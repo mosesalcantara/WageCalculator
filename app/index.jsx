@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NavBar from '../.expo/components/NavBar';
-import { Button } from 'react-native';
+import { ScrollView } from 'react-native';
 import {
   View,
   Text,
@@ -16,12 +16,20 @@ export default function HomeScreen() {
     {
       id: '1',
       name: 'DOLE - MIMAROPA',
-      address: '',
+      address: 'Confil Building, Sampaguita, Lumangbayan, Calapan City, Oriental Mindoro',
       type: '',
       image: '',
       employees: [
         { id: '1', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
         { id: '2', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
+        { id: '3', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
+        { id: '4', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
+        { id: '5', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
+        { id: '6', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
+        { id: '7', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
+        { id: '8', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
+        { id: '9', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
+        { id: '10', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
       ],
     },
     {
@@ -165,12 +173,15 @@ export default function HomeScreen() {
             <Text style={styles.tableTitle}>
               {selectedEstablishment?.name} - Employees
             </Text>
-            
+            <Text style={styles.tableAddress}>
+              {selectedEstablishment?.address}
+            </Text>
+
             <TouchableOpacity
               style={styles.moreButton}
               onPress={() => console.log('Button pressed!')}
             >
-            <Text style={styles.moreButtonText}>More Details</Text>
+              <Text style={styles.moreButtonText}>More Details</Text>
             </TouchableOpacity>
 
             {/* Table Header */}
@@ -180,14 +191,16 @@ export default function HomeScreen() {
               <Text style={styles.tableHeaderText}>No. of Underpayment</Text>
             </View>
 
-            {/* Table Rows */}
-            {selectedEstablishment?.employees.map((emp) => (
-              <View key={emp.id} style={styles.tableRow}>
-                <Text style={styles.tableCell}>{emp.name}</Text>
-                <Text style={styles.tableCell}>{emp.rate}</Text>
-                <Text style={styles.tableCell}>{emp.underpayment}</Text>
-              </View>
-            ))}
+            {/* Scrollable Table Rows */}
+            <ScrollView style={{ maxHeight: 300 }}>
+              {selectedEstablishment?.employees.map((emp) => (
+                <View key={emp.id} style={styles.tableRow}>
+                  <Text style={styles.tableCell}>{emp.name}</Text>
+                  <Text style={styles.tableCell}>{emp.rate}</Text>
+                  <Text style={styles.tableCell}>{emp.underpayment}</Text>
+                </View>
+              ))}
+            </ScrollView>
 
             {/* Close Button */}
             <TouchableOpacity
@@ -290,6 +303,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
+  },
+  tableAddress: {
+    fontStyle: 'italic',
+    marginBottom: 10,
+    textAlign: 'left',
   },
   tableHeaderText: {
     flex: 1,
