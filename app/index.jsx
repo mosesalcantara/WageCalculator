@@ -1,68 +1,68 @@
-import React, { useState } from 'react';
-import NavBar from '../.expo/components/NavBar';
-import { ScrollView } from 'react-native';
+import NavBar from "@/components/NavBar";
+import { useState } from "react";
 import {
-  View,
+  FlatList,
+  Modal,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  Modal,
-} from 'react-native';
+  View,
+} from "react-native";
 
 export default function HomeScreen() {
   const [establishments, setEstablishments] = useState([
     {
-      id: '1',
-      name: 'DOLE - MIMAROPA',
-      address: 'Confil Building, Sampaguita, Lumangbayan, Calapan City, Oriental Mindoro',
-      type: '',
-      image: '',
+      id: "1",
+      name: "DOLE - MIMAROPA",
+      address:
+        "Confil Building, Sampaguita, Lumangbayan, Calapan City, Oriental Mindoro",
+      type: "",
+      image: "",
       employees: [
-        { id: '1', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
-        { id: '2', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
-        { id: '3', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
-        { id: '4', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
-        { id: '5', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
-        { id: '6', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
-        { id: '7', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
-        { id: '8', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
-        { id: '9', name: 'Crisostomo Ibarra', rate: '500', underpayment: '0' },
-        { id: '10', name: 'Maria Clara Alba', rate: '480', underpayment: '20' },
+        { id: "1", name: "Crisostomo Ibarra", rate: "500", underpayment: "0" },
+        { id: "2", name: "Maria Clara Alba", rate: "480", underpayment: "20" },
+        { id: "3", name: "Crisostomo Ibarra", rate: "500", underpayment: "0" },
+        { id: "4", name: "Maria Clara Alba", rate: "480", underpayment: "20" },
+        { id: "5", name: "Crisostomo Ibarra", rate: "500", underpayment: "0" },
+        { id: "6", name: "Maria Clara Alba", rate: "480", underpayment: "20" },
+        { id: "7", name: "Crisostomo Ibarra", rate: "500", underpayment: "0" },
+        { id: "8", name: "Maria Clara Alba", rate: "480", underpayment: "20" },
+        { id: "9", name: "Crisostomo Ibarra", rate: "500", underpayment: "0" },
+        { id: "10", name: "Maria Clara Alba", rate: "480", underpayment: "20" },
       ],
     },
     {
-      id: '2',
-      name: 'Establishment 2',
-      address: '',
-      type: '',
-      image: '',
+      id: "2",
+      name: "Establishment 2",
+      address: "",
+      type: "",
+      image: "",
       employees: [
-        { id: '1', name: 'Pedro Reyes', rate: '450', underpayment: '50' },
+        { id: "1", name: "Pedro Reyes", rate: "450", underpayment: "50" },
       ],
     },
     {
-      id: '3',
-      name: 'Establishment 3',
-      address: '',
-      type: '',
-      image: '',
+      id: "3",
+      name: "Establishment 3",
+      address: "",
+      type: "",
+      image: "",
       employees: [],
     },
   ]);
 
   const [form, setForm] = useState({
-    name: '',
-    address: '',
-    type: '',
-    image: '',
+    name: "",
+    address: "",
+    type: "",
+    image: "",
   });
 
   const [formModalVisible, setFormModalVisible] = useState(false);
   const [tableModalVisible, setTableModalVisible] = useState(false);
-  const [selectedEstablishment, setSelectedEstablishment] =
-    useState(null);
+  const [selectedEstablishment, setSelectedEstablishment] = useState(null);
 
   const handleSave = () => {
     if (form.name) {
@@ -75,7 +75,7 @@ export default function HomeScreen() {
         employees: [],
       };
       setEstablishments([...establishments, newEstablishment]);
-      setForm({ name: '', address: '', type: '', image: '' });
+      setForm({ name: "", address: "", type: "", image: "" });
       setFormModalVisible(false);
     }
   };
@@ -88,7 +88,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <NavBar title ="Wage Calculator" />
+      <NavBar title="Wage Calculator" />
 
       {/* List of establishments */}
       <FlatList
@@ -146,7 +146,7 @@ export default function HomeScreen() {
               onChangeText={(text) => setForm({ ...form, image: text })}
             />
 
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
               <TouchableOpacity
                 style={[styles.saveButton, { marginRight: 8 }]}
                 onPress={() => setFormModalVisible(false)}
@@ -179,7 +179,7 @@ export default function HomeScreen() {
 
             <TouchableOpacity
               style={styles.moreButton}
-              onPress={() => console.log('Button pressed!')}
+              onPress={() => console.log("Button pressed!")}
             >
               <Text style={styles.moreButtonText}>More Details</Text>
             </TouchableOpacity>
@@ -204,7 +204,10 @@ export default function HomeScreen() {
 
             {/* Close Button */}
             <TouchableOpacity
-              style={[styles.saveButton, { marginTop: 15, alignSelf: 'center' }]}
+              style={[
+                styles.saveButton,
+                { marginTop: 15, alignSelf: "center" },
+              ]}
               onPress={() => setTableModalVisible(false)}
             >
               <Text style={styles.saveText}>Close</Text>
@@ -217,108 +220,108 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#acb6e2ff' },
+  container: { flex: 1, padding: 16, backgroundColor: "#acb6e2ff" },
   header: {
     fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     paddingVertical: 10,
     borderBottomWidth: 1,
-    backgroundColor: '#acb6e2ff',
+    backgroundColor: "#acb6e2ff",
   },
   moreButton: {
-    backgroundColor: '#1E90FF',
-    paddingVertical: 5,   // Adjust height
+    backgroundColor: "#1E90FF",
+    paddingVertical: 5, // Adjust height
     paddingHorizontal: 10, // Adjust width
     borderRadius: 5,
-    alignSelf: 'flex-end', // or 'center' to center
+    alignSelf: "flex-end", // or 'center' to center
   },
   moreButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
   },
   establishmentCard: {
     padding: 10,
     marginVertical: 5,
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: '#ffffffff',
+    backgroundColor: "#ffffffff",
   },
-  establishmentText: { fontWeight: 'bold' },
+  establishmentText: { fontWeight: "bold" },
   addButton: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     padding: 12,
     borderRadius: 30,
     marginTop: 20,
   },
-  addText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
+  addText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   form: {
-    backgroundColor: '#1E90FF',
+    backgroundColor: "#1E90FF",
     padding: 16,
     borderRadius: 10,
-    width: '80%',
-    shadowColor: '#000',
+    width: "80%",
+    shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 8,
     elevation: 8,
   },
-  label: { color: '#fff', marginTop: 5 },
+  label: { color: "#fff", marginTop: 5 },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 5,
     paddingHorizontal: 8,
     height: 35,
     marginTop: 2,
   },
   saveButton: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 4,
     marginTop: 10,
   },
-  saveText: { fontWeight: 'bold' },
+  saveText: { fontWeight: "bold" },
 
   tableContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 16,
     borderRadius: 10,
-    width: '90%',
-    maxHeight: '80%',
+    width: "90%",
+    maxHeight: "80%",
   },
-  tableTitle: { fontWeight: 'bold', fontSize: 16, marginBottom: 10 },
+  tableTitle: { fontWeight: "bold", fontSize: 16, marginBottom: 10 },
   tableRowHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#c3ced49e',
+    flexDirection: "row",
+    backgroundColor: "#c3ced49e",
     paddingVertical: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
   },
   tableAddress: {
-    fontStyle: 'italic',
+    fontStyle: "italic",
     marginBottom: 10,
-    textAlign: 'left',
+    textAlign: "left",
   },
   tableHeaderText: {
     flex: 1,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   tableRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#eee",
     paddingVertical: 5,
   },
-  tableCell: { flex: 1, textAlign: 'center' },
+  tableCell: { flex: 1, textAlign: "center" },
 });
