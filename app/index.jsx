@@ -79,10 +79,11 @@ const HomeScreen = () => {
       <UpdateEstablishmentModal
         db={db}
         setMutations={setMutations}
-        values={values}
-        setValues={setValues}
-        isUpdateModalVisible={isUpdateModalVisible}
-        setIsUpdateModalVisible={setIsUpdateModalVisible}
+        valuesState={[values, setValues]}
+        isUpdateModalVisibleState={[
+          isUpdateModalVisible,
+          setIsUpdateModalVisible,
+        ]}
       />
     </View>
   );

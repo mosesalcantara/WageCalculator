@@ -6,11 +6,13 @@ import { styles } from "./styles";
 const UpdateEstablishmentModal = ({
   db,
   setMutations,
-  values,
-  setValues,
-  isUpdateModalVisible,
-  setIsUpdateModalVisible,
+  valuesState,
+  isUpdateModalVisibleState,
 }) => {
+  const [values, setValues] = valuesState;
+  const [isUpdateModalVisible, setIsUpdateModalVisible] =
+    isUpdateModalVisibleState;
+
   const handleChange = (key, value) => {
     setValues((prev) => ({
       ...prev,
