@@ -24,6 +24,8 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   establishmentCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: 10,
     marginVertical: 5,
     borderWidth: 1,
@@ -36,9 +38,9 @@ export const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 30,
     marginTop: 20,
+    marginBottom: 30,
   },
   addText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
-
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.4)",

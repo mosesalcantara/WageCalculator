@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1755132321779,
+      "tag": "0000_bouncy_justice",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1755156846310,
+      "tag": "0001_sour_warbird",
+      "breakpoints": true
+    }
+  ]
+}
