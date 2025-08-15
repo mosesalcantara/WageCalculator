@@ -1,28 +1,57 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: { padding: 20, backgroundColor: '#fff' },
-  header: { textAlign: 'center', fontWeight: 'bold', fontSize: 18, marginBottom: 10 },
-  buttonScroll: { marginBottom: 15 },
-  buttonScrollContent: { paddingHorizontal: 10, alignItems: 'center', gap: 10 },
-  calcButton: { paddingVertical: 10, paddingHorizontal: 18, backgroundColor: '#e0e0e0', borderRadius: 25, marginRight: 10, justifyContent: 'center', alignItems: 'center' },
-  activeCalcButton: { backgroundColor: '#3b82f6' },
-  calcButtonText: { fontSize: 14, color: '#333', fontWeight: '500' },
-  activeCalcButtonText: { color: '#fff', fontWeight: '700' },
-  blueBox: { backgroundColor: '#89CFF0', padding: 10, alignItems: 'center', marginBottom: 10 },
-  blueBoxText: { fontWeight: 'bold' },
-  formBox: { borderWidth: 1, borderColor: '#000', padding: 10 },
-  label: { fontWeight: 'bold', marginBottom: 4, color: '#333' },
-  input: { borderBottomWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 5 },
-  customPickerContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 15, borderWidth: 1, borderColor: '#4A90E2', paddingHorizontal: 15, paddingVertical: 12, marginBottom: 16 },
-  customPickerInput: { flex: 1, fontSize: 16, color: '#222', paddingVertical: 10, paddingHorizontal: 5 },
-  dateInput: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 10, borderRadius: 5 },
-  totalText: { fontWeight: 'bold', marginVertical: 10 },
-  buttonRow: { flexDirection: 'row', gap: 10 },
-  button: { padding: 10, borderWidth: 1, borderRadius: 3 },
-  computeBtn: { backgroundColor: '#89CFF0' },
-  computeText: { fontWeight: 'bold' },
-  clearBtn: { backgroundColor: '#fff' },
-  addBtn: { backgroundColor: '#28a745', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 8, marginTop: 5 },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
+  container: { flex: 1, backgroundColor: "#f5f5f5" },
+  header: { flexDirection: "row", alignItems: "center", backgroundColor: "#2c3e50", padding: 15 },
+  headerText: { color: "#fff", fontSize: 18, fontWeight: "bold", marginLeft: 10 },
+  calcScroll: { backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#ddd", paddingVertical: 10 },
+  calcButton: {
+    flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#ccc", backgroundColor: "#fff",
+    paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, marginHorizontal: 5
+  },
+  calcButtonActive: { backgroundColor: "#2c3e50", borderColor: "#2c3e50" },
+  calcButtonText: { marginLeft: 6, fontSize: 14, color: "#555" },
+  calcButtonTextActive: { color: "#fff" },
+  content: { padding: 15 },
+  card: {
+    backgroundColor: "#fff", padding: 15, borderRadius: 8, shadowColor: "#000", shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 }, shadowRadius: 4, elevation: 2
+  },
+  label: { fontSize: 14, fontWeight: "bold", marginTop: 10, marginBottom: 4, color: "#333" },
+  input: {
+    borderWidth: 1, borderColor: "#ccc", borderRadius: 6, paddingHorizontal: 10, height: 40, backgroundColor: "#fafafa",
+    justifyContent: "center"
+  },
+  dateField: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  calcAction: { backgroundColor: "#2c3e50", padding: 12, borderRadius: 6, marginTop: 15, alignItems: "center" },
+  calcActionText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  resultBox: {
+    marginTop: 15, padding: 12, backgroundColor: "#eafaf1", borderRadius: 6, borderWidth: 1, borderColor: "#27ae60"
+  },
+  resultLabel: { fontSize: 14, fontWeight: "bold", color: "#27ae60" },
+  resultValue: { fontSize: 18, fontWeight: "bold", color: "#27ae60", marginTop: 4 },
+  addButton: { marginTop: 8, backgroundColor: "#3498db", paddingVertical: 6, paddingHorizontal: 10, borderRadius: 4 },
+  addButtonText: { color: "#fff", fontSize: 12, fontWeight: "bold" },
+  modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" },
+  modalBox: { backgroundColor: "#fff", width: "80%", borderRadius: 8, padding: 15 },
+  modalTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10 },
+  modalActions: { flexDirection: "row", justifyContent: "flex-end", marginTop: 10 },
+  modalBtn: { paddingVertical: 8, paddingHorizontal: 15, marginLeft: 10, borderRadius: 4 },
+  modalBtnText: { fontSize: 14 },
+    image: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+  },
 });
+
+export const pickerSelectStyles = {
+  inputIOS: {
+    fontSize: 14, paddingVertical: 10, paddingHorizontal: 10, borderWidth: 1, borderColor: "#ccc",
+    borderRadius: 6, color: "#333", backgroundColor: "#fafafa", marginBottom: 6
+  },
+  inputAndroid: {
+    fontSize: 14, paddingHorizontal: 10, paddingVertical: 8, borderWidth: 1, borderColor: "#ccc",
+    borderRadius: 6, color: "#333", backgroundColor: "#fafafa", marginBottom: 6
+  }
+};
