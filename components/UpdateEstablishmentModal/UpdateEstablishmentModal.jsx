@@ -36,7 +36,7 @@ const UpdateEstablishmentModal = ({
     }
   };
 
-  const setValuesType = (value) => {
+  const setType = (value) => {
     setValues((prev) => ({
       ...prev,
       type: value,
@@ -69,7 +69,7 @@ const UpdateEstablishmentModal = ({
                 { label: "Non-Agriculture", value: "Non-Agriculture" },
               ]}
               placeholder="Select Type"
-              valueState={[values.type, setValuesType]}
+              valueState={[values.type, setType]}
             />
 
             <Text style={styles.label}>Address:</Text>
