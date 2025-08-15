@@ -76,6 +76,8 @@ const HomeScreen = () => {
         )}
       />
       <Link href="/calculator">Go to Calculator</Link>
+      <Link href="/pdf">Go to Pdf</Link>
+      <Link href="/employees">Go to Employees</Link>
       <AddEstablishmentModal db={db} setMutations={setMutations} />
       <UpdateEstablishmentModal
         db={db}

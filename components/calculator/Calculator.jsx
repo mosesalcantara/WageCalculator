@@ -210,7 +210,6 @@ export default function EmployeeDetails() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.header}>Wage Calculator</Text>
 
         {/* Horizontal swipe + buttons */}
         <GestureDetector gesture={panGesture}>
