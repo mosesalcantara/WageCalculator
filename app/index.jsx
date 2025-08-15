@@ -51,7 +51,7 @@ const HomeScreen = () => {
         keyExtractor={(record) => record.id}
         renderItem={({ item }) => (
           <View style={styles.establishmentCard}>
-            <Text style={styles.establishmentText}>{item.address}</Text>
+            <Text style={styles.establishmentText}>{item.name}</Text>
 
             <View style={{ flexDirection: "row", gap: 15 }}>
               <TouchableOpacity
