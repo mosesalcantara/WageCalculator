@@ -19,8 +19,8 @@ const Select = ({ options, placeholder = "Select Item", valueState }) => {
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={(item) => {
-          setValue(item.value);
+        onChange={(option) => {
+          setValue(option.value);
           setIsFocus(false);
         }}
       />
@@ -39,15 +39,12 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 27,
-    borderColor: "gray",
-    borderWidth: 0.5,
-    borderRadius: 8,
     paddingHorizontal: 8,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 14,
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: 14,
   },
 });

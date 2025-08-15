@@ -34,6 +34,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const getRecords = async () => {
       const data = await db.query.establishments.findMany();
+      console.log(data)
       setRecords(data);
     };
 
