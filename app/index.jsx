@@ -6,12 +6,16 @@ import * as schema from "@/db/schema";
 import { establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import SessionStorage from "react-native-session-storage";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { styles } from "./styles";
-const HomeScreen = () => {
+
+const HomePage = () => {
+  const router = useRouter();
   const initialDb = useSQLiteContext();
   const db = drizzle(initialDb, { schema });
 
@@ -29,6 +33,11 @@ const HomeScreen = () => {
   const deleteRecord = async (id) => {
     await db.delete(establishments).where(eq(establishments.id, id));
     setMutations((prev) => ++prev);
+  };
+
+  const setEstablishment = (id) => {
+    SessionStorage.setItem("establishment_id", `${id}`);
+    router.push("/employees");
   };
 
   useEffect(() => {
@@ -52,7 +61,9 @@ const HomeScreen = () => {
         keyExtractor={(record) => record.id}
         renderItem={({ item }) => (
           <View style={styles.establishmentCard}>
-            <Text style={styles.establishmentText}>{item.name}</Text>
+            <TouchableOpacity onPress={() => setEstablishment(item.id)}>
+              <Text style={styles.establishmentText}>{item.name}</Text>
+            </TouchableOpacity>
 
             <View style={{ flexDirection: "row", gap: 15 }}>
               <TouchableOpacity
@@ -61,7 +72,7 @@ const HomeScreen = () => {
                   setIsUpdateModalVisible(true);
                 }}
               >
-                <Text style={{ ...styles.establishmentText }}>✏️</Text>
+                <Icon name="edit" size={20} color="#2196F3" />
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -69,7 +80,7 @@ const HomeScreen = () => {
                   confirmAlert("Establishment", deleteRecord, item.id);
                 }}
               >
-                <Text style={{ ...styles.establishmentText }}>❌</Text>
+                <Icon name="delete" size={20} color="#E53935" />
               </TouchableOpacity>
             </View>
           </View>
@@ -94,4 +105,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default HomePage;

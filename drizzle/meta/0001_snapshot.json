@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "3c58ef16-f410-43fe-b181-ac970a79b8aa",
+  "id": "13227ba0-15ff-4465-90db-653da71c92fc",
   "prevId": "b348b3ce-f289-4286-9e2b-5211fe86e4ca",
   "tables": {
     "employees": {
@@ -14,8 +14,15 @@
           "notNull": true,
           "autoincrement": true
         },
-        "name": {
-          "name": "name",
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "last_name": {
+          "name": "last_name",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

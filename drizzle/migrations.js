@@ -2,7 +2,7 @@
 
 import journal from './meta/_journal.json';
 import m0000 from './0000_bouncy_justice.sql';
-import m0001 from './0001_sour_warbird.sql';
+import m0001 from './0001_easy_scourge.sql';
 
   export default {
     journal,

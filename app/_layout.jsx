@@ -11,7 +11,7 @@ const expoDb = openDatabaseSync(name);
 const db = drizzle(expoDb);
 
 const RootLayout = () => {
-  const { success, error } = useMigrations(db, migrations);
+  useMigrations(db, migrations);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -20,12 +20,7 @@ const RootLayout = () => {
         options={{ useNewConnection: false }}
         useSuspense
       >
-        <Stack>
-          <Stack.Screen
-            name="index"
-            options={{ title: "Home", headerShown: false }}
-          />
-        </Stack>
+        <Stack screenOptions={{ headerShown: false }} />
       </SQLiteProvider>
     </Suspense>
   );

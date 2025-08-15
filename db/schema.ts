@@ -10,21 +10,21 @@ export const establishments = sqliteTable("establishments", {
 
 export const employees = sqliteTable("employees", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
-  last_name: text("name").notNull(),
-  first_name: text("name").notNull(),
+  first_name: text("first_name").notNull(),
+  last_name: text("last_name").notNull(),
   rate: real("rate").notNull(),
   establishment_id: integer("establishment_id").references(
     () => establishments.id
   )
 });
 
-// export const establishmentsRelation = relations(establishments, ({ many }) => ({
-//   employees: many(employees),
-// }));
+export const establishmentsRelation = relations(establishments, ({ many }) => ({
+  employees: many(employees),
+}));
 
-// export const employeesRelation = relations(employees, ({ one }) => ({
-//   establishment: one(establishments, {
-//     fields: [employees.establishment_id],
-//     references: [establishments.id],
-//   }),
-// }));
+export const employeesRelation = relations(employees, ({ one }) => ({
+  establishment: one(establishments, {
+    fields: [employees.establishment_id],
+    references: [establishments.id],
+  }),
+}));

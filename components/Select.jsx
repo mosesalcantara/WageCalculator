@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 27,
-    paddingHorizontal: 8,
   },
   placeholderStyle: {
     fontSize: 14,
