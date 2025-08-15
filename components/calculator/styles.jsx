@@ -1,0 +1,28 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: { padding: 20, backgroundColor: '#fff' },
+  header: { textAlign: 'center', fontWeight: 'bold', fontSize: 18, marginBottom: 10 },
+  buttonScroll: { marginBottom: 15 },
+  buttonScrollContent: { paddingHorizontal: 10, alignItems: 'center', gap: 10 },
+  calcButton: { paddingVertical: 10, paddingHorizontal: 18, backgroundColor: '#e0e0e0', borderRadius: 25, marginRight: 10, justifyContent: 'center', alignItems: 'center' },
+  activeCalcButton: { backgroundColor: '#3b82f6' },
+  calcButtonText: { fontSize: 14, color: '#333', fontWeight: '500' },
+  activeCalcButtonText: { color: '#fff', fontWeight: '700' },
+  blueBox: { backgroundColor: '#89CFF0', padding: 10, alignItems: 'center', marginBottom: 10 },
+  blueBoxText: { fontWeight: 'bold' },
+  formBox: { borderWidth: 1, borderColor: '#000', padding: 10 },
+  label: { fontWeight: 'bold', marginBottom: 4, color: '#333' },
+  input: { borderBottomWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 5 },
+  customPickerContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 15, borderWidth: 1, borderColor: '#4A90E2', paddingHorizontal: 15, paddingVertical: 12, marginBottom: 16 },
+  customPickerInput: { flex: 1, fontSize: 16, color: '#222', paddingVertical: 10, paddingHorizontal: 5 },
+  dateInput: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 10, borderRadius: 5 },
+  totalText: { fontWeight: 'bold', marginVertical: 10 },
+  buttonRow: { flexDirection: 'row', gap: 10 },
+  button: { padding: 10, borderWidth: 1, borderRadius: 3 },
+  computeBtn: { backgroundColor: '#89CFF0' },
+  computeText: { fontWeight: 'bold' },
+  clearBtn: { backgroundColor: '#fff' },
+  addBtn: { backgroundColor: '#28a745', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 8, marginTop: 5 },
+  buttonText: { color: '#fff', fontWeight: 'bold' },
+});

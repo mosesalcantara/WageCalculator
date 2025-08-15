@@ -10,7 +10,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-
+import { Link } from 'expo-router';
 const HomeScreen = () => {
   const initialDb = useSQLiteContext();
   const db = drizzle(initialDb, { schema });
@@ -74,7 +74,7 @@ const HomeScreen = () => {
           </View>
         )}
       />
-
+      <Link href="/calculator">Go to Calculator</Link>
       <AddEstablishmentModal db={db} setMutations={setMutations} />
       <UpdateEstablishmentModal
         db={db}
