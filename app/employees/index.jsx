@@ -109,7 +109,7 @@ const EmployeesPage = () => {
                 <View style={[styles.actionCell, { flex: 0.8 }]}>
                   <TouchableOpacity
                     onPress={() => {
-                      setValues({ ...values, rate: `${values.rate}` });
+                      setValues({ ...record, rate: `${record.rate}` });
                       setIsUpdateModalVisible(true);
                     }}
                   >
