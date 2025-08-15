@@ -1,3 +1,4 @@
+import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -36,6 +37,13 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
     }
   };
 
+  const setType = (value) => {
+    setValues((prev) => ({
+      ...prev,
+      type: value,
+    }));
+  };
+
   return (
     <>
       {/* Add Establishment Button */}
@@ -56,7 +64,6 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.form}>
-            <Text style={styles.label}>{isAddModalVisible}</Text>
             <Text style={styles.label}>Name:</Text>
             <TextInput
               style={styles.input}
@@ -65,10 +72,13 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
             />
 
             <Text style={styles.label}>Type:</Text>
-            <TextInput
-              style={styles.input}
-              value={values.type}
-              onChangeText={(value) => handleChange("type", value)}
+            <Select
+              options={[
+                { label: "Agriculture", value: "Agriculture" },
+                { label: "Non-Agriculture", value: "Non-Agriculture" },
+              ]}
+              placeholder="Select Type"
+              valueState={[values.type, setType]}
             />
 
             <Text style={styles.label}>Address:</Text>
