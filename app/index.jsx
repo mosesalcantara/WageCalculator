@@ -6,11 +6,11 @@ import * as schema from "@/db/schema";
 import { establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
+import { Link } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
-import { Link } from 'expo-router';
 const HomeScreen = () => {
   const initialDb = useSQLiteContext();
   const db = drizzle(initialDb, { schema });
@@ -34,7 +34,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const getRecords = async () => {
       const data = await db.query.establishments.findMany();
-      console.log(data)
+      console.log(data);
       setRecords(data);
     };
 
@@ -52,7 +52,7 @@ const HomeScreen = () => {
         keyExtractor={(record) => record.id}
         renderItem={({ item }) => (
           <View style={styles.establishmentCard}>
-            <Text style={styles.establishmentText}>{item.address}</Text>
+            <Text style={styles.establishmentText}>{item.name}</Text>
 
             <View style={{ flexDirection: "row", gap: 15 }}>
               <TouchableOpacity
@@ -75,9 +75,11 @@ const HomeScreen = () => {
           </View>
         )}
       />
+
       <Link href="/calculator">Go to Calculator</Link>
       <Link href="/pdf">Go to Pdf</Link>
       <Link href="/employees">Go to Employees</Link>
+
       <AddEstablishmentModal db={db} setMutations={setMutations} />
       <UpdateEstablishmentModal
         db={db}
