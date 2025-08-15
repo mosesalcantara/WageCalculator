@@ -43,7 +43,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <NavBar title="Wage Calculator" />
+      <NavBar />
 
       {/* List of establishments */}
       <FlatList

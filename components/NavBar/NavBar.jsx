@@ -3,7 +3,7 @@ import DoleImage from "@/assets/images/dole.png";
 import { Image, Text, View } from "react-native";
 import { styles } from "./styles";
 
-const NavBar = ({ title }) => {
+const NavBar = ({ title = "Wage Calculator" }) => {
   return (
     <View style={styles.header}>
       <Image source={DoleImage} style={styles.image} />
