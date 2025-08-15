@@ -3,7 +3,7 @@ import confirmAlert from "@/components/ConfirmAlert";
 import NavBar from "@/components/NavBar/NavBar";
 import UpdateEstablishmentModal from "@/components/UpdateEstablishmentModal/UpdateEstablishmentModal";
 import * as schema from "@/db/schema";
-import { establishments } from "@/db/schema";
+import { employees, establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { Link, useRouter } from "expo-router";
@@ -32,6 +32,7 @@ const HomePage = () => {
 
   const deleteRecord = async (id) => {
     await db.delete(establishments).where(eq(establishments.id, id));
+    await db.delete(employees).where(eq(employees.establishment_id, id));
     setMutations((prev) => ++prev);
   };
 

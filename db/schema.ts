@@ -15,7 +15,7 @@ export const employees = sqliteTable("employees", {
   rate: real("rate").notNull(),
   establishment_id: integer("establishment_id").references(
     () => establishments.id
-  )
+  ),
 });
 
 export const establishmentsRelation = relations(establishments, ({ many }) => ({
