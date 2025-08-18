@@ -89,8 +89,10 @@ const HomePage = () => {
       />
 
       <Link href="/calculator">Go to Calculator</Link>
+      <Link href="/old-calculator">Go to Old Calculator</Link>
       <Link href="/pdf">Go to Pdf</Link>
       <Link href="/employees">Go to Employees</Link>
+      <Link href="/test">Test</Link>
 
       <AddEstablishmentModal db={db} setMutations={setMutations} />
       <UpdateEstablishmentModal

@@ -1,10 +1,13 @@
-import Calculator from "@/components/calculator/Calculator";
-import NavBar from "@/components/NavBar/NavBar";
+import Calculator from "@/components/Calculator/Calculator";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite";
+import * as schema from "@/db/schema";
 
-export default function CalculatorPage() {
-  return (
-      <>
-      <Calculator />
-    </>
-    )
-}
+const CalculatorPage = () => {
+  const initialDb = useSQLiteContext();
+  const db = drizzle(initialDb, { schema });
+
+  return <Calculator db={db} />;
+};
+
+export default CalculatorPage;

@@ -6,6 +6,7 @@ import * as schema from "@/db/schema";
 import { employees, establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
+import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import {
@@ -20,6 +21,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { styles } from "./styles";
 
 const EmployeesPage = () => {
+  const router = useRouter();
   const { width: screenWidth } = Dimensions.get("window");
   const parent_id = SessionStorage.getItem("establishment_id");
 
@@ -46,6 +48,11 @@ const EmployeesPage = () => {
   const deleteRecord = async (id) => {
     await db.delete(employees).where(eq(employees.id, id));
     setMutations((prev) => ++prev);
+  };
+
+  const setEmployee = (id) => {
+    SessionStorage.setItem("employee_id", `${id}`);
+    router.push("/calculator");
   };
 
   useEffect(() => {
@@ -106,7 +113,11 @@ const EmployeesPage = () => {
                   {record.rate}
                 </Text>
                 <Text style={[styles.cellText, { flex: 1 }]}>0</Text>
+
                 <View style={[styles.actionCell, { flex: 0.8 }]}>
+                  <TouchableOpacity onPress={() => setEmployee(record.id)}>
+                    <Icon name="remove-red-eye" size={20} color="#2196F3" />
+                  </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
                       setValues({ ...record, rate: `${record.rate}` });
