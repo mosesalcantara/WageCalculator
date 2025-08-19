@@ -11,6 +11,9 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { styles } from "./styles";
 
 const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
+  const actualRate = parent.rate;
+  const minimumRate = 430;
+
   const [startDateModalVisible, setStartDateModalVisible] = useState(false);
   const [endDateModalVisible, setEndDateModalVisible] = useState(false);
 
@@ -26,13 +29,30 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     }
   };
 
-  const calculate = () => {
-    const actualRate = parent.rate;
-    const minimumRate = 430;
-    let rate = 0;
+  const isBelowMinimum = () => {
+    return actualRate < minimumRate;
+  };
 
-    actualRate < minimumRate ? (rate = minimumRate) : (rate = actualRate);
-    const total = rate * (values[type].daysOrHours || 0);
+  const calculate = () => {
+    let total = 0;
+    let rate = 0;
+    isBelowMinimum() ? (rate = minimumRate) : (rate = actualRate);
+    const daysOrHours = values[type].daysOrHours
+
+    if (type == "Basic Wage") {
+      if (!isBelowMinimum()) {
+        total = (minimumRate - actualRate) * (daysOrHours || 0);
+        handleChange("total", total);
+      }
+    } else if (type == "Holiday Pay") {
+      total = rate * (daysOrHours || 0);
+    } else if (type == "Premium Pay") {
+      total = rate * 0.3 * 2;
+    } else if (type == "Overtime Pay") {
+      total = (rate / 8) * 0.25 * daysOrHours;
+    } else if (type == "Night Differential") {
+      total = (rate / 8) * 0.10 * daysOrHours;
+    }
     handleChange("total", total);
   };
 
@@ -82,6 +102,7 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
                 ₱{" "}
                 {(values[type].total || 0).toLocaleString("en-US", {
                   minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 })}
               </Text>
             </View>

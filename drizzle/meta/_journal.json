@@ -15,6 +15,13 @@
       "when": 1755244395133,
       "tag": "0001_easy_scourge",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1755573606324,
+      "tag": "0002_brief_veda",
+      "breakpoints": true
     }
   ]
 }

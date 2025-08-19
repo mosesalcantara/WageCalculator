@@ -57,16 +57,15 @@ const EmployeesPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const data = await db.query.establishments.findMany({
+      const data = await db.query.establishments.findFirst({
         where: eq(establishments.id, parent.id),
         with: {
           employees: true,
         },
       });
       console.log(data);
-      const establishment = data[0];
-      setParent(establishment);
-      setRecords(establishment.employees);
+      setParent(data);
+      setRecords(data.employees);
     };
 
     getRecords();

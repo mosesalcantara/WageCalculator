@@ -2,7 +2,7 @@ import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { styles } from "@/components/Calculator/styles";
-import { employees } from "@/db/schema";
+import { employees, violations } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -85,7 +85,6 @@ const Calculator = ({ db }) => {
   };
 
   const renderForm = () => {
-    console.log(values);
     return (
       <Form
         db={db}
@@ -97,14 +96,32 @@ const Calculator = ({ db }) => {
     );
   };
 
+  const addRecord = async () => {
+    try {
+      await db.delete(violations).where(eq(violations.employee_id, parent_id));
+
+      await db
+        .insert(violations)
+        .values({ values: JSON.stringify(values), employee_id: parent_id });
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
+    }
+  };
+
   useEffect(() => {
     const getRecords = async () => {
-      const data = await db.query.employees.findMany({
+      const parentQuery = await db.query.employees.findFirst({
         where: eq(employees.id, parent_id),
       });
-      console.log(data);
-      const employee = data[0];
-      setParent(employee);
+      setParent(parentQuery);
+
+      const violationsQuery = await db.query.violations.findFirst({
+        where: eq(violations.employee_id, parent_id),
+      });
+
+      const values = JSON.parse(violationsQuery.values);
+      setValues(values)
     };
 
     getRecords();
@@ -160,6 +177,25 @@ const Calculator = ({ db }) => {
         <ScrollView style={styles.content}>
           <View style={styles.card}>{renderForm(selectedTab)}</View>
         </ScrollView>
+      </View>
+
+      <View style={{ marginHorizontal: 20 }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#000",
+            padding: 12,
+            borderRadius: 30,
+            marginTop: 20,
+            marginBottom: 30,
+          }}
+          onPress={addRecord}
+        >
+          <Text
+            style={{ color: "#fff", textAlign: "center", fontWeight: "bold" }}
+          >
+            Save
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
