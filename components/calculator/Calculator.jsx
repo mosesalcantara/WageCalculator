@@ -67,6 +67,7 @@ const Calculator = ({ db }) => {
       end_date: "",
       daysOrHours: "",
       total: "",
+      received: "",
     },
   });
 

@@ -37,7 +37,7 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     let total = 0;
     let rate = 0;
     isBelowMinimum() ? (rate = minimumRate) : (rate = actualRate);
-    const daysOrHours = values[type].daysOrHours
+    const daysOrHours = values[type].daysOrHours;
 
     if (type == "Basic Wage") {
       if (!isBelowMinimum()) {
@@ -51,7 +51,9 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     } else if (type == "Overtime Pay") {
       total = (rate / 8) * 0.25 * daysOrHours;
     } else if (type == "Night Differential") {
-      total = (rate / 8) * 0.10 * daysOrHours;
+      total = (rate / 8) * 0.1 * daysOrHours;
+    } else if (type == "13th Month Pay") {
+      total = ((rate * daysOrHours) / 12) - values[type].received;
     }
     handleChange("total", total);
   };
@@ -64,6 +66,14 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     <>
       <View style={{ ...styles.container, padding: 10 }}>
         <ScrollView style={styles.content}>
+          <Text style={{ ...styles.label, fontSize: 20, textAlign: "center" }}>
+            {`${parent.first_name} ${parent.last_name} - ${(
+              parent.rate || 0
+            ).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`}
+          </Text>
           <Text style={styles.label}>Start Date</Text>
           <TouchableOpacity
             style={[styles.input, styles.dateField]}
@@ -90,6 +100,19 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
             value={values[type].daysOrHours}
             onChangeText={(value) => handleChange("daysOrHours", value)}
           />
+
+          {type == "13th Month Pay" && (
+            <>
+              <Text style={styles.label}>Received</Text>
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                placeholder={`Enter pay received`}
+                value={values[type].received}
+                onChangeText={(value) => handleChange("received", value)}
+              />
+            </>
+          )}
 
           <View style={{ marginTop: 20 }}>
             <TouchableOpacity style={styles.calcAction} onPress={calculate}>
