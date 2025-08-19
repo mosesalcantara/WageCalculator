@@ -5,7 +5,15 @@ import { styles } from "@/components/Calculator/styles";
 import { employees, violations } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  BackHandler,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -111,6 +119,15 @@ const Calculator = ({ db }) => {
   };
 
   useEffect(() => {
+    const handleBackPress = () => {
+      console.log(5);
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress
+    );
+
     const getRecords = async () => {
       const parentQuery = await db.query.employees.findFirst({
         where: eq(employees.id, parent_id),
@@ -122,10 +139,12 @@ const Calculator = ({ db }) => {
       });
 
       const values = JSON.parse(violationsQuery.values);
-      setValues(values)
+      setValues(values);
     };
 
     getRecords();
+
+    return () => backHandler.remove();
   }, []);
 
   return (
