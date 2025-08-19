@@ -92,31 +92,6 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
   },
   addButtonText: { color: "#fff", fontSize: 12, fontWeight: "bold" },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalBox: {
-    backgroundColor: "#fff",
-    width: "80%",
-    borderRadius: 8,
-    padding: 15,
-  },
-  modalTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10 },
-  modalActions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 10,
-  },
-  modalBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginLeft: 10,
-    borderRadius: 4,
-  },
-  modalBtnText: { fontSize: 14 },
   image: {
     width: 60,
     height: 60,

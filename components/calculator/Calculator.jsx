@@ -10,7 +10,7 @@ import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const Calculator = ({ db }) => {
-  const id = SessionStorage.getItem("employee_id");
+  const parent_id = SessionStorage.getItem("employee_id");
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
@@ -21,8 +21,8 @@ const Calculator = ({ db }) => {
     { name: "13th Month Pay", icon: "card-giftcard" },
   ];
 
-  const [record, setRecord] = useState({
-    id: id,
+  const [parent, setParent] = useState({
+    id: parent_id,
     first_name: "",
     last_name: "",
     rate: "",
@@ -31,26 +31,80 @@ const Calculator = ({ db }) => {
 
   const [selectedTab, setSelectedTab] = useState("Basic Wage");
 
-  const renderForm = () => {
-    if (["Overtime Pay", "Night Differential"].includes(selectedTab)) {
-      return <Text>No Tab Selected</Text>;
-    } else {
-      return (
-        <>
-          <Form />
-        </>
-      );
+  const [values, setValues] = useState({
+    "Basic Wage": {
+      start_date: "",
+      end_date: "",
+      daysOrHours: "",
+      total: "",
+    },
+    "Holiday Pay": {
+      start_date: "",
+      end_date: "",
+      daysOrHours: "",
+      total: "",
+    },
+    "Premium Pay": {
+      start_date: "",
+      end_date: "",
+      daysOrHours: "",
+      total: "",
+    },
+    "Overtime Pay": {
+      start_date: "",
+      end_date: "",
+      daysOrHours: "",
+      total: "",
+    },
+    "Night Differential": {
+      start_date: "",
+      end_date: "",
+      daysOrHours: "",
+      total: "",
+    },
+    "13th Month Pay": {
+      start_date: "",
+      end_date: "",
+      daysOrHours: "",
+      total: "",
+    },
+  });
+
+  const handleChange = (type, key, value) => {
+    if (key.endsWith("_date")) {
+      value = value.toISOString().split("T")[0];
     }
+
+    setValues((prev) => ({
+      ...prev,
+      [type]: {
+        ...values[type],
+        [key]: value,
+      },
+    }));
+  };
+
+  const renderForm = () => {
+    console.log(values);
+    return (
+      <Form
+        db={db}
+        parent={parent}
+        type={selectedTab}
+        valuesState={[values, setValues]}
+        handleInitialChange={handleChange}
+      />
+    );
   };
 
   useEffect(() => {
     const getRecords = async () => {
       const data = await db.query.employees.findMany({
-        where: eq(employees.id, id),
+        where: eq(employees.id, parent_id),
       });
       console.log(data);
       const employee = data[0];
-      setRecord(employee);
+      setParent(employee);
     };
 
     getRecords();

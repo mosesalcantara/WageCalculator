@@ -20,7 +20,6 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
 
   const addRecord = async () => {
     try {
-      console.log()
       await db
         .insert(employees)
         .values({ ...values, establishment_id: parent.id });

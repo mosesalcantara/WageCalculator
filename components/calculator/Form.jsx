@@ -10,27 +10,14 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { styles } from "./styles";
 
-const Form = () => {
+const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
   const [startDateModalVisible, setStartDateModalVisible] = useState(false);
   const [endDateModalVisible, setEndDateModalVisible] = useState(false);
 
-  const [values, setValues] = useState({
-    start_date: "",
-    end_date: "",
-    days: "",
-  });
-
-  const [total, setTotal] = useState(0);
+  const [values, setValues] = valuesState;
 
   const handleChange = (key, value) => {
-    if (key.endsWith("_date")) {
-      value = value.toISOString().split("T")[0];
-    }
-
-    setValues((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    handleInitialChange(type, key, value);
 
     if (key == "start_date") {
       setStartDateModalVisible(false);
@@ -40,13 +27,17 @@ const Form = () => {
   };
 
   const calculate = () => {
-    const actualRate = 400;
+    const actualRate = parent.rate;
     const minimumRate = 430;
     let rate = 0;
 
     actualRate < minimumRate ? (rate = minimumRate) : (rate = actualRate);
-    const total = rate * (values.days || 0);
-    setTotal(total);
+    const total = rate * (values[type].daysOrHours || 0);
+    handleChange("total", total);
+  };
+
+  const checkType = () => {
+    return ["Overtime Pay", "Night Differential"].includes(type);
   };
 
   return (
@@ -58,7 +49,7 @@ const Form = () => {
             style={[styles.input, styles.dateField]}
             onPress={() => setStartDateModalVisible(true)}
           >
-            <Text>{values.start_date || "Select start date"}</Text>
+            <Text>{values[type].start_date || "Select start date"}</Text>
             <Icon name="date-range" size={20} color="#555" />
           </TouchableOpacity>
 
@@ -67,17 +58,17 @@ const Form = () => {
             style={[styles.input, styles.dateField]}
             onPress={() => setEndDateModalVisible(true)}
           >
-            <Text>{values.end_date || "Select end date"}</Text>
+            <Text>{values[type].end_date || "Select end date"}</Text>
             <Icon name="date-range" size={20} color="#555" />
           </TouchableOpacity>
 
-          <Text style={styles.label}>Days</Text>
+          <Text style={styles.label}>{checkType() ? "Hours" : "Days"}</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
-            placeholder="Enter days"
-            value={values.days}
-            onChangeText={(value) => handleChange("days", value)}
+            placeholder={`Enter ${checkType() ? "hours" : "days"}`}
+            value={values[type].daysOrHours}
+            onChangeText={(value) => handleChange("daysOrHours", value)}
           />
 
           <View style={{ marginTop: 20 }}>
@@ -87,7 +78,12 @@ const Form = () => {
 
             <View style={styles.resultBox}>
               <Text style={styles.resultLabel}>Total:</Text>
-              <Text style={styles.resultValue}>₱ {total.toFixed(2)}</Text>
+              <Text style={styles.resultValue}>
+                ₱{" "}
+                {(values[type].total || 0).toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                })}
+              </Text>
             </View>
           </View>
         </ScrollView>
