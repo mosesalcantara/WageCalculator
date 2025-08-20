@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { styles } from "./styles";
@@ -19,6 +13,14 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
 
   const [values, setValues] = valuesState;
 
+  const isBelowMinimum = () => {
+    return actualRate < minimumRate;
+  };
+
+  const checkType = () => {
+    return ["Overtime Pay", "Night Differential"].includes(type);
+  };
+
   const handleChange = (key, value) => {
     handleInitialChange(type, key, value);
 
@@ -29,10 +31,6 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     }
   };
 
-  const isBelowMinimum = () => {
-    return actualRate < minimumRate;
-  };
-
   const calculate = () => {
     let total = 0;
     let rate = 0;
@@ -40,7 +38,7 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     const daysOrHours = values[type].daysOrHours;
 
     if (type == "Basic Wage") {
-      if (!isBelowMinimum()) {
+      if (isBelowMinimum()) {
         total = (minimumRate - actualRate) * (daysOrHours || 0);
         handleChange("total", total);
       }
@@ -53,84 +51,78 @@ const Form = ({ db, parent, type, valuesState, handleInitialChange }) => {
     } else if (type == "Night Differential") {
       total = (rate / 8) * 0.1 * daysOrHours;
     } else if (type == "13th Month Pay") {
-      total = ((rate * daysOrHours) / 12) - values[type].received;
+      total = (rate * daysOrHours) / 12 - values[type].received;
     }
     handleChange("total", total);
   };
 
-  const checkType = () => {
-    return ["Overtime Pay", "Night Differential"].includes(type);
-  };
-
   return (
     <>
-      <View style={{ ...styles.container, padding: 10 }}>
-        <ScrollView style={styles.content}>
-          <Text style={{ ...styles.label, fontSize: 20, textAlign: "center" }}>
-            {`${parent.first_name} ${parent.last_name} - ${(
-              parent.rate || 0
-            ).toLocaleString("en-US", {
+      <View style={{ paddingHorizontal: 40 }}>
+        <View>
+          <View>
+            <Text style={styles.label}>Start Date</Text>
+            <TouchableOpacity
+              style={[styles.input, styles.dateField]}
+              onPress={() => setStartDateModalVisible(true)}
+            >
+              <Text>{values[type].start_date || "Select start date"}</Text>
+              <Icon name="date-range" size={20} color="#555" />
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <Text style={styles.label}>End Date</Text>
+            <TouchableOpacity
+              style={[styles.input, styles.dateField]}
+              onPress={() => setEndDateModalVisible(true)}
+            >
+              <Text>{values[type].end_date || "Select end date"}</Text>
+              <Icon name="date-range" size={20} color="#555" />
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <Text style={styles.label}>{checkType() ? "Hours" : "Days"}</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              placeholder={`Enter ${checkType() ? "hours" : "days"}`}
+              value={values[type].daysOrHours}
+              onChangeText={(value) => handleChange("daysOrHours", value)}
+            />
+          </View>
+
+          <View>
+            {type == "13th Month Pay" && (
+              <>
+                <Text style={styles.label}>Received</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  placeholder={`Enter pay received`}
+                  value={values[type].received}
+                  onChangeText={(value) => handleChange("received", value)}
+                />
+              </>
+            )}
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.calcAction} onPress={calculate}>
+          <Text style={styles.calcActionText}>Calculate</Text>
+        </TouchableOpacity>
+
+        <View style={styles.resultBox}>
+          <Text style={styles.resultLabel}>Total:</Text>
+          <Text style={styles.resultValue}>
+            ₱{" "}
+            {(values[type].total || 0).toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
-            })}`}
+            })}
           </Text>
-          <Text style={styles.label}>Start Date</Text>
-          <TouchableOpacity
-            style={[styles.input, styles.dateField]}
-            onPress={() => setStartDateModalVisible(true)}
-          >
-            <Text>{values[type].start_date || "Select start date"}</Text>
-            <Icon name="date-range" size={20} color="#555" />
-          </TouchableOpacity>
-
-          <Text style={styles.label}>End Date</Text>
-          <TouchableOpacity
-            style={[styles.input, styles.dateField]}
-            onPress={() => setEndDateModalVisible(true)}
-          >
-            <Text>{values[type].end_date || "Select end date"}</Text>
-            <Icon name="date-range" size={20} color="#555" />
-          </TouchableOpacity>
-
-          <Text style={styles.label}>{checkType() ? "Hours" : "Days"}</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            placeholder={`Enter ${checkType() ? "hours" : "days"}`}
-            value={values[type].daysOrHours}
-            onChangeText={(value) => handleChange("daysOrHours", value)}
-          />
-
-          {type == "13th Month Pay" && (
-            <>
-              <Text style={styles.label}>Received</Text>
-              <TextInput
-                style={styles.input}
-                keyboardType="numeric"
-                placeholder={`Enter pay received`}
-                value={values[type].received}
-                onChangeText={(value) => handleChange("received", value)}
-              />
-            </>
-          )}
-
-          <View style={{ marginTop: 20 }}>
-            <TouchableOpacity style={styles.calcAction} onPress={calculate}>
-              <Text style={styles.calcActionText}>Calculate</Text>
-            </TouchableOpacity>
-
-            <View style={styles.resultBox}>
-              <Text style={styles.resultLabel}>Total:</Text>
-              <Text style={styles.resultValue}>
-                ₱{" "}
-                {(values[type].total || 0).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
+        </View>
       </View>
 
       <DateTimePickerModal

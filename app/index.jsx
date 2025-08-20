@@ -43,8 +43,11 @@ const HomePage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const data = await db.query.establishments.findMany();
-      console.log(data);
+      const data = await db.query.establishments.findMany({
+        with: {
+          employees: true,
+        }
+      });
       setRecords(data);
     };
 
@@ -88,6 +91,7 @@ const HomePage = () => {
         )}
       />
 
+      <Link href="/calculator">Calculator</Link>
       <Link href="/pdf">Go to PDF</Link>
 
       <AddEstablishmentModal db={db} setMutations={setMutations} />

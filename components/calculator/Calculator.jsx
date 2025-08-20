@@ -35,6 +35,7 @@ const Calculator = ({ db }) => {
     last_name: "",
     rate: "",
     establishment_id: "",
+    violations: "",
   });
 
   const [selectedTab, setSelectedTab] = useState("Basic Wage");
@@ -120,7 +121,7 @@ const Calculator = ({ db }) => {
 
   useEffect(() => {
     const handleBackPress = () => {
-      console.log(5);
+      addRecord();
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -132,14 +133,15 @@ const Calculator = ({ db }) => {
       const parentQuery = await db.query.employees.findFirst({
         where: eq(employees.id, parent_id),
       });
-      setParent(parentQuery);
 
       const violationsQuery = await db.query.violations.findFirst({
         where: eq(violations.employee_id, parent_id),
       });
-
       const values = JSON.parse(violationsQuery.values);
+
+      setParent({ ...parentQuery, violations: values });
       setValues(values);
+      console.log(values)
     };
 
     getRecords();
@@ -193,29 +195,19 @@ const Calculator = ({ db }) => {
         </ScrollView>
       </View>
 
-      <View>
-        <ScrollView style={styles.content}>
-          <View style={styles.card}>{renderForm(selectedTab)}</View>
-        </ScrollView>
+      <View style={{ paddingVertical: 15 }}>
+        <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
+          {`${parent.first_name} ${parent.last_name} - ${(
+            parent.rate || 0
+          ).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`}
+        </Text>
       </View>
 
-      <View style={{ marginHorizontal: 20 }}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#000",
-            padding: 12,
-            borderRadius: 30,
-            marginTop: 20,
-            marginBottom: 30,
-          }}
-          onPress={addRecord}
-        >
-          <Text
-            style={{ color: "#fff", textAlign: "center", fontWeight: "bold" }}
-          >
-            Save
-          </Text>
-        </TouchableOpacity>
+      <View style={{ height: 450 }}>
+        <ScrollView>{renderForm(selectedTab)}</ScrollView>
       </View>
     </View>
   );

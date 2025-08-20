@@ -63,7 +63,6 @@ const EmployeesPage = () => {
           employees: true,
         },
       });
-      console.log(data);
       setParent(data);
       setRecords(data.employees);
     };

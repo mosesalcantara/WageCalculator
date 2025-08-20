@@ -34,11 +34,10 @@ export const styles = StyleSheet.create({
   calcButtonActive: { backgroundColor: "#2c3e50", borderColor: "#2c3e50" },
   calcButtonText: { marginLeft: 6, fontSize: 14, color: "#555" },
   calcButtonTextActive: { color: "#fff" },
-  content: { padding: 15 },
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    elevation: 2,
+    borderWidth: 5,
   },
   label: {
     fontSize: 14,
@@ -52,9 +51,9 @@ export const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 6,
     paddingHorizontal: 10,
-    height: 40,
     backgroundColor: "#fafafa",
     justifyContent: "center",
+    height: 40,
   },
   dateField: {
     flexDirection: "row",

@@ -54,7 +54,6 @@ export default function Pdf() {
       });
 
       Alert.alert("PDF Generated", `Saved at: ${file.filePath}`);
-      console.log("PDF Path:", file.filePath);
     } catch (error) {
       console.error(error);
     }
