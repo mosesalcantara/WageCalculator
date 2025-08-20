@@ -119,10 +119,12 @@ const Calculator = ({ db }) => {
     }
   };
 
+  const numToLetter = (index) => {
+    return String.fromCharCode(65 + index);
+  };
+
   useEffect(() => {
-    const handleBackPress = () => {
-      addRecord();
-    };
+    const handleBackPress = () => {};
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -141,7 +143,6 @@ const Calculator = ({ db }) => {
 
       setParent({ ...parentQuery, violations: values });
       setValues(values);
-      console.log(values)
     };
 
     getRecords();
@@ -207,7 +208,31 @@ const Calculator = ({ db }) => {
       </View>
 
       <View style={{ height: 450 }}>
-        <ScrollView>{renderForm(selectedTab)}</ScrollView>
+        <ScrollView>
+          <View style={{ gap: 30 }}>
+            {renderForm(selectedTab)}
+            {renderForm(selectedTab)}
+          </View>
+        </ScrollView>
+      </View>
+
+      <View style={{ marginHorizontal: 20 }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#000",
+            padding: 12,
+            borderRadius: 30,
+            marginTop: 20,
+            marginBottom: 30,
+          }}
+          onPress={addRecord}
+        >
+          <Text
+            style={{ color: "#fff", textAlign: "center", fontWeight: "bold" }}
+          >
+            Save
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
