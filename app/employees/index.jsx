@@ -1,7 +1,7 @@
-import AddEmployeeModal from "@/components/AddEmployeeModal/AddEmployeeModal";
 import confirmAlert from "@/components/ConfirmAlert";
-import NavBar from "@/components/NavBar/NavBar";
-import UpdateEmployeeModal from "@/components/UpdateEmployeeModal/UpdateEmployeeModal";
+import AddEmployeeModal from "@/components/Modal/AddEmployeeModal";
+import UpdateEmployeeModal from "@/components/Modal/UpdateEmployeeModal";
+import NavBar from "@/components/NavBar";
 import * as schema from "@/db/schema";
 import { employees, establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { styles } from "./styles";
+import styles from "./styles";
 
 const EmployeesPage = () => {
   const router = useRouter();

@@ -1,7 +1,7 @@
 import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import { styles } from "@/components/Calculator/styles";
+import styles from "@/components/Calculator/styles";
 import { employees, violations } from "@/db/schema";
 import { formatNumber, inputFormat } from "@/utils/utils";
 import { eq } from "drizzle-orm";

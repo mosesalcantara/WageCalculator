@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import * as Yup from "yup";
-import { styles } from "./styles";
+import styles from "./styles";
 import { establishments } from "@/db/schema";
 
 const AddEstablishmentModal = ({ db, setMutations }) => {

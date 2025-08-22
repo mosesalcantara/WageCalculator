@@ -1,7 +1,7 @@
-import AddEstablishmentModal from "@/components/AddEstablishmentModal/AddEstablishmentModal";
+import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
 import confirmAlert from "@/components/ConfirmAlert";
-import NavBar from "@/components/NavBar/NavBar";
-import UpdateEstablishmentModal from "@/components/UpdateEstablishmentModal/UpdateEstablishmentModal";
+import NavBar from "@/components/NavBar";
+import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModal";
 import * as schema from "@/db/schema";
 import { employees, establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { styles } from "./styles";
+import styles from "./styles";
 
 const HomePage = () => {
   const router = useRouter();

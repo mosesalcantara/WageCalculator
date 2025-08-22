@@ -1,5 +1,5 @@
 import Pdf from "@/components/pdf/Pdf";
-import NavBar from "@/components/NavBar/NavBar";
+import NavBar from "@/components/NavBar";
 
 export default function PdfPage() {
   return (

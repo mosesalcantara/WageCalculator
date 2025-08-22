@@ -1,6 +1,5 @@
-import React from 'react';
-import { View, Button, Alert } from 'react-native';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import { Alert, Button, View } from "react-native";
+import RNHTMLtoPDF from "react-native-html-to-pdf";
 
 export default function Pdf() {
   const exportPDF = async () => {
@@ -31,8 +30,12 @@ export default function Pdf() {
               <p style="font-weight: bold; margin: 5px 0;">${name}</p>
               <p style="margin: 3px 0; font-size: 14px;">Actual Rate: Php ${actualRate}/day</p>
               <p style="margin: 3px 0; font-size: 14px;">Period: ${startDate} – ${endDate} (${days} days)</p>
-              <p style="margin: 3px 0; font-size: 14px;">Prevailing Rate: Php ${prevRate.toFixed(2)} (RB - MIMAROPA-12)</p>
-              <p style="margin: 3px 0; font-size: 14px;">Php ${prevRate.toFixed(2)} – ${deductionRate.toFixed(2)} x ${days} days</p>
+              <p style="margin: 3px 0; font-size: 14px;">Prevailing Rate: Php ${prevRate.toFixed(
+                2
+              )} (RB - MIMAROPA-12)</p>
+              <p style="margin: 3px 0; font-size: 14px;">Php ${prevRate.toFixed(
+                2
+              )} – ${deductionRate.toFixed(2)} x ${days} days</p>
               <p style="font-weight: bold; margin-top: 10px;">TOTAL = ${total.toLocaleString()}</p>
 
               <hr style="border: none; border-top: 1px dashed #555; margin: 10px 0;">
@@ -49,8 +52,8 @@ export default function Pdf() {
     try {
       let file = await RNHTMLtoPDF.convert({
         html: htmlContent,
-        fileName: 'wage-calculator',
-        directory: 'Download',
+        fileName: "wage-calculator",
+        directory: "Download",
       });
 
       Alert.alert("PDF Generated", `Saved at: ${file.filePath}`);

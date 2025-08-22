@@ -1,32 +1,32 @@
-import { styles } from "@/components/AddEstablishmentModal/styles";
 import { employees } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
+import styles from "./styles";
 
-const AddEmployeeModal = ({ db, setMutations, parent }) => {
+const UpdateEmployeeModal = ({
+  db,
+  setMutations,
+  values,
+  isUpdateModalVisibleState,
+}) => {
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().trim().required().label("First Name"),
     last_name: Yup.string().trim().required().label("Last Name"),
     rate: Yup.number().typeError().required().label("Rate"),
   });
 
-  const initialValues = {
-    first_name: "",
-    last_name: "",
-    rate: "",
-  };
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const initialValues = values;
+  const [isUpdateModalVisible, setIsUpdateModalVisible] =
+    isUpdateModalVisibleState;
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      await db
-        .insert(employees)
-        .values({ ...values, establishment_id: parent.id });
+      await db.update(employees).set(values).where(eq(employees.id, values.id));
       setMutations((prev) => ++prev);
       resetForm();
-      setIsAddModalVisible(false);
+      setIsUpdateModalVisible(false);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message || "An Error Eccurred");
@@ -35,18 +35,11 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setIsAddModalVisible(true)}
-      >
-        <Text style={styles.addText}>Add Employee</Text>
-      </TouchableOpacity>
-
       <Modal
         animationType="slide"
         transparent
-        visible={isAddModalVisible}
-        onRequestClose={() => setIsAddModalVisible(false)}
+        visible={isUpdateModalVisible}
+        onRequestClose={() => setIsUpdateModalVisible(false)}
       >
         <Formik
           initialValues={initialValues}
@@ -117,7 +110,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                 >
                   <TouchableOpacity
                     style={[styles.actionButton, { marginRight: 8 }]}
-                    onPress={() => setIsAddModalVisible(false)}
+                    onPress={() => setIsUpdateModalVisible(false)}
                   >
                     <Text style={styles.actionText}>Cancel</Text>
                   </TouchableOpacity>
@@ -126,7 +119,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                     style={styles.actionButton}
                     onPress={handleSubmit}
                   >
-                    <Text style={styles.actionText}>Save</Text>
+                    <Text style={styles.actionText}>Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -138,4 +131,4 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
   );
 };
 
-export default AddEmployeeModal;
+export default UpdateEmployeeModal;

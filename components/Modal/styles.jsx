@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   addButton: {
     backgroundColor: "#000",
     padding: 12,
@@ -43,3 +43,5 @@ export const styles = StyleSheet.create({
   },
   actionText: { fontWeight: "bold" },
 });
+
+export default styles;

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: "#acb6e2ff" },
   header: {
     fontSize: 20,
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   moreButton: {
     backgroundColor: "#1E90FF",
     paddingVertical: 5,
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
     borderRadius: 5,
     alignSelf: "flex-end",
   },
@@ -66,3 +66,5 @@ export const styles = StyleSheet.create({
   },
   tableCell: { flex: 1, textAlign: "center" },
 });
+
+export default styles;

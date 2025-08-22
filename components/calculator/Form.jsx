@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { styles } from "./styles";
+import styles from "./styles";
 
 const Form = ({ db, parent, type, index, valuesState }) => {
   const actualRate = parent.rate;
