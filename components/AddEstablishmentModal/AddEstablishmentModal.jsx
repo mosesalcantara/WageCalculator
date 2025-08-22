@@ -67,6 +67,7 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
             <Text style={styles.label}>Name:</Text>
             <TextInput
               style={styles.input}
+              placeholder="Enter name"
               value={values.name}
               onChangeText={(value) => handleChange("name", value)}
             />
@@ -77,26 +78,27 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
                 { label: "Agriculture", value: "Agriculture" },
                 { label: "Non-Agriculture", value: "Non-Agriculture" },
               ]}
-              placeholder="Select Type"
+              placeholder="Select type"
               valueState={[values.type, setType]}
             />
 
             <Text style={styles.label}>Address:</Text>
             <TextInput
               style={styles.input}
+              placeholder="Enter address"
               value={values.address}
               onChangeText={(value) => handleChange("address", value)}
             />
 
             <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
               <TouchableOpacity
-                style={[styles.saveButton, { marginRight: 8 }]}
+                style={[styles.actionButton, { marginRight: 8 }]}
                 onPress={() => setIsAddModalVisible(false)}
               >
-                <Text style={styles.saveText}>Cancel</Text>
+                <Text style={styles.actionText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.saveButton} onPress={addRecord}>
-                <Text style={styles.saveText}>Save</Text>
+              <TouchableOpacity style={styles.actionButton} onPress={addRecord}>
+                <Text style={styles.actionText}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>

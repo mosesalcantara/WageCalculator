@@ -2,7 +2,7 @@ import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
+import { styles } from "@/components/AddEstablishmentModal/styles";
 
 const UpdateEstablishmentModal = ({
   db,
@@ -58,6 +58,7 @@ const UpdateEstablishmentModal = ({
             <Text style={styles.label}>Name:</Text>
             <TextInput
               style={styles.input}
+              placeholder="Enter name"
               value={values.name}
               onChangeText={(value) => handleChange("name", value)}
             />
@@ -68,31 +69,32 @@ const UpdateEstablishmentModal = ({
                 { label: "Agriculture", value: "Agriculture" },
                 { label: "Non-Agriculture", value: "Non-Agriculture" },
               ]}
-              placeholder="Select Type"
+              placeholder="Select type"
               valueState={[values.type, setType]}
             />
 
             <Text style={styles.label}>Address:</Text>
             <TextInput
               style={styles.input}
+              placeholder="Enter address"
               value={values.address}
               onChangeText={(value) => handleChange("address", value)}
             />
 
             <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
               <TouchableOpacity
-                style={[styles.updateButton, { marginRight: 8 }]}
+                style={[styles.actionButton, { marginRight: 8 }]}
                 onPress={() => setIsUpdateModalVisible(false)}
               >
-                <Text style={styles.updateText}>Cancel</Text>
+                <Text style={styles.actionText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.updateButton}
+                style={styles.actionButton}
                 onPress={() => {
                   updateRecord();
                 }}
               >
-                <Text style={styles.updateText}>Update</Text>
+                <Text style={styles.actionText}>Update</Text>
               </TouchableOpacity>
             </View>
           </View>

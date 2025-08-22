@@ -7,11 +7,27 @@ const Select = ({ options, placeholder = "Select Item", valueState }) => {
   const [isFocus, setIsFocus] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        backgroundColor: "white",
+        padding: 7,
+        marginTop: 3,
+        borderRadius: 5,
+      }}
+    >
       <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
+        style={[
+          {
+            height: 27,
+          },
+          isFocus && { borderColor: "blue" },
+        ]}
+        placeholderStyle={{
+          fontSize: 14,
+        }}
+        selectedTextStyle={{
+          fontSize: 14,
+        }}
         data={options}
         labelField="label"
         valueField="value"

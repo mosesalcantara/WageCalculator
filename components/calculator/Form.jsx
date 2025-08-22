@@ -184,7 +184,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
                 <TextInput
                   style={styles.input}
                   keyboardType="numeric"
-                  placeholder={`Enter pay received`}
+                  placeholder="Enter pay received"
                   value={values[type].inputs[index].received}
                   onChangeText={(value) => handleChange("received", value)}
                 />

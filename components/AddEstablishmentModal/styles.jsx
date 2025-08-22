@@ -34,12 +34,12 @@ export const styles = StyleSheet.create({
     height: 35,
     marginTop: 2,
   },
-  saveButton: {
+  actionButton: {
     backgroundColor: "#fff",
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 4,
     marginTop: 10,
   },
-  saveText: { fontWeight: "bold" },
+  actionText: { fontWeight: "bold" },
 });

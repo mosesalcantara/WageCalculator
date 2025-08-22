@@ -1,34 +1,33 @@
-import { eq } from "drizzle-orm";
-import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { styles } from "@/components/UpdateEstablishmentModal/styles";
+import { styles } from "@/components/AddEstablishmentModal/styles";
 import { employees } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { Formik } from "formik";
+import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import * as Yup from "yup";
 
 const UpdateEmployeeModal = ({
   db,
   setMutations,
-  valuesState,
+  values,
   isUpdateModalVisibleState,
 }) => {
-  const [values, setValues] = valuesState;
+  console.log(values);
+  const validationSchema = Yup.object().shape({
+    first_name: Yup.string().trim().required().label("First Name"),
+    last_name: Yup.string().trim().required().label("Last Name"),
+    rate: Yup.number().typeError().required().label("Rate"),
+  });
+
+  const initialValues = values;
   const [isUpdateModalVisible, setIsUpdateModalVisible] =
     isUpdateModalVisibleState;
 
-  const handleChange = (key, value) => {
-    setValues((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const updateRecord = async () => {
+  const onSubmit = async (values, { resetForm }) => {
     try {
-      await db
-        .update(employees)
-        .set(values)
-        .where(eq(employees.id, values.id));
-
-      setIsUpdateModalVisible(false);
+      await db.update(employees).set(values).where(eq(employees.id, values.id));
       setMutations((prev) => ++prev);
+      resetForm();
+      setIsUpdateModalVisible(false);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message || "An Error Eccurred");
@@ -43,47 +42,91 @@ const UpdateEmployeeModal = ({
         visible={isUpdateModalVisible}
         onRequestClose={() => setIsUpdateModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.form}>
-            <Text style={styles.label}>First Name:</Text>
-            <TextInput
-              style={styles.input}
-              value={values.first_name}
-              onChangeText={(value) => handleChange("first_name", value)}
-            />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleSubmit,
+            handleChange,
+            setFieldTouched,
+          }) => (
+            <View style={styles.modalOverlay}>
+              <View style={styles.form}>
+                <View>
+                  <Text style={styles.label}>First Name:</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter first name"
+                    value={values.first_name}
+                    onChangeText={handleChange("first_name")}
+                    onBlur={() => setFieldTouched("first_name")}
+                  />
+                  {touched.first_name && errors.first_name && (
+                    <Text style={{ color: "red", fontSize: 12 }}>
+                      {errors.first_name}
+                    </Text>
+                  )}
+                </View>
 
-            <Text style={styles.label}>Last Name:</Text>
-            <TextInput
-              style={styles.input}
-              value={values.last_name}
-              onChangeText={(value) => handleChange("last_name", value)}
-            />
+                <View>
+                  <Text style={styles.label}>Last Name:</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter last name"
+                    value={values.last_name}
+                    onChangeText={handleChange("last_name")}
+                    onBlur={() => setFieldTouched("last_name")}
+                  />
+                  {touched.last_name && errors.last_name && (
+                    <Text style={{ color: "red", fontSize: 12 }}>
+                      {errors.last_name}
+                    </Text>
+                  )}
+                </View>
 
-            <Text style={styles.label}>Rate:</Text>
-            <TextInput
-              style={styles.input}
-              value={values.rate}
-              onChangeText={(value) => handleChange("rate", value)}
-            />
+                <View>
+                  <Text style={styles.label}>Rate:</Text>
+                  <TextInput
+                    style={styles.input}
+                    keyboardType="numeric"
+                    placeholder="Enter rate"
+                    value={values.rate}
+                    onChangeText={handleChange("rate")}
+                    onBlur={() => setFieldTouched("rate")}
+                  />
+                  {touched.rate && errors.rate && (
+                    <Text style={{ color: "red", fontSize: 12 }}>
+                      {errors.rate}
+                    </Text>
+                  )}
+                </View>
 
-            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-              <TouchableOpacity
-                style={[styles.updateButton, { marginRight: 8 }]}
-                onPress={() => setIsUpdateModalVisible(false)}
-              >
-                <Text style={styles.updateText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.updateButton}
-                onPress={() => {
-                  updateRecord();
-                }}
-              >
-                <Text style={styles.updateText}>Update</Text>
-              </TouchableOpacity>
+                <View
+                  style={{ flexDirection: "row", justifyContent: "flex-end" }}
+                >
+                  <TouchableOpacity
+                    style={[styles.actionButton, { marginRight: 8 }]}
+                    onPress={() => setIsUpdateModalVisible(false)}
+                  >
+                    <Text style={styles.actionText}>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.actionText}>Update</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
+          )}
+        </Formik>
       </Modal>
     </>
   );
