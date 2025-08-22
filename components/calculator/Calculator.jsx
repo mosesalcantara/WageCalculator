@@ -3,11 +3,11 @@ import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { styles } from "@/components/Calculator/styles";
 import { employees, violations } from "@/db/schema";
+import { formatNumber, inputFormat } from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import { useEffect, useState } from "react";
 import {
   Alert,
-  BackHandler,
   Image,
   ScrollView,
   Text,
@@ -38,73 +38,19 @@ const Calculator = ({ db }) => {
     violations: "",
   });
 
-  const [selectedTab, setSelectedTab] = useState("Basic Wage");
+  const [type, setType] = useState("Basic Wage");
 
   const [values, setValues] = useState({
-    "Basic Wage": {
-      start_date: "",
-      end_date: "",
-      daysOrHours: "",
-      total: "",
-    },
-    "Holiday Pay": {
-      start_date: "",
-      end_date: "",
-      daysOrHours: "",
-      total: "",
-    },
-    "Premium Pay": {
-      start_date: "",
-      end_date: "",
-      daysOrHours: "",
-      total: "",
-    },
-    "Overtime Pay": {
-      start_date: "",
-      end_date: "",
-      daysOrHours: "",
-      total: "",
-    },
-    "Night Differential": {
-      start_date: "",
-      end_date: "",
-      daysOrHours: "",
-      total: "",
-    },
+    "Basic Wage": { inputs: [inputFormat, inputFormat], subtotal: "" },
+    "Holiday Pay": { inputs: [inputFormat], subtotal: "" },
+    "Premium Pay": { inputs: [inputFormat], subtotal: "" },
+    "Overtime Pay": { inputs: [inputFormat], subtotal: "" },
+    "Night Differential": { inputs: [inputFormat], subtotal: "" },
     "13th Month Pay": {
-      start_date: "",
-      end_date: "",
-      daysOrHours: "",
-      total: "",
-      received: "",
+      inputs: [{ ...inputFormat, received: "" }],
+      subtotal: "",
     },
   });
-
-  const handleChange = (type, key, value) => {
-    if (key.endsWith("_date")) {
-      value = value.toISOString().split("T")[0];
-    }
-
-    setValues((prev) => ({
-      ...prev,
-      [type]: {
-        ...values[type],
-        [key]: value,
-      },
-    }));
-  };
-
-  const renderForm = () => {
-    return (
-      <Form
-        db={db}
-        parent={parent}
-        type={selectedTab}
-        valuesState={[values, setValues]}
-        handleInitialChange={handleChange}
-      />
-    );
-  };
 
   const addRecord = async () => {
     try {
@@ -119,18 +65,7 @@ const Calculator = ({ db }) => {
     }
   };
 
-  const numToLetter = (index) => {
-    return String.fromCharCode(65 + index);
-  };
-
   useEffect(() => {
-    const handleBackPress = () => {};
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      handleBackPress
-    );
-
     const getRecords = async () => {
       const parentQuery = await db.query.employees.findFirst({
         where: eq(employees.id, parent_id),
@@ -139,15 +74,25 @@ const Calculator = ({ db }) => {
       const violationsQuery = await db.query.violations.findFirst({
         where: eq(violations.employee_id, parent_id),
       });
-      const values = JSON.parse(violationsQuery.values);
 
-      setParent({ ...parentQuery, violations: values });
-      setValues(values);
+      if (violationsQuery) {
+        const valuesJSONString = JSON.parse(violationsQuery.values);
+
+        setParent({
+          ...parentQuery,
+          violations: valuesJSONString,
+        });
+
+        setValues(valuesJSONString);
+      } else {
+        setParent({
+          ...parentQuery,
+          violations: values,
+        });
+      }
     };
 
     getRecords();
-
-    return () => backHandler.remove();
   }, []);
 
   return (
@@ -172,21 +117,21 @@ const Calculator = ({ db }) => {
               key={item.name}
               style={[
                 styles.calcButton,
-                selectedTab === item.name && styles.calcButtonActive,
+                type === item.name && styles.calcButtonActive,
               ]}
               onPress={() => {
-                setSelectedTab(item.name);
+                setType(item.name);
               }}
             >
               <Icon
                 name={item.icon}
                 size={18}
-                color={selectedTab === item.name ? "#fff" : "#555"}
+                color={type === item.name ? "#fff" : "#555"}
               />
               <Text
                 style={[
                   styles.calcButtonText,
-                  selectedTab === item.name && { color: "#fff" },
+                  type === item.name && { color: "#fff" },
                 ]}
               >
                 {item.name}
@@ -198,20 +143,28 @@ const Calculator = ({ db }) => {
 
       <View style={{ paddingVertical: 15 }}>
         <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
-          {`${parent.first_name} ${parent.last_name} - ${(
-            parent.rate || 0
-          ).toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
+          {`${parent.first_name} ${parent.last_name} - ${formatNumber(
+            parent.rate
+          )}`}
+        </Text>
+        <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
+          Subtotal: {formatNumber(values[type].subtotal)}
         </Text>
       </View>
 
       <View style={{ height: 450 }}>
         <ScrollView>
           <View style={{ gap: 30 }}>
-            {renderForm(selectedTab)}
-            {renderForm(selectedTab)}
+            {values[type].inputs.map((input, index) => (
+              <Form
+                key={index}
+                db={db}
+                parent={parent}
+                type={type}
+                index={index}
+                valuesState={[values, setValues]}
+              />
+            ))}
           </View>
         </ScrollView>
       </View>
