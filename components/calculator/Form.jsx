@@ -138,7 +138,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
       <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
         <View>
           <Text style={{ textAlign: "center" }}>
-            Period {values[type].inputs.length > 1 && numToLetter(index)}
+            Period {numToLetter(index)}
           </Text>
           <View>
             <Text style={styles.label}>Start Date</Text>
