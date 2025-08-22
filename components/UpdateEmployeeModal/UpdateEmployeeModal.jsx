@@ -11,7 +11,6 @@ const UpdateEmployeeModal = ({
   values,
   isUpdateModalVisibleState,
 }) => {
-  console.log(values);
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().trim().required().label("First Name"),
     last_name: Yup.string().trim().required().label("Last Name"),

@@ -97,7 +97,7 @@ const HomePage = () => {
       <UpdateEstablishmentModal
         db={db}
         setMutations={setMutations}
-        valuesState={[values, setValues]}
+        values={values}
         isUpdateModalVisibleState={[
           isUpdateModalVisible,
           setIsUpdateModalVisible,
