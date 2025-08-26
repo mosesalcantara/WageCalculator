@@ -4,7 +4,7 @@ export const inputFormat = {
   start_date: "",
   end_date: "",
   daysOrHours: "",
-  total: "",
+  total: "0",
 };
 
 export const formatNumber = (number) => {

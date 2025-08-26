@@ -1,7 +1,6 @@
 import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import styles from "./styles";
 import * as schema from "@/db/schema";
 import { employees, violations } from "@/db/schema";
 import { formatNumber, inputFormat } from "@/utils/utils";
@@ -19,6 +18,7 @@ import {
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import styles from "./styles";
 
 const Calculator = () => {
   const initialDb = useSQLiteContext();
@@ -46,7 +46,7 @@ const Calculator = () => {
   const [type, setType] = useState("Basic Wage");
 
   const [values, setValues] = useState({
-    "Basic Wage": { inputs: [inputFormat, inputFormat], subtotal: "" },
+    "Basic Wage": { inputs: [inputFormat], subtotal: "" },
     "Holiday Pay": { inputs: [inputFormat], subtotal: "" },
     "Premium Pay": { inputs: [inputFormat], subtotal: "" },
     "Overtime Pay": { inputs: [inputFormat], subtotal: "" },
@@ -98,7 +98,7 @@ const Calculator = () => {
     };
 
     getRecords();
-  }, []);
+  }, [values]);
 
   return (
     <View style={styles.container}>
