@@ -1,3 +1,5 @@
+import { isBefore, parse } from "date-fns";
+
 export const inputFormat = {
   start_date: "",
   end_date: "",
@@ -16,20 +18,23 @@ export const numToLetter = (index) => {
   return String.fromCharCode(65 + index);
 };
 
-export const isBelowMinimum = (rate) => {
-  const minimumRate = 430
-  return rate < minimumRate;
-};
+export const getRate = (start, actualRate) => {
+  let minimumRate = 0;
+  const date = parse(start, "yyyy-MM-dd", new Date());
 
-export const getRate = (start, end, rate) => {
-  const minimumRate = 430;
-  let result = 0;
+  isBefore(date, new Date(2024, 12, 23))
+    ? (minimumRate = 395)
+    : (minimumRate = 430);
 
-  if (rate < minimumRate) {
-    result = minimumRate;
-  } else {
-    result = rate;
-  }
+  let isBelow = false;
+  let rate = 0;
 
-  return result;
+  isBelow = actualRate < minimumRate;
+  isBelow ? (rate = minimumRate) : (rate = actualRate);
+
+  return {
+    minimumRate: minimumRate,
+    isBelow: isBelow,
+    rate: rate,
+  };
 };

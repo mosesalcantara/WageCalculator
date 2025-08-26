@@ -1,4 +1,4 @@
-import { formatNumber, inputFormat, numToLetter, isBelowMinimum} from "@/utils/utils";
+import { formatNumber, getRate, inputFormat, numToLetter } from "@/utils/utils";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -7,12 +7,13 @@ import styles from "./styles";
 
 const Form = ({ db, parent, type, index, valuesState }) => {
   const actualRate = parent.rate;
-  const minimumRate = 430;
 
   const [startDateModalVisible, setStartDateModalVisible] = useState(false);
   const [endDateModalVisible, setEndDateModalVisible] = useState(false);
 
   const [values, setValues] = valuesState;
+
+  const [isErrorDisplayed, setIsErrorDisplayed] = useState(false);
 
   const checkType = () => {
     return ["Overtime Pay", "Night Differential"].includes(type);
@@ -72,27 +73,37 @@ const Form = ({ db, parent, type, index, valuesState }) => {
     }
   };
 
-  const calculate = () => {
-    let total = 0;
-    let rate = 0;
-    isBelowMinimum(actualRate) ? (rate = minimumRate) : (rate = actualRate);
-    const daysOrHours = values[type].inputs[index].daysOrHours;
+  const validate = () => {
+    return Object.values(values[type].inputs[index]).every((value) => value);
+  };
 
-    if (type == "Basic Wage") {
-      if (isBelowMinimum(actualRate)) {
-        total = (minimumRate - actualRate) * (daysOrHours || 0);
+  const calculate = () => {
+    const isValid = validate();
+    let total = 0;
+
+    if (isValid) {
+      const startDate = values[type].inputs[index].start_date;
+      const daysOrHours = values[type].inputs[index].daysOrHours;
+      const { minimumRate, isBelow, rate } = getRate(startDate, actualRate);
+
+      if (type == "Basic Wage") {
+        if (isBelow) {
+          total = (minimumRate - actualRate) * (daysOrHours || 0);
+        }
+      } else if (type == "Holiday Pay") {
+        total = rate * (daysOrHours || 0);
+      } else if (type == "Premium Pay") {
+        total = rate * 0.3 * 2;
+      } else if (type == "Overtime Pay") {
+        total = (rate / 8) * 0.25 * daysOrHours;
+      } else if (type == "Night Differential") {
+        total = (rate / 8) * 0.1 * daysOrHours;
+      } else if (type == "13th Month Pay") {
+        total = (rate * daysOrHours) / 12 - values[type].inputs[index].received;
       }
-    } else if (type == "Holiday Pay") {
-      total = rate * (daysOrHours || 0);
-    } else if (type == "Premium Pay") {
-      total = rate * 0.3 * 2;
-    } else if (type == "Overtime Pay") {
-      total = (rate / 8) * 0.25 * daysOrHours;
-    } else if (type == "Night Differential") {
-      total = (rate / 8) * 0.1 * daysOrHours;
-    } else if (type == "13th Month Pay") {
-      total = (rate * daysOrHours) / 12 - values[type].inputs[index].received;
     }
+
+    setIsErrorDisplayed(!isValid);
     handleChange("total", total);
   };
 
@@ -186,6 +197,11 @@ const Form = ({ db, parent, type, index, valuesState }) => {
         </View>
 
         <View>
+          {isErrorDisplayed && (
+            <Text style={{ color: "red", textAlign: "center", marginTop: 5 }}>
+              All Fields are Required
+            </Text>
+          )}
           <TouchableOpacity style={styles.calcAction} onPress={calculate}>
             <Text style={styles.calcActionText}>Calculate</Text>
           </TouchableOpacity>
