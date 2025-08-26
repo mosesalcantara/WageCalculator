@@ -6,14 +6,11 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const Form = ({ db, parent, type, index, valuesState }) => {
-  const actualRate = parent.rate;
-
   const [startDateModalVisible, setStartDateModalVisible] = useState(false);
   const [endDateModalVisible, setEndDateModalVisible] = useState(false);
-
   const [values, setValues] = valuesState;
-
   const [isErrorDisplayed, setIsErrorDisplayed] = useState(false);
+  const target = values[type].inputs[index]
 
   const checkType = () => {
     return ["Overtime Pay", "Night Differential"].includes(type);
@@ -74,16 +71,17 @@ const Form = ({ db, parent, type, index, valuesState }) => {
   };
 
   const validate = () => {
-    return Object.values(values[type].inputs[index]).every((value) => value);
+    return Object.values(target).every((value) => value);
   };
 
   const calculate = () => {
     const isValid = validate();
+    const actualRate = parent.rate;
     let total = 0;
 
     if (isValid) {
-      const startDate = values[type].inputs[index].start_date;
-      const daysOrHours = values[type].inputs[index].daysOrHours;
+      const startDate = target.start_date;
+      const daysOrHours = target.daysOrHours;
       const { minimumRate, isBelow, rate } = getRate(startDate, actualRate);
 
       if (type == "Basic Wage") {
@@ -99,7 +97,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
       } else if (type == "Night Differential") {
         total = (rate / 8) * 0.1 * daysOrHours;
       } else if (type == "13th Month Pay") {
-        total = (rate * daysOrHours) / 12 - values[type].inputs[index].received;
+        total = (rate * daysOrHours) / 12 - target.received;
       }
     }
 
@@ -150,7 +148,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
               onPress={() => setStartDateModalVisible(true)}
             >
               <Text>
-                {values[type].inputs[index].start_date || "Select start date"}
+                {target.start_date || "Select start date"}
               </Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
@@ -163,7 +161,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
               onPress={() => setEndDateModalVisible(true)}
             >
               <Text>
-                {values[type].inputs[index].end_date || "Select end date"}
+                {target.end_date || "Select end date"}
               </Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
@@ -175,7 +173,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
               style={styles.input}
               keyboardType="numeric"
               placeholder={`Enter ${checkType() ? "hours" : "days"}`}
-              value={values[type].inputs[index].daysOrHours}
+              value={target.daysOrHours}
               onChangeText={(value) => handleChange("daysOrHours", value)}
             />
           </View>
@@ -188,7 +186,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
                   style={styles.input}
                   keyboardType="numeric"
                   placeholder="Enter pay received"
-                  value={values[type].inputs[index].received}
+                  value={target.received}
                   onChangeText={(value) => handleChange("received", value)}
                 />
               </>
@@ -210,7 +208,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
         <View style={styles.resultBox}>
           <Text style={styles.resultLabel}>Total:</Text>
           <Text style={styles.resultValue}>
-            ₱{formatNumber(values[type].inputs[index].total)}
+            ₱{formatNumber(target.total)}
           </Text>
         </View>
 
