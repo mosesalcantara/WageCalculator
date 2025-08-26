@@ -1,4 +1,4 @@
-import { formatNumber, inputFormat } from "@/utils/utils";
+import { formatNumber, inputFormat, numToLetter, isBelowMinimum} from "@/utils/utils";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -14,16 +14,8 @@ const Form = ({ db, parent, type, index, valuesState }) => {
 
   const [values, setValues] = valuesState;
 
-  const isBelowMinimum = () => {
-    return actualRate < minimumRate;
-  };
-
   const checkType = () => {
     return ["Overtime Pay", "Night Differential"].includes(type);
-  };
-
-  const numToLetter = (index) => {
-    return String.fromCharCode(65 + index);
   };
 
   const updateTotals = () => {
@@ -83,11 +75,11 @@ const Form = ({ db, parent, type, index, valuesState }) => {
   const calculate = () => {
     let total = 0;
     let rate = 0;
-    isBelowMinimum() ? (rate = minimumRate) : (rate = actualRate);
+    isBelowMinimum(actualRate) ? (rate = minimumRate) : (rate = actualRate);
     const daysOrHours = values[type].inputs[index].daysOrHours;
 
     if (type == "Basic Wage") {
-      if (isBelowMinimum()) {
+      if (isBelowMinimum(actualRate)) {
         total = (minimumRate - actualRate) * (daysOrHours || 0);
       }
     } else if (type == "Holiday Pay") {
