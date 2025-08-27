@@ -1,7 +1,7 @@
-import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
 import confirmAlert from "@/components/ConfirmAlert";
-import NavBar from "@/components/NavBar";
+import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
 import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModal";
+import NavBar from "@/components/NavBar";
 import * as schema from "@/db/schema";
 import { employees, establishments } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -36,9 +36,9 @@ const HomePage = () => {
     setMutations((prev) => ++prev);
   };
 
-  const setEstablishment = (id) => {
+  const setEstablishment = (id, route) => {
     SessionStorage.setItem("establishment_id", `${id}`);
-    router.push("/employees");
+    router.push(`/${route}`);
   };
 
   useEffect(() => {
@@ -65,11 +65,15 @@ const HomePage = () => {
         keyExtractor={(record) => record.id}
         renderItem={({ item }) => (
           <View style={styles.establishmentCard}>
-            <TouchableOpacity onPress={() => setEstablishment(item.id)}>
-              <Text style={styles.establishmentText}>{item.name}</Text>
-            </TouchableOpacity>
+            <Text style={styles.establishmentText}>{item.name}</Text>
 
-            <View style={{ flexDirection: "row", gap: 15 }}>
+            <View style={{ flexDirection: "row", gap: 3 }}>
+              <TouchableOpacity
+                onPress={() => setEstablishment(item.id, "employees")}
+              >
+                <Icon name="remove-red-eye" size={20} color="#2196F3" />
+              </TouchableOpacity>
+
               <TouchableOpacity
                 onPress={() => {
                   setValues(item);
@@ -85,6 +89,14 @@ const HomePage = () => {
                 }}
               >
                 <Icon name="delete" size={20} color="#E53935" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setEstablishment(item.id, "pdf");
+                }}
+              >
+                <Icon name="file-download" size={20} color="#2196F3" />
               </TouchableOpacity>
             </View>
           </View>

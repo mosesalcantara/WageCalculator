@@ -87,9 +87,6 @@ const EmployeesPage = () => {
               <Text style={[styles.cell, styles.headerCell, { flex: 1 }]}>
                 Rate
               </Text>
-              <Text style={[styles.cell, styles.headerCell, { flex: 1 }]}>
-                Underpay
-              </Text>
               <Text style={[styles.cell, styles.headerCell, { flex: 0.8 }]}>
                 Actions
               </Text>
@@ -110,8 +107,7 @@ const EmployeesPage = () => {
                 <Text style={[styles.cellText, { flex: 1 }]}>
                   {record.rate}
                 </Text>
-                <Text style={[styles.cellText, { flex: 1 }]}>0</Text>
-
+                
                 <View style={[styles.actionCell, { flex: 0.8 }]}>
                   <TouchableOpacity onPress={() => setEmployee(record.id)}>
                     <Icon name="remove-red-eye" size={20} color="#2196F3" />
