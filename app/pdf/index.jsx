@@ -56,8 +56,8 @@ const PDFPage = () => {
     let violationHtml = "";
     violation.inputs.map((input, index) => {
       violationHtml += `
-        <p>Period ${
-          violation.inputs.length > 1 ? numToLetter(index) : ""
+        <p>Period${
+          violation.inputs.length > 1 ? ` ${numToLetter(index)}` : ""
         }: ${formatDate(input.start_date)} to ${formatDate(
         input.end_date
       )} (${getDaysOrHours(key, input.daysOrHours)})</p>
