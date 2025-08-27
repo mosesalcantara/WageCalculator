@@ -1,7 +1,7 @@
 import NavBar from "@/components/NavBar";
 import * as schema from "@/db/schema";
 import { establishments } from "@/db/schema";
-import { numToLetter, formatDate } from "@/utils/utils";
+import { formatDate, formatNumber, getRate, numToLetter } from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as Print from "expo-print";
@@ -24,7 +24,10 @@ const PDFPage = () => {
     const violations = JSON.parse(employee.violations[0].values);
     const rate = employee.rate;
 
+    let total = 0;
+
     Object.keys(violations).forEach((key) => {
+      total += parseFloat(violations[key].subtotal || 0);
       let isValid = false;
 
       violations[key].inputs.forEach((input) => {
@@ -35,31 +38,140 @@ const PDFPage = () => {
         violationsHtml += `
           <p font-weight: bold;"><u>${
             key == "Holiday Pay" ? "Non-payment" : "Underpayment"
-          } of ${key}</u></p>
+          } of ${getType(key)}</u></p>
          
           ${renderViolation(key, violations[key], rate)}
+          
+          <br/>
         `;
       }
     });
+
+    violationsHtml += `<p>Total: Php${formatNumber(total)}</p>`;
 
     return violationsHtml;
   };
 
   const renderViolation = (key, violation, rate) => {
     let violationHtml = "";
-
     violation.inputs.map((input, index) => {
-      console.log(input);
       violationHtml += `
-        <p>Period${violation.inputs.length > 1 ? numToLetter(index) : ""}: ${
-        formatDate(input.start_date)
-      } to ${formatDate(input.end_date)} (${input.daysOrHours})</p>
-
-        
+        <p>Period${
+          violation.inputs.length > 1 ? numToLetter(index) : ""
+        }: ${formatDate(input.start_date)} to ${formatDate(
+        input.end_date
+      )} (${getDaysOrHours(key, input.daysOrHours)})</p>
+        ${renderFormula(key, input, rate)}
       `;
     });
 
     return violationHtml;
+  };
+
+  const getType = (key) => {
+    let keyword = key;
+
+    if (key == "Basic Wage") {
+      keyword = "Wages";
+    } else if (key == "Night Differential") {
+      keyword = "Night Shift Differential";
+    } else if (key == "Premium Pay") {
+      keyword = "Premium Pay on Special Day";
+    }
+
+    return keyword;
+  };
+
+  const getDaysOrHours = (key, daysOrHours) => {
+    let keyword = `${daysOrHours} `;
+    switch (key) {
+      case "Basic Wage":
+        keyword += "day";
+        break;
+      case "Overtime Pay":
+        keyword += "OT hour";
+        break;
+      case "Night Differential":
+        keyword += "night-shift hour";
+        break;
+      case "Premium Pay":
+        keyword += "special day";
+        break;
+      case "Holiday Pay":
+        keyword += "regular holiday";
+        break;
+      case "Premium Pay":
+        keyword += "special day";
+        break;
+      case "13th Month Pay":
+        keyword += "day";
+        break;
+    }
+    daysOrHours > 1 && (keyword += "s");
+    return keyword;
+  };
+
+  const renderFormula = (key, input, actualRate) => {
+    let formulatHtml = "";
+    const result = getRate(input.start_date, actualRate);
+
+    if (result.isBelow) {
+      formulatHtml += `<p>Prevailing Rate: Php${result.rate.toFixed(
+        2
+      )} (RB-MIMAROPA-12)</p>`;
+    } else {
+      let keyword = getDaysOrHours(key, input.daysOrHours);
+      let total = formatNumber(input.total);
+
+      switch (key) {
+        case "Basic Wage":
+          formulatHtml += `<p>Php${result.rate.toFixed(2)}-${actualRate.toFixed(
+            2
+          )} x ${input.daysOrHours} ${keyword}</p>`;
+          break;
+        case "Overtime Pay":
+          formulatHtml += `<p>Php${result.rate.toFixed(
+            2
+          )} / 8 x 25% x ${keyword} = Php${total}</p>`;
+          break;
+        case "Night Differential":
+          formulatHtml += `<p>Php${result.rate.toFixed(
+            2
+          )} / 8 x 10% x ${keyword} = Php${total}</p>`;
+          break;
+        case "Premium Pay":
+          formulatHtml += `<p>Php${result.rate.toFixed(
+            2
+          )} x 30% x ${keyword} = Php${total}</p>`;
+          break;
+        case "Holiday Pay":
+          formulatHtml += `<p>Php${result.rate.toFixed(
+            2
+          )} x ${keyword} = Php${total}</p>`;
+          break;
+        case "13th Month Pay":
+          const total13thMonth = formatNumber(
+            parseFloat(input.total) + parseFloat(input.received)
+          );
+          const received = formatNumber(input.received);
+
+          formulatHtml += `
+          <p>Php${result.rate.toFixed(
+            2
+          )} x ${keyword} / 12 months = Php${total13thMonth}</p>
+          <p>Actual 13th month pay received: Php${received}</p>
+          <p>Php ${total13thMonth} - ${received} = Php${formatNumber(
+            input.total
+          )}</p>
+          `;
+          break;
+        default:
+          formulatHtml += "";
+          break;
+      }
+
+      return formulatHtml;
+    }
   };
 
   useEffect(() => {
