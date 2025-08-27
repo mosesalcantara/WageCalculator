@@ -3,7 +3,7 @@ import AddEmployeeModal from "@/components/Modal/AddEmployeeModal";
 import UpdateEmployeeModal from "@/components/Modal/UpdateEmployeeModal";
 import NavBar from "@/components/NavBar";
 import * as schema from "@/db/schema";
-import { employees, establishments } from "@/db/schema";
+import { employees, establishments, violations } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useRouter } from "expo-router";
@@ -40,6 +40,7 @@ const EmployeesPage = () => {
 
   const deleteRecord = async (id) => {
     await db.delete(employees).where(eq(employees.id, id));
+    await db.delete(violations).where(eq(violations.employee_id, id));
     setMutations((prev) => ++prev);
   };
 

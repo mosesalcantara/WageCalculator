@@ -133,6 +133,26 @@ const Form = ({ db, parent, type, index, valuesState }) => {
     updateTotals();
   };
 
+  const clearInput = () => {
+    setValues((prev) => {
+      const updatedInputs = prev[type].inputs.map((input, inputIndex) => {
+        if (index == inputIndex) {
+          return inputFormat;
+        } else return input;
+      });
+
+      return {
+        ...prev,
+        [type]: {
+          inputs: updatedInputs,
+          subtotal: prev[type].subtotal,
+        },
+      };
+    });
+
+    updateTotals();
+  };
+
   return (
     <>
       <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
@@ -223,6 +243,10 @@ const Form = ({ db, parent, type, index, valuesState }) => {
               <Text>Remove</Text>
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity onPress={clearInput}>
+            <Text>Clear</Text>
+          </TouchableOpacity>
         </View>
       </View>
 

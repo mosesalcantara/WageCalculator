@@ -103,8 +103,6 @@ const EstablishmentPage = () => {
         )}
       />
 
-      <Link href="/pdf">Go to PDF</Link>
-
       <AddEstablishmentModal db={db} setMutations={setMutations} />
       <UpdateEstablishmentModal
         db={db}
