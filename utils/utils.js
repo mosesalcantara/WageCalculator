@@ -1,4 +1,4 @@
-import { isBefore, parse, format } from "date-fns";
+import { format, isBefore, parse, parseISO } from "date-fns";
 
 export const inputFormat = {
   start_date: "",
@@ -20,14 +20,17 @@ export const numToLetter = (index) => {
 
 export const formatDate = (date) => {
   date = parse(date, "yyyy-MM-dd", new Date());
-  return format(date, "dd MMMM yyyy")
-}
+  return format(date, "dd MMMM yyyy");
+};
+
+export const parseDate = (date) => {
+  return parseISO(new Date(date).toISOString());
+};
 
 export const getRate = (start, actualRate) => {
   let minimumRate = 0;
-  const date = parse(start, "yyyy-MM-dd", new Date());
 
-  isBefore(date, new Date(2024, 12, 23))
+  isBefore(parseDate(start), parseDate("2024-12-23"))
     ? (minimumRate = 395)
     : (minimumRate = 430);
 

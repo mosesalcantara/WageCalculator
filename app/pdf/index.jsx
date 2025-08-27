@@ -41,7 +41,7 @@ const PDFPage = () => {
           } of ${getType(key)}</u></p>
          
           ${renderViolation(key, violations[key], rate)}
-          
+
           <br/>
         `;
       }
@@ -56,7 +56,7 @@ const PDFPage = () => {
     let violationHtml = "";
     violation.inputs.map((input, index) => {
       violationHtml += `
-        <p>Period${
+        <p>Period ${
           violation.inputs.length > 1 ? numToLetter(index) : ""
         }: ${formatDate(input.start_date)} to ${formatDate(
         input.end_date
@@ -114,64 +114,64 @@ const PDFPage = () => {
   const renderFormula = (key, input, actualRate) => {
     let formulatHtml = "";
     const result = getRate(input.start_date, actualRate);
-
+    console.log(result);
     if (result.isBelow) {
       formulatHtml += `<p>Prevailing Rate: Php${result.rate.toFixed(
         2
       )} (RB-MIMAROPA-12)</p>`;
-    } else {
-      let keyword = getDaysOrHours(key, input.daysOrHours);
-      let total = formatNumber(input.total);
+    }
 
-      switch (key) {
-        case "Basic Wage":
-          formulatHtml += `<p>Php${result.rate.toFixed(2)}-${actualRate.toFixed(
-            2
-          )} x ${input.daysOrHours} ${keyword}</p>`;
-          break;
-        case "Overtime Pay":
-          formulatHtml += `<p>Php${result.rate.toFixed(
-            2
-          )} / 8 x 25% x ${keyword} = Php${total}</p>`;
-          break;
-        case "Night Differential":
-          formulatHtml += `<p>Php${result.rate.toFixed(
-            2
-          )} / 8 x 10% x ${keyword} = Php${total}</p>`;
-          break;
-        case "Premium Pay":
-          formulatHtml += `<p>Php${result.rate.toFixed(
-            2
-          )} x 30% x ${keyword} = Php${total}</p>`;
-          break;
-        case "Holiday Pay":
-          formulatHtml += `<p>Php${result.rate.toFixed(
-            2
-          )} x ${keyword} = Php${total}</p>`;
-          break;
-        case "13th Month Pay":
-          const total13thMonth = formatNumber(
-            parseFloat(input.total) + parseFloat(input.received)
-          );
-          const received = formatNumber(input.received);
+    let keyword = getDaysOrHours(key, input.daysOrHours);
+    let total = formatNumber(input.total);
 
-          formulatHtml += `
+    switch (key) {
+      case "Basic Wage":
+        formulatHtml += `<p>Php${result.rate.toFixed(2)} - ${actualRate.toFixed(
+          2
+        )} x ${keyword} = Php${total}</p>`;
+        break;
+      case "Overtime Pay":
+        formulatHtml += `<p>Php${result.rate.toFixed(
+          2
+        )} / 8 x 25% x ${keyword} = Php${total}</p>`;
+        break;
+      case "Night Differential":
+        formulatHtml += `<p>Php${result.rate.toFixed(
+          2
+        )} / 8 x 10% x ${keyword} = Php${total}</p>`;
+        break;
+      case "Premium Pay":
+        formulatHtml += `<p>Php${result.rate.toFixed(
+          2
+        )} x 30% x ${keyword} = Php${total}</p>`;
+        break;
+      case "Holiday Pay":
+        formulatHtml += `<p>Php${result.rate.toFixed(
+          2
+        )} x ${keyword} = Php${total}</p>`;
+        break;
+      case "13th Month Pay":
+        const total13thMonth = formatNumber(
+          parseFloat(input.total) + parseFloat(input.received)
+        );
+        const received = formatNumber(input.received);
+
+        formulatHtml += `
           <p>Php${result.rate.toFixed(
             2
           )} x ${keyword} / 12 months = Php${total13thMonth}</p>
           <p>Actual 13th month pay received: Php${received}</p>
           <p>Php ${total13thMonth} - ${received} = Php${formatNumber(
-            input.total
-          )}</p>
+          input.total
+        )}</p>
           `;
-          break;
-        default:
-          formulatHtml += "";
-          break;
-      }
-
-      return formulatHtml;
+        break;
+      default:
+        formulatHtml += "";
+        break;
     }
+
+    return formulatHtml;
   };
 
   useEffect(() => {
