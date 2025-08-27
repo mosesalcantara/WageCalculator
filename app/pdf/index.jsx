@@ -47,7 +47,7 @@ const PDFPage = () => {
       }
     });
 
-    violationsHtml += `<p>Total: Php${formatNumber(total)}</p>`;
+    violationsHtml += `<p style="text-align:right;"><u>Total: Php${formatNumber(total)}</u></p>`;
 
     return violationsHtml;
   };
@@ -128,27 +128,27 @@ const PDFPage = () => {
       case "Basic Wage":
         formulatHtml += `<p>Php${result.rate.toFixed(2)} - ${actualRate.toFixed(
           2
-        )} x ${keyword} = Php${total}</p>`;
+        )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Overtime Pay":
         formulatHtml += `<p>Php${result.rate.toFixed(
           2
-        )} / 8 x 25% x ${keyword} = Php${total}</p>`;
+        )} / 8 x 25% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Night Differential":
         formulatHtml += `<p>Php${result.rate.toFixed(
           2
-        )} / 8 x 10% x ${keyword} = Php${total}</p>`;
+        )} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Premium Pay":
         formulatHtml += `<p>Php${result.rate.toFixed(
           2
-        )} x 30% x ${keyword} = Php${total}</p>`;
+        )} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Holiday Pay":
         formulatHtml += `<p>Php${result.rate.toFixed(
           2
-        )} x ${keyword} = Php${total}</p>`;
+        )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
         const total13thMonth = formatNumber(
@@ -205,6 +205,10 @@ const PDFPage = () => {
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 0;
+          }
+          .value{
+              float: right;
+              font-weight: bold;
           }
           p {
             font-size: ${isPreview ? "40" : "16"}px;
