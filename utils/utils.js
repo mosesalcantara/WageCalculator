@@ -1,4 +1,4 @@
-import { isBefore, parse } from "date-fns";
+import { isBefore, parse, format } from "date-fns";
 
 export const inputFormat = {
   start_date: "",
@@ -17,6 +17,11 @@ export const formatNumber = (number) => {
 export const numToLetter = (index) => {
   return String.fromCharCode(65 + index);
 };
+
+export const formatDate = (date) => {
+  date = parse(date, "yyyy-MM-dd", new Date());
+  return format(date, "dd MMMM yyyy")
+}
 
 export const getRate = (start, actualRate) => {
   let minimumRate = 0;

@@ -14,7 +14,7 @@ import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const HomePage = () => {
+const EstablishmentPage = () => {
   const router = useRouter();
   const initialDb = useSQLiteContext();
   const db = drizzle(initialDb, { schema });
@@ -119,4 +119,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default EstablishmentPage;

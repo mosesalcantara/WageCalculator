@@ -1,10 +1,87 @@
 import NavBar from "@/components/NavBar";
+import * as schema from "@/db/schema";
+import { establishments } from "@/db/schema";
+import { numToLetter, formatDate } from "@/utils/utils";
+import { eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useState } from "react";
 import { Button, View } from "react-native";
+import SessionStorage from "react-native-session-storage";
 import { WebView } from "react-native-webview";
 
-const PDF = () => {
+const PDFPage = () => {
+  const initialDb = useSQLiteContext();
+  const db = drizzle(initialDb, { schema });
+  const id = SessionStorage.getItem("establishment_id");
+
+  const [record, setRecord] = useState(null);
+
+  const renderViolations = (employee) => {
+    let violationsHtml = "";
+    const violations = JSON.parse(employee.violations[0].values);
+    const rate = employee.rate;
+
+    Object.keys(violations).forEach((key) => {
+      let isValid = false;
+
+      violations[key].inputs.forEach((input) => {
+        isValid = Object.values(input).every((value) => value);
+      });
+
+      if (isValid) {
+        violationsHtml += `
+          <p font-weight: bold;"><u>${
+            key == "Holiday Pay" ? "Non-payment" : "Underpayment"
+          } of ${key}</u></p>
+         
+          ${renderViolation(key, violations[key], rate)}
+        `;
+      }
+    });
+
+    return violationsHtml;
+  };
+
+  const renderViolation = (key, violation, rate) => {
+    let violationHtml = "";
+
+    violation.inputs.map((input, index) => {
+      console.log(input);
+      violationHtml += `
+        <p>Period${violation.inputs.length > 1 ? numToLetter(index) : ""}: ${
+        formatDate(input.start_date)
+      } to ${formatDate(input.end_date)} (${input.daysOrHours})</p>
+
+        
+      `;
+    });
+
+    return violationHtml;
+  };
+
+  useEffect(() => {
+    const getRecords = async () => {
+      const data = await db.query.establishments.findFirst({
+        where: eq(establishments.id, id),
+        with: {
+          employees: {
+            with: {
+              violations: true,
+            },
+          },
+        },
+      });
+
+      console.log(data);
+      setRecord(data);
+    };
+
+    getRecords();
+  }, []);
+
   const generateHTML = (isPreview) => `
     <!DOCTYPE html>
     <html>
@@ -18,7 +95,7 @@ const PDF = () => {
             padding: 0;
           }
           p {
-            font-size: ${isPreview ? "40px" : "16px"};
+            font-size: ${isPreview ? "40" : "16"}px;
             line-height: ${isPreview ? "1.5" : "0.2"};
           }
           .period {
@@ -33,47 +110,22 @@ const PDF = () => {
       </head>
       <body>
         <h1 style="text-align: center; font-size: ${
-          isPreview ? "50" : "20"
-        }px; font-weight: bold; color: black;">Sample Report</h1>
-        <p style="font-weight: bold;">DELA CRUZ, JUAN BINOY</p>
-        <p>MINDORO STATE UNIVERSITY -CALAPAN CITY CAMPUS</p><hr>
-        <p font-weight: bold;">Actual Rate: Php 430/day</p>
-        <p font-weight: bold;"><u>Underpayment of Overtime Pay:</u></p>
-        <p>No. of hours: 21 hrs.</p>
-        <p>Rate per hour: Php 75.00</p>
-        <p>25% additional payment per hour: Php 18.75</p>
-        <p>21 hrs x Php 18.75 = <span style="font-weight: bold;">393.75</span></p><br>
+          isPreview ? "47" : "20"
+        }px; font-weight: bold; color: black;">${record.name.toUpperCase()}</h1>
+        ${record.employees.map(
+          (employee, index) =>
+            `        
+            <p style="font-weight: bold;">${
+              index + 1
+            }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</p>
+            <p font-weight: bold;">Actual Rate: Php ${employee.rate.toFixed(
+              2
+            )}/day</p>
+            <hr>
 
-        <p>No. of hours: 2 hrs</p>
-        <p>Rate per hour: Php 75.00</p>
-        <p>30% additional payment per hour: Php 22.50</p>
-        <p>2 hrs x Php 22.50 = <span style="font-weight: bold;">45.00</span></p><br>
-
-        <p style="font-weight: bold;"><u>Underpayment of Night Shift Differential</u></p>
-        <p>No. of hours: 9 hrs.</p>
-        <p>Rate per hour: Php 75.00</p>
-        <p>10% additional payment per hour: Php 7.50</p>
-        <p>9 hrs x Php 7.50 = <span style="font-weight: bold;">67.50</span></p><br>
-
-        <p style="font-weight: bold;"><u>Underpayment of Premium pay on Special Holiday(2023)</u></p>
-        <p>No. of SH: 4 days</p>
-        <p>Php 600.00 x 30% x 4 days = <span style="font-weight: bold;">720.00</span></p>
-
-        <p style="font-weight: bold;"><u>Underpayment of Premium pay on Special Holiday(2024)</u></p>
-        <p>No. of SH: 5 days before December 23, 2024</p>
-        <p>Php 600.00 x 7 days x 30% = <span style="font-weight: bold;">1260.00</span></p>
-
-        <p style="font-weight: bold;"><u>Non-payment of Regular Holiday Pay (2023)</u></p>
-        <p>No. of RH: 4 days</p>
-        <p>Php 600.00 x 4 days = <span style="font-weight: bold;">2400.00</span></p>
-
-        <p style="font-weight: bold;"><u>Non-payment of Regular Holiday Pay (2024)</u></p>
-        <p>No. of RH: 10 days</p>
-        <p>Php 600.00 x 10 days = <span style="font-weight: bold;">6000.00</span></p>
-
-        <p style="font-weight: bold;"><u>Non-payment of Regular Holiday Pay (2025)</u></p>
-        <p>No. of RH: 1 day</p>
-        <p>Php 600.00 x 1 day = <span style="font-weight: bold;">600.00</span></p>
+            ${renderViolations(employee)}
+          `
+        )}
       </body>
     </html>
   `;
@@ -96,18 +148,22 @@ const PDF = () => {
 
   return (
     <>
-      <NavBar />
+      {record && (
+        <>
+          <NavBar />
 
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={{ flex: 1, marginBottom: 10 }}>
-          <WebView source={{ html: generateHTML(true) }} />
-        </View>
-        <View style={{ marginBottom: 50, paddingHorizontal: 20 }}>
-          <Button title="Download/Export PDF" onPress={printToPDF} />
-        </View>
-      </View>
+          <View style={{ flex: 1, backgroundColor: "#fff" }}>
+            <View style={{ flex: 1, marginBottom: 10 }}>
+              <WebView source={{ html: generateHTML(true) }} />
+            </View>
+            <View style={{ marginBottom: 50, paddingHorizontal: 20 }}>
+              <Button title="Download/Export PDF" onPress={printToPDF} />
+            </View>
+          </View>
+        </>
+      )}
     </>
   );
 };
 
-export default PDF;
+export default PDFPage;

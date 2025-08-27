@@ -15,7 +15,7 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
 
   const initialValues = {
     name: "",
-    type: "",
+    type: "Non-Agriculture",
     address: "",
   };
 

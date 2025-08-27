@@ -90,7 +90,7 @@ const Form = ({ db, parent, type, index, valuesState }) => {
       } else if (type == "Holiday Pay") {
         total = rate * (daysOrHours || 0);
       } else if (type == "Premium Pay") {
-        total = rate * 0.3 * 2;
+        total = rate * 0.3 * daysOrHours;
       } else if (type == "Overtime Pay") {
         total = (rate / 8) * 0.25 * daysOrHours;
       } else if (type == "Night Differential") {

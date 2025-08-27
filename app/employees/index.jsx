@@ -9,20 +9,13 @@ import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import {
-  Dimensions,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const EmployeesPage = () => {
   const router = useRouter();
-  const { width: screenWidth } = Dimensions.get("window");
   const parent_id = SessionStorage.getItem("establishment_id");
 
   const initialDb = useSQLiteContext();
@@ -78,7 +71,7 @@ const EmployeesPage = () => {
         <Text style={styles.title}>{parent.name} - Employees</Text>
 
         <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-          <View style={[styles.table, { width: screenWidth - 32 }]}>
+          <View style={[styles.table, { width: 361 }]}>
             {/* Table Header */}
             <View style={[styles.row, styles.headerRow]}>
               <Text style={[styles.cell, styles.headerCell, { flex: 2 }]}>
@@ -107,7 +100,7 @@ const EmployeesPage = () => {
                 <Text style={[styles.cellText, { flex: 1 }]}>
                   {record.rate}
                 </Text>
-                
+
                 <View style={[styles.actionCell, { flex: 0.8 }]}>
                   <TouchableOpacity onPress={() => setEmployee(record.id)}>
                     <Icon name="remove-red-eye" size={20} color="#2196F3" />

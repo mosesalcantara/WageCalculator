@@ -20,7 +20,7 @@ import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const Calculator = () => {
+const CalculatorPage = () => {
   const initialDb = useSQLiteContext();
   const db = drizzle(initialDb, { schema });
 
@@ -40,7 +40,6 @@ const Calculator = () => {
     last_name: "",
     rate: "",
     establishment_id: "",
-    violations: "",
   });
 
   const [type, setType] = useState("Basic Wage");
@@ -72,33 +71,17 @@ const Calculator = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const parentQuery = await db.query.employees.findFirst({
+      const data = await db.query.employees.findFirst({
         where: eq(employees.id, parent_id),
+        with: { violations: true },
       });
 
-      const violationsQuery = await db.query.violations.findFirst({
-        where: eq(violations.employee_id, parent_id),
-      });
-
-      if (violationsQuery) {
-        const valuesJSONString = JSON.parse(violationsQuery.values);
-
-        setParent({
-          ...parentQuery,
-          violations: valuesJSONString,
-        });
-
-        setValues(valuesJSONString);
-      } else {
-        setParent({
-          ...parentQuery,
-          violations: values,
-        });
-      }
+      setParent(data);
+      data.violations && setValues(JSON.parse(data.violations[0].values));
     };
 
     getRecords();
-  }, [values]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -196,4 +179,4 @@ const Calculator = () => {
   );
 };
 
-export default Calculator;
+export default CalculatorPage;
