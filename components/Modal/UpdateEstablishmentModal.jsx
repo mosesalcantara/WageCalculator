@@ -124,7 +124,8 @@ const UpdateEstablishmentModal = ({
                 <View>
                   <Text style={styles.label}>Address:</Text>
                   <TextInput
-                    style={styles.input}
+                    style={{ ...styles.input, textAlignVertical: "top" }}
+                    multiline
                     placeholder="Enter address"
                     value={values.address}
                     onChangeText={handleChange("address")}

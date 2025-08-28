@@ -1,10 +1,10 @@
+import { establishments } from "@/db/schema";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import * as Yup from "yup";
 import styles from "./styles";
-import { establishments } from "@/db/schema";
 
 const AddEstablishmentModal = ({ db, setMutations }) => {
   const validationSchema = Yup.object().shape({
@@ -125,7 +125,8 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
                 <View>
                   <Text style={styles.label}>Address:</Text>
                   <TextInput
-                    style={styles.input}
+                    style={{...styles.input, textAlignVertical: "top"}}
+                    multiline
                     placeholder="Enter address"
                     value={values.address}
                     onChangeText={handleChange("address")}
