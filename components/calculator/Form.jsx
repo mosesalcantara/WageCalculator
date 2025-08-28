@@ -1,11 +1,24 @@
-import { formatNumber, getRate, inputFormat, numToLetter } from "@/utils/utils";
+import {
+  formatNumber,
+  getMultiplier,
+  getRate,
+  inputFormat,
+  numToLetter,
+} from "@/utils/utils";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const Form = ({ db, parent, type, index, valuesState }) => {
+const Form = ({
+  db,
+  parent,
+  type,
+  index,
+  valuesState,
+  handleInitialChange,
+}) => {
   const [startDateModalVisible, setStartDateModalVisible] = useState(false);
   const [endDateModalVisible, setEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
@@ -32,35 +45,9 @@ const Form = ({ db, parent, type, index, valuesState }) => {
     });
   };
 
-  const handleInitialChange = (key, value) => {
-    if (key.endsWith("_date")) {
-      value = value.toISOString().split("T")[0];
-    }
-
-    setValues((prev) => {
-      const updatedInputs = prev[type].inputs.map((input, inputIndex) => {
-        if (index == inputIndex) {
-          return {
-            ...input,
-            [key]: `${value}`,
-          };
-        } else return input;
-      });
-
-      return {
-        ...prev,
-        [type]: {
-          inputs: updatedInputs,
-          subtotal: prev[type].subtotal,
-        },
-      };
-    });
-
-    updateTotals();
-  };
-
   const handleChange = (key, value) => {
-    handleInitialChange(key, value);
+    handleInitialChange(index, key, value);
+    updateTotals();
 
     if (key == "start_date") {
       setStartDateModalVisible(false);
@@ -85,18 +72,20 @@ const Form = ({ db, parent, type, index, valuesState }) => {
 
       if (type == "Basic Wage") {
         if (isBelow) {
-          total = (minimumRate - actualRate) * (daysOrHours || 0);
+          total = (minimumRate - actualRate) * daysOrHours;
         }
-      } else if (type == "Holiday Pay") {
-        total = rate * (daysOrHours || 0);
-      } else if (type == "Premium Pay") {
-        total = rate * 0.3 * daysOrHours;
       } else if (type == "Overtime Pay") {
         total = (rate / 8) * 0.25 * daysOrHours;
       } else if (type == "Night Differential") {
         total = (rate / 8) * 0.1 * daysOrHours;
+      } else if (type == "Special Day") {
+        total = rate * getMultiplier(startDate) * daysOrHours;
+      } else if (type == "Rest Day") {
+        total = rate * 0.3 * daysOrHours;
+      } else if (type == "Holiday Pay") {
+        total = rate * daysOrHours;
       } else if (type == "13th Month Pay") {
-        total = (rate * daysOrHours) / 12 - values[type].inputs[index].received;
+        total = (rate * daysOrHours) / 12;
       }
     }
 
@@ -195,21 +184,6 @@ const Form = ({ db, parent, type, index, valuesState }) => {
               value={values[type].inputs[index].daysOrHours}
               onChangeText={(value) => handleChange("daysOrHours", value)}
             />
-          </View>
-
-          <View>
-            {type == "13th Month Pay" && (
-              <>
-                <Text style={styles.label}>Received</Text>
-                <TextInput
-                  style={styles.input}
-                  keyboardType="numeric"
-                  placeholder="Enter pay received"
-                  value={values[type].inputs[index].received}
-                  onChangeText={(value) => handleChange("received", value)}
-                />
-              </>
-            )}
           </View>
         </View>
 

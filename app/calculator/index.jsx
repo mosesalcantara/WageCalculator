@@ -13,6 +13,7 @@ import {
   Image,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -26,10 +27,11 @@ const CalculatorPage = () => {
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
-    { name: "Holiday Pay", icon: "event-available" },
-    { name: "Premium Pay", icon: "star" },
     { name: "Overtime Pay", icon: "access-time" },
     { name: "Night Differential", icon: "nights-stay" },
+    { name: "Special Day", icon: "star" },
+    { name: "Rest Day", icon: "star" },
+    { name: "Holiday Pay", icon: "event-available" },
     { name: "13th Month Pay", icon: "card-giftcard" },
   ];
 
@@ -42,16 +44,18 @@ const CalculatorPage = () => {
     establishment_id: "",
   });
 
-  const [type, setType] = useState("Basic Wage");
+  const [type, setType] = useState("13th Month Pay");
 
   const [values, setValues] = useState({
     "Basic Wage": { inputs: [inputFormat], subtotal: "" },
-    "Holiday Pay": { inputs: [inputFormat], subtotal: "" },
-    "Premium Pay": { inputs: [inputFormat], subtotal: "" },
     "Overtime Pay": { inputs: [inputFormat], subtotal: "" },
     "Night Differential": { inputs: [inputFormat], subtotal: "" },
+    "Special Day": { inputs: [inputFormat], subtotal: "" },
+    "Rest Day": { inputs: [inputFormat], subtotal: "" },
+    "Holiday Pay": { inputs: [inputFormat], subtotal: "" },
     "13th Month Pay": {
-      inputs: [{ ...inputFormat, received: "" }],
+      inputs: [{ inputFormat }],
+      received: "",
       subtotal: "",
     },
   });
@@ -66,6 +70,44 @@ const CalculatorPage = () => {
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message || "An Error Eccurred");
+    }
+  };
+
+  const handleInitialChange = (index, key, value) => {
+    if (key.endsWith("_date")) {
+      value = value.toISOString().split("T")[0];
+    }
+
+    if (key == "received") {
+      setValues((prev) => {
+        return {
+          ...prev,
+          [type]: {
+            inputs: prev[type].inputs,
+            [key]: value,
+            subtotal: prev[type].subtotal,
+          },
+        };
+      });
+    } else {
+      setValues((prev) => {
+        const updatedInputs = prev[type].inputs.map((input, inputIndex) => {
+          if (index == inputIndex) {
+            return {
+              ...input,
+              [key]: `${value}`,
+            };
+          } else return input;
+        });
+
+        return {
+          ...prev,
+          [type]: {
+            inputs: updatedInputs,
+            subtotal: prev[type].subtotal,
+          },
+        };
+      });
     }
   };
 
@@ -143,7 +185,7 @@ const CalculatorPage = () => {
       <View style={{ height: 450 }}>
         <ScrollView>
           <View style={{ gap: 30 }}>
-            {values[type].inputs.map((input, index) => (
+            {values[type].inputs.map((_, index) => (
               <Form
                 key={index}
                 db={db}
@@ -151,8 +193,26 @@ const CalculatorPage = () => {
                 type={type}
                 index={index}
                 valuesState={[values, setValues]}
+                handleInitialChange={handleInitialChange}
               />
             ))}
+          </View>
+
+          <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
+            {type == "13th Month Pay" && (
+              <>
+                <Text style={styles.label}>Received</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  placeholder="Enter pay received"
+                  value={values[type].received}
+                  onChangeText={(value) =>
+                    handleInitialChange(null, "received", value)
+                  }
+                />
+              </>
+            )}
           </View>
         </ScrollView>
       </View>

@@ -1,7 +1,13 @@
 import NavBar from "@/components/NavBar";
 import * as schema from "@/db/schema";
 import { establishments } from "@/db/schema";
-import { formatDate, formatNumber, getRate, numToLetter } from "@/utils/utils";
+import {
+  formatDate,
+  formatNumber,
+  getMultiplier,
+  getRate,
+  numToLetter,
+} from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as Print from "expo-print";
@@ -19,15 +25,46 @@ const PDFPage = () => {
 
   const [record, setRecord] = useState(null);
 
-  const renderViolations = (employee) => {
-    let violationsHtml = "";
-    const violations = JSON.parse(employee.violations[0].values);
-    const rate = employee.rate;
+  const renderEmployee = (employee, index) => {
+    let employeeHtml = "";
 
+    if (employee.violations.length > 0) {
+      const violations = JSON.parse(employee.violations[0].values);
+      let valid = 0;
+
+      Object.keys(violations).forEach((key) => {
+        violations[key].inputs.forEach((input) => {
+          Object.values(input).every((value) => value) && (valid += 1);
+        });
+      });
+
+      if (valid > 0) {
+        employeeHtml += `        
+            <p style="font-weight: bold;">${
+              index + 1
+            }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</p>
+            <p font-weight: bold;">Actual Rate: Php ${employee.rate.toFixed(
+              2
+            )}/day</p>
+            <hr>
+
+            ${renderViolations(employee, violations)}
+          `;
+      }
+    }
+
+    return employeeHtml;
+  };
+
+  const renderViolations = (employee, violations) => {
+    let violationsHtml = "";
+    const rate = employee.rate;
     let total = 0;
 
     Object.keys(violations).forEach((key) => {
       total += parseFloat(violations[key].subtotal || 0);
+      violations[key].received && (total -= violations[key].received);
+
       let isValid = false;
 
       violations[key].inputs.forEach((input) => {
@@ -47,12 +84,16 @@ const PDFPage = () => {
       }
     });
 
-    violationsHtml += `<p style="text-align:right;"><u>Total: Php${formatNumber(total)}</u></p>`;
+    violationsHtml += `<p style="text-align:right;"><u>Total: Php${formatNumber(
+      total
+    )}</u></p>`;
 
     return violationsHtml;
   };
 
   const renderViolation = (key, violation, rate) => {
+    console.log(violation);
+
     let violationHtml = "";
     violation.inputs.map((input, index) => {
       violationHtml += `
@@ -65,6 +106,25 @@ const PDFPage = () => {
       `;
     });
 
+    if (violation.inputs.length > 1) {
+      violationHtml += `<p style="text-align:right;">Subtotal: Php${formatNumber(
+        violation.subtotal
+      )}</p>`;
+    }
+
+    if (key == "13th Month Pay") {
+      violationHtml += `
+      <p>Actual 13th Month Pay Received: Php${formatNumber(
+        violation.received
+      )}</p>
+      <p>Php${formatNumber(violation.subtotal)} - ${formatNumber(
+        violation.received
+      )} <span>= Php${formatNumber(
+        violation.subtotal - violation.received
+      )}</span></p>
+      `;
+    }
+
     return violationHtml;
   };
 
@@ -75,8 +135,10 @@ const PDFPage = () => {
       keyword = "Wages";
     } else if (key == "Night Differential") {
       keyword = "Night Shift Differential";
-    } else if (key == "Premium Pay") {
+    } else if (key == "Special Day") {
       keyword = "Premium Pay on Special Day";
+    } else if (key == "Rest Day") {
+      keyword = "Premium Pay on Rest Day";
     }
 
     return keyword;
@@ -94,14 +156,14 @@ const PDFPage = () => {
       case "Night Differential":
         keyword += "night-shift hour";
         break;
-      case "Premium Pay":
+      case "Special Day":
         keyword += "special day";
+        break;
+      case "Rest Day":
+        keyword += "rest day";
         break;
       case "Holiday Pay":
         keyword += "regular holiday";
-        break;
-      case "Premium Pay":
-        keyword += "special day";
         break;
       case "13th Month Pay":
         keyword += "day";
@@ -114,7 +176,7 @@ const PDFPage = () => {
   const renderFormula = (key, input, actualRate) => {
     let formulatHtml = "";
     const result = getRate(input.start_date, actualRate);
-    console.log(result);
+
     if (result.isBelow) {
       formulatHtml += `<p>Prevailing Rate: Php${result.rate.toFixed(
         2
@@ -140,7 +202,12 @@ const PDFPage = () => {
           2
         )} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
-      case "Premium Pay":
+      case "Special Day":
+        formulatHtml += `<p>Php${result.rate.toFixed(2)} ${
+          getMultiplier(input.start_date) == 0.3 ? " x 30% " : ""
+        } x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        break;
+      case "Rest Day":
         formulatHtml += `<p>Php${result.rate.toFixed(
           2
         )} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
@@ -151,19 +218,10 @@ const PDFPage = () => {
         )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
-        const total13thMonth = formatNumber(
-          parseFloat(input.total) + parseFloat(input.received)
-        );
-        const received = formatNumber(input.received);
-
         formulatHtml += `
           <p>Php${result.rate.toFixed(
             2
-          )} x ${keyword} / 12 months = Php${total13thMonth}</p>
-          <p>Actual 13th month pay received: Php${received}</p>
-          <p>Php ${total13thMonth} - ${received} = Php${formatNumber(
-          input.total
-        )}</p>
+          )} x ${keyword} / 12 months = Php${formatNumber(input.total)}</p>
           `;
         break;
       default:
@@ -229,18 +287,7 @@ const PDFPage = () => {
           isPreview ? "47" : "20"
         }px; font-weight: bold; color: black;">${record.name.toUpperCase()}</h1>
         ${record.employees.map(
-          (employee, index) =>
-            `        
-            <p style="font-weight: bold;">${
-              index + 1
-            }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</p>
-            <p font-weight: bold;">Actual Rate: Php ${employee.rate.toFixed(
-              2
-            )}/day</p>
-            <hr>
-
-            ${renderViolations(employee)}
-          `
+          (employee, index) => `${renderEmployee(employee, index)}`
         )}
       </body>
     </html>

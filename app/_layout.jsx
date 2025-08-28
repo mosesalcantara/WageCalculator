@@ -7,7 +7,9 @@ import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
 import { Suspense } from "react";
 
 const name = "WageCalculator.db";
-const expoDb = openDatabaseSync(name);
+const expoDb = openDatabaseSync(name, {
+  useNewConnection: true,
+});
 const db = drizzle(expoDb);
 
 const RootLayout = () => {

@@ -1,4 +1,4 @@
-import { format, isBefore, parse, parseISO } from "date-fns";
+import { format, isAfter, isBefore, parse, parseISO } from "date-fns";
 
 export const inputFormat = {
   start_date: "",
@@ -45,4 +45,15 @@ export const getRate = (start, actualRate) => {
     isBelow: isBelow,
     rate: rate,
   };
+};
+
+export const getMultiplier = (start) => {
+  let multiplier = 1;
+
+  isBefore(parseDate(start), parseDate("2024-12-23")) &&
+  isAfter(parseDate(start), parseDate("2023-12-31"))
+    ? (multiplier = 1)
+    : (multiplier = 0.3);
+
+  return multiplier;
 };

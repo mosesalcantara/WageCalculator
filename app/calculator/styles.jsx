@@ -44,6 +44,22 @@ const styles = StyleSheet.create({
     height: 60,
     resizeMode: "contain",
   },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 4,
+    color: "#333",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    backgroundColor: "#fafafa",
+    justifyContent: "center",
+    height: 40,
+  },
 });
 
 export default styles;
