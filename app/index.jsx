@@ -2,12 +2,10 @@ import confirmAlert from "@/components/ConfirmAlert";
 import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
 import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModal";
 import NavBar from "@/components/NavBar";
-import * as schema from "@/db/schema";
 import { employees, establishments } from "@/db/schema";
+import { getDb } from "@/utils/utils";
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { Link, useRouter } from "expo-router";
-import { useSQLiteContext } from "expo-sqlite";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
@@ -16,8 +14,7 @@ import styles from "./styles";
 
 const EstablishmentPage = () => {
   const router = useRouter();
-  const initialDb = useSQLiteContext();
-  const db = drizzle(initialDb, { schema });
+  const db = getDb();
 
   const [records, setRecords] = useState([]);
   const [values, setValues] = useState({

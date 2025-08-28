@@ -1,26 +1,23 @@
 import NavBar from "@/components/NavBar";
-import * as schema from "@/db/schema";
 import { establishments } from "@/db/schema";
 import {
   formatDate,
   formatNumber,
+  getDb,
   getMultiplier,
   getRate,
   numToLetter,
 } from "@/utils/utils";
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
-import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { Button, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import { WebView } from "react-native-webview";
 
 const PDFPage = () => {
-  const initialDb = useSQLiteContext();
-  const db = drizzle(initialDb, { schema });
+  const db = getDb();
   const id = SessionStorage.getItem("establishment_id");
 
   const [record, setRecord] = useState(null);

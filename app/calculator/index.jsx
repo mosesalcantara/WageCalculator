@@ -1,12 +1,9 @@
 import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import * as schema from "@/db/schema";
 import { employees, violations } from "@/db/schema";
 import { formatNumber, inputFormat } from "@/utils/utils";
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -20,10 +17,10 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
+import { getDb } from "@/utils/utils";
 
 const CalculatorPage = () => {
-  const initialDb = useSQLiteContext();
-  const db = drizzle(initialDb, { schema });
+  const db = getDb();
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
@@ -44,7 +41,7 @@ const CalculatorPage = () => {
     establishment_id: "",
   });
 
-  const [type, setType] = useState("13th Month Pay");
+  const [type, setType] = useState("Basic Wage");
 
   const [values, setValues] = useState({
     "Basic Wage": { inputs: [inputFormat], subtotal: "" },

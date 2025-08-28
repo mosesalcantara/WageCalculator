@@ -1,4 +1,7 @@
 import { format, isAfter, isBefore, parse, parseISO } from "date-fns";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite";
+import * as schema from "@/db/schema";
 
 export const inputFormat = {
   start_date: "",
@@ -6,6 +9,10 @@ export const inputFormat = {
   daysOrHours: "",
   total: "0",
 };
+
+export const getDb = () => {
+    return drizzle(useSQLiteContext(), { schema });
+}
 
 export const formatNumber = (number) => {
   return (parseFloat(number) || 0).toLocaleString("en-US", {

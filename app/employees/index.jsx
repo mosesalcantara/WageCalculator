@@ -2,12 +2,10 @@ import confirmAlert from "@/components/ConfirmAlert";
 import AddEmployeeModal from "@/components/Modal/AddEmployeeModal";
 import UpdateEmployeeModal from "@/components/Modal/UpdateEmployeeModal";
 import NavBar from "@/components/NavBar";
-import * as schema from "@/db/schema";
 import { employees, establishments, violations } from "@/db/schema";
+import { getDb } from "@/utils/utils";
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useRouter } from "expo-router";
-import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
@@ -18,8 +16,7 @@ const EmployeesPage = () => {
   const router = useRouter();
   const parent_id = SessionStorage.getItem("establishment_id");
 
-  const initialDb = useSQLiteContext();
-  const db = drizzle(initialDb, { schema });
+  const db = getDb();
 
   const [parent, setParent] = useState({
     id: parent_id,
