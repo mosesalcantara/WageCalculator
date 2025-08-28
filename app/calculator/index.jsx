@@ -97,6 +97,7 @@ const CalculatorPage = () => {
         return {
           ...prev,
           [type]: {
+            ...prev[type],
             inputs: updatedInputs,
           },
         };
