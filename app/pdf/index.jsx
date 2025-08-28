@@ -89,8 +89,6 @@ const PDFPage = () => {
   };
 
   const renderViolation = (key, violation, rate) => {
-    console.log(violation);
-
     let violationHtml = "";
     violation.inputs.map((input, index) => {
       violationHtml += `

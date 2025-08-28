@@ -1,7 +1,6 @@
 import {
+  calculate,
   formatNumber,
-  getMultiplier,
-  getRate,
   inputFormat,
   numToLetter,
 } from "@/utils/utils";
@@ -22,32 +21,17 @@ const Form = ({
   const [startDateModalVisible, setStartDateModalVisible] = useState(false);
   const [endDateModalVisible, setEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
-  const [isErrorDisplayed, setIsErrorDisplayed] = useState(false);
+
+  const formatDate = (date) => {
+    return date ? (date = new Date(date)) : (date = new Date());
+  };
 
   const checkType = () => {
     return ["Overtime Pay", "Night Differential"].includes(type);
   };
 
-  const updateTotals = () => {
-    setValues((prev) => {
-      let subtotal = 0;
-      prev[type].inputs.forEach((input) => {
-        subtotal += parseFloat(input.total || 0);
-      });
-
-      return {
-        ...prev,
-        [type]: {
-          inputs: prev[type].inputs,
-          subtotal: `${subtotal}`,
-        },
-      };
-    });
-  };
-
   const handleChange = (key, value) => {
     handleInitialChange(index, key, value);
-    updateTotals();
 
     if (key == "start_date") {
       setStartDateModalVisible(false);
@@ -56,50 +40,12 @@ const Form = ({
     }
   };
 
-  const validate = () => {
-    return Object.values(values[type].inputs[index]).every((value) => value);
-  };
-
-  const calculate = () => {
-    const isValid = validate();
-    const actualRate = parent.rate;
-    let total = 0;
-
-    if (isValid) {
-      const startDate = values[type].inputs[index].start_date;
-      const daysOrHours = values[type].inputs[index].daysOrHours;
-      const { minimumRate, isBelow, rate } = getRate(startDate, actualRate);
-
-      if (type == "Basic Wage") {
-        if (isBelow) {
-          total = (minimumRate - actualRate) * daysOrHours;
-        }
-      } else if (type == "Overtime Pay") {
-        total = (rate / 8) * 0.25 * daysOrHours;
-      } else if (type == "Night Differential") {
-        total = (rate / 8) * 0.1 * daysOrHours;
-      } else if (type == "Special Day") {
-        total = rate * getMultiplier(startDate) * daysOrHours;
-      } else if (type == "Rest Day") {
-        total = rate * 0.3 * daysOrHours;
-      } else if (type == "Holiday Pay") {
-        total = rate * daysOrHours;
-      } else if (type == "13th Month Pay") {
-        total = (rate * daysOrHours) / 12;
-      }
-    }
-
-    setIsErrorDisplayed(!isValid);
-    handleChange("total", total);
-  };
-
   const addInput = () => {
     setValues((prev) => {
       return {
         ...prev,
         [type]: {
           inputs: [...prev[type].inputs, inputFormat],
-          subtotal: prev[type].subtotal,
         },
       };
     });
@@ -114,12 +60,9 @@ const Form = ({
         ...prev,
         [type]: {
           inputs: updatedInputs,
-          subtotal: prev[type].subtotal,
         },
       };
     });
-
-    updateTotals();
   };
 
   const clearInput = () => {
@@ -134,12 +77,9 @@ const Form = ({
         ...prev,
         [type]: {
           inputs: updatedInputs,
-          subtotal: prev[type].subtotal,
         },
       };
     });
-
-    updateTotals();
   };
 
   return (
@@ -187,21 +127,10 @@ const Form = ({
           </View>
         </View>
 
-        <View>
-          {isErrorDisplayed && (
-            <Text style={{ color: "red", textAlign: "center", marginTop: 5 }}>
-              All Fields are Required
-            </Text>
-          )}
-          <TouchableOpacity style={styles.calcAction} onPress={calculate}>
-            <Text style={styles.calcActionText}>Calculate</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.resultBox}>
           <Text style={styles.resultLabel}>Total:</Text>
           <Text style={styles.resultValue}>
-            ₱{formatNumber(values[type].inputs[index].total)}
+            ₱{formatNumber(calculate(values, type, index, parent.rate))}
           </Text>
         </View>
 
@@ -227,6 +156,7 @@ const Form = ({
       <DateTimePickerModal
         isVisible={startDateModalVisible}
         mode="date"
+        date={formatDate(values[type].inputs[index].start_date)}
         onConfirm={(value) => {
           handleChange("start_date", value);
         }}
@@ -236,6 +166,7 @@ const Form = ({
       <DateTimePickerModal
         isVisible={endDateModalVisible}
         mode="date"
+        date={formatDate(values[type].inputs[index].end_date)}
         onConfirm={(value) => {
           handleChange("end_date", value);
         }}

@@ -2,7 +2,7 @@ import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
-import { formatNumber, inputFormat } from "@/utils/utils";
+import { formatNumber, getDb, getTotals, inputFormat } from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import { useEffect, useState } from "react";
 import {
@@ -17,7 +17,6 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
-import { getDb } from "@/utils/utils";
 
 const CalculatorPage = () => {
   const db = getDb();
@@ -44,16 +43,15 @@ const CalculatorPage = () => {
   const [type, setType] = useState("Basic Wage");
 
   const [values, setValues] = useState({
-    "Basic Wage": { inputs: [inputFormat], subtotal: "" },
-    "Overtime Pay": { inputs: [inputFormat], subtotal: "" },
-    "Night Differential": { inputs: [inputFormat], subtotal: "" },
-    "Special Day": { inputs: [inputFormat], subtotal: "" },
-    "Rest Day": { inputs: [inputFormat], subtotal: "" },
-    "Holiday Pay": { inputs: [inputFormat], subtotal: "" },
+    "Basic Wage": { inputs: [inputFormat] },
+    "Overtime Pay": { inputs: [inputFormat] },
+    "Night Differential": { inputs: [inputFormat] },
+    "Special Day": { inputs: [inputFormat] },
+    "Rest Day": { inputs: [inputFormat] },
+    "Holiday Pay": { inputs: [inputFormat] },
     "13th Month Pay": {
-      inputs: [{ inputFormat }],
+      inputs: [inputFormat],
       received: "",
-      subtotal: "",
     },
   });
 
@@ -82,7 +80,6 @@ const CalculatorPage = () => {
           [type]: {
             inputs: prev[type].inputs,
             [key]: value,
-            subtotal: prev[type].subtotal,
           },
         };
       });
@@ -101,7 +98,6 @@ const CalculatorPage = () => {
           ...prev,
           [type]: {
             inputs: updatedInputs,
-            subtotal: prev[type].subtotal,
           },
         };
       });
@@ -175,7 +171,7 @@ const CalculatorPage = () => {
           )}`}
         </Text>
         <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
-          Subtotal: {formatNumber(values[type].subtotal)}
+          Subtotal: {formatNumber(getTotals(values, type, parent.rate))}
         </Text>
       </View>
 
