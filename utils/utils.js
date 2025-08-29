@@ -7,7 +7,7 @@ export const getDb = () => {
   return drizzle(useSQLiteContext(), { schema });
 };
 
-export const inputFormat = {
+export const periodFormat = {
   start_date: "",
   end_date: "",
   daysOrHours: "",
@@ -65,15 +65,15 @@ export const getMultiplier = (start) => {
 };
 
 export const validate = (values, type, index) => {
-  return Object.values(values[type].inputs[index]).every((value) => value);
+  return Object.values(values[type].periods[index]).every((value) => value);
 };
 
 export const calculate = (values, type, index, actualRate) => {
   const isValid = validate(values, type, index);
   let total = 0;
   if (isValid) {
-    const startDate = values[type].inputs[index].start_date;
-    const daysOrHours = values[type].inputs[index].daysOrHours;
+    const startDate = values[type].periods[index].start_date;
+    const daysOrHours = values[type].periods[index].daysOrHours;
     const { minimumRate, isBelow, rate } = getRate(startDate, actualRate);
 
     if (type == "Basic Wage") {
@@ -100,7 +100,7 @@ export const calculate = (values, type, index, actualRate) => {
 
 export const getTotals = (values, type, actualRate) => {
   let subtotal = 0;
-  values[type].inputs.forEach((_, index) => {
+  values[type].periods.forEach((_, index) => {
     subtotal += calculate(values, type, index, actualRate);
   });
   values[type].received && (subtotal -= values[type].received);

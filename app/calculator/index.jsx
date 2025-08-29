@@ -2,7 +2,7 @@ import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
-import { formatNumber, getDb, getTotals, inputFormat } from "@/utils/utils";
+import { formatNumber, getDb, getTotals, periodFormat } from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import { useEffect, useState } from "react";
 import {
@@ -43,14 +43,14 @@ const CalculatorPage = () => {
   const [type, setType] = useState("Basic Wage");
 
   const [values, setValues] = useState({
-    "Basic Wage": { inputs: [inputFormat] },
-    "Overtime Pay": { inputs: [inputFormat] },
-    "Night Differential": { inputs: [inputFormat] },
-    "Special Day": { inputs: [inputFormat] },
-    "Rest Day": { inputs: [inputFormat] },
-    "Holiday Pay": { inputs: [inputFormat] },
+    "Basic Wage": { periods: [periodFormat] },
+    "Overtime Pay": { periods: [periodFormat] },
+    "Night Differential": { periods: [periodFormat] },
+    "Special Day": { periods: [periodFormat] },
+    "Rest Day": { periods: [periodFormat] },
+    "Holiday Pay": { periods: [periodFormat] },
     "13th Month Pay": {
-      inputs: [inputFormat],
+      periods: [periodFormat],
       received: "",
     },
   });
@@ -78,27 +78,27 @@ const CalculatorPage = () => {
         return {
           ...prev,
           [type]: {
-            inputs: prev[type].inputs,
+            periods: prev[type].periods,
             [key]: value,
           },
         };
       });
     } else {
       setValues((prev) => {
-        const updatedInputs = prev[type].inputs.map((input, inputIndex) => {
-          if (index == inputIndex) {
+        const updatedPeriods = prev[type].periods.map((period, periodIndex) => {
+          if (index == periodIndex) {
             return {
-              ...input,
+              ...period,
               [key]: `${value}`,
             };
-          } else return input;
+          } else return period;
         });
 
         return {
           ...prev,
           [type]: {
             ...prev[type],
-            inputs: updatedInputs,
+            periods: updatedPeriods,
           },
         };
       });
@@ -179,7 +179,7 @@ const CalculatorPage = () => {
       <View style={{ height: 450 }}>
         <ScrollView>
           <View style={{ gap: 30 }}>
-            {values[type].inputs.map((_, index) => (
+            {values[type].periods.map((_, index) => (
               <Form
                 key={index}
                 db={db}

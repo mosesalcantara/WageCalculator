@@ -1,7 +1,7 @@
 import {
   calculate,
   formatNumber,
-  inputFormat,
+  periodFormat,
   numToLetter,
 } from "@/utils/utils";
 import { useState } from "react";
@@ -40,43 +40,43 @@ const Form = ({
     }
   };
 
-  const addInput = () => {
+  const addPeriod = () => {
     setValues((prev) => {
       return {
         ...prev,
         [type]: {
-          inputs: [...prev[type].inputs, inputFormat],
+          periods: [...prev[type].periods, periodFormat],
         },
       };
     });
   };
 
-  const removeInput = () => {
+  const removePeriod = () => {
     setValues((prev) => {
-      const updatedInputs = prev[type].inputs;
-      updatedInputs.splice(index, 1);
+      const updatedPeriods = prev[type].periods;
+      updatedPeriods.splice(index, 1);
 
       return {
         ...prev,
         [type]: {
-          inputs: updatedInputs,
+          periods: updatedPeriods,
         },
       };
     });
   };
 
-  const clearInput = () => {
+  const clearPeriod = () => {
     setValues((prev) => {
-      const updatedInputs = prev[type].inputs.map((input, inputIndex) => {
-        if (index == inputIndex) {
-          return inputFormat;
-        } else return input;
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) => {
+        if (index == periodIndex) {
+          return periodFormat;
+        } else return period;
       });
 
       return {
         ...prev,
         [type]: {
-          inputs: updatedInputs,
+          periods: updatedPeriods,
         },
       };
     });
@@ -87,7 +87,7 @@ const Form = ({
       <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
         <View>
           <Text style={{ textAlign: "center" }}>
-            {values[type].inputs.length > 1 && `Period ${numToLetter(index)}`}
+            {values[type].periods.length > 1 && `Period ${numToLetter(index)}`}
           </Text>
           <View>
             <Text style={styles.label}>Start Date</Text>
@@ -96,7 +96,7 @@ const Form = ({
               onPress={() => setStartDateModalVisible(true)}
             >
               <Text>
-                {values[type].inputs[index].start_date || "Select start date"}
+                {values[type].periods[index].start_date || "Select start date"}
               </Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
@@ -109,7 +109,7 @@ const Form = ({
               onPress={() => setEndDateModalVisible(true)}
             >
               <Text>
-                {values[type].inputs[index].end_date || "Select end date"}
+                {values[type].periods[index].end_date || "Select end date"}
               </Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
@@ -121,7 +121,7 @@ const Form = ({
               style={styles.input}
               keyboardType="numeric"
               placeholder={`Enter ${checkType() ? "hours" : "days"}`}
-              value={values[type].inputs[index].daysOrHours}
+              value={values[type].periods[index].daysOrHours}
               onChangeText={(value) => handleChange("daysOrHours", value)}
             />
           </View>
@@ -135,19 +135,19 @@ const Form = ({
         </View>
 
         <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
-          {values[type].inputs.length - 1 == index && (
-            <TouchableOpacity onPress={addInput}>
+          {values[type].periods.length - 1 == index && (
+            <TouchableOpacity onPress={addPeriod}>
               <Text>Add</Text>
             </TouchableOpacity>
           )}
 
-          {values[type].inputs.length > 1 && (
-            <TouchableOpacity onPress={removeInput}>
+          {values[type].periods.length > 1 && (
+            <TouchableOpacity onPress={removePeriod}>
               <Text>Remove</Text>
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity onPress={clearInput}>
+          <TouchableOpacity onPress={clearPeriod}>
             <Text>Clear</Text>
           </TouchableOpacity>
         </View>
@@ -156,7 +156,7 @@ const Form = ({
       <DateTimePickerModal
         isVisible={startDateModalVisible}
         mode="date"
-        date={formatDate(values[type].inputs[index].start_date)}
+        date={formatDate(values[type].periods[index].start_date)}
         onConfirm={(value) => {
           handleChange("start_date", value);
         }}
@@ -166,7 +166,7 @@ const Form = ({
       <DateTimePickerModal
         isVisible={endDateModalVisible}
         mode="date"
-        date={formatDate(values[type].inputs[index].end_date)}
+        date={formatDate(values[type].periods[index].end_date)}
         onConfirm={(value) => {
           handleChange("end_date", value);
         }}

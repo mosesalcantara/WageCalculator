@@ -31,8 +31,8 @@ const PDFPage = () => {
       let valid = 0;
 
       Object.keys(violations).forEach((type) => {
-        violations[type].inputs.forEach((input) => {
-          Object.values(input).every((value) => value) && (valid += 1);
+        violations[type].periods.forEach((period) => {
+          Object.values(period).every((value) => value) && (valid += 1);
         });
       });
 
@@ -64,15 +64,15 @@ const PDFPage = () => {
     Object.keys(violations).forEach((type) => {
       const violationType = violations[type];
 
-      violationType.inputs.map((_, index) => {
+      violationType.periods.map((_, index) => {
         total += calculate(violations, type, index, actualRate);
       });
       violationType.received && (total -= violationType.received);
 
       let isValid = false;
 
-      violationType.inputs.forEach((input) => {
-        isValid = Object.values(input).every((value) => value);
+      violationType.periods.forEach((period) => {
+        isValid = Object.values(period).every((value) => value);
       });
 
       isValid &&
@@ -99,19 +99,19 @@ const PDFPage = () => {
     let html = "";
     let subtotal = 0;
     
-    violationType.inputs.map((input, index) => {
+    violationType.periods.map((period, index) => {
       subtotal += calculate(violations, type, index, actualRate);
       html += `
         <p>Period${
-          violationType.inputs.length > 1 ? ` ${numToLetter(index)}` : ""
-        }: ${formatDate(input.start_date)} to ${formatDate(
-        input.end_date
-      )} (${getDaysOrHours(type, input.daysOrHours)})</p>
+          violationType.periods.length > 1 ? ` ${numToLetter(index)}` : ""
+        }: ${formatDate(period.start_date)} to ${formatDate(
+        period.end_date
+      )} (${getDaysOrHours(type, period.daysOrHours)})</p>
         ${renderFormula(violations, type, index, actualRate)}
       `;
     });
 
-    violationType.inputs.length > 1 &&
+    violationType.periods.length > 1 &&
       (html += `<p style="text-align:right;">Subtotal: Php${formatNumber(
         subtotal
       )}</p>`);
@@ -178,8 +178,8 @@ const PDFPage = () => {
 
   const renderFormula = (violations, type, index, actualRate) => {
     let html = "";
-    const input = violations[type].inputs[index];
-    const result = getRate(input.start_date, actualRate);
+    const period = violations[type].periods[index];
+    const result = getRate(period.start_date, actualRate);
 
     if (result.isBelow) {
       html += `<p>Prevailing Rate: Php${result.rate.toFixed(
@@ -188,7 +188,7 @@ const PDFPage = () => {
     }
 
     const formattedRate = result.rate.toFixed(2);
-    const keyword = getDaysOrHours(type, input.daysOrHours);
+    const keyword = getDaysOrHours(type, period.daysOrHours);
     const total = formatNumber(calculate(violations, type, index, actualRate));
 
     switch (type) {
@@ -205,7 +205,7 @@ const PDFPage = () => {
         break;
       case "Special Day":
         html += `<p>Php${formattedRate} ${
-          getMultiplier(input.start_date) == 0.3 ? " x 30% " : ""
+          getMultiplier(period.start_date) == 0.3 ? " x 30% " : ""
         } x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Rest Day":
