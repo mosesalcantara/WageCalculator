@@ -56,8 +56,8 @@ export const getRate = (start, actualRate) => {
 export const getMultiplier = (start) => {
   let multiplier = 1;
 
-  isBefore(parseDate(start), parseDate("2024-12-23")) &&
-  isAfter(parseDate(start), parseDate("2023-12-31"))
+  isAfter(parseDate(start), parseDate("2023-12-31")) &&
+  isBefore(parseDate(start), parseDate("2024-12-23"))
     ? (multiplier = 1)
     : (multiplier = 0.3);
 
