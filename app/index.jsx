@@ -13,8 +13,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const EstablishmentPage = () => {
-  const router = useRouter();
   const db = getDb();
+  const router = useRouter();
 
   const [records, setRecords] = useState([]);
   const [mutations, setMutations] = useState(0);
@@ -39,7 +39,6 @@ const EstablishmentPage = () => {
       });
       setRecords(data);
     };
-
     getRecords();
   }, [mutations]);
 
@@ -68,17 +67,15 @@ const EstablishmentPage = () => {
               />
 
               <TouchableOpacity
-                onPress={() => {
-                  confirmAlert("Establishment", deleteRecord, item.id);
-                }}
+                onPress={() =>
+                  confirmAlert("Establishment", deleteRecord, item.id)
+                }
               >
                 <Icon name="delete" size={20} color="#E53935" />
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => {
-                  setEstablishment(item.id, "pdf");
-                }}
+                onPress={() => setEstablishment(item.id, "pdf")}
               >
                 <Icon name="file-download" size={20} color="#2196F3" />
               </TouchableOpacity>

@@ -13,15 +13,10 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const EmployeesPage = () => {
-  const router = useRouter();
-  const parent_id = SessionStorage.getItem("establishment_id");
-
   const db = getDb();
+  const router = useRouter();
 
-  const [parent, setParent] = useState({
-    id: parent_id,
-    name: "",
-  });
+  const [parent, setParent] = useState(null);
   const [records, setRecords] = useState([]);
   const [mutations, setMutations] = useState(0);
 
@@ -38,8 +33,9 @@ const EmployeesPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
+      const parent_id = SessionStorage.getItem("establishment_id");
       const data = await db.query.establishments.findFirst({
-        where: eq(establishments.id, parent.id),
+        where: eq(establishments.id, parent_id),
         with: {
           employees: true,
         },
@@ -47,72 +43,73 @@ const EmployeesPage = () => {
       setParent(data);
       setRecords(data.employees);
     };
-
     getRecords();
   }, [mutations]);
 
   return (
     <>
-      <NavBar />
+      {parent && records && (
+        <>
+          <NavBar />
 
-      <View style={styles.container}>
-        <Text style={styles.title}>{parent.name} - Employees</Text>
+          <View style={styles.container}>
+            <Text style={styles.title}>{parent.name} - Employees</Text>
 
-        <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-          <View style={[styles.table, { width: 361 }]}>
-            <View style={[styles.row, styles.headerRow]}>
-              <Text style={[styles.cell, styles.headerCell, { flex: 2 }]}>
-                Name
-              </Text>
-              <Text style={[styles.cell, styles.headerCell, { flex: 1 }]}>
-                Rate
-              </Text>
-              <Text style={[styles.cell, styles.headerCell, { flex: 0.8 }]}>
-                Actions
-              </Text>
-            </View>
-
-            {records.map((record, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.row,
-                  index % 2 === 0 ? styles.evenRow : styles.oddRow,
-                ]}
-              >
-                <Text style={[styles.cellText, { flex: 2 }]}>
-                  {record.first_name} {record.last_name}
-                </Text>
-                <Text style={[styles.cellText, { flex: 1 }]}>
-                  {record.rate}
-                </Text>
-
-                <View style={[styles.actionCell, { flex: 0.8 }]}>
-                  <TouchableOpacity onPress={() => setEmployee(record.id)}>
-                    <Icon name="remove-red-eye" size={20} color="#2196F3" />
-                  </TouchableOpacity>
-
-                  <UpdateEmployeeModal
-                    db={db}
-                    setMutations={setMutations}
-                    values={{ ...record, rate: `${record.rate}` }}
-                  />
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      confirmAlert("Employee", deleteRecord, record.id);
-                    }}
-                  >
-                    <Icon name="delete" size={20} color="#E53935" />
-                  </TouchableOpacity>
+            <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
+              <View style={[styles.table, { width: 361 }]}>
+                <View style={[styles.row, styles.headerRow]}>
+                  <Text style={[styles.cell, styles.headerCell, { flex: 2 }]}>
+                    Name
+                  </Text>
+                  <Text style={[styles.cell, styles.headerCell, { flex: 1 }]}>
+                    Rate
+                  </Text>
+                  <Text style={[styles.cell, styles.headerCell, { flex: 0.8 }]}>
+                    Actions
+                  </Text>
                 </View>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
 
-        <AddEmployeeModal db={db} setMutations={setMutations} parent={parent} />
-      </View>
+                {records.map((record) => (
+                  <View key={record.id} style={[styles.row]}>
+                    <Text style={[styles.cellText, { flex: 2 }]}>
+                      {record.first_name} {record.last_name}
+                    </Text>
+                    <Text style={[styles.cellText, { flex: 1 }]}>
+                      {record.rate}
+                    </Text>
+
+                    <View style={[styles.actionCell, { flex: 0.8 }]}>
+                      <TouchableOpacity onPress={() => setEmployee(record.id)}>
+                        <Icon name="remove-red-eye" size={20} color="#2196F3" />
+                      </TouchableOpacity>
+
+                      <UpdateEmployeeModal
+                        db={db}
+                        setMutations={setMutations}
+                        values={{ ...record, rate: `${record.rate}` }}
+                      />
+
+                      <TouchableOpacity
+                        onPress={() => {
+                          confirmAlert("Employee", deleteRecord, record.id);
+                        }}
+                      >
+                        <Icon name="delete" size={20} color="#E53935" />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+
+            <AddEmployeeModal
+              db={db}
+              setMutations={setMutations}
+              parent={parent}
+            />
+          </View>
+        </>
+      )}
     </>
   );
 };

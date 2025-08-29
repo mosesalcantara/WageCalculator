@@ -20,7 +20,6 @@ import { WebView } from "react-native-webview";
 
 const PDFPage = () => {
   const db = getDb();
-  const id = SessionStorage.getItem("establishment_id");
 
   const [record, setRecord] = useState(null);
 
@@ -29,8 +28,8 @@ const PDFPage = () => {
 
     if (employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values);
-      let valid = 0;
 
+      let valid = 0;
       Object.values(violations).forEach((violationType) => {
         violationType.periods.forEach((period) => {
           Object.values(period).every((value) => value) && (valid += 1);
@@ -39,12 +38,15 @@ const PDFPage = () => {
 
       if (valid > 0) {
         html += `        
-            <p style="font-weight: bold;">${
-              index + 1
-            }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</p>
-            <p font-weight: bold;">Actual Rate: Php ${employee.rate.toFixed(
-              2
-            )}/day</p>
+            <p style="font-weight: bold;">
+              ${
+                index + 1
+              }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}
+            </p>
+
+            <p font-weight: bold;">
+              Actual Rate: Php${employee.rate.toFixed(2)}/day
+            </p>
             <hr>
 
             ${renderViolations(employee)}
@@ -60,72 +62,78 @@ const PDFPage = () => {
 
     const violations = JSON.parse(employee.violations[0].values);
     const rate = employee.rate;
-    let total = 0;
 
+    let total = 0;
     Object.keys(violations).forEach((type) => {
       const violationType = violations[type];
 
+      let valid = 0;
       violationType.periods.forEach((period) => {
+        validate(period) && (valid += 1);
         total += calculate(period, rate, type);
       });
       violationType.received && (total -= violationType.received);
 
-      let isValid = false;
-
-      violationType.periods.forEach((period) => {
-        isValid = validate(period);
-      });
-
-      isValid &&
+      valid > 0 &&
         (html += `
-          <p font-weight: bold;"><u>${
-            type == "Holiday Pay" ? "Non-payment" : "Underpayment"
-          } of ${getType(type)}</u></p>
+          <p font-weight: bold;">
+            <u>
+            ${
+              type == "Holiday Pay" ? "Non-payment" : "Underpayment"
+            } of ${getType(type)}
+            </u>
+          </p>
          
-          ${renderViolation(violations[type], rate, type)}
+          ${renderViolationType(violations[type], rate, type)}
 
           <br/>
         `);
     });
 
-    html += `<p style="text-align:right;"><u>Total: Php${formatNumber(
-      total
-    )}</u></p>`;
+    html += `<p style="text-align:right;">
+              <u>Total: Php${formatNumber(total)}</u>
+             </p>`;
 
     return html;
   };
 
-  const renderViolation = (violationType, rate, type) => {
+  const renderViolationType = (violationType, rate, type) => {
     let html = "";
     let subtotal = 0;
-
     violationType.periods.forEach((period, index) => {
-      subtotal += calculate(period, rate, type);
-      html += `
+      if (validate(period)) {
+        subtotal += calculate(period, rate, type);
+        html += `
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
         }: ${formatDate(period.start_date)} to ${formatDate(
-        period.end_date
-      )} (${getDaysOrHours(type, period.daysOrHours)})</p>
+          period.end_date
+        )} (${getDaysOrHours(type, period.daysOrHours)})
+        </p>
+
         ${renderFormula(period, rate, type)}
-      `;
+        `;
+      }
     });
 
     violationType.periods.length > 1 &&
-      (html += `<p style="text-align:right;">Subtotal: Php${formatNumber(
-        subtotal
-      )}</p>`);
+      (html += `
+        <p style="text-align:right;">
+          Subtotal: Php${formatNumber(subtotal)}
+        </p>
+      `);
 
     type == "13th Month Pay" &&
       (html += `
-      <p>Actual 13th Month Pay Received: Php${formatNumber(
-        violationType.received
-      )}</p>
-      <p>Php${formatNumber(subtotal)} - ${formatNumber(
-        violationType.received
-      )} <span>= Php${formatNumber(
-        subtotal - violationType.received
-      )}</span></p>
+      <p>
+        Actual 13th Month Pay Received: 
+        Php${formatNumber(violationType.received)}
+      </p>
+
+      <p>
+        Php${formatNumber(subtotal)} - ${formatNumber(violationType.received)} 
+        <span>= Php${formatNumber(subtotal - violationType.received)}</span>
+      </p>
       `);
 
     return html;
@@ -133,7 +141,6 @@ const PDFPage = () => {
 
   const getType = (type) => {
     let keyword = type;
-
     if (type == "Basic Wage") {
       keyword = "Wages";
     } else if (type == "Night Differential") {
@@ -143,34 +150,23 @@ const PDFPage = () => {
     } else if (type == "Rest Day") {
       keyword = "Premium Pay on Rest Day";
     }
-
     return keyword;
   };
 
   const getDaysOrHours = (type, daysOrHours) => {
     let keyword = `${daysOrHours} `;
-    switch (type) {
-      case "Basic Wage":
-        keyword += "day";
-        break;
-      case "Overtime Pay":
-        keyword += "OT hour";
-        break;
-      case "Night Differential":
-        keyword += "night-shift hour";
-        break;
-      case "Special Day":
-        keyword += "special day";
-        break;
-      case "Rest Day":
-        keyword += "rest day";
-        break;
-      case "Holiday Pay":
-        keyword += "regular holiday";
-        break;
-      case "13th Month Pay":
-        keyword += "day";
-        break;
+    if (type == "Basic Wage") {
+      keyword += "day";
+    } else if ("Overtime Pay") {
+      keyword += "OT hour";
+    } else if ("Night Differential") {
+      keyword += "night-shift hour";
+    } else if ("Special Day") {
+      keyword += "special day";
+    } else if ("Rest Day") {
+      keyword += "rest day";
+    } else if ("13th Month Pay") {
+      keyword += "day";
     }
     daysOrHours > 1 && (keyword += "s");
     return keyword;
@@ -178,34 +174,40 @@ const PDFPage = () => {
 
   const renderFormula = (period, rate, type) => {
     let html = "";
-    const result = getRate(period.start_date, rate);
 
-    if (result.isBelow) {
-      html += `<p>Prevailing Rate: Php${result.rateToUse.toFixed(
-        2
-      )} (RB-MIMAROPA-12)</p>`;
-    }
+    const result = getRate(period.start_date, rate);
+    result.isBelow &&
+      (html += `
+        <p>
+          Prevailing Rate: Php${result.rateToUse.toFixed(2)} (RB-MIMAROPA-12)
+        </p>`);
 
     const formattedRateToUse = result.rateToUse.toFixed(2);
-    const keyword = getDaysOrHours(type, period.daysOrHours);
     const total = formatNumber(calculate(period, rate, type));
+    const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
       case "Basic Wage":
-        html += `<p>Php${formattedRateToUse} - ${rate.toFixed(
-          2
-        )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>
+                  Php${formattedRateToUse} - ${rate.toFixed(2)} x ${keyword} 
+                  <span class="value";">= Php${total}</span>
+                 </p>`;
         break;
       case "Overtime Pay":
-        html += `<p>Php${formattedRateToUse} / 8 x 25% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>
+                  Php${formattedRateToUse} / 8 x 25% x ${keyword} 
+                  <span class="value";">= Php${total}</span>
+                 </p>`;
         break;
       case "Night Differential":
         html += `<p>Php${formattedRateToUse} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Special Day":
-        html += `<p>Php${formattedRateToUse} ${
-          getMultiplier(period.start_date) == 0.3 ? " x 30% " : ""
-        } x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>
+                    Php${formattedRateToUse} 
+                    ${getMultiplier(period.start_date) == 0.3 ? " x 30% " : ""} 
+                    x ${keyword} <span class="value";">= Php${total}</span>
+                  </p>`;
         break;
       case "Rest Day":
         html += `<p>Php${formattedRateToUse} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
@@ -214,9 +216,7 @@ const PDFPage = () => {
         html += `<p>Php${formattedRateToUse} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
-        html += `
-          <p>Php${formattedRateToUse} x ${keyword} / 12 months = Php${total}</p>
-          `;
+        html += `<p>Php${formattedRateToUse} x ${keyword} / 12 months = Php${total}</p>`;
         break;
       default:
         html += "";
@@ -225,26 +225,6 @@ const PDFPage = () => {
 
     return html;
   };
-
-  useEffect(() => {
-    const getRecords = async () => {
-      const data = await db.query.establishments.findFirst({
-        where: eq(establishments.id, id),
-        with: {
-          employees: {
-            with: {
-              violations: true,
-            },
-          },
-        },
-      });
-
-      console.log(data);
-      setRecord(data);
-    };
-
-    getRecords();
-  }, []);
 
   const generateHTML = (isPreview) => `
     <!DOCTYPE html>
@@ -280,6 +260,7 @@ const PDFPage = () => {
         <h1 style="text-align: center; font-size: ${
           isPreview ? "47" : "20"
         }px; font-weight: bold; color: black;">${record.name.toUpperCase()}</h1>
+
         ${record.employees.map(
           (employee, index) => `${renderEmployee(employee, index)}`
         )}
@@ -298,10 +279,23 @@ const PDFPage = () => {
       } else {
         alert("PDF saved at: " + uri);
       }
-    } catch (err) {
-      console.error("Error generating PDF:", err);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
     }
   };
+
+  useEffect(() => {
+    const getRecords = async () => {
+      const id = SessionStorage.getItem("establishment_id");
+      const data = await db.query.establishments.findFirst({
+        where: eq(establishments.id, id),
+        with: { employees: { with: { violations: true } } },
+      });
+      console.log(data);
+      setRecord(data);
+    };
+    getRecords();
+  }, []);
 
   return (
     <>

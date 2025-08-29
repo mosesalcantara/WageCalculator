@@ -1,8 +1,8 @@
 import {
   calculate,
   formatNumber,
-  periodFormat,
   numberToLetter,
+  periodFormat,
 } from "@/utils/utils";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -23,7 +23,7 @@ const Form = ({
   const [values, setValues] = valuesState;
 
   const formatDate = (date) => {
-    return date ? (date = new Date(date)) : (date = new Date());
+    return date ? new Date(date) : new Date();
   };
 
   const checkType = () => {
@@ -31,7 +31,7 @@ const Form = ({
   };
 
   const handleChange = (key, value) => {
-    handleInitialChange(index, key, value);
+    handleInitialChange(key, value, index);
 
     if (key == "start_date") {
       setStartDateModalVisible(false);
@@ -44,9 +44,7 @@ const Form = ({
     setValues((prev) => {
       return {
         ...prev,
-        [type]: {
-          periods: [...prev[type].periods, periodFormat],
-        },
+        [type]: { periods: [...prev[type].periods, periodFormat] },
       };
     });
   };
@@ -56,29 +54,17 @@ const Form = ({
       const updatedPeriods = prev[type].periods;
       updatedPeriods.splice(index, 1);
 
-      return {
-        ...prev,
-        [type]: {
-          periods: updatedPeriods,
-        },
-      };
+      return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
 
   const clearPeriod = () => {
     setValues((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) => {
-        if (index == periodIndex) {
-          return periodFormat;
-        } else return period;
-      });
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+        index == periodIndex ? periodFormat : period
+      );
 
-      return {
-        ...prev,
-        [type]: {
-          periods: updatedPeriods,
-        },
-      };
+      return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
 
@@ -87,7 +73,8 @@ const Form = ({
       <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
         <View>
           <Text style={{ textAlign: "center" }}>
-            {values[type].periods.length > 1 && `Period ${numberToLetter(index)}`}
+            {values[type].periods.length > 1 &&
+              `Period ${numberToLetter(index)}`}
           </Text>
           <View>
             <Text style={styles.label}>Start Date</Text>
@@ -130,7 +117,10 @@ const Form = ({
         <View style={styles.resultBox}>
           <Text style={styles.resultLabel}>Total:</Text>
           <Text style={styles.resultValue}>
-            ₱{formatNumber(calculate(values[type].periods[index], parent.rate, type))}
+            ₱
+            {formatNumber(
+              calculate(values[type].periods[index], parent.rate, type)
+            )}
           </Text>
         </View>
 

@@ -9,6 +9,10 @@ export const periodFormat = {
   daysOrHours: "",
 };
 
+export const periodsFormat = {
+  periods: [periodFormat],
+};
+
 export const getDb = () => {
   return drizzle(useSQLiteContext(), { schema });
 };
@@ -87,9 +91,9 @@ export const calculate = (period, rate, type) => {
 
 export const getTotals = (valuesType, rate, type) => {
   let result = 0;
-  valuesType.periods.forEach((period) => {
-    result += calculate(period, rate, type);
-  });
-  valuesType.received && (subtotal -= valuesType.received);
+  valuesType.periods.forEach(
+    (period) => (result += calculate(period, rate, type))
+  );
+  valuesType.received && (result -= valuesType.received);
   return result;
 };

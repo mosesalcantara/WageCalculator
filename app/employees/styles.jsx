@@ -33,12 +33,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     paddingVertical: 12,
   },
-  evenRow: {
-    backgroundColor: "#fafafa",
-  },
-  oddRow: {
-    backgroundColor: "#f0f0f0",
-  },
   cellText: {
     color: "#333",
     fontSize: 14,
