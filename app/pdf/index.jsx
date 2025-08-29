@@ -1,12 +1,14 @@
 import NavBar from "@/components/NavBar";
 import { establishments } from "@/db/schema";
 import {
+  calculate,
   formatDate,
   formatNumber,
   getDb,
   getMultiplier,
   getRate,
-  numToLetter,
+  numberToLetter,
+  validate,
 } from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import * as Print from "expo-print";
@@ -15,7 +17,6 @@ import { useEffect, useState } from "react";
 import { Button, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import { WebView } from "react-native-webview";
-import { calculate } from "../../utils/utils";
 
 const PDFPage = () => {
   const db = getDb();
@@ -30,8 +31,8 @@ const PDFPage = () => {
       const violations = JSON.parse(employee.violations[0].values);
       let valid = 0;
 
-      Object.keys(violations).forEach((type) => {
-        violations[type].periods.forEach((period) => {
+      Object.values(violations).forEach((violationType) => {
+        violationType.periods.forEach((period) => {
           Object.values(period).every((value) => value) && (valid += 1);
         });
       });
@@ -58,21 +59,21 @@ const PDFPage = () => {
     let html = "";
 
     const violations = JSON.parse(employee.violations[0].values);
-    const actualRate = employee.rate;
+    const rate = employee.rate;
     let total = 0;
 
     Object.keys(violations).forEach((type) => {
       const violationType = violations[type];
 
-      violationType.periods.map((_, index) => {
-        total += calculate(violations, type, index, actualRate);
+      violationType.periods.forEach((period) => {
+        total += calculate(period, rate, type);
       });
       violationType.received && (total -= violationType.received);
 
       let isValid = false;
 
       violationType.periods.forEach((period) => {
-        isValid = Object.values(period).every((value) => value);
+        isValid = validate(period);
       });
 
       isValid &&
@@ -81,7 +82,7 @@ const PDFPage = () => {
             type == "Holiday Pay" ? "Non-payment" : "Underpayment"
           } of ${getType(type)}</u></p>
          
-          ${renderViolation(violations, type, actualRate)}
+          ${renderViolation(violations[type], rate, type)}
 
           <br/>
         `);
@@ -94,20 +95,19 @@ const PDFPage = () => {
     return html;
   };
 
-  const renderViolation = (violations, type, actualRate) => {
-    const violationType = violations[type]
+  const renderViolation = (violationType, rate, type) => {
     let html = "";
     let subtotal = 0;
-    
-    violationType.periods.map((period, index) => {
-      subtotal += calculate(violations, type, index, actualRate);
+
+    violationType.periods.forEach((period, index) => {
+      subtotal += calculate(period, rate, type);
       html += `
         <p>Period${
-          violationType.periods.length > 1 ? ` ${numToLetter(index)}` : ""
+          violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
         }: ${formatDate(period.start_date)} to ${formatDate(
         period.end_date
       )} (${getDaysOrHours(type, period.daysOrHours)})</p>
-        ${renderFormula(violations, type, index, actualRate)}
+        ${renderFormula(period, rate, type)}
       `;
     });
 
@@ -176,47 +176,46 @@ const PDFPage = () => {
     return keyword;
   };
 
-  const renderFormula = (violations, type, index, actualRate) => {
+  const renderFormula = (period, rate, type) => {
     let html = "";
-    const period = violations[type].periods[index];
-    const result = getRate(period.start_date, actualRate);
+    const result = getRate(period.start_date, rate);
 
     if (result.isBelow) {
-      html += `<p>Prevailing Rate: Php${result.rate.toFixed(
+      html += `<p>Prevailing Rate: Php${result.rateToUse.toFixed(
         2
       )} (RB-MIMAROPA-12)</p>`;
     }
 
-    const formattedRate = result.rate.toFixed(2);
+    const formattedRateToUse = result.rateToUse.toFixed(2);
     const keyword = getDaysOrHours(type, period.daysOrHours);
-    const total = formatNumber(calculate(violations, type, index, actualRate));
+    const total = formatNumber(calculate(period, rate, type));
 
     switch (type) {
       case "Basic Wage":
-        html += `<p>Php${formattedRate} - ${actualRate.toFixed(
+        html += `<p>Php${formattedRateToUse} - ${rate.toFixed(
           2
         )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Overtime Pay":
-        html += `<p>Php${formattedRate} / 8 x 25% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} / 8 x 25% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Night Differential":
-        html += `<p>Php${formattedRate} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Special Day":
-        html += `<p>Php${formattedRate} ${
+        html += `<p>Php${formattedRateToUse} ${
           getMultiplier(period.start_date) == 0.3 ? " x 30% " : ""
         } x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Rest Day":
-        html += `<p>Php${formattedRate} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Holiday Pay":
-        html += `<p>Php${formattedRate} x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
         html += `
-          <p>Php${formattedRate} x ${keyword} / 12 months = Php${total}</p>
+          <p>Php${formattedRateToUse} x ${keyword} / 12 months = Php${total}</p>
           `;
         break;
       default:

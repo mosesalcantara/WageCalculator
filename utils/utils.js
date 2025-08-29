@@ -3,14 +3,14 @@ import { format, isAfter, isBefore, parse, parseISO } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
-export const getDb = () => {
-  return drizzle(useSQLiteContext(), { schema });
-};
-
 export const periodFormat = {
   start_date: "",
   end_date: "",
   daysOrHours: "",
+};
+
+export const getDb = () => {
+  return drizzle(useSQLiteContext(), { schema });
 };
 
 export const formatNumber = (number) => {
@@ -20,89 +20,76 @@ export const formatNumber = (number) => {
   });
 };
 
-export const numToLetter = (index) => {
-  return String.fromCharCode(65 + index);
+export const numberToLetter = (number) => {
+  return String.fromCharCode(65 + number);
 };
 
 export const formatDate = (date) => {
-  date = parse(date, "yyyy-MM-dd", new Date());
-  return format(date, "dd MMMM yyyy");
+  return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
 };
 
 export const parseDate = (date) => {
   return parseISO(new Date(date).toISOString());
 };
 
-export const getRate = (start, actualRate) => {
-  let minimumRate = 0;
-
-  isBefore(parseDate(start), parseDate("2024-12-23"))
-    ? (minimumRate = 395)
-    : (minimumRate = 430);
-
-  let isBelow = false;
-  let rate = 0;
-
-  isBelow = actualRate < minimumRate;
-  isBelow ? (rate = minimumRate) : (rate = actualRate);
+export const getRate = (start, rate) => {
+  const minimumRate = isBefore(parseDate(start), parseDate("2024-12-23"))
+    ? 395
+    : 430;
+  const isBelow = rate < minimumRate;
+  const rateToUse = isBelow ? minimumRate : rate;
 
   return {
     minimumRate: minimumRate,
     isBelow: isBelow,
-    rate: rate,
+    rateToUse: rateToUse,
   };
 };
 
 export const getMultiplier = (start) => {
-  let multiplier = 1;
-
-  isAfter(parseDate(start), parseDate("2023-12-31")) &&
-  isBefore(parseDate(start), parseDate("2024-12-23"))
-    ? (multiplier = 1)
-    : (multiplier = 0.3);
-
-  return multiplier;
+  return isAfter(parseDate(start), parseDate("2023-12-31")) &&
+    isBefore(parseDate(start), parseDate("2024-12-23"))
+    ? 1
+    : 0.3;
 };
 
-export const validate = (values, type, index) => {
-  return Object.values(values[type].periods[index]).every((value) => value);
+export const validate = (object) => {
+  return Object.values(object).every((value) => value);
 };
 
-export const calculate = (values, type, index, actualRate) => {
-  const isValid = validate(values, type, index);
-  let total = 0;
-  if (isValid) {
-    const startDate = values[type].periods[index].start_date;
-    const daysOrHours = values[type].periods[index].daysOrHours;
-    const { minimumRate, isBelow, rate } = getRate(startDate, actualRate);
+export const calculate = (period, rate, type) => {
+  let result = 0;
 
-    if (type == "Basic Wage") {
-      if (isBelow) {
-        total = (minimumRate - actualRate) * daysOrHours;
-      }
+  if (validate(period)) {
+    const start = period.start_date;
+    const daysOrHours = period.daysOrHours;
+    const { minimumRate, isBelow, rateToUse } = getRate(start, rate);
+
+    if (type == "Basic Wage" && isBelow) {
+      result = (minimumRate - rate) * daysOrHours;
     } else if (type == "Overtime Pay") {
-      total = (rate / 8) * 0.25 * daysOrHours;
+      result = (rateToUse / 8) * 0.25 * daysOrHours;
     } else if (type == "Night Differential") {
-      total = (rate / 8) * 0.1 * daysOrHours;
+      result = (rateToUse / 8) * 0.1 * daysOrHours;
     } else if (type == "Special Day") {
-      total = rate * getMultiplier(startDate) * daysOrHours;
+      result = rateToUse * getMultiplier(start) * daysOrHours;
     } else if (type == "Rest Day") {
-      total = rate * 0.3 * daysOrHours;
+      result = rateToUse * 0.3 * daysOrHours;
     } else if (type == "Holiday Pay") {
-      total = rate * daysOrHours;
+      result = rateToUse * daysOrHours;
     } else if (type == "13th Month Pay") {
-      total = (rate * daysOrHours) / 12;
+      result = (rateToUse * daysOrHours) / 12;
     }
   }
 
-  return total;
+  return result;
 };
 
-export const getTotals = (values, type, actualRate) => {
-  let subtotal = 0;
-  values[type].periods.forEach((_, index) => {
-    subtotal += calculate(values, type, index, actualRate);
+export const getTotals = (valuesType, rate, type) => {
+  let result = 0;
+  valuesType.periods.forEach((period) => {
+    result += calculate(period, rate, type);
   });
-  values[type].received && (subtotal -= values[type].received);
-  return subtotal;
+  valuesType.received && (subtotal -= valuesType.received);
+  return result;
 };

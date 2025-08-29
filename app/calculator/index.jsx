@@ -172,7 +172,7 @@ const CalculatorPage = () => {
           )}`}
         </Text>
         <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
-          Subtotal: {formatNumber(getTotals(values, type, parent.rate))}
+          Subtotal: {formatNumber(getTotals(values[type], parent.rate, type))}
         </Text>
       </View>
 

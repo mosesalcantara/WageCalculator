@@ -2,7 +2,7 @@ import {
   calculate,
   formatNumber,
   periodFormat,
-  numToLetter,
+  numberToLetter,
 } from "@/utils/utils";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -87,7 +87,7 @@ const Form = ({
       <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
         <View>
           <Text style={{ textAlign: "center" }}>
-            {values[type].periods.length > 1 && `Period ${numToLetter(index)}`}
+            {values[type].periods.length > 1 && `Period ${numberToLetter(index)}`}
           </Text>
           <View>
             <Text style={styles.label}>Start Date</Text>
@@ -130,7 +130,7 @@ const Form = ({
         <View style={styles.resultBox}>
           <Text style={styles.resultLabel}>Total:</Text>
           <Text style={styles.resultValue}>
-            ₱{formatNumber(calculate(values, type, index, parent.rate))}
+            ₱{formatNumber(calculate(values[type].periods[index], parent.rate, type))}
           </Text>
         </View>
 
