@@ -36,8 +36,8 @@ export const parseDate = (date) => {
   return parseISO(new Date(date).toISOString());
 };
 
-export const getRate = (start, rate) => {
-  const minimumRate = isBefore(parseDate(start), parseDate("2024-12-23"))
+export const getRate = (startDate, rate) => {
+  const minimumRate = isBefore(parseDate(startDate), parseDate("2024-12-23"))
     ? 395
     : 430;
   const isBelow = rate < minimumRate;
@@ -50,9 +50,9 @@ export const getRate = (start, rate) => {
   };
 };
 
-export const getMultiplier = (start) => {
-  return isAfter(parseDate(start), parseDate("2023-12-31")) &&
-    isBefore(parseDate(start), parseDate("2024-12-23"))
+export const getMultiplier = (startDate) => {
+  return isAfter(parseDate(startDate), parseDate("2023-12-31")) &&
+    isBefore(parseDate(startDate), parseDate("2024-12-23"))
     ? 1
     : 0.3;
 };
@@ -65,9 +65,9 @@ export const calculate = (period, rate, type) => {
   let result = 0;
 
   if (validate(period)) {
-    const start = period.start_date;
+    const startDate = period.start_date;
     const daysOrHours = period.daysOrHours;
-    const { minimumRate, isBelow, rateToUse } = getRate(start, rate);
+    const { minimumRate, isBelow, rateToUse } = getRate(startDate, rate);
 
     if (type == "Basic Wage" && isBelow) {
       result = (minimumRate - rate) * daysOrHours;
@@ -76,7 +76,7 @@ export const calculate = (period, rate, type) => {
     } else if (type == "Night Differential") {
       result = (rateToUse / 8) * 0.1 * daysOrHours;
     } else if (type == "Special Day") {
-      result = rateToUse * getMultiplier(start) * daysOrHours;
+      result = rateToUse * getMultiplier(startDate) * daysOrHours;
     } else if (type == "Rest Day") {
       result = rateToUse * 0.3 * daysOrHours;
     } else if (type == "Holiday Pay") {
@@ -90,9 +90,9 @@ export const calculate = (period, rate, type) => {
 };
 
 export const getTotals = (valuesType, rate, type) => {
-  let result = 0;
-  valuesType.periods.forEach(
-    (period) => (result += calculate(period, rate, type))
+  let result = valuesType.periods.reduce(
+    (accumulator, period) => (accumulator += calculate(period, rate, type)),
+    0
   );
   valuesType.received && (result -= valuesType.received);
   return result;

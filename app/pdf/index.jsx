@@ -45,7 +45,7 @@ const PDFPage = () => {
             </p>
 
             <p font-weight: bold;">
-              Actual Rate: Php${employee.rate.toFixed(2)}/day
+              Actual Rate: Php${formatNumber(employee.rate)}/day
             </p>
             <hr>
 
@@ -175,21 +175,25 @@ const PDFPage = () => {
   const renderFormula = (period, rate, type) => {
     let html = "";
 
-    const result = getRate(period.start_date, rate);
-    result.isBelow &&
+    const { minimumRate, isBelow, rateToUse } = getRate(
+      period.start_date,
+      rate
+    );
+
+    isBelow &&
       (html += `
         <p>
-          Prevailing Rate: Php${result.rateToUse.toFixed(2)} (RB-MIMAROPA-12)
+          Prevailing Rate: Php${formatNumber(rateToUse)} (RB-MIMAROPA-12)
         </p>`);
 
-    const formattedRateToUse = result.rateToUse.toFixed(2);
+    const formattedRateToUse = formatNumber(rateToUse);
     const total = formatNumber(calculate(period, rate, type));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
       case "Basic Wage":
         html += `<p>
-                  Php${formattedRateToUse} - ${rate.toFixed(2)} x ${keyword} 
+                  Php${formattedRateToUse} - ${formatNumber(rate)} x ${keyword} 
                   <span class="value";">= Php${total}</span>
                  </p>`;
         break;
