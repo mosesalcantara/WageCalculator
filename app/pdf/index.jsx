@@ -231,46 +231,65 @@ const PDFPage = () => {
   };
 
   const generateHTML = (isPreview) => `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <title>Static PDF Preview</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-          }
-          .value{
-              float: right;
-              font-weight: bold;
-          }
-          p {
-            font-size: ${isPreview ? "40" : "16"}px;
-            line-height: ${isPreview ? "1.5" : "0.2"};
-          }
-          .period {
-            font-weight: bold;
-            float: right;
-          }
-          .actual {
-            font-weight: bold;
-            float: right;
-          }
-        </style>
-      </head>
-      <body>
-        <h1 style="text-align: center; font-size: ${
-          isPreview ? "47" : "20"
-        }px; font-weight: bold; color: black;">${record.name.toUpperCase()}</h1>
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <title>Static PDF Preview</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          padding: 0;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+        th, td {
+          padding: 6px;
+          font-size: ${isPreview ? "32" : "12"}px;
+        }
+        .value {
+          font-weight: bold;
+          text-align: right;
+          float: right;
+        }
+        h1 {
+          text-align: center; 
+          font-size: ${isPreview ? "40" : "20"}px;
+          font-weight: bold;
+          color: black;
+          margin-bottom: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>${record.name.toUpperCase()}</h1>
 
-        ${record.employees.map(
-          (employee, index) => `${renderEmployee(employee, index)}`
-        )}
-      </body>
-    </html>
-  `;
+      <table>
+        <tbody>
+          ${record.employees
+            .map(
+              (employee, index) => `
+              <tr>
+                <td>
+                ${
+                  index + 1
+                }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</td>
+                <td></td>
+              </tr>
+              <tr><td>Php ${formatNumber(employee.rate)}/day</td><tr>
+              <tr><td>${renderViolations(employee, index)}</td><tr>
+            `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </body>
+  </html>
+`;
 
   const printToPDF = async () => {
     try {
