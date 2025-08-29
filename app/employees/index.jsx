@@ -23,15 +23,7 @@ const EmployeesPage = () => {
     name: "",
   });
   const [records, setRecords] = useState([]);
-  const [values, setValues] = useState({
-    id: "",
-    first_name: "",
-    last_name: "",
-    rate: "",
-  });
-
   const [mutations, setMutations] = useState(0);
-  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
   const deleteRecord = async (id) => {
     await db.delete(employees).where(eq(employees.id, id));
@@ -68,7 +60,6 @@ const EmployeesPage = () => {
 
         <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
           <View style={[styles.table, { width: 361 }]}>
-            {/* Table Header */}
             <View style={[styles.row, styles.headerRow]}>
               <Text style={[styles.cell, styles.headerCell, { flex: 2 }]}>
                 Name
@@ -81,7 +72,6 @@ const EmployeesPage = () => {
               </Text>
             </View>
 
-            {/* Table Rows */}
             {records.map((record, index) => (
               <View
                 key={index}
@@ -101,14 +91,13 @@ const EmployeesPage = () => {
                   <TouchableOpacity onPress={() => setEmployee(record.id)}>
                     <Icon name="remove-red-eye" size={20} color="#2196F3" />
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setValues({ ...record, rate: `${record.rate}` });
-                      setIsUpdateModalVisible(true);
-                    }}
-                  >
-                    <Icon name="edit" size={20} color="#2196F3" />
-                  </TouchableOpacity>
+
+                  <UpdateEmployeeModal
+                    db={db}
+                    setMutations={setMutations}
+                    values={{ ...record, rate: `${record.rate}` }}
+                  />
+
                   <TouchableOpacity
                     onPress={() => {
                       confirmAlert("Employee", deleteRecord, record.id);
@@ -123,15 +112,6 @@ const EmployeesPage = () => {
         </ScrollView>
 
         <AddEmployeeModal db={db} setMutations={setMutations} parent={parent} />
-        <UpdateEmployeeModal
-          db={db}
-          setMutations={setMutations}
-          values={values}
-          isUpdateModalVisibleState={[
-            isUpdateModalVisible,
-            setIsUpdateModalVisible,
-          ]}
-        />
       </View>
     </>
   );

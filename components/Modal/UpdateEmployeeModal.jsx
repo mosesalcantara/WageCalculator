@@ -1,16 +1,13 @@
 import { employees } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
+import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import * as Yup from "yup";
 import styles from "./styles";
 
-const UpdateEmployeeModal = ({
-  db,
-  setMutations,
-  values,
-  isUpdateModalVisibleState,
-}) => {
+const UpdateEmployeeModal = ({ db, setMutations, values }) => {
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().trim().required().label("First Name"),
     last_name: Yup.string().trim().required().label("Last Name"),
@@ -18,8 +15,7 @@ const UpdateEmployeeModal = ({
   });
 
   const initialValues = values;
-  const [isUpdateModalVisible, setIsUpdateModalVisible] =
-    isUpdateModalVisibleState;
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
   const onSubmit = async (values, { resetForm }) => {
     try {
@@ -35,6 +31,14 @@ const UpdateEmployeeModal = ({
 
   return (
     <>
+      <TouchableOpacity
+        onPress={() => {
+          setIsUpdateModalVisible(true);
+        }}
+      >
+        <Icon name="edit" size={20} color="#2196F3" />
+      </TouchableOpacity>
+
       <Modal
         animationType="slide"
         transparent

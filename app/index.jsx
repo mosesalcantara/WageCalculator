@@ -17,13 +17,7 @@ const EstablishmentPage = () => {
   const db = getDb();
 
   const [records, setRecords] = useState([]);
-  const [values, setValues] = useState({
-    id: "",
-    name: "",
-  });
-
   const [mutations, setMutations] = useState(0);
-  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
   const deleteRecord = async (id) => {
     await db.delete(establishments).where(eq(establishments.id, id));
@@ -51,10 +45,8 @@ const EstablishmentPage = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <NavBar />
 
-      {/* List of establishments */}
       <FlatList
         data={records}
         keyExtractor={(record) => record.id}
@@ -69,14 +61,11 @@ const EstablishmentPage = () => {
                 <Icon name="remove-red-eye" size={20} color="#2196F3" />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => {
-                  setValues(item);
-                  setIsUpdateModalVisible(true);
-                }}
-              >
-                <Icon name="edit" size={20} color="#2196F3" />
-              </TouchableOpacity>
+              <UpdateEstablishmentModal
+                db={db}
+                setMutations={setMutations}
+                values={item}
+              />
 
               <TouchableOpacity
                 onPress={() => {
@@ -99,15 +88,6 @@ const EstablishmentPage = () => {
       />
 
       <AddEstablishmentModal db={db} setMutations={setMutations} />
-      <UpdateEstablishmentModal
-        db={db}
-        setMutations={setMutations}
-        values={values}
-        isUpdateModalVisibleState={[
-          isUpdateModalVisible,
-          setIsUpdateModalVisible,
-        ]}
-      />
     </View>
   );
 };
