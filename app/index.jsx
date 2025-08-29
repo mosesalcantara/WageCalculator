@@ -20,8 +20,6 @@ const EstablishmentPage = () => {
   const [values, setValues] = useState({
     id: "",
     name: "",
-    type: "",
-    address: "",
   });
 
   const [mutations, setMutations] = useState(0);

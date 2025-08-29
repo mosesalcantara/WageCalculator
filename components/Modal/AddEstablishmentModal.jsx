@@ -2,24 +2,18 @@ import { establishments } from "@/db/schema";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
 import * as Yup from "yup";
 import styles from "./styles";
 
 const AddEstablishmentModal = ({ db, setMutations }) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required().label("Name"),
-    type: Yup.string().trim().required().label("Type"),
-    address: Yup.string().trim().required().label("Address"),
   });
 
   const initialValues = {
     name: "",
-    type: "Non-Agriculture",
-    address: "",
   };
 
-  const [isFocus, setIsFocus] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
   const onSubmit = async (values, { resetForm }) => {
@@ -77,64 +71,6 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
                   {touched.name && errors.name && (
                     <Text style={{ color: "red", fontSize: 12 }}>
                       {errors.name}
-                    </Text>
-                  )}
-                </View>
-
-                <View>
-                  <Text style={styles.label}>Type:</Text>
-                  <View
-                    style={{
-                      backgroundColor: "white",
-                      padding: 7,
-                      marginTop: 3,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Dropdown
-                      style={[
-                        {
-                          height: 27,
-                        },
-                        isFocus && { borderColor: "blue" },
-                      ]}
-                      placeholderStyle={{
-                        fontSize: 14,
-                      }}
-                      selectedTextStyle={{
-                        fontSize: 14,
-                      }}
-                      data={[
-                        { label: "Agriculture", value: "Agriculture" },
-                        { label: "Non-Agriculture", value: "Non-Agriculture" },
-                      ]}
-                      labelField="label"
-                      valueField="value"
-                      placeholder={!isFocus ? "Select type" : ""}
-                      value={values.type}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={(option) => {
-                        setFieldValue("type", option.value);
-                        setIsFocus(false);
-                      }}
-                    />
-                  </View>
-                </View>
-
-                <View>
-                  <Text style={styles.label}>Address:</Text>
-                  <TextInput
-                    style={{...styles.input, textAlignVertical: "top"}}
-                    multiline
-                    placeholder="Enter address"
-                    value={values.address}
-                    onChangeText={handleChange("address")}
-                    onBlur={() => setFieldTouched("address")}
-                  />
-                  {touched.address && errors.address && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.address}
                     </Text>
                   )}
                 </View>

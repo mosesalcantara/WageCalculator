@@ -21,8 +21,6 @@ const EmployeesPage = () => {
   const [parent, setParent] = useState({
     id: parent_id,
     name: "",
-    type: "",
-    address: "",
   });
   const [records, setRecords] = useState([]);
   const [values, setValues] = useState({

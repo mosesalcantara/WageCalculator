@@ -4,8 +4,6 @@ import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 export const establishments = sqliteTable("establishments", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   name: text("name").notNull(),
-  type: text("type").notNull(),
-  address: text("address").notNull(),
 });
 
 export const employees = sqliteTable("employees", {

@@ -24,7 +24,7 @@ const PDFPage = () => {
   const [record, setRecord] = useState(null);
 
   const renderEmployee = (employee, index) => {
-    let employeeHtml = "";
+    let html = "";
 
     if (employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values);
@@ -37,7 +37,7 @@ const PDFPage = () => {
       });
 
       if (valid > 0) {
-        employeeHtml += `        
+        html += `        
             <p style="font-weight: bold;">${
               index + 1
             }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</p>
@@ -46,84 +46,89 @@ const PDFPage = () => {
             )}/day</p>
             <hr>
 
-            ${renderViolations(employee, violations)}
+            ${renderViolations(employee)}
           `;
       }
     }
 
-    return employeeHtml;
+    return html;
   };
 
-  const renderViolations = (employee, violations) => {
-    let violationsHtml = "";
+  const renderViolations = (employee) => {
+    let html = "";
+
+    const violations = JSON.parse(employee.violations[0].values);
     const actualRate = employee.rate;
     let total = 0;
 
     Object.keys(violations).forEach((type) => {
-      violations[type].inputs.map((_, index) => {
+      const violationType = violations[type];
+
+      violationType.inputs.map((_, index) => {
         total += calculate(violations, type, index, actualRate);
       });
-      violations[type].received && (total -= violations[type].received);
+      violationType.received && (total -= violationType.received);
 
       let isValid = false;
 
-      violations[type].inputs.forEach((input) => {
+      violationType.inputs.forEach((input) => {
         isValid = Object.values(input).every((value) => value);
       });
 
-      if (isValid) {
-        violationsHtml += `
+      isValid &&
+        (html += `
           <p font-weight: bold;"><u>${
             type == "Holiday Pay" ? "Non-payment" : "Underpayment"
           } of ${getType(type)}</u></p>
          
-          ${renderViolation(type, violations[type], actualRate, violations)}
+          ${renderViolation(violations, type, actualRate)}
 
           <br/>
-        `;
-      }
+        `);
     });
 
-    violationsHtml += `<p style="text-align:right;"><u>Total: Php${formatNumber(
+    html += `<p style="text-align:right;"><u>Total: Php${formatNumber(
       total
     )}</u></p>`;
 
-    return violationsHtml;
+    return html;
   };
 
-  const renderViolation = (type, violation, actualRate, violations) => {
+  const renderViolation = (violations, type, actualRate) => {
+    const violationType = violations[type]
+    let html = "";
     let subtotal = 0;
-    let violationHtml = "";
-    violation.inputs.map((input, index) => {
+    
+    violationType.inputs.map((input, index) => {
       subtotal += calculate(violations, type, index, actualRate);
-      violationHtml += `
+      html += `
         <p>Period${
-          violation.inputs.length > 1 ? ` ${numToLetter(index)}` : ""
+          violationType.inputs.length > 1 ? ` ${numToLetter(index)}` : ""
         }: ${formatDate(input.start_date)} to ${formatDate(
         input.end_date
       )} (${getDaysOrHours(type, input.daysOrHours)})</p>
-        ${renderFormula(violations, type, index, actualRate, input)}
+        ${renderFormula(violations, type, index, actualRate)}
       `;
     });
 
-    if (violation.inputs.length > 1) {
-      violationHtml += `<p style="text-align:right;">Subtotal: Php${formatNumber(
+    violationType.inputs.length > 1 &&
+      (html += `<p style="text-align:right;">Subtotal: Php${formatNumber(
         subtotal
-      )}</p>`;
-    }
+      )}</p>`);
 
-    if (type == "13th Month Pay") {
-      violationHtml += `
+    type == "13th Month Pay" &&
+      (html += `
       <p>Actual 13th Month Pay Received: Php${formatNumber(
-        violation.received
+        violationType.received
       )}</p>
       <p>Php${formatNumber(subtotal)} - ${formatNumber(
-        violation.received
-      )} <span>= Php${formatNumber(subtotal - violation.received)}</span></p>
-      `;
-    }
+        violationType.received
+      )} <span>= Php${formatNumber(
+        subtotal - violationType.received
+      )}</span></p>
+      `);
 
-    return violationHtml;
+    return html;
   };
 
   const getType = (type) => {
@@ -172,70 +177,54 @@ const PDFPage = () => {
   };
 
   const renderFormula = (violations, type, index, actualRate) => {
-    let formulatHtml = "";
-    const result = getRate(
-      violations[type].inputs[index].start_date,
-      actualRate
-    );
+    let html = "";
+    const input = violations[type].inputs[index];
+    const result = getRate(input.start_date, actualRate);
 
     if (result.isBelow) {
-      formulatHtml += `<p>Prevailing Rate: Php${result.rate.toFixed(
+      html += `<p>Prevailing Rate: Php${result.rate.toFixed(
         2
       )} (RB-MIMAROPA-12)</p>`;
     }
 
-    let keyword = getDaysOrHours(
-      type,
-      violations[type].inputs[index].daysOrHours
-    );
-    let total = calculate(violations, type, index, actualRate);
+    const formattedRate = result.rate.toFixed(2);
+    const keyword = getDaysOrHours(type, input.daysOrHours);
+    const total = formatNumber(calculate(violations, type, index, actualRate));
 
     switch (type) {
       case "Basic Wage":
-        formulatHtml += `<p>Php${result.rate.toFixed(2)} - ${actualRate.toFixed(
+        html += `<p>Php${formattedRate} - ${actualRate.toFixed(
           2
         )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Overtime Pay":
-        formulatHtml += `<p>Php${result.rate.toFixed(
-          2
-        )} / 8 x 25% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRate} / 8 x 25% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Night Differential":
-        formulatHtml += `<p>Php${result.rate.toFixed(
-          2
-        )} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRate} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Special Day":
-        formulatHtml += `<p>Php${result.rate.toFixed(2)} ${
-          getMultiplier(violations[type].inputs[index].start_date) == 0.3
-            ? " x 30% "
-            : ""
+        html += `<p>Php${formattedRate} ${
+          getMultiplier(input.start_date) == 0.3 ? " x 30% " : ""
         } x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Rest Day":
-        formulatHtml += `<p>Php${result.rate.toFixed(
-          2
-        )} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRate} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "Holiday Pay":
-        formulatHtml += `<p>Php${result.rate.toFixed(
-          2
-        )} x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRate} x ${keyword} <span class="value";">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
-        formulatHtml += `
-          <p>Php${result.rate.toFixed(
-            2
-          )} x ${keyword} / 12 months = Php${formatNumber(total)}</p>
+        html += `
+          <p>Php${formattedRate} x ${keyword} / 12 months = Php${total}</p>
           `;
         break;
       default:
-        formulatHtml += "";
+        html += "";
         break;
     }
 
-    return formulatHtml;
+    return html;
   };
 
   useEffect(() => {
