@@ -88,9 +88,8 @@ const PDFPage = () => {
         `);
     });
 
-    html += `<p style="text-align:right;">
-              <u>Total: Php${formatNumber(total)}</u>
-             </p>`;
+    html += `<b><u style="float:right;">Total: Php${formatNumber(total)}</u></b>
+             `;
 
     return html;
   };

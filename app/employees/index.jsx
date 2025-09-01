@@ -12,6 +12,7 @@ import {
   BackHandler,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -26,6 +27,7 @@ const EmployeesPage = () => {
   const [parent, setParent] = useState(null);
   const [records, setRecords] = useState([]);
   const [mutations, setMutations] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const deleteRecord = async (id) => {
     await db.delete(employees).where(eq(employees.id, id));
@@ -69,6 +71,12 @@ const EmployeesPage = () => {
     }, [])
   );
 
+  const filteredRecords = records.filter((record) =>
+    `${record.first_name} ${record.last_name}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       {parent && records && (
@@ -77,6 +85,20 @@ const EmployeesPage = () => {
 
           <View style={styles.container}>
             <Text style={styles.title}>{parent.name} - Employees</Text>
+
+            <TextInput
+              placeholder="Search employee by name..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              style={{
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 10,
+                fontSize: 16,
+              }}
+            />
 
             <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
               <View style={[styles.table, { width: 361 }]}>
@@ -92,36 +114,48 @@ const EmployeesPage = () => {
                   </Text>
                 </View>
 
-                {records.map((record) => (
-                  <View key={record.id} style={[styles.row]}>
-                    <Text style={[styles.cellText, { flex: 2 }]}>
-                      {record.first_name} {record.last_name}
-                    </Text>
-                    <Text style={[styles.cellText, { flex: 1 }]}>
-                      {record.rate}
-                    </Text>
+                {filteredRecords.length > 0 ? (
+                  filteredRecords.map((record) => (
+                    <View key={record.id} style={[styles.row]}>
+                      <Text style={[styles.cellText, { flex: 2 }]}>
+                        {record.first_name} {record.last_name}
+                      </Text>
+                      <Text style={[styles.cellText, { flex: 1 }]}>
+                        {record.rate}
+                      </Text>
 
-                    <View style={[styles.actionCell, { flex: 0.8 }]}>
-                      <TouchableOpacity onPress={() => setEmployee(record.id)}>
-                        <Icon name="remove-red-eye" size={20} color="#2196F3" />
-                      </TouchableOpacity>
+                      <View style={[styles.actionCell, { flex: 0.8 }]}>
+                        <TouchableOpacity
+                          onPress={() => setEmployee(record.id)}
+                        >
+                          <Icon
+                            name="remove-red-eye"
+                            size={20}
+                            color="#2196F3"
+                          />
+                        </TouchableOpacity>
 
-                      <UpdateEmployeeModal
-                        db={db}
-                        setMutations={setMutations}
-                        values={{ ...record, rate: `${record.rate}` }}
-                      />
+                        <UpdateEmployeeModal
+                          db={db}
+                          setMutations={setMutations}
+                          values={{ ...record, rate: `${record.rate}` }}
+                        />
 
-                      <TouchableOpacity
-                        onPress={() => {
-                          confirmAlert("Employee", deleteRecord, record.id);
-                        }}
-                      >
-                        <Icon name="delete" size={20} color="#E53935" />
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            confirmAlert("Employee", deleteRecord, record.id);
+                          }}
+                        >
+                          <Icon name="delete" size={20} color="#E53935" />
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                  </View>
-                ))}
+                  ))
+                ) : (
+                  <Text style={{ textAlign: "center", marginVertical: 10 }}>
+                    No employees found.
+                  </Text>
+                )}
               </View>
             </ScrollView>
 
