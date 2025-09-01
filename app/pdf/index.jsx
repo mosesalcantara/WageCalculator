@@ -298,13 +298,16 @@ const PDFPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const id = SessionStorage.getItem("establishment_id");
-      const data = await db.query.establishments.findFirst({
-        where: eq(establishments.id, id),
-        with: { employees: { with: { violations: true } } },
-      });
-      console.log(data);
-      setRecord(data);
+      try {
+        const id = SessionStorage.getItem("establishment_id");
+        const data = await db.query.establishments.findFirst({
+          where: eq(establishments.id, id),
+          with: { employees: { with: { violations: true } } },
+        });
+        setRecord(data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getRecords();
   }, []);

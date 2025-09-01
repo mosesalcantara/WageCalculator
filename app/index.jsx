@@ -49,12 +49,14 @@ const EstablishmentPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const data = await db.query.establishments.findMany({
-        with: {
-          employees: true,
-        },
-      });
-      setRecords(data);
+      try {
+        const data = await db.query.establishments.findMany({
+          with: { employees: true },
+        });
+        setRecords(data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getRecords();
   }, [mutations]);

@@ -37,9 +37,13 @@ const EmployeesPage = () => {
   });
 
   const deleteRecord = async (id) => {
-    await db.delete(violations).where(eq(violations.employee_id, id));
-    await db.delete(employees).where(eq(employees.id, id));
-    setMutations((prev) => ++prev);
+    try {
+      await db.delete(violations).where(eq(violations.employee_id, id));
+      await db.delete(employees).where(eq(employees.id, id));
+      setMutations((prev) => ++prev);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const setEmployee = (id) => {
@@ -49,13 +53,17 @@ const EmployeesPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const parent_id = SessionStorage.getItem("establishment_id");
-      const data = await db.query.establishments.findFirst({
-        where: eq(establishments.id, parent_id),
-        with: { employees: true },
-      });
-      setParent(data);
-      setRecords(data.employees);
+      try {
+        const parent_id = SessionStorage.getItem("establishment_id");
+        const data = await db.query.establishments.findFirst({
+          where: eq(establishments.id, parent_id),
+          with: { employees: true },
+        });
+        setParent(data);
+        setRecords(data.employees);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getRecords();
   }, [mutations]);
