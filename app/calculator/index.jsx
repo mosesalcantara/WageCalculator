@@ -51,7 +51,7 @@ const CalculatorPage = () => {
     },
   });
 
-  const addRecord = async () => {
+  const addRecord = async (values) => {
     try {
       await db.delete(violations).where(eq(violations.employee_id, parent_id));
       await db
@@ -98,22 +98,22 @@ const CalculatorPage = () => {
     getRecords();
   }, []);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const handleBackPress = () => {
-  //       router.push("/employees");
-  //       addRecord();
-  //       return true;
-  //     };
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        router.push("/employees");
+        addRecord(values);
+        return true;
+      };
 
-  //     const backhandler = BackHandler.addEventListener(
-  //       "hardwareBackPress",
-  //       handleBackPress
-  //     );
+      const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
 
-  //     return () => backhandler.remove();
-  //   }, [])
-  // );
+      return () => backhandler.remove();
+    }, [values])
+  );
 
   return (
     <>
@@ -232,7 +232,7 @@ const CalculatorPage = () => {
                   marginTop: 20,
                   marginBottom: 30,
                 }}
-                onPress={addRecord}
+                onPress={() => addRecord(values)}
               >
                 <Text
                   style={{
