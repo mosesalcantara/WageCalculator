@@ -4,10 +4,17 @@ import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModa
 import NavBar from "@/components/NavBar";
 import { employees, establishments } from "@/db/schema";
 import { getDb } from "@/utils/utils";
+import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+  BackHandler,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
@@ -41,6 +48,22 @@ const EstablishmentPage = () => {
     };
     getRecords();
   }, [mutations]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        BackHandler.exitApp();
+        return true;
+      };
+
+      const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
+
+      return () => backhandler.remove();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>

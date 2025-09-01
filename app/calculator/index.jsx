@@ -3,10 +3,13 @@ import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
 import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
+import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
-import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
+  BackHandler,
   Image,
   ScrollView,
   Text,
@@ -20,6 +23,8 @@ import styles from "./styles";
 
 const CalculatorPage = () => {
   const db = getDb();
+  const router = useRouter();
+  const parent_id = SessionStorage.getItem("employee_id");
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
@@ -48,10 +53,10 @@ const CalculatorPage = () => {
 
   const addRecord = async () => {
     try {
-      await db.delete(violations).where(eq(violations.employee_id, parent.id));
+      await db.delete(violations).where(eq(violations.employee_id, parent_id));
       await db
         .insert(violations)
-        .values({ values: JSON.stringify(values), employee_id: parent.id });
+        .values({ values: JSON.stringify(values), employee_id: parent_id });
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message || "An Error Eccurred");
@@ -83,7 +88,6 @@ const CalculatorPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      const parent_id = SessionStorage.getItem("employee_id");
       const data = await db.query.employees.findFirst({
         where: eq(employees.id, parent_id),
         with: { violations: true },
@@ -93,6 +97,23 @@ const CalculatorPage = () => {
     };
     getRecords();
   }, []);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const handleBackPress = () => {
+  //       router.push("/employees");
+  //       addRecord();
+  //       return true;
+  //     };
+
+  //     const backhandler = BackHandler.addEventListener(
+  //       "hardwareBackPress",
+  //       handleBackPress
+  //     );
+
+  //     return () => backhandler.remove();
+  //   }, [])
+  // );
 
   return (
     <>

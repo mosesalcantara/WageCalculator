@@ -4,10 +4,17 @@ import UpdateEmployeeModal from "@/components/Modal/UpdateEmployeeModal";
 import NavBar from "@/components/NavBar";
 import { employees, establishments, violations } from "@/db/schema";
 import { getDb } from "@/utils/utils";
+import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+  BackHandler,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
@@ -45,6 +52,22 @@ const EmployeesPage = () => {
     };
     getRecords();
   }, [mutations]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        router.push("/");
+        return true;
+      };
+
+      const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
+
+      return () => backhandler.remove();
+    }, [])
+  );
 
   return (
     <>

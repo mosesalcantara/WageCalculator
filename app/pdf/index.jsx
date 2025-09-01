@@ -38,18 +38,16 @@ const PDFPage = () => {
 
       if (valid > 0) {
         html += `        
-            <p style="font-weight: bold;">
-              ${
-                index + 1
-              }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}
-            </p>
-
-            <p font-weight: bold;">
-              Actual Rate: Php${formatNumber(employee.rate)}/day
-            </p>
-            <hr>
-
-            ${renderViolations(employee)}
+            <tr>
+                <td>
+                ${
+                  index + 1
+                }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}
+                </td>
+                <td></td>
+            </tr>
+            <tr><td>Actual Rate: Php${formatNumber(employee.rate)}/day</td><tr>
+            <tr><td>${renderViolations(employee, index)}</td><tr>
           `;
       }
     }
@@ -273,15 +271,7 @@ const PDFPage = () => {
           ${record.employees
             .map(
               (employee, index) => `
-              <tr>
-                <td>
-                ${
-                  index + 1
-                }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}</td>
-                <td></td>
-              </tr>
-              <tr><td>Php ${formatNumber(employee.rate)}/day</td><tr>
-              <tr><td>${renderViolations(employee, index)}</td><tr>
+              ${renderEmployee(employee, index)}
             `
             )
             .join("")}
