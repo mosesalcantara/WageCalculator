@@ -31,7 +31,7 @@ const CalculatorPage = () => {
     { name: "Overtime Pay", icon: "access-time" },
     { name: "Night Differential", icon: "nights-stay" },
     { name: "Special Day", icon: "star" },
-    { name: "Rest Day", icon: "star" },
+    { name: "Rest Day", icon: "coffee" },
     { name: "Holiday Pay", icon: "event-available" },
     { name: "13th Month Pay", icon: "card-giftcard" },
   ];
@@ -88,16 +88,12 @@ const CalculatorPage = () => {
 
   useEffect(() => {
     const getRecords = async () => {
-      try {
-        const data = await db.query.employees.findFirst({
-          where: eq(employees.id, parent_id),
-          with: { violations: true },
-        });
-        setParent(data);
-        data.violations && setValues(JSON.parse(data.violations[0].values));
-      } catch (error) {
-        console.log(error);
-      }
+      const data = await db.query.employees.findFirst({
+        where: eq(employees.id, parent_id),
+        with: { violations: true },
+      });
+      setParent(data);
+      data.violations && setValues(JSON.parse(data.violations[0].values));
     };
     getRecords();
   }, []);
@@ -180,16 +176,6 @@ const CalculatorPage = () => {
                   parent.rate
                 )}`}
               </Text>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  textAlign: "center",
-                }}
-              >
-                Subtotal:{" "}
-                {formatNumber(getTotals(values[type], parent.rate, type))}
-              </Text>
             </View>
 
             <View style={{ height: 450 }}>
@@ -225,6 +211,16 @@ const CalculatorPage = () => {
                   )}
                 </View>
               </ScrollView>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  textAlign: "center",
+                }}
+              >
+                Subtotal:{" "}
+                {formatNumber(getTotals(values[type], parent.rate, type))}
+              </Text>
             </View>
 
             <View style={{ marginHorizontal: 20 }}>
