@@ -83,10 +83,10 @@ const EmployeesPage = () => {
           <NavBar />
 
           <View style={styles.container}>
-            <Text style={styles.title}>{parent.name} - Employees</Text>
+            <Text style={styles.title}>{parent.name}</Text>
 
             <TextInput
-              placeholder="Search employee by name..."
+              placeholder="Search employee"
               value={searchQuery}
               onChangeText={setSearchQuery}
               style={{
