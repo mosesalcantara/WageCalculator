@@ -28,8 +28,8 @@ const EmployeesPage = () => {
   const [mutations, setMutations] = useState(0);
 
   const deleteRecord = async (id) => {
-    await db.delete(employees).where(eq(employees.id, id));
     await db.delete(violations).where(eq(violations.employee_id, id));
+    await db.delete(employees).where(eq(employees.id, id));
     setMutations((prev) => ++prev);
   };
 
@@ -43,9 +43,7 @@ const EmployeesPage = () => {
       const parent_id = SessionStorage.getItem("establishment_id");
       const data = await db.query.establishments.findFirst({
         where: eq(establishments.id, parent_id),
-        with: {
-          employees: true,
-        },
+        with: { employees: true },
       });
       setParent(data);
       setRecords(data.employees);

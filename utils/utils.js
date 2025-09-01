@@ -76,7 +76,7 @@ export const calculate = (period, rate, type) => {
     } else if (type == "Night Differential") {
       result = (rateToUse / 8) * 0.1 * daysOrHours;
     } else if (type == "Special Day") {
-      result = rateToUse * getMultiplier(startDate) * daysOrHours;
+      result = rateToUse * 0.3 * daysOrHours;
     } else if (type == "Rest Day") {
       result = rateToUse * 0.3 * daysOrHours;
     } else if (type == "Holiday Pay") {
