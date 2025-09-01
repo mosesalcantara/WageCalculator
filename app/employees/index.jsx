@@ -27,7 +27,14 @@ const EmployeesPage = () => {
   const [parent, setParent] = useState(null);
   const [records, setRecords] = useState([]);
   const [mutations, setMutations] = useState(0);
+
   const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredRecords = records.filter((record) => {
+    return Object.values(record).some((value) => {
+      return `${value}`.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+  });
 
   const deleteRecord = async (id) => {
     await db.delete(violations).where(eq(violations.employee_id, id));
@@ -67,12 +74,6 @@ const EmployeesPage = () => {
 
       return () => backhandler.remove();
     }, [])
-  );
-
-  const filteredRecords = records.filter((record) =>
-    `${record.first_name} ${record.last_name}`
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
   );
 
   return (
