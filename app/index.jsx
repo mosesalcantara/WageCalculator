@@ -2,10 +2,10 @@ import confirmAlert from "@/components/ConfirmAlert";
 import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
 import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModal";
 import NavBar from "@/components/NavBar";
-import { employees, establishments } from "@/db/schema";
+import { employees, establishments, violations } from "@/db/schema";
 import { getDb } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -27,9 +27,19 @@ const EstablishmentPage = () => {
   const [mutations, setMutations] = useState(0);
 
   const deleteRecord = async (id) => {
-    await db.delete(establishments).where(eq(establishments.id, id));
-    await db.delete(employees).where(eq(employees.establishment_id, id));
-    setMutations((prev) => ++prev);
+    try {
+      const data = await db.query.establishments.findFirst({
+        where: eq(establishments.id, id),
+        with: { employees: true },
+      });
+      const ids = data.employees.map((employee) => employee.id);
+      await db.delete(violations).where(inArray(violations.employee_id, ids));
+      await db.delete(employees).where(eq(employees.establishment_id, id));
+      await db.delete(establishments).where(eq(establishments.id, id));
+      setMutations((prev) => ++prev);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const setEstablishment = (id, route) => {
