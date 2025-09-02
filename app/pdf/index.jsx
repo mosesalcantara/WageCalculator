@@ -74,7 +74,7 @@ const PDFPage = () => {
 
       valid > 0 &&
         (html += `
-          <p font-weight: bold;">
+          <p class="bold">
             <u>
             ${
               type == "Holiday Pay" ? "Non-payment" : "Underpayment"
@@ -88,7 +88,7 @@ const PDFPage = () => {
         `);
     });
 
-    html += `<b><u style="float:right;">Total: Php${formatNumber(total)}</u></b>
+    html += `<b><u class="right">Total: Php${formatNumber(total)}</u></b>
              `;
 
     return html;
@@ -115,7 +115,7 @@ const PDFPage = () => {
 
     violationType.periods.length > 1 &&
       (html += `
-        <p style="text-align:right;">
+        <p class="right">
           Subtotal: Php${formatNumber(subtotal)}
         </p>
       `);
@@ -172,10 +172,7 @@ const PDFPage = () => {
   const renderFormula = (period, rate, type) => {
     let html = "";
 
-    const { minimumRate, isBelow, rateToUse } = getRate(
-      period.start_date,
-      rate
-    );
+    const { isBelow, rateToUse } = getRate(period.start_date, rate);
 
     isBelow &&
       (html += `
@@ -191,30 +188,30 @@ const PDFPage = () => {
       case "Basic Wage":
         html += `<p>
                   Php${formattedRateToUse} - ${formatNumber(rate)} x ${keyword} 
-                  <span class="value";">= Php${total}</span>
+                  <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Overtime Pay":
         html += `<p>
                   Php${formattedRateToUse} / 8 x 25% x ${keyword} 
-                  <span class="value";">= Php${total}</span>
+                  <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Night Differential":
-        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "Special Day":
         html += `<p>
                     Php${formattedRateToUse} 
                     ${getMultiplier(period.start_date) == 0.3 ? " x 30% " : ""} 
-                    x ${keyword} <span class="value";">= Php${total}</span>
+                    x ${keyword} <span class="value">= Php${total}</span>
                   </p>`;
         break;
       case "Rest Day":
-        html += `<p>Php${formattedRateToUse} x 30% x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} x 30% x ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "Holiday Pay":
-        html += `<p>Php${formattedRateToUse} x ${keyword} <span class="value";">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} x ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
         html += `<p>Php${formattedRateToUse} x ${keyword} / 12 months = Php${total}</p>`;
@@ -227,58 +224,65 @@ const PDFPage = () => {
     return html;
   };
 
-  const generateHTML = (isPreview) => `
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <title>Static PDF Preview</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          margin: 20px;
-          padding: 0;
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-bottom: 20px;
-        }
-        th, td {
-          padding: 6px;
-          font-size: ${isPreview ? "32" : "12"}px;
-        }
-        .value {
-          font-weight: bold;
-          text-align: right;
-          float: right;
-        }
-        h1 {
-          text-align: center; 
-          font-size: ${isPreview ? "40" : "20"}px;
-          font-weight: bold;
-          color: black;
-          margin-bottom: 20px;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>${record.name.toUpperCase()}</h1>
+  const generateHTML = (isPreview) =>
+    `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>Static PDF Preview</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+          }
+          th, td {
+            padding: 6px;
+            font-size: ${isPreview ? "32" : "12"}px;
+          }
+          h1 {
+            text-align: center; 
+            font-size: ${isPreview ? "40" : "20"}px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 20px;
+          }
+          .value {
+            font-weight: bold;
+            text-align: right;
+            float: right;
+          }
+          .right {
+            float: right;
+          }
+          .bold {
+            font-weight: bold;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${record.name.toUpperCase()}</h1>
 
-      <table>
-        <tbody>
-          ${record.employees
-            .map(
-              (employee, index) => `
-              ${renderEmployee(employee, index)}
-            `
-            )
-            .join("")}
-        </tbody>
-      </table>
-    </body>
-  </html>
-`;
+        <table>
+          <tbody>
+            ${record.employees
+              .map(
+                (employee, index) => `
+                ${renderEmployee(employee, index)}
+              `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
 
   const printToPDF = async () => {
     try {
