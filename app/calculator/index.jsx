@@ -2,13 +2,7 @@ import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
 import { formatNumber, periodsFormat } from "@/utils/utils";
 import { useState } from "react";
-import {
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
@@ -213,6 +207,11 @@ const CalculatorPage = () => {
                 {formatNumber(getTotals(values[type], parent.rate, type))}
               </Text>
             </View> */}
+
+            <View>
+              <Text>{JSON.stringify(values)}</Text>
+              <Text>{JSON.stringify(parent)}</Text>
+            </View>
 
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity
