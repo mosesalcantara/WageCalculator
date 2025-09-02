@@ -53,7 +53,6 @@ const Form = ({
     setValues((prev) => {
       const updatedPeriods = prev[type].periods;
       updatedPeriods.splice(index, 1);
-
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
@@ -63,7 +62,6 @@ const Form = ({
       const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
         index == periodIndex ? periodFormat : period
       );
-
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
