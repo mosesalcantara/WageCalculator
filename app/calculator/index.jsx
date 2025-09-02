@@ -1,15 +1,27 @@
 import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
-import { formatNumber, periodsFormat } from "@/utils/utils";
-import { useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { employees, violations } from "@/db/schema";
+import { formatNumber, getDb, periodsFormat } from "@/utils/utils";
+import { useFocusEffect } from "@react-navigation/native";
+import { eq } from "drizzle-orm";
+import { useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Alert,
+  BackHandler,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
-
 const CalculatorPage = () => {
-  // const db = getDb();
-  // const router = useRouter();
-  // const parent_id = SessionStorage.getItem("employee_id");
+  const db = getDb();
+  const router = useRouter();
+  const parent_id = SessionStorage.getItem("employee_id");
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
@@ -64,52 +76,52 @@ const CalculatorPage = () => {
     }
   };
 
-  // const addRecord = async (values) => {
-  //   try {
-  //     await db.delete(violations).where(eq(violations.employee_id, parent_id));
-  //     await db
-  //       .insert(violations)
-  //       .values({ values: JSON.stringify(values), employee_id: parent_id });
-  //   } catch (error) {
-  //     console.error(error);
-  //     Alert.alert("Error", error.message || "An Error Eccurred");
-  //   }
-  // };
+  const addRecord = async (values) => {
+    try {
+      await db.delete(violations).where(eq(violations.employee_id, parent_id));
+      await db
+        .insert(violations)
+        .values({ values: JSON.stringify(values), employee_id: parent_id });
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
+    }
+  };
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const handleBackPress = () => {
-  //       router.push("/employees");
-  //       addRecord(values);
-  //       return true;
-  //     };
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        router.push("/employees");
+        addRecord(values);
+        return true;
+      };
 
-  //     const backhandler = BackHandler.addEventListener(
-  //       "hardwareBackPress",
-  //       handleBackPress
-  //     );
+      const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
 
-  //     return () => backhandler.remove();
-  //   }, [values])
-  // );
+      return () => backhandler.remove();
+    }, [values])
+  );
 
-  // useEffect(() => {
-  //   const getRecords = async () => {
-  //     try {
-  //       const data = await db.query.employees.findFirst({
-  //         where: eq(employees.id, parent_id),
-  //         with: { violations: true },
-  //       });
-  //       setParent(data);
-  //       data.violations.length > 0 &&
-  //         setValues(JSON.parse(data.violations[0].values));
-  //     } catch (error) {
-  //       console.error(error);
-  //       Alert.alert("Error", error.message || "An Error Eccurred");
-  //     }
-  //   };
-  //   getRecords();
-  // }, []);
+  useEffect(() => {
+    const getRecords = async () => {
+      try {
+        const data = await db.query.employees.findFirst({
+          where: eq(employees.id, parent_id),
+          with: { violations: true },
+        });
+        setParent(data);
+        data.violations.length > 0 &&
+          setValues(JSON.parse(data.violations[0].values));
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", error.message || "An Error Eccurred");
+      }
+    };
+    getRecords();
+  }, []);
 
   return (
     <>
@@ -210,6 +222,7 @@ const CalculatorPage = () => {
 
             <View>
               <Text>{JSON.stringify(values)}</Text>
+              <Text>Employee</Text>
               <Text>{JSON.stringify(parent)}</Text>
             </View>
 
