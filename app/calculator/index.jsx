@@ -155,14 +155,14 @@ const CalculatorPage = () => {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={styles.calcScroll}
+                style={styles.types}
               >
                 {tabs.map((item) => (
                   <TouchableOpacity
                     key={item.name}
                     style={[
-                      styles.calcButton,
-                      type === item.name && styles.calcButtonActive,
+                      styles.button,
+                      type === item.name && styles.buttonActive,
                     ]}
                     onPress={() => {
                       setType(item.name);
@@ -175,7 +175,7 @@ const CalculatorPage = () => {
                     />
                     <Text
                       style={[
-                        styles.calcButtonText,
+                        styles.buttonText,
                         type === item.name && { color: "#fff" },
                       ]}
                     >
@@ -188,11 +188,7 @@ const CalculatorPage = () => {
 
             <View style={{ paddingVertical: 15 }}>
               <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  textAlign: "center",
-                }}
+                style={styles.employee}
               >
                 {`${parent.first_name} ${parent.last_name} - ${formatNumber(
                   parent.rate
@@ -200,9 +196,9 @@ const CalculatorPage = () => {
               </Text>
             </View>
 
-            <View style={{ height: 450 }}>
+            <View style={styles.periodsContainer}>
               <ScrollView>
-                <View style={{ gap: 30 }}>
+                <View style={styles.periods}>
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
@@ -216,7 +212,7 @@ const CalculatorPage = () => {
                   ))}
                 </View>
 
-                <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
+                <View style={styles.receivedContainer}>
                   {type == "13th Month Pay" && (
                     <>
                       <Text style={styles.label}>Received</Text>
@@ -233,35 +229,22 @@ const CalculatorPage = () => {
                   )}
                 </View>
               </ScrollView>
+
               <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  textAlign: "center",
-                }}
+                style={styles.subtotal}
               >
                 Subtotal:{" "}
                 {formatNumber(getTotals(values[type], parent.rate, type))}
               </Text>
             </View>
 
-            <View style={{ marginHorizontal: 20 }}>
+            <View style={styles.saveButtonContainer}>
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#000",
-                  padding: 12,
-                  borderRadius: 30,
-                  marginTop: 20,
-                  marginBottom: 30,
-                }}
+                style={styles.saveButton}
                 onPress={() => addRecord(values)}
               >
                 <Text
-                  style={{
-                    color: "#fff",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
+                  style={styles.saveButtonText}
                 >
                   Save
                 </Text>

@@ -70,9 +70,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                     onBlur={() => setFieldTouched("first_name")}
                   />
                   {touched.first_name && errors.first_name && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.first_name}
-                    </Text>
+                    <Text style={styles.eror}>{errors.first_name}</Text>
                   )}
                 </View>
 
@@ -86,9 +84,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                     onBlur={() => setFieldTouched("last_name")}
                   />
                   {touched.last_name && errors.last_name && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.last_name}
-                    </Text>
+                    <Text style={styles.eror}>{errors.last_name}</Text>
                   )}
                 </View>
 
@@ -103,17 +99,13 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                     onBlur={() => setFieldTouched("rate")}
                   />
                   {touched.rate && errors.rate && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.rate}
-                    </Text>
+                    <Text style={styles.error}>{errors.rate}</Text>
                   )}
                 </View>
 
-                <View
-                  style={{ flexDirection: "row", justifyContent: "flex-end" }}
-                >
+                <View style={styles.actionButtons}>
                   <TouchableOpacity
-                    style={[styles.actionButton, { marginRight: 8 }]}
+                    style={styles.actionButton}
                     onPress={() => setIsUpdateModalVisible(false)}
                   >
                     <Text style={styles.actionText}>Cancel</Text>

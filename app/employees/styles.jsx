@@ -1,11 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-    padding: 16,
-  },
+  container: { flex: 1, backgroundColor: "#f2f2f2", padding: 16 },
   table: {
     borderRadius: 10,
     overflow: "hidden",
@@ -15,6 +11,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    width: 361,
   },
   title: {
     color: "#333",
@@ -29,35 +26,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 8,
   },
-  headerRow: {
-    backgroundColor: "#2196F3",
-    paddingVertical: 12,
-  },
-  cellText: {
-    color: "#333",
-    fontSize: 14,
-  },
+  headerRow: { backgroundColor: "#2196F3", paddingVertical: 12 },
   headerCell: {
     fontWeight: "bold",
     fontSize: 15,
     color: "#fff",
   },
+  cellText: { color: "#333", fontSize: 14 },
   actionCell: {
     flexDirection: "row",
     justifyContent: "space-around",
   },
-  closeBtn: {
-    marginTop: 16,
-    alignSelf: "center",
-    backgroundColor: "#2196F3",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-  },
-  closeBtnText: {
-    color: "white",
-    fontWeight: "bold",
-  },
+  empty: { textAlign: "center", marginVertical: 10 },
 });
 
 export default styles;
