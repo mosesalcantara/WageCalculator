@@ -1,12 +1,12 @@
 import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
 import DoleImage from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import { employees, violations } from "@/db/schema";
+import { violations } from "@/db/schema";
 import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Alert,
   BackHandler,
@@ -37,7 +37,12 @@ const CalculatorPage = () => {
   ];
 
   const [type, setType] = useState("Basic Wage");
-  const [parent, setParent] = useState(null);
+  const [parent, setParent] = useState({
+    id: 1,
+    first_name: "Rowell",
+    last_name: "Belarmino",
+    rate: 400,
+  });
   const [values, setValues] = useState({
     "Basic Wage": periodsFormat,
     "Overtime Pay": periodsFormat,
@@ -86,17 +91,17 @@ const CalculatorPage = () => {
     }
   };
 
-  useEffect(() => {
-    const getRecords = async () => {
-      const data = await db.query.employees.findFirst({
-        where: eq(employees.id, parent_id),
-        with: { violations: true },
-      });
-      setParent(data);
-      data.violations.length > 0 && setValues(JSON.parse(data.violations[0].values));
-    };
-    getRecords();
-  }, []);
+  // useEffect(() => {
+  //   const getRecords = async () => {
+  //     const data = await db.query.employees.findFirst({
+  //       where: eq(employees.id, parent_id),
+  //       with: { violations: true },
+  //     });
+  //     setParent(data);
+  //     data.violations.length > 0 && setValues(JSON.parse(data.violations[0].values));
+  //   };
+  //   getRecords();
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -165,9 +170,7 @@ const CalculatorPage = () => {
             </View>
 
             <View style={{ paddingVertical: 15 }}>
-              <Text
-                style={styles.employee}
-              >
+              <Text style={styles.employee}>
                 {`${parent.first_name} ${parent.last_name} - ${formatNumber(
                   parent.rate
                 )}`}
@@ -208,9 +211,7 @@ const CalculatorPage = () => {
                 </View>
               </ScrollView>
 
-              <Text
-                style={styles.subtotal}
-              >
+              <Text style={styles.subtotal}>
                 Subtotal:{" "}
                 {formatNumber(getTotals(values[type], parent.rate, type))}
               </Text>
@@ -221,11 +222,7 @@ const CalculatorPage = () => {
                 style={styles.saveButton}
                 onPress={() => addRecord(values)}
               >
-                <Text
-                  style={styles.saveButtonText}
-                >
-                  Save
-                </Text>
+                <Text style={styles.saveButtonText}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>
