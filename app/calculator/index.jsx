@@ -51,18 +51,6 @@ const CalculatorPage = () => {
     },
   });
 
-  const addRecord = async (values) => {
-    try {
-      await db.delete(violations).where(eq(violations.employee_id, parent_id));
-      await db
-        .insert(violations)
-        .values({ values: JSON.stringify(values), employee_id: parent_id });
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
-    }
-  };
-
   const handleInitialChange = (key, value, index) => {
     if (key.endsWith("_date")) {
       value = value.toISOString().split("T")[0];
@@ -86,14 +74,31 @@ const CalculatorPage = () => {
     }
   };
 
+  const addRecord = async (values) => {
+    try {
+      await db.delete(violations).where(eq(violations.employee_id, parent_id));
+      await db
+        .insert(violations)
+        .values({ values: JSON.stringify(values), employee_id: parent_id });
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
+    }
+  };
+
   useEffect(() => {
     const getRecords = async () => {
-      const data = await db.query.employees.findFirst({
-        where: eq(employees.id, parent_id),
-        with: { violations: true },
-      });
-      setParent(data);
-      data.violations && setValues(JSON.parse(data.violations[0].values));
+      try {
+        const data = await db.query.employees.findFirst({
+          where: eq(employees.id, parent_id),
+          with: { violations: true },
+        });
+        setParent(data);
+        data.violations && setValues(JSON.parse(data.violations[0].values));
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", error.message || "An Error Eccurred");
+      }
     };
     getRecords();
   }, []);
