@@ -88,10 +88,10 @@ const EstablishmentPage = () => {
         data={records}
         keyExtractor={(record) => record.id}
         renderItem={({ item }) => (
-          <View style={styles.establishmentCard}>
-            <Text style={styles.establishmentText}>{item.name}</Text>
+          <View style={styles.card}>
+            <Text style={styles.text}>{item.name}</Text>
 
-            <View style={{ flexDirection: "row", gap: 3 }}>
+            <View style={styles.icons}>
               <TouchableOpacity
                 onPress={() => setEstablishment(item.id, "employees")}
               >

@@ -1,9 +1,9 @@
-import styles from "./styles";
 import { employees } from "@/db/schema";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
+import styles from "./styles";
 
 const AddEmployeeModal = ({ db, setMutations, parent }) => {
   const validationSchema = Yup.object().shape({
@@ -73,9 +73,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                     onBlur={() => setFieldTouched("first_name")}
                   />
                   {touched.first_name && errors.first_name && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.first_name}
-                    </Text>
+                    <Text style={styles.error}>{errors.first_name}</Text>
                   )}
                 </View>
 
@@ -89,9 +87,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                     onBlur={() => setFieldTouched("last_name")}
                   />
                   {touched.last_name && errors.last_name && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.last_name}
-                    </Text>
+                    <Text style={styles.error}>{errors.last_name}</Text>
                   )}
                 </View>
 
@@ -106,17 +102,13 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                     onBlur={() => setFieldTouched("rate")}
                   />
                   {touched.rate && errors.rate && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.rate}
-                    </Text>
+                    <Text style={styles.error}>{errors.rate}</Text>
                   )}
                 </View>
 
-                <View
-                  style={{ flexDirection: "row", justifyContent: "flex-end" }}
-                >
+                <View style={styles.actionButtons}>
                   <TouchableOpacity
-                    style={[styles.actionButton, { marginRight: 8 }]}
+                    style={styles.actionButton}
                     onPress={() => setIsAddModalVisible(false)}
                   >
                     <Text style={styles.actionText}>Cancel</Text>

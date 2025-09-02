@@ -69,17 +69,13 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
                     onBlur={() => setFieldTouched("name")}
                   />
                   {touched.name && errors.name && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errors.name}
-                    </Text>
+                    <Text style={styles.error}>{errors.name}</Text>
                   )}
                 </View>
 
-                <View
-                  style={{ flexDirection: "row", justifyContent: "flex-end" }}
-                >
+                <View style={styles.actionButtons}>
                   <TouchableOpacity
-                    style={[styles.actionButton, { marginRight: 8 }]}
+                    style={styles.actionButton}
                     onPress={() => setIsAddModalVisible(false)}
                   >
                     <Text style={styles.actionText}>Cancel</Text>

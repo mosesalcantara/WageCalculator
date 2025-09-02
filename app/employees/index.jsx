@@ -111,15 +111,15 @@ const EmployeesPage = () => {
             />
 
             <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-              <View style={[styles.table, { width: 361 }]}>
+              <View style={styles.table}>
                 <View style={[styles.row, styles.headerRow]}>
-                  <Text style={[styles.cell, styles.headerCell, { flex: 2 }]}>
+                  <Text style={[styles.headerCell, { flex: 2 }]}>
                     Name
                   </Text>
-                  <Text style={[styles.cell, styles.headerCell, { flex: 1 }]}>
+                  <Text style={[styles.headerCell, { flex: 1 }]}>
                     Rate
                   </Text>
-                  <Text style={[styles.cell, styles.headerCell, { flex: 0.8 }]}>
+                  <Text style={[styles.headerCell, { flex: 0.8 }]}>
                     Actions
                   </Text>
                 </View>
@@ -162,7 +162,7 @@ const EmployeesPage = () => {
                     </View>
                   ))
                 ) : (
-                  <Text style={{ textAlign: "center", marginVertical: 10 }}>
+                  <Text style={styles.empty}>
                     No employees found.
                   </Text>
                 )}

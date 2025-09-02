@@ -14,13 +14,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 10,
   },
-  calcScroll: {
+  image: { width: 60, height: 60, resizeMode: "contain" },
+  types: {
     backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
     paddingVertical: 10,
   },
-  calcButton: {
+  button: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
@@ -31,26 +32,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     height: 40,
   },
-  calcButtonActive: { backgroundColor: "#2c3e50", borderColor: "#2c3e50" },
-  calcButtonText: { marginLeft: 6, fontSize: 14, color: "#555" },
-  calcButtonTextActive: { color: "#fff" },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    borderWidth: 5,
-  },
-  image: {
-    width: 60,
-    height: 60,
-    resizeMode: "contain",
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 4,
-    color: "#333",
-  },
+  buttonActive: { backgroundColor: "#2c3e50", borderColor: "#2c3e50" },
+  buttonText: { marginLeft: 6, fontSize: 14, color: "#555" },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -60,6 +43,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 40,
   },
+  employee: { fontWeight: "bold", fontSize: 20, textAlign: "center" },
+  periodsContainer: { height: 450 },
+  periods: { gap: 30 },
+  receivedContainer: { marginHorizontal: 40, paddingTop: 10 },
+  subtotal: { fontWeight: "bold", fontSize: 20, textAlign: "center" },
+  saveButtonContainer: { marginHorizontal: 20 },
+  saveButton: {
+    backgroundColor: "#000",
+    padding: 12,
+    borderRadius: 30,
+    marginTop: 20,
+    marginBottom: 30,
+  },
+  saveButtonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 });
 
 export default styles;

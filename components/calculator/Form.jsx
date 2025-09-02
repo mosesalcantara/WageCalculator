@@ -70,28 +70,12 @@ const Form = ({
 
   return (
     <>
-      <View
-        style={{
-          marginHorizontal: 40,
-          paddingTop: 10,
-          borderTopColor: "#0d3dffff",
-          borderTopWidth: 5,
-          borderRightColor: "#0d3dffff",
-          borderRightWidth: 1,
-          borderLeftColor: "#0d3dffff",
-          borderLeftWidth: 1,
-          borderBottomColor: "#0d3dffff",
-          borderBottomWidth: 1,
-          borderRadius: 8,
-          marginBottom: 20,
-          padding: 10,
-        }}
-      >
+      <View style={styles.topBorder}>
         <View>
-          <Text style={{ textAlign: "center" }}>
-            {values[type].periods.length > 1 &&
-              `Period ${numberToLetter(index)}`}
-          </Text>
+          {values[type].periods.length > 1 && (
+            <Text style={styles.center}>Period {numberToLetter(index)}</Text>
+          )}
+
           <View>
             <Text style={styles.label}>Start Date</Text>
             <TouchableOpacity
@@ -140,28 +124,13 @@ const Form = ({
           </Text>
         </View>
 
-        <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+        <View style={styles.buttons}>
           {values[type].periods.length - 1 == index && (
             <TouchableOpacity onPress={addPeriod}>
               <Text
                 style={[
-                  styles.calcButtonText,
-                  {
-                    paddingStart: 10,
-                    paddingEnd: 10,
-                    backgroundColor: "#008000",
-                    color: "#ffffffff",
-                    borderTopColor: "#008000",
-                    borderTopWidth: 1,
-                    borderRightColor: "#008000",
-                    borderRightWidth: 1,
-                    borderLeftColor: "#008000",
-                    borderLeftWidth: 1,
-                    borderBottomColor: "#008000",
-                    borderBottomWidth: 1,
-                    borderRadius: 5,
-                    padding: 5,
-                  },
+                  styles.button,
+                  { backgroundColor: "#008000", borderColor: "#008000" },
                 ]}
               >
                 Add
@@ -171,23 +140,8 @@ const Form = ({
           <TouchableOpacity onPress={clearPeriod}>
             <Text
               style={[
-                styles.calcButtonText,
-                {
-                  paddingStart: 10,
-                  paddingEnd: 10,
-                  backgroundColor: "#f79812ff",
-                  color: "#ffffffff",
-                  borderTopColor: "#f79812ff",
-                  borderTopWidth: 1,
-                  borderRightColor: "#f79812ff",
-                  borderRightWidth: 1,
-                  borderLeftColor: "#f79812ff",
-                  borderLeftWidth: 1,
-                  borderBottomColor: "#f79812ff",
-                  borderBottomWidth: 1,
-                  borderRadius: 5,
-                  padding: 5,
-                },
+                styles.button,
+                { backgroundColor: "#f79812ff", borderColor: "#f79812ff" },
               ]}
             >
               Clear
@@ -198,23 +152,8 @@ const Form = ({
             <TouchableOpacity onPress={removePeriod}>
               <Text
                 style={[
-                  styles.calcButtonText,
-                  {
-                    paddingStart: 10,
-                    paddingEnd: 10,
-                    backgroundColor: "#e71414ff",
-                    color: "#ffffffff",
-                    borderTopColor: "#e71414ff",
-                    borderTopWidth: 1,
-                    borderRightColor: "#e71414ff",
-                    borderRightWidth: 1,
-                    borderLeftColor: "#e71414ff",
-                    borderLeftWidth: 1,
-                    borderBottomColor: "#e71414ff",
-                    borderBottomWidth: 1,
-                    borderRadius: 5,
-                    padding: 5,
-                  },
+                  styles.button,
+                  { backgroundColor: "#e71414ff", borderColor: "#e71414ff" },
                 ]}
               >
                 Remove

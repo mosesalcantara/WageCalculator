@@ -1,6 +1,22 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  topBorder: {
+    marginHorizontal: 40,
+    paddingTop: 10,
+    borderTopColor: "#0d3dffff",
+    borderTopWidth: 5,
+    borderRightColor: "#0d3dffff",
+    borderRightWidth: 1,
+    borderLeftColor: "#0d3dffff",
+    borderLeftWidth: 1,
+    borderBottomColor: "#0d3dffff",
+    borderBottomWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+    padding: 10,
+  },
+  center: { textAlign: "center" },
   label: {
     fontSize: 14,
     fontWeight: "bold",
@@ -22,14 +38,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-    calcAction: {
-    backgroundColor: "#2c3e50",
-    padding: 12,
-    borderRadius: 6,
-    marginTop: 15,
-    alignItems: "center",
-  },
-  calcActionText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
   resultBox: {
     marginTop: 15,
     padding: 12,
@@ -44,6 +52,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#27ae60",
     marginTop: 4,
+  },
+  buttons: { flexDirection: "row", gap: 10, marginTop: 10 },
+  button: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    color: "#ffffffff",
+    borderWidth: 1,
+    borderRadius: 5,
   },
 });
 
