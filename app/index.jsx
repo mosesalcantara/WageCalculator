@@ -6,7 +6,7 @@ import { employees, establishments, violations } from "@/db/schema";
 import { getDb } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq, inArray } from "drizzle-orm";
-import { useRouter } from "expo-router";
+import { useRouter, Link } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
@@ -122,6 +122,7 @@ const EstablishmentPage = () => {
         )}
       />
 
+      <Link href="/test">Calculator</Link>
       <AddEstablishmentModal db={db} setMutations={setMutations} />
     </View>
   );
