@@ -1,7 +1,8 @@
-import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
-import Dole from "@/assets/images/dole.png";
+import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
+import DoleImage from "@/assets/images/dole.png";
+import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
-import { formatNumber, getDb, periodsFormat, getTotals } from "@/utils/utils";
+import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
@@ -12,13 +13,13 @@ import {
   Image,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
-import Form from "@/components/Calculator/Form";
 
 const CalculatorPage = () => {
   const db = getDb();
@@ -30,18 +31,13 @@ const CalculatorPage = () => {
     { name: "Overtime Pay", icon: "access-time" },
     { name: "Night Differential", icon: "nights-stay" },
     { name: "Special Day", icon: "star" },
-    { name: "Rest Day", icon: "coffee" },
+    { name: "Rest Day", icon: "star" },
     { name: "Holiday Pay", icon: "event-available" },
     { name: "13th Month Pay", icon: "card-giftcard" },
   ];
 
   const [type, setType] = useState("Basic Wage");
-  const [parent, setParent] = useState({
-    id: 1,
-    first_name: "Employee",
-    last_name: "Employee",
-    rate: 400,
-  });
+  const [parent, setParent] = useState(null);
   const [values, setValues] = useState({
     "Basic Wage": periodsFormat,
     "Overtime Pay": periodsFormat,
@@ -54,6 +50,18 @@ const CalculatorPage = () => {
       received: "",
     },
   });
+
+  const addRecord = async (values) => {
+    try {
+      await db.delete(violations).where(eq(violations.employee_id, parent_id));
+      await db
+        .insert(violations)
+        .values({ values: JSON.stringify(values), employee_id: parent_id });
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
+    }
+  };
 
   const handleInitialChange = (key, value, index) => {
     if (key.endsWith("_date")) {
@@ -78,18 +86,6 @@ const CalculatorPage = () => {
     }
   };
 
-  const addRecord = async (values) => {
-    try {
-      await db.delete(violations).where(eq(violations.employee_id, parent_id));
-      await db
-        .insert(violations)
-        .values({ values: JSON.stringify(values), employee_id: parent_id });
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -104,7 +100,7 @@ const CalculatorPage = () => {
       );
 
       return () => backhandler.remove();
-    }, [values])
+    }, [])
   );
 
   useEffect(() => {
@@ -115,8 +111,7 @@ const CalculatorPage = () => {
           with: { violations: true },
         });
         setParent(data);
-        data.violations.length > 0 &&
-          setValues(JSON.parse(data.violations[0].values));
+        data.violations && setValues(JSON.parse(data.violations[0].values));
       } catch (error) {
         console.error(error);
         Alert.alert("Error", error.message || "An Error Eccurred");
@@ -134,8 +129,8 @@ const CalculatorPage = () => {
               <Icon name="assignment" size={22} color="#fff" />
               <Text style={styles.headerText}>Inspector Wage Calculator</Text>
               <View style={styles.header}>
-                <Image source={Dole} style={styles.image} />
-                <Image source={BagongPilipinas} style={styles.image} />
+                <Image source={DoleImage} style={styles.image} />
+                <Image source={BagongPilipinasImage} style={styles.image} />
               </View>
             </View>
 
@@ -143,14 +138,14 @@ const CalculatorPage = () => {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={styles.types}
+                style={styles.calcScroll}
               >
                 {tabs.map((item) => (
                   <TouchableOpacity
                     key={item.name}
                     style={[
-                      styles.button,
-                      type === item.name && styles.buttonActive,
+                      styles.calcButton,
+                      type === item.name && styles.calcButtonActive,
                     ]}
                     onPress={() => {
                       setType(item.name);
@@ -163,7 +158,7 @@ const CalculatorPage = () => {
                     />
                     <Text
                       style={[
-                        styles.buttonText,
+                        styles.calcButtonText,
                         type === item.name && { color: "#fff" },
                       ]}
                     >
@@ -175,29 +170,45 @@ const CalculatorPage = () => {
             </View>
 
             <View style={{ paddingVertical: 15 }}>
-              <Text style={styles.employee}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  textAlign: "center",
+                }}
+              >
                 {`${parent.first_name} ${parent.last_name} - ${formatNumber(
                   parent.rate
                 )}`}
               </Text>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  textAlign: "center",
+                }}
+              >
+                Subtotal:{" "}
+                {formatNumber(getTotals(values[type], parent.rate, type))}
+              </Text>
             </View>
 
-            <View style={styles.periodsContainer}>
+            <View style={{ height: 450 }}>
               <ScrollView>
-                <View style={styles.periods}>
+                <View style={{ gap: 30 }}>
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
-                      // parent={parent}
-                      // type={type}
-                      // index={index}
-                      // valuesState={[values, setValues]}
-                      // handleInitialChange={handleInitialChange}
+                      parent={parent}
+                      type={type}
+                      index={index}
+                      valuesState={[values, setValues]}
+                      handleInitialChange={handleInitialChange}
                     />
                   ))}
                 </View>
 
-                <View style={styles.receivedContainer}>
+                <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
                   {type == "13th Month Pay" && (
                     <>
                       <Text style={styles.label}>Received</Text>
@@ -214,19 +225,28 @@ const CalculatorPage = () => {
                   )}
                 </View>
               </ScrollView>
-
-              <Text style={styles.subtotal}>
-                Subtotal:{" "}
-                {formatNumber(getTotals(values[type], parent.rate, type))}
-              </Text>
             </View>
 
-            <View style={styles.saveButtonContainer}>
+            <View style={{ marginHorizontal: 20 }}>
               <TouchableOpacity
-                style={styles.saveButton}
+                style={{
+                  backgroundColor: "#000",
+                  padding: 12,
+                  borderRadius: 30,
+                  marginTop: 20,
+                  marginBottom: 30,
+                }}
                 onPress={() => addRecord(values)}
               >
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Save
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

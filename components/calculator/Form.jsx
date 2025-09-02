@@ -11,67 +11,70 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const Form = ({
-
+  parent,
+  type,
+  index,
+  valuesState,
+  handleInitialChange,
 }) => {
-  // const [startDateModalVisible, setStartDateModalVisible] = useState(false);
-  // const [endDateModalVisible, setEndDateModalVisible] = useState(false);
-  // const [values, setValues] = valuesState;
+  const [startDateModalVisible, setStartDateModalVisible] = useState(false);
+  const [endDateModalVisible, setEndDateModalVisible] = useState(false);
+  const [values, setValues] = valuesState;
 
-  // const formatDate = (date) => {
-  //   return date ? new Date(date) : new Date();
-  // };
+  const formatDate = (date) => {
+    return date ? new Date(date) : new Date();
+  };
 
-  // const checkType = () => {
-  //   return ["Overtime Pay", "Night Differential"].includes(type);
-  // };
+  const checkType = () => {
+    return ["Overtime Pay", "Night Differential"].includes(type);
+  };
 
-  // const handleChange = (key, value) => {
-  //   handleInitialChange(key, value, index);
+  const handleChange = (key, value) => {
+    handleInitialChange(key, value, index);
 
-  //   if (key == "start_date") {
-  //     setStartDateModalVisible(false);
-  //   } else if (key == "end_date") {
-  //     setEndDateModalVisible(false);
-  //   }
-  // };
+    if (key == "start_date") {
+      setStartDateModalVisible(false);
+    } else if (key == "end_date") {
+      setEndDateModalVisible(false);
+    }
+  };
 
-  // const addPeriod = () => {
-  //   setValues((prev) => {
-  //     return {
-  //       ...prev,
-  //       [type]: { periods: [...prev[type].periods, periodFormat] },
-  //     };
-  //   });
-  // };
+  const addPeriod = () => {
+    setValues((prev) => {
+      return {
+        ...prev,
+        [type]: { periods: [...prev[type].periods, periodFormat] },
+      };
+    });
+  };
 
-  // const removePeriod = () => {
-  //   setValues((prev) => {
-  //     const updatedPeriods = prev[type].periods;
-  //     updatedPeriods.splice(index, 1);
-  //     return { ...prev, [type]: { periods: updatedPeriods } };
-  //   });
-  // };
+  const removePeriod = () => {
+    setValues((prev) => {
+      const updatedPeriods = prev[type].periods;
+      updatedPeriods.splice(index, 1);
 
-  // const clearPeriod = () => {
-  //   setValues((prev) => {
-  //     const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-  //       index == periodIndex ? periodFormat : period
-  //     );
-  //     return { ...prev, [type]: { periods: updatedPeriods } };
-  //   });
-  // };
+      return { ...prev, [type]: { periods: updatedPeriods } };
+    });
+  };
+
+  const clearPeriod = () => {
+    setValues((prev) => {
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+        index == periodIndex ? periodFormat : period
+      );
+
+      return { ...prev, [type]: { periods: updatedPeriods } };
+    });
+  };
 
   return (
     <>
-      <View>
-        <Text>Test</Text>
-      </View>
-      {/* <View style={styles.topBorder}>
+      <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
         <View>
-          {values[type].periods.length > 1 && (
-            <Text style={styles.center}>Period {numberToLetter(index)}</Text>
-          )}
-
+          <Text style={{ textAlign: "center" }}>
+            {values[type].periods.length > 1 &&
+              `Period ${numberToLetter(index)}`}
+          </Text>
           <View>
             <Text style={styles.label}>Start Date</Text>
             <TouchableOpacity
@@ -120,42 +123,22 @@ const Form = ({
           </Text>
         </View>
 
-        <View style={styles.buttons}>
+        <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
           {values[type].periods.length - 1 == index && (
             <TouchableOpacity onPress={addPeriod}>
-              <Text
-                style={[
-                  styles.button,
-                  { backgroundColor: "#008000", borderColor: "#008000" },
-                ]}
-              >
-                Add
-              </Text>
+              <Text>Add</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={clearPeriod}>
-            <Text
-              style={[
-                styles.button,
-                { backgroundColor: "#f79812ff", borderColor: "#f79812ff" },
-              ]}
-            >
-              Clear
-            </Text>
-          </TouchableOpacity>
 
           {values[type].periods.length > 1 && (
             <TouchableOpacity onPress={removePeriod}>
-              <Text
-                style={[
-                  styles.button,
-                  { backgroundColor: "#e71414ff", borderColor: "#e71414ff" },
-                ]}
-              >
-                Remove
-              </Text>
+              <Text>Remove</Text>
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity onPress={clearPeriod}>
+            <Text>Clear</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -177,7 +160,7 @@ const Form = ({
           handleChange("end_date", value);
         }}
         onCancel={() => setEndDateModalVisible(false)}
-      /> */}
+      />
     </>
   );
 };
