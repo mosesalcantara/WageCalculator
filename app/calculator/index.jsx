@@ -93,7 +93,7 @@ const CalculatorPage = () => {
         with: { violations: true },
       });
       setParent(data);
-      data.violations && setValues(JSON.parse(data.violations[0].values));
+      data.violations.length > 0 && setValues(JSON.parse(data.violations[0].values));
     };
     getRecords();
   }, []);
