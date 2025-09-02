@@ -70,7 +70,23 @@ const Form = ({
 
   return (
     <>
-      <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
+      <View
+        style={{
+          marginHorizontal: 40,
+          paddingTop: 10,
+          borderTopColor: "#0d3dffff",
+          borderTopWidth: 5,
+          borderRightColor: "#0d3dffff",
+          borderRightWidth: 1,
+          borderLeftColor: "#0d3dffff",
+          borderLeftWidth: 1,
+          borderBottomColor: "#0d3dffff",
+          borderBottomWidth: 1,
+          borderRadius: 8,
+          marginBottom: 20,
+          padding: 10,
+        }}
+      >
         <View>
           <Text style={{ textAlign: "center" }}>
             {values[type].periods.length > 1 &&
@@ -127,19 +143,84 @@ const Form = ({
         <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
           {values[type].periods.length - 1 == index && (
             <TouchableOpacity onPress={addPeriod}>
-              <Text>Add</Text>
+              <Text
+                style={[
+                  styles.calcButtonText,
+                  {
+                    paddingStart: 10,
+                    paddingEnd: 10,
+                    backgroundColor: "#008000",
+                    color: "#ffffffff",
+                    borderTopColor: "#008000",
+                    borderTopWidth: 1,
+                    borderRightColor: "#008000",
+                    borderRightWidth: 1,
+                    borderLeftColor: "#008000",
+                    borderLeftWidth: 1,
+                    borderBottomColor: "#008000",
+                    borderBottomWidth: 1,
+                    borderRadius: 5,
+                    padding: 5,
+                  },
+                ]}
+              >
+                Add
+              </Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity onPress={clearPeriod}>
+            <Text
+              style={[
+                styles.calcButtonText,
+                {
+                  paddingStart: 10,
+                  paddingEnd: 10,
+                  backgroundColor: "#f79812ff",
+                  color: "#ffffffff",
+                  borderTopColor: "#f79812ff",
+                  borderTopWidth: 1,
+                  borderRightColor: "#f79812ff",
+                  borderRightWidth: 1,
+                  borderLeftColor: "#f79812ff",
+                  borderLeftWidth: 1,
+                  borderBottomColor: "#f79812ff",
+                  borderBottomWidth: 1,
+                  borderRadius: 5,
+                  padding: 5,
+                },
+              ]}
+            >
+              Clear
+            </Text>
+          </TouchableOpacity>
 
           {values[type].periods.length > 1 && (
             <TouchableOpacity onPress={removePeriod}>
-              <Text>Remove</Text>
+              <Text
+                style={[
+                  styles.calcButtonText,
+                  {
+                    paddingStart: 10,
+                    paddingEnd: 10,
+                    backgroundColor: "#e71414ff",
+                    color: "#ffffffff",
+                    borderTopColor: "#e71414ff",
+                    borderTopWidth: 1,
+                    borderRightColor: "#e71414ff",
+                    borderRightWidth: 1,
+                    borderLeftColor: "#e71414ff",
+                    borderLeftWidth: 1,
+                    borderBottomColor: "#e71414ff",
+                    borderBottomWidth: 1,
+                    borderRadius: 5,
+                    padding: 5,
+                  },
+                ]}
+              >
+                Remove
+              </Text>
             </TouchableOpacity>
           )}
-
-          <TouchableOpacity onPress={clearPeriod}>
-            <Text>Clear</Text>
-          </TouchableOpacity>
         </View>
       </View>
 
