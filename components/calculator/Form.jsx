@@ -11,66 +11,61 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const Form = ({
-  parent,
-  type,
-  index,
-  valuesState,
-  handleInitialChange,
+
 }) => {
-  const [startDateModalVisible, setStartDateModalVisible] = useState(false);
-  const [endDateModalVisible, setEndDateModalVisible] = useState(false);
-  const [values, setValues] = valuesState;
+  // const [startDateModalVisible, setStartDateModalVisible] = useState(false);
+  // const [endDateModalVisible, setEndDateModalVisible] = useState(false);
+  // const [values, setValues] = valuesState;
 
-  const formatDate = (date) => {
-    return date ? new Date(date) : new Date();
-  };
+  // const formatDate = (date) => {
+  //   return date ? new Date(date) : new Date();
+  // };
 
-  const checkType = () => {
-    return ["Overtime Pay", "Night Differential"].includes(type);
-  };
+  // const checkType = () => {
+  //   return ["Overtime Pay", "Night Differential"].includes(type);
+  // };
 
-  const handleChange = (key, value) => {
-    handleInitialChange(key, value, index);
+  // const handleChange = (key, value) => {
+  //   handleInitialChange(key, value, index);
 
-    if (key == "start_date") {
-      setStartDateModalVisible(false);
-    } else if (key == "end_date") {
-      setEndDateModalVisible(false);
-    }
-  };
+  //   if (key == "start_date") {
+  //     setStartDateModalVisible(false);
+  //   } else if (key == "end_date") {
+  //     setEndDateModalVisible(false);
+  //   }
+  // };
 
-  const addPeriod = () => {
-    setValues((prev) => {
-      return {
-        ...prev,
-        [type]: { periods: [...prev[type].periods, periodFormat] },
-      };
-    });
-  };
+  // const addPeriod = () => {
+  //   setValues((prev) => {
+  //     return {
+  //       ...prev,
+  //       [type]: { periods: [...prev[type].periods, periodFormat] },
+  //     };
+  //   });
+  // };
 
-  const removePeriod = () => {
-    setValues((prev) => {
-      const updatedPeriods = prev[type].periods;
-      updatedPeriods.splice(index, 1);
-      return { ...prev, [type]: { periods: updatedPeriods } };
-    });
-  };
+  // const removePeriod = () => {
+  //   setValues((prev) => {
+  //     const updatedPeriods = prev[type].periods;
+  //     updatedPeriods.splice(index, 1);
+  //     return { ...prev, [type]: { periods: updatedPeriods } };
+  //   });
+  // };
 
-  const clearPeriod = () => {
-    setValues((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? periodFormat : period
-      );
-      return { ...prev, [type]: { periods: updatedPeriods } };
-    });
-  };
+  // const clearPeriod = () => {
+  //   setValues((prev) => {
+  //     const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+  //       index == periodIndex ? periodFormat : period
+  //     );
+  //     return { ...prev, [type]: { periods: updatedPeriods } };
+  //   });
+  // };
 
   return (
     <>
       <View>
-        <Text>{JSON.stringify(values)}</Text>
+        <Text>Test</Text>
       </View>
-      
       {/* <View style={styles.topBorder}>
         <View>
           {values[type].periods.length > 1 && (

@@ -1,7 +1,7 @@
 import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
 import { employees, violations } from "@/db/schema";
-import { formatNumber, getDb, periodsFormat } from "@/utils/utils";
+import { formatNumber, getDb, periodsFormat, getTotals } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
@@ -18,6 +18,8 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
+import Form from "@/components/Calculator/Form";
+
 const CalculatorPage = () => {
   const db = getDb();
   const router = useRouter();
@@ -186,11 +188,11 @@ const CalculatorPage = () => {
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
-                      parent={parent}
-                      type={type}
-                      index={index}
-                      valuesState={[values, setValues]}
-                      handleInitialChange={handleInitialChange}
+                      // parent={parent}
+                      // type={type}
+                      // index={index}
+                      // valuesState={[values, setValues]}
+                      // handleInitialChange={handleInitialChange}
                     />
                   ))}
                 </View>
@@ -217,12 +219,6 @@ const CalculatorPage = () => {
                 Subtotal:{" "}
                 {formatNumber(getTotals(values[type], parent.rate, type))}
               </Text>
-            </View>
-
-            <View>
-              <Text>{JSON.stringify(values)}</Text>
-              <Text>Employee</Text>
-              <Text>{JSON.stringify(parent)}</Text>
             </View>
 
             <View style={styles.saveButtonContainer}>
