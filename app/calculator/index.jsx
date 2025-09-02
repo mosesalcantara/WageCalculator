@@ -180,13 +180,12 @@ const CalculatorPage = () => {
               </Text>
             </View>
 
-            {/* <View style={styles.periodsContainer}>
+            <View style={styles.periodsContainer}>
               <ScrollView>
                 <View style={styles.periods}>
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
-                      db={null}
                       parent={parent}
                       type={type}
                       index={index}
@@ -218,7 +217,7 @@ const CalculatorPage = () => {
                 Subtotal:{" "}
                 {formatNumber(getTotals(values[type], parent.rate, type))}
               </Text>
-            </View> */}
+            </View>
 
             <View>
               <Text>{JSON.stringify(values)}</Text>

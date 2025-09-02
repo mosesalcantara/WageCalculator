@@ -11,7 +11,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const Form = ({
-  db,
   parent,
   type,
   index,
@@ -68,7 +67,11 @@ const Form = ({
 
   return (
     <>
-      <View style={styles.topBorder}>
+      <View>
+        <Text>{JSON.stringify(values)}</Text>
+      </View>
+      
+      {/* <View style={styles.topBorder}>
         <View>
           {values[type].periods.length > 1 && (
             <Text style={styles.center}>Period {numberToLetter(index)}</Text>
@@ -179,7 +182,7 @@ const Form = ({
           handleChange("end_date", value);
         }}
         onCancel={() => setEndDateModalVisible(false)}
-      />
+      /> */}
     </>
   );
 };
