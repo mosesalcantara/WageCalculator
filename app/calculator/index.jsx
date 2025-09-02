@@ -1,15 +1,13 @@
 import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
-import Form from "@/components/Calculator/Form";
-import { formatNumber, getTotals, periodsFormat } from "@/utils/utils";
+import { formatNumber, periodsFormat } from "@/utils/utils";
 import { useState } from "react";
 import {
   Image,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
@@ -176,7 +174,7 @@ const CalculatorPage = () => {
               </Text>
             </View>
 
-            <View style={styles.periodsContainer}>
+            {/* <View style={styles.periodsContainer}>
               <ScrollView>
                 <View style={styles.periods}>
                   {values[type].periods.map((_, index) => (
@@ -214,7 +212,7 @@ const CalculatorPage = () => {
                 Subtotal:{" "}
                 {formatNumber(getTotals(values[type], parent.rate, type))}
               </Text>
-            </View>
+            </View> */}
 
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity
