@@ -1,15 +1,9 @@
-import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
-import DoleImage from "@/assets/images/dole.png";
+import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
+import Dole from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import { violations } from "@/db/schema";
-import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
-import { useFocusEffect } from "@react-navigation/native";
-import { eq } from "drizzle-orm";
-import { useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { formatNumber, getTotals, periodsFormat } from "@/utils/utils";
+import { useState } from "react";
 import {
-  Alert,
-  BackHandler,
   Image,
   ScrollView,
   Text,
@@ -17,14 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
 const CalculatorPage = () => {
-  const db = getDb();
-  const router = useRouter();
-  const parent_id = SessionStorage.getItem("employee_id");
+  // const db = getDb();
+  // const router = useRouter();
+  // const parent_id = SessionStorage.getItem("employee_id");
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
@@ -79,34 +72,34 @@ const CalculatorPage = () => {
     }
   };
 
-  const addRecord = async (values) => {
-    try {
-      await db.delete(violations).where(eq(violations.employee_id, parent_id));
-      await db
-        .insert(violations)
-        .values({ values: JSON.stringify(values), employee_id: parent_id });
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
-    }
-  };
+  // const addRecord = async (values) => {
+  //   try {
+  //     await db.delete(violations).where(eq(violations.employee_id, parent_id));
+  //     await db
+  //       .insert(violations)
+  //       .values({ values: JSON.stringify(values), employee_id: parent_id });
+  //   } catch (error) {
+  //     console.error(error);
+  //     Alert.alert("Error", error.message || "An Error Eccurred");
+  //   }
+  // };
 
-  useFocusEffect(
-    useCallback(() => {
-      const handleBackPress = () => {
-        router.push("/employees");
-        addRecord(values);
-        return true;
-      };
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const handleBackPress = () => {
+  //       router.push("/employees");
+  //       addRecord(values);
+  //       return true;
+  //     };
 
-      const backhandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        handleBackPress
-      );
+  //     const backhandler = BackHandler.addEventListener(
+  //       "hardwareBackPress",
+  //       handleBackPress
+  //     );
 
-      return () => backhandler.remove();
-    }, [values])
-  );
+  //     return () => backhandler.remove();
+  //   }, [values])
+  // );
 
   // useEffect(() => {
   //   const getRecords = async () => {
@@ -135,8 +128,8 @@ const CalculatorPage = () => {
               <Icon name="assignment" size={22} color="#fff" />
               <Text style={styles.headerText}>Inspector Wage Calculator</Text>
               <View style={styles.header}>
-                <Image source={DoleImage} style={styles.image} />
-                <Image source={BagongPilipinasImage} style={styles.image} />
+                <Image source={Dole} style={styles.image} />
+                <Image source={BagongPilipinas} style={styles.image} />
               </View>
             </View>
 
@@ -189,7 +182,7 @@ const CalculatorPage = () => {
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
-                      db={db}
+                      db={null}
                       parent={parent}
                       type={type}
                       index={index}
