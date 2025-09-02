@@ -14,7 +14,7 @@ import { eq } from "drizzle-orm";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { useEffect, useState } from "react";
-import { Button, View } from "react-native";
+import { Alert, Button, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import { WebView } from "react-native-webview";
 
@@ -292,7 +292,8 @@ const PDFPage = () => {
         alert("PDF saved at: " + uri);
       }
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
     }
   };
 
@@ -306,7 +307,8 @@ const PDFPage = () => {
         });
         setRecord(data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        Alert.alert("Error", error.message || "An Error Eccurred");
       }
     };
     getRecords();

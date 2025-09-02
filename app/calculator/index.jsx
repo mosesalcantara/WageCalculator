@@ -86,22 +86,6 @@ const CalculatorPage = () => {
     }
   };
 
-  useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const data = await db.query.employees.findFirst({
-          where: eq(employees.id, parent_id),
-          with: { violations: true },
-        });
-        setParent(data);
-        data.violations && setValues(JSON.parse(data.violations[0].values));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getRecords();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -116,8 +100,25 @@ const CalculatorPage = () => {
       );
 
       return () => backhandler.remove();
-    }, [values])
+    }, [])
   );
+
+  useEffect(() => {
+    const getRecords = async () => {
+      try {
+        const data = await db.query.employees.findFirst({
+          where: eq(employees.id, parent_id),
+          with: { violations: true },
+        });
+        setParent(data);
+        data.violations && setValues(JSON.parse(data.violations[0].values));
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", error.message || "An Error Eccurred");
+      }
+    };
+    getRecords();
+  }, []);
 
   return (
     <>

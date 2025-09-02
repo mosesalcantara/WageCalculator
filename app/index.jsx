@@ -9,6 +9,7 @@ import { eq, inArray } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
   BackHandler,
   FlatList,
   Text,
@@ -38,7 +39,8 @@ const EstablishmentPage = () => {
       await db.delete(establishments).where(eq(establishments.id, id));
       setMutations((prev) => ++prev);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
     }
   };
 
@@ -46,20 +48,6 @@ const EstablishmentPage = () => {
     SessionStorage.setItem("establishment_id", `${id}`);
     router.push(`/${route}`);
   };
-
-  useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const data = await db.query.establishments.findMany({
-          with: { employees: true },
-        });
-        setRecords(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getRecords();
-  }, [mutations]);
 
   useFocusEffect(
     useCallback(() => {
@@ -76,6 +64,21 @@ const EstablishmentPage = () => {
       return () => backhandler.remove();
     }, [])
   );
+
+  useEffect(() => {
+    const getRecords = async () => {
+      try {
+        const data = await db.query.establishments.findMany({
+          with: { employees: true },
+        });
+        setRecords(data);
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", error.message || "An Error Eccurred");
+      }
+    };
+    getRecords();
+  }, [mutations]);
 
   return (
     <View style={styles.container}>

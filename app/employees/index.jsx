@@ -9,6 +9,7 @@ import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
   BackHandler,
   ScrollView,
   Text,
@@ -42,7 +43,8 @@ const EmployeesPage = () => {
       await db.delete(employees).where(eq(employees.id, id));
       setMutations((prev) => ++prev);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
     }
   };
 
@@ -50,23 +52,6 @@ const EmployeesPage = () => {
     SessionStorage.setItem("employee_id", `${id}`);
     router.push("/calculator");
   };
-
-  useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const parent_id = SessionStorage.getItem("establishment_id");
-        const data = await db.query.establishments.findFirst({
-          where: eq(establishments.id, parent_id),
-          with: { employees: true },
-        });
-        setParent(data);
-        setRecords(data.employees);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getRecords();
-  }, [mutations]);
 
   useFocusEffect(
     useCallback(() => {
@@ -83,6 +68,24 @@ const EmployeesPage = () => {
       return () => backhandler.remove();
     }, [])
   );
+
+  useEffect(() => {
+    const getRecords = async () => {
+      try {
+        const parent_id = SessionStorage.getItem("establishment_id");
+        const data = await db.query.establishments.findFirst({
+          where: eq(establishments.id, parent_id),
+          with: { employees: true },
+        });
+        setParent(data);
+        setRecords(data.employees);
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", error.message || "An Error Eccurred");
+      }
+    };
+    getRecords();
+  }, [mutations]);
 
   return (
     <>
