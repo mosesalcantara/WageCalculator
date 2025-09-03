@@ -176,6 +176,10 @@ const CalculatorPage = () => {
                   parent.rate
                 )}`}
               </Text>
+              <Text style={styles.subtotal}>
+                Subtotal:{" "}
+                {formatNumber(getTotals(values[type], parent.rate, type))}
+              </Text>
             </View>
 
             <View style={styles.periodsContainer}>
@@ -210,11 +214,6 @@ const CalculatorPage = () => {
                   )}
                 </View>
               </ScrollView>
-
-              <Text style={styles.subtotal}>
-                Subtotal:{" "}
-                {formatNumber(getTotals(values[type], parent.rate, type))}
-              </Text>
             </View>
 
             <View style={styles.saveButtonContainer}>

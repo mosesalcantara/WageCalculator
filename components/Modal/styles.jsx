@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 30,
     marginTop: 20,
-    marginBottom: 30,
+    marginBottom: 40,
   },
   addText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
   modalOverlay: {

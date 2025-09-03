@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 10,
   },
-  image: { width: 60, height: 60, resizeMode: "contain" },
+  image: { width: "28%", height: 60, resizeMode: "contain" },
   types: {
     backgroundColor: "#fff",
     borderBottomWidth: 1,
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   periodsContainer: { height: 450 },
   periods: { gap: 30 },
   receivedContainer: { marginHorizontal: 40, paddingTop: 10 },
-  subtotal: { fontWeight: "bold", fontSize: 20, textAlign: "center" },
-  saveButtonContainer: { marginHorizontal: 20 },
+  subtotal: { fontWeight: "bold", fontSize: 20, textAlign: "center", fontStyle: "italic", textDecorationLine: "underline" },
+  saveButtonContainer: { marginHorizontal: 20, marginVertical: -8 },
   saveButton: {
     backgroundColor: "#000",
     padding: 12,
