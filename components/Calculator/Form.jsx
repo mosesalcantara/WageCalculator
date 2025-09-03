@@ -4,21 +4,15 @@ import {
   numberToLetter,
   periodFormat,
 } from "@/utils/utils";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const Form = ({
-  parent,
-  type,
-  index,
-  valuesState,
-  handleInitialChange,
-}) => {
-  const [startDateModalVisible, setStartDateModalVisible] = useState(false);
-  const [endDateModalVisible, setEndDateModalVisible] = useState(false);
+const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
+  const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
+  const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
 
   const formatDate = (date) => {
@@ -33,9 +27,9 @@ const Form = ({
     handleInitialChange(key, value, index);
 
     if (key == "start_date") {
-      setStartDateModalVisible(false);
+      setIsStartDateModalVisible(false);
     } else if (key == "end_date") {
-      setEndDateModalVisible(false);
+      setIsEndDateModalVisible(false);
     }
   };
 
@@ -70,14 +64,16 @@ const Form = ({
       <View style={styles.topBorder}>
         <View>
           {values[type].periods.length > 1 && (
-            <Text style={styles.periodHeader}>Period {numberToLetter(index)}</Text>
+            <Text style={styles.periodHeader}>
+              Period {numberToLetter(index)}
+            </Text>
           )}
 
           <View>
             <Text style={styles.label}>Start Date</Text>
             <TouchableOpacity
               style={[styles.input, styles.dateField]}
-              onPress={() => setStartDateModalVisible(true)}
+              onPress={() => setIsStartDateModalVisible(true)}
             >
               <Text>
                 {values[type].periods[index].start_date || "Select start date"}
@@ -90,7 +86,7 @@ const Form = ({
             <Text style={styles.label}>End Date</Text>
             <TouchableOpacity
               style={[styles.input, styles.dateField]}
-              onPress={() => setEndDateModalVisible(true)}
+              onPress={() => setIsEndDateModalVisible(true)}
             >
               <Text>
                 {values[type].periods[index].end_date || "Select end date"}
@@ -160,25 +156,21 @@ const Form = ({
         </View>
       </View>
 
-      <DateTimePickerModal
-        isVisible={startDateModalVisible}
-        mode="date"
-        // date={formatDate(values[type].periods[index].start_date)}
-        // onConfirm={(value) => {
-        //   handleChange("start_date", value);
-        // }}
-        // onCancel={() => setStartDateModalVisible(false)}
-      />
+      {isStartDateModalVisible && (
+        <DateTimePicker
+          value={formatDate(values[type].periods[index].start_date)}
+          mode="date"
+          onChange={(_, value) => handleChange("start_date", value)}
+        />
+      )}
 
-      <DateTimePickerModal
-        isVisible={endDateModalVisible}
-        mode="date"
-        // date={formatDate(values[type].periods[index].end_date)}
-        // onConfirm={(value) => {
-        //   handleChange("end_date", value);
-        // }}
-        // onCancel={() => setEndDateModalVisible(false)}
-      />
+      {isEndDateModalVisible && (
+        <DateTimePicker
+          value={formatDate(values[type].periods[index].end_date)}
+          mode="date"
+          onChange={(_, value) => handleChange("end_date", value)}
+        />
+      )}
     </>
   );
 };
