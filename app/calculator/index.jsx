@@ -1,12 +1,12 @@
-import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
-import DoleImage from "@/assets/images/dole.png";
+import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
+import Dole from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import { employees, violations } from "@/db/schema";
+import { violations } from "@/db/schema";
 import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Alert,
   BackHandler,
@@ -31,13 +31,18 @@ const CalculatorPage = () => {
     { name: "Overtime Pay", icon: "access-time" },
     { name: "Night Differential", icon: "nights-stay" },
     { name: "Special Day", icon: "star" },
-    { name: "Rest Day", icon: "star" },
+    { name: "Rest Day", icon: "coffee" },
     { name: "Holiday Pay", icon: "event-available" },
     { name: "13th Month Pay", icon: "card-giftcard" },
   ];
 
   const [type, setType] = useState("Basic Wage");
-  const [parent, setParent] = useState(null);
+  const [parent, setParent] = useState({
+    id: 1,
+    first_name: "Employee",
+    last_name: "Employee",
+    rate: 400,
+  });
   const [values, setValues] = useState({
     "Basic Wage": periodsFormat,
     "Overtime Pay": periodsFormat,
@@ -50,18 +55,6 @@ const CalculatorPage = () => {
       received: "",
     },
   });
-
-  const addRecord = async (values) => {
-    try {
-      await db.delete(violations).where(eq(violations.employee_id, parent_id));
-      await db
-        .insert(violations)
-        .values({ values: JSON.stringify(values), employee_id: parent_id });
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
-    }
-  };
 
   const handleInitialChange = (key, value, index) => {
     if (key.endsWith("_date")) {
@@ -86,6 +79,18 @@ const CalculatorPage = () => {
     }
   };
 
+  const addRecord = async (values) => {
+    try {
+      await db.delete(violations).where(eq(violations.employee_id, parent_id));
+      await db
+        .insert(violations)
+        .values({ values: JSON.stringify(values), employee_id: parent_id });
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", error.message || "An Error Eccurred");
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -100,7 +105,7 @@ const CalculatorPage = () => {
       );
 
       return () => backhandler.remove();
-    }, [])
+    }, [values])
   );
 
   useEffect(() => {
@@ -111,7 +116,8 @@ const CalculatorPage = () => {
           with: { violations: true },
         });
         setParent(data);
-        data.violations && setValues(JSON.parse(data.violations[0].values));
+        data.violations.length > 0 &&
+          setValues(JSON.parse(data.violations[0].values));
       } catch (error) {
         console.error(error);
         Alert.alert("Error", error.message || "An Error Eccurred");
@@ -129,8 +135,8 @@ const CalculatorPage = () => {
               <Icon name="assignment" size={22} color="#fff" />
               <Text style={styles.headerText}>Inspector Wage Calculator</Text>
               <View style={styles.header}>
-                <Image source={DoleImage} style={styles.image} />
-                <Image source={BagongPilipinasImage} style={styles.image} />
+                <Image source={Dole} style={styles.image} />
+                <Image source={BagongPilipinas} style={styles.image} />
               </View>
             </View>
 
@@ -138,14 +144,14 @@ const CalculatorPage = () => {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={styles.calcScroll}
+                style={styles.types}
               >
                 {tabs.map((item) => (
                   <TouchableOpacity
                     key={item.name}
                     style={[
-                      styles.calcButton,
-                      type === item.name && styles.calcButtonActive,
+                      styles.button,
+                      type === item.name && styles.buttonActive,
                     ]}
                     onPress={() => {
                       setType(item.name);
@@ -158,7 +164,7 @@ const CalculatorPage = () => {
                     />
                     <Text
                       style={[
-                        styles.calcButtonText,
+                        styles.buttonText,
                         type === item.name && { color: "#fff" },
                       ]}
                     >
@@ -169,33 +175,17 @@ const CalculatorPage = () => {
               </ScrollView>
             </View>
 
-            <View style={{ paddingVertical: 15 }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  textAlign: "center",
-                }}
-              >
+            <View style={styles.employeeContainer}>
+              <Text style={styles.employee}>
                 {`${parent.first_name} ${parent.last_name} - ${formatNumber(
                   parent.rate
                 )}`}
               </Text>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  textAlign: "center",
-                }}
-              >
-                Subtotal:{" "}
-                {formatNumber(getTotals(values[type], parent.rate, type))}
-              </Text>
             </View>
 
-            <View style={{ height: 450 }}>
+            <View style={styles.periodsContainer}>
               <ScrollView>
-                <View style={{ gap: 30 }}>
+                <View style={styles.periods}>
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
@@ -208,7 +198,7 @@ const CalculatorPage = () => {
                   ))}
                 </View>
 
-                <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
+                <View style={styles.receivedContainer}>
                   {type == "13th Month Pay" && (
                     <>
                       <Text style={styles.label}>Received</Text>
@@ -225,28 +215,19 @@ const CalculatorPage = () => {
                   )}
                 </View>
               </ScrollView>
+
+              <Text style={styles.subtotal}>
+                Subtotal:{" "}
+                {formatNumber(getTotals(values[type], parent.rate, type))}
+              </Text>
             </View>
 
-            <View style={{ marginHorizontal: 20 }}>
+            <View style={styles.saveButtonContainer}>
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#000",
-                  padding: 12,
-                  borderRadius: 30,
-                  marginTop: 20,
-                  marginBottom: 30,
-                }}
+                style={styles.saveButton}
                 onPress={() => addRecord(values)}
               >
-                <Text
-                  style={{
-                    color: "#fff",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Save
-                </Text>
+                <Text style={styles.saveButtonText}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 40,
   },
+  employeeContainer: { paddingVertical: 15 },
   employee: { fontWeight: "bold", fontSize: 20, textAlign: "center" },
   periodsContainer: { height: 450 },
   periods: { gap: 30 },

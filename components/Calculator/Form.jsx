@@ -52,7 +52,6 @@ const Form = ({
     setValues((prev) => {
       const updatedPeriods = prev[type].periods;
       updatedPeriods.splice(index, 1);
-
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
@@ -62,19 +61,18 @@ const Form = ({
       const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
         index == periodIndex ? periodFormat : period
       );
-
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
 
   return (
     <>
-      <View style={{ marginHorizontal: 40, paddingTop: 10 }}>
+      <View style={styles.topBorder}>
         <View>
-          <Text style={{ textAlign: "center" }}>
-            {values[type].periods.length > 1 &&
-              `Period ${numberToLetter(index)}`}
-          </Text>
+          {values[type].periods.length > 1 && (
+            <Text style={styles.center}>Period {numberToLetter(index)}</Text>
+          )}
+
           <View>
             <Text style={styles.label}>Start Date</Text>
             <TouchableOpacity
@@ -123,22 +121,42 @@ const Form = ({
           </Text>
         </View>
 
-        <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+        <View style={styles.buttons}>
           {values[type].periods.length - 1 == index && (
             <TouchableOpacity onPress={addPeriod}>
-              <Text>Add</Text>
+              <Text
+                style={[
+                  styles.button,
+                  { backgroundColor: "#008000", borderColor: "#008000" },
+                ]}
+              >
+                Add
+              </Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity onPress={clearPeriod}>
+            <Text
+              style={[
+                styles.button,
+                { backgroundColor: "#f79812ff", borderColor: "#f79812ff" },
+              ]}
+            >
+              Clear
+            </Text>
+          </TouchableOpacity>
 
           {values[type].periods.length > 1 && (
             <TouchableOpacity onPress={removePeriod}>
-              <Text>Remove</Text>
+              <Text
+                style={[
+                  styles.button,
+                  { backgroundColor: "#e71414ff", borderColor: "#e71414ff" },
+                ]}
+              >
+                Remove
+              </Text>
             </TouchableOpacity>
           )}
-
-          <TouchableOpacity onPress={clearPeriod}>
-            <Text>Clear</Text>
-          </TouchableOpacity>
         </View>
       </View>
 
