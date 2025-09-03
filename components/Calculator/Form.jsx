@@ -6,7 +6,7 @@ import {
 } from "@/utils/utils";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+// import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
@@ -17,13 +17,13 @@ const Form = ({
   valuesState,
   handleInitialChange,
 }) => {
-  const [startDateModalVisible, setStartDateModalVisible] = useState(false);
-  const [endDateModalVisible, setEndDateModalVisible] = useState(false);
+  // const [startDateModalVisible, setStartDateModalVisible] = useState(false);
+  // const [endDateModalVisible, setEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
 
-  const formatDate = (date) => {
-    return date ? new Date(date) : new Date();
-  };
+  // const formatDate = (date) => {
+  //   return date ? new Date(date) : new Date();
+  // };
 
   const checkType = () => {
     return ["Overtime Pay", "Night Differential"].includes(type);
@@ -73,7 +73,7 @@ const Form = ({
             <Text style={styles.periodHeader}>Period {numberToLetter(index)}</Text>
           )}
 
-          <View>
+          {/* <View>
             <Text style={styles.label}>Start Date</Text>
             <TouchableOpacity
               style={[styles.input, styles.dateField]}
@@ -97,7 +97,7 @@ const Form = ({
               </Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View>
             <Text style={styles.label}>{checkType() ? "Hours" : "Days"}</Text>
@@ -160,7 +160,7 @@ const Form = ({
         </View>
       </View>
 
-      <DateTimePickerModal
+      {/* <DateTimePickerModal
         isVisible={startDateModalVisible}
         mode="date"
         date={formatDate(values[type].periods[index].start_date)}
@@ -178,7 +178,7 @@ const Form = ({
           handleChange("end_date", value);
         }}
         onCancel={() => setEndDateModalVisible(false)}
-      />
+      /> */}
     </>
   );
 };
