@@ -1,12 +1,12 @@
 import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
-import { violations } from "@/db/schema";
+import { employees, violations } from "@/db/schema";
 import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   BackHandler,
@@ -37,12 +37,7 @@ const CalculatorPage = () => {
   ];
 
   const [type, setType] = useState("Basic Wage");
-  const [parent, setParent] = useState({
-    id: 1,
-    first_name: "Employee",
-    last_name: "Employee",
-    rate: 400,
-  });
+  const [parent, setParent] = useState(null);
   const [values, setValues] = useState({
     "Basic Wage": periodsFormat,
     "Overtime Pay": periodsFormat,

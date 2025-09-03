@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  bold: { fontWeight: "bold" },
   topBorder: {
     marginHorizontal: 40,
     paddingTop: 10,
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
   },
-  center: { textAlign: "center" },
+  periodHeader: { textAlign: "center", fontWeight: "bold" },
   label: {
     fontSize: 14,
     fontWeight: "bold",

@@ -70,7 +70,7 @@ const Form = ({
       <View style={styles.topBorder}>
         <View>
           {values[type].periods.length > 1 && (
-            <Text style={styles.center}>Period {numberToLetter(index)}</Text>
+            <Text style={styles.periodHeader}>Period {numberToLetter(index)}</Text>
           )}
 
           <View>
