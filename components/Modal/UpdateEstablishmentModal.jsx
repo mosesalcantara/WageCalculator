@@ -19,7 +19,7 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
     try {
       await db
         .update(establishments)
-        .set(values)
+        .set({ ...values, name: `${values.name}`.trim() })
         .where(eq(establishments.id, values.id));
       setMutations((prev) => ++prev);
       resetForm();

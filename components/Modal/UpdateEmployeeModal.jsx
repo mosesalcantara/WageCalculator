@@ -19,7 +19,14 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      await db.update(employees).set(values).where(eq(employees.id, values.id));
+      await db
+        .update(employees)
+        .set({
+          ...values,
+          first_name: `${values.first_name}`.trim(),
+          last_name: `${values.last_name}`.trim(),
+        })
+        .where(eq(employees.id, values.id));
       setMutations((prev) => ++prev);
       resetForm();
       setIsUpdateModalVisible(false);

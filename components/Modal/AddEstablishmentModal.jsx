@@ -18,7 +18,9 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      await db.insert(establishments).values(values);
+      await db
+        .insert(establishments)
+        .values({ ...values, name: `${values.name}`.trim() });
       setMutations((prev) => ++prev);
       resetForm();
       setIsAddModalVisible(false);

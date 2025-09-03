@@ -23,7 +23,12 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
     try {
       await db
         .insert(employees)
-        .values({ ...values, establishment_id: parent.id });
+        .values({
+          ...values,
+          first_name: `${values.first_name}`.trim(),
+          last_name: `${values.last_name}`.trim(),
+          establishment_id: parent.id,
+        });
       setMutations((prev) => ++prev);
       resetForm();
       setIsAddModalVisible(false);
