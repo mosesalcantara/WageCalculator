@@ -197,9 +197,9 @@ const CalculatorPage = () => {
                   ))}
                 </View>
 
-                <View style={styles.receivedContainer}>
-                  {type == "13th Month Pay" && (
-                    <>
+                {type == "13th Month Pay" && (
+                  <>
+                    <View style={styles.receivedContainer}>
                       <Text style={styles.label}>Received</Text>
                       <TextInput
                         style={styles.input}
@@ -210,9 +210,9 @@ const CalculatorPage = () => {
                           handleInitialChange("received", value, null)
                         }
                       />
-                    </>
-                  )}
-                </View>
+                    </View>
+                  </>
+                )}
               </ScrollView>
             </View>
 
