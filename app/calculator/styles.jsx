@@ -58,6 +58,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   saveButtonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
+  footer: { textAlign: "center", fontSize: 12, color: "#888", marginTop: 120 },
+  MIMAROPA: { textAlign: "center", fontSize: 12, color: "#888", marginBottom: 10 },
 });
 
 export default styles;

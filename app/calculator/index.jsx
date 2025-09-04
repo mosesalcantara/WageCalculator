@@ -198,7 +198,6 @@ const CalculatorPage = () => {
                 </View>
 
                 {type == "13th Month Pay" && (
-                  <>
                     <View style={styles.receivedContainer}>
                       <Text style={styles.label}>Received</Text>
                       <TextInput
@@ -211,8 +210,11 @@ const CalculatorPage = () => {
                         }
                       />
                     </View>
-                  </>
                 )}
+                <Text style={styles.footer}>
+                  Copyright © 2025 - Department of Labor and Employment
+                </Text>
+                <Text style={styles.MIMAROPA}>MIMAROPA Region</Text>
               </ScrollView>
             </View>
 
