@@ -98,6 +98,7 @@ const EmployeesPage = () => {
 
             <TextInput
               placeholder="Search employee"
+              placeholderTextColor="#888"
               value={searchQuery}
               onChangeText={setSearchQuery}
               style={{
@@ -113,12 +114,8 @@ const EmployeesPage = () => {
             <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
               <View style={styles.table}>
                 <View style={[styles.row, styles.headerRow]}>
-                  <Text style={[styles.headerCell, { flex: 2 }]}>
-                    Name
-                  </Text>
-                  <Text style={[styles.headerCell, { flex: 1 }]}>
-                    Rate
-                  </Text>
+                  <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
+                  <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
                   <Text style={[styles.headerCell, { flex: 0.8 }]}>
                     Actions
                   </Text>
@@ -162,9 +159,7 @@ const EmployeesPage = () => {
                     </View>
                   ))
                 ) : (
-                  <Text style={styles.empty}>
-                    No employees found.
-                  </Text>
+                  <Text style={styles.empty}>No employees found.</Text>
                 )}
               </View>
             </ScrollView>

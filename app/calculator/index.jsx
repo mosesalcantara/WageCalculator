@@ -169,7 +169,14 @@ const CalculatorPage = () => {
                 ))}
               </ScrollView>
             </View>
-
+            <View style={styles.saveButtonContainer}>
+              <TouchableOpacity
+                style={styles.saveButton}
+                onPress={() => addRecord(values)}
+              >
+                <Text style={styles.saveButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.employeeContainer}>
               <Text style={styles.employee}>
                 {`${parent.first_name} ${parent.last_name} - ${formatNumber(
@@ -212,22 +219,13 @@ const CalculatorPage = () => {
                   </View>
                 )}
 
-                <Text style={{ ...styles.footer, marginTop: 120 }}>
+                <Text style={{ ...styles.footer, marginTop: "45%" }}>
                   Copyright © 2025 - Department of Labor and Employment
                 </Text>
-                <Text style={{ ...styles.footer, marginBottom: 10 }}>
+                <Text style={{ ...styles.footer, marginBottom: "2%" }}>
                   MIMAROPA Region
                 </Text>
               </ScrollView>
-            </View>
-
-            <View style={styles.saveButtonContainer}>
-              <TouchableOpacity
-                style={styles.saveButton}
-                onPress={() => addRecord(values)}
-              >
-                <Text style={styles.saveButtonText}>Save</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </>
