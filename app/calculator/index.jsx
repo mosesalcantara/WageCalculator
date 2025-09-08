@@ -11,6 +11,7 @@ import {
   Alert,
   BackHandler,
   Image,
+  Keyboard,
   ScrollView,
   Text,
   TextInput,
@@ -50,6 +51,7 @@ const CalculatorPage = () => {
       received: "",
     },
   });
+  const [isKeyboardShown, setIsKeyboardShown] = useState(false);
 
   const handleInitialChange = (key, value, index) => {
     if (key.endsWith("_date")) {
@@ -88,6 +90,19 @@ const CalculatorPage = () => {
 
   useFocusEffect(
     useCallback(() => {
+      const handleKeyboardShown = Keyboard.addListener(
+        "keyboardDidShow",
+        () => {
+          setIsKeyboardShown(true);
+        }
+      );
+      const handleKeyboardHidden = Keyboard.addListener(
+        "keyboardDidHide",
+        () => {
+          setIsKeyboardShown(false);
+        }
+      );
+
       const handleBackPress = () => {
         router.push("/employees");
         addRecord(values);
@@ -99,7 +114,11 @@ const CalculatorPage = () => {
         handleBackPress
       );
 
-      return () => backhandler.remove();
+      return () => {
+        handleKeyboardShown.remove();
+        handleKeyboardHidden.remove();
+        backhandler.remove();
+      };
     }, [values])
   );
 
@@ -169,6 +188,7 @@ const CalculatorPage = () => {
                 ))}
               </ScrollView>
             </View>
+
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity
                 style={styles.saveButton}
@@ -177,6 +197,7 @@ const CalculatorPage = () => {
                 <Text style={styles.saveButtonText}>Save</Text>
               </TouchableOpacity>
             </View>
+
             <View style={styles.employeeContainer}>
               <Text style={styles.employee}>
                 {`${parent.first_name} ${parent.last_name} - ${formatNumber(
@@ -219,12 +240,9 @@ const CalculatorPage = () => {
                   </View>
                 )}
 
-                <Text style={{ ...styles.footer, marginTop: "63%" }}>
-                  Copyright © 2025 - Department of Labor and Employment
-                </Text>
-                <Text style={{ ...styles.footer, marginBottom: "2%" }}>
-                  MIMAROPA Region
-                </Text>
+                {isKeyboardShown && (
+                  <View style={{ marginTop: "63%", marginBottom: "2%" }}></View>
+                )}
               </ScrollView>
             </View>
           </View>

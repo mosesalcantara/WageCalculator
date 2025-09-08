@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     borderBottomColor: "#0d3dffff",
     borderBottomWidth: 1,
     borderRadius: 8,
-    marginBottom: 20,
     padding: 10,
   },
   periodHeader: { textAlign: "center", fontWeight: "bold" },

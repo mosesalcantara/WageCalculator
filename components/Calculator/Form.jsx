@@ -109,7 +109,7 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
 
         <View style={styles.resultBox}>
           <Text style={styles.resultLabel}>
-            Total: 
+            Total:{" "}
             <Text style={styles.resultValue}>
               ₱
               {formatNumber(

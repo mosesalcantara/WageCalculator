@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
   },
   employeeContainer: { paddingVertical: 10 },
   employee: { fontWeight: "bold", fontSize: 20, textAlign: "left", marginLeft: "3%" },
-  periodsContainer: { height: 520 },
+  periodsContainer: { height: 500 },
   periods: { gap: 30 },
-  receivedContainer: { marginHorizontal: 40, paddingTop: 10 },
+  receivedContainer: { marginHorizontal: 40, paddingTop: 15 },
   subtotal: { fontWeight: "bold", fontSize: 20, textAlign: "left", fontStyle: "italic", textDecorationLine: "underline", marginLeft: "3%",},
   saveButtonContainer: {
     flexDirection: "row",
