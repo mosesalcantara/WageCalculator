@@ -11,7 +11,8 @@ import {
   Alert,
   BackHandler,
   Image,
-  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   Text,
   TextInput,
@@ -51,7 +52,6 @@ const CalculatorPage = () => {
       received: "",
     },
   });
-  const [isKeyboardShown, setIsKeyboardShown] = useState(false);
 
   const handleInitialChange = (key, value, index) => {
     if (key.endsWith("_date")) {
@@ -90,19 +90,6 @@ const CalculatorPage = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const handleKeyboardShown = Keyboard.addListener(
-        "keyboardDidShow",
-        () => {
-          setIsKeyboardShown(true);
-        }
-      );
-      const handleKeyboardHidden = Keyboard.addListener(
-        "keyboardDidHide",
-        () => {
-          setIsKeyboardShown(false);
-        }
-      );
-
       const handleBackPress = () => {
         router.push("/employees");
         addRecord(values);
@@ -115,8 +102,6 @@ const CalculatorPage = () => {
       );
 
       return () => {
-        handleKeyboardShown.remove();
-        handleKeyboardHidden.remove();
         backhandler.remove();
       };
     }, [values])
@@ -210,7 +195,10 @@ const CalculatorPage = () => {
               </Text>
             </View>
 
-            <View style={styles.periodsContainer}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={styles.periodsContainer}
+            >
               <ScrollView>
                 <View style={styles.periods}>
                   {values[type].periods.map((_, index) => (
@@ -239,12 +227,8 @@ const CalculatorPage = () => {
                     />
                   </View>
                 )}
-
-                {isKeyboardShown && (
-                  <View style={{ marginTop: "63%", marginBottom: "2%" }}></View>
-                )}
               </ScrollView>
-            </View>
+            </KeyboardAvoidingView>
           </View>
         </>
       )}

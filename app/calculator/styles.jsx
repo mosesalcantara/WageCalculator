@@ -44,11 +44,23 @@ const styles = StyleSheet.create({
     height: 40,
   },
   employeeContainer: { paddingVertical: 10 },
-  employee: { fontWeight: "bold", fontSize: 20, textAlign: "left", marginLeft: "3%" },
+  employee: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "left",
+    marginLeft: "3%",
+  },
   periodsContainer: { height: 500 },
   periods: { gap: 30 },
   receivedContainer: { marginHorizontal: 40, paddingTop: 15 },
-  subtotal: { fontWeight: "bold", fontSize: 20, textAlign: "left", fontStyle: "italic", textDecorationLine: "underline", marginLeft: "3%",},
+  subtotal: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "left",
+    fontStyle: "italic",
+    textDecorationLine: "underline",
+    marginLeft: "3%",
+  },
   saveButtonContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
@@ -56,9 +68,13 @@ const styles = StyleSheet.create({
     marginRight: "3%",
     marginBottom: "-14%",
   },
-  saveButton: { backgroundColor: "#2196F3", padding: 20, paddingVertical: 10, borderRadius: 8},
+  saveButton: {
+    backgroundColor: "#2196F3",
+    padding: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
   saveButtonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
-  footer: { textAlign: "center", fontSize: 12, color: "#888" },
 });
 
 export default styles;
