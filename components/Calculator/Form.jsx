@@ -108,12 +108,14 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
         </View>
 
         <View style={styles.resultBox}>
-          <Text style={styles.resultLabel}>Total:</Text>
-          <Text style={styles.resultValue}>
-            ₱
-            {formatNumber(
-              calculate(values[type].periods[index], parent.rate, type)
-            )}
+          <Text style={styles.resultLabel}>
+            Total: 
+            <Text style={styles.resultValue}>
+              ₱
+              {formatNumber(
+                calculate(values[type].periods[index], parent.rate, type)
+              )}
+            </Text>
           </Text>
         </View>
 

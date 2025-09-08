@@ -219,7 +219,7 @@ const CalculatorPage = () => {
                   </View>
                 )}
 
-                <Text style={{ ...styles.footer, marginTop: "45%" }}>
+                <Text style={{ ...styles.footer, marginTop: "63%" }}>
                   Copyright © 2025 - Department of Labor and Employment
                 </Text>
                 <Text style={{ ...styles.footer, marginBottom: "2%" }}>

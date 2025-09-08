@@ -47,9 +47,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#27ae60",
   },
-  resultLabel: { fontSize: 14, fontWeight: "bold", color: "#27ae60" },
+  resultLabel: { fontSize: 16, color: "#27ae60" },
   resultValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#27ae60",
     marginTop: 4,
