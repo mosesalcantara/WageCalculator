@@ -174,25 +174,27 @@ const CalculatorPage = () => {
               </ScrollView>
             </View>
 
-            <View style={styles.saveButtonContainer}>
-              <TouchableOpacity
-                style={styles.saveButton}
-                onPress={() => addRecord(values)}
-              >
-                <Text style={styles.saveButtonText}>Save</Text>
-              </TouchableOpacity>
-            </View>
+            <View style={styles.employeeSave}>
+              <View style={styles.employeeContainer}>
+                <Text style={styles.employee}>
+                  {`${parent.first_name} ${parent.last_name} - ${formatNumber(
+                    parent.rate
+                  )}`}
+                </Text>
+                <Text style={styles.subtotal}>
+                  Subtotal:{" "}
+                  {formatNumber(getTotals(values[type], parent.rate, type))}
+                </Text>
+              </View>
 
-            <View style={styles.employeeContainer}>
-              <Text style={styles.employee}>
-                {`${parent.first_name} ${parent.last_name} - ${formatNumber(
-                  parent.rate
-                )}`}
-              </Text>
-              <Text style={styles.subtotal}>
-                Subtotal:{" "}
-                {formatNumber(getTotals(values[type], parent.rate, type))}
-              </Text>
+              <View>
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={() => addRecord(values)}
+                >
+                  <Text style={styles.saveButtonText}>Save</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             <KeyboardAvoidingView

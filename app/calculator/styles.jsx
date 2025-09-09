@@ -43,6 +43,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 40,
   },
+  employeeSave: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
   employeeContainer: { paddingVertical: 10 },
   employee: {
     fontWeight: "bold",
@@ -60,13 +66,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     textDecorationLine: "underline",
     marginLeft: "3%",
-  },
-  saveButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: "4%",
-    marginRight: "3%",
-    marginBottom: "-14%",
   },
   saveButton: {
     backgroundColor: "#2196F3",
