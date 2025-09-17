@@ -105,7 +105,7 @@ const PDFPage = () => {
         </p>
 
         ${renderFormula(period, rate, type)}
-        <p style="font-size: 3%">&nbsp</p>`;
+        <p style="font-size: 5%">&nbsp</p>`;
       }
     });
 
