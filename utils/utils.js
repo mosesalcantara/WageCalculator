@@ -1,5 +1,5 @@
 import * as schema from "@/db/schema";
-import { format, isAfter, isBefore, parse, parseISO } from "date-fns";
+import { format, isBefore, parse, parseISO } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
@@ -44,17 +44,9 @@ export const getRate = (startDate, rate) => {
   const rateToUse = isBelow ? minimumRate : rate;
 
   return {
-    minimumRate: minimumRate,
     isBelow: isBelow,
     rateToUse: rateToUse,
   };
-};
-
-export const getMultiplier = (startDate) => {
-  return isAfter(parseDate(startDate), parseDate("2023-12-31")) &&
-    isBefore(parseDate(startDate), parseDate("2024-12-23"))
-    ? 1
-    : 0.3;
 };
 
 export const validate = (object) => {
@@ -67,10 +59,10 @@ export const calculate = (period, rate, type) => {
   if (validate(period)) {
     const startDate = period.start_date;
     const daysOrHours = period.daysOrHours;
-    const { minimumRate, isBelow, rateToUse } = getRate(startDate, rate);
+    const { isBelow, rateToUse } = getRate(startDate, rate);
 
     if (type == "Basic Wage" && isBelow) {
-      result = (minimumRate - rate) * daysOrHours;
+      result = (rateToUse - rate) * daysOrHours;
     } else if (type == "Overtime Pay") {
       result = (rateToUse / 8) * 0.25 * daysOrHours;
     } else if (type == "Night Differential") {
@@ -89,11 +81,11 @@ export const calculate = (period, rate, type) => {
   return result;
 };
 
-export const getTotals = (valuesType, rate, type) => {
-  let result = valuesType.periods.reduce(
+export const getTotal = (violationType, rate, type) => {
+  let result = violationType.periods.reduce(
     (accumulator, period) => (accumulator += calculate(period, rate, type)),
     0
   );
-  valuesType.received && (result -= valuesType.received);
+  violationType.received && (result -= violationType.received);
   return result;
 };

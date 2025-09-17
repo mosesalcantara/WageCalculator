@@ -5,8 +5,8 @@ import {
   formatDate,
   formatNumber,
   getDb,
-  getMultiplier,
   getRate,
+  getTotal,
   numberToLetter,
   validate,
 } from "@/utils/utils";
@@ -64,13 +64,12 @@ const PDFPage = () => {
     let total = 0;
     Object.keys(violations).forEach((type) => {
       const violationType = violations[type];
+      total += getTotal(violationType, rate, type);
 
       let valid = 0;
       violationType.periods.forEach((period) => {
         validate(period) && (valid += 1);
-        total += calculate(period, rate, type);
       });
-      violationType.received && (total -= violationType.received);
 
       valid > 0 &&
         (html += `
@@ -88,8 +87,7 @@ const PDFPage = () => {
         `);
     });
 
-    html += `<b><u class="right">Total: Php${formatNumber(total)}</u></b>
-             `;
+    html += `<b><u class="right">Total: Php${formatNumber(total)}</u></b>`;
 
     return html;
   };
@@ -202,10 +200,8 @@ const PDFPage = () => {
         break;
       case "Special Day":
         html += `<p>
-                    Php${formattedRateToUse} 
-                    ${getMultiplier(period.start_date) == 0.3 ? " x 30% " : ""} 
-                    x ${keyword} <span class="value">= Php${total}</span>
-                  </p>`;
+                    Php${formattedRateToUse} x 30% x ${keyword} <span class="value">= Php${total}</span>
+                 </p>`;
         break;
       case "Rest Day":
         html += `<p>Php${formattedRateToUse} x 30% x ${keyword} <span class="value">= Php${total}</span></p>`;

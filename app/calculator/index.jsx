@@ -2,7 +2,7 @@ import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
-import { formatNumber, getDb, getTotals, periodsFormat } from "@/utils/utils";
+import { formatNumber, getDb, getTotal, periodsFormat } from "@/utils/utils";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
@@ -183,7 +183,7 @@ const CalculatorPage = () => {
                 </Text>
                 <Text style={styles.subtotal}>
                   Subtotal:{" "}
-                  {formatNumber(getTotals(values[type], parent.rate, type))}
+                  {formatNumber(getTotal(values[type], parent.rate, type))}
                 </Text>
               </View>
 
