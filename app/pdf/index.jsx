@@ -32,7 +32,7 @@ const PDFPage = () => {
       let valid = 0;
       Object.values(violations).forEach((violationType) => {
         violationType.periods.forEach((period) => {
-          Object.values(period).every((value) => value) && (valid += 1);
+          validate(period) && (valid += 1);
         });
       });
 
@@ -40,13 +40,15 @@ const PDFPage = () => {
         html += `        
             <tr>
                 <td>
-                ${
-                  index + 1
-                }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}
+                  <p>
+                    ${
+                      index + 1
+                    }. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}
+                  </p>
+                  
+                  <p>Actual Rate: Php${formatNumber(employee.rate)}/day</p>
                 </td>
-                <td></td>
             </tr>
-            <tr><td>Actual Rate: Php${formatNumber(employee.rate)}/day</td><tr>
             <tr><td>${renderViolations(employee, index)}</td><tr>
           `;
       }
@@ -74,20 +76,16 @@ const PDFPage = () => {
       valid > 0 &&
         (html += `
           <p class="bold">
-            <u>
             ${
               type == "Holiday Pay" ? "Non-payment" : "Underpayment"
             } of ${getType(type)}
-            </u>
           </p>
          
           ${renderViolationType(violations[type], rate, type)}
-
-          <br/>
         `);
     });
 
-    html += `<b><u class="right">Total: Php${formatNumber(total)}</u></b>`;
+    html += `<p class="bold right">Total: Php${formatNumber(total)}</p>`;
 
     return html;
   };
@@ -249,16 +247,16 @@ const PDFPage = () => {
             color: black;
             margin-bottom: 20px;
           }
-          .value {
-            font-weight: bold;
-            text-align: right;
-            float: right;
-          }
-          .right {
-            float: right;
+          p {
+            margin: 0;
+            padding: 0;
           }
           .bold {
             font-weight: bold;
+            text-decoration: underline;
+          }
+          .right {
+            text-align: right;
           }
         </style>
       </head>
