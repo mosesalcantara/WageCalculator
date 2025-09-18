@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  AppState,
   BackHandler,
   Image,
   KeyboardAvoidingView,
@@ -97,6 +98,13 @@ const CalculatorPage = () => {
 
   useFocusEffect(
     useCallback(() => {
+      const appStateHandler = AppState.addEventListener(
+        "change",
+        (nextAppState) => {
+          nextAppState == "background" && addRecord(values);
+        }
+      );
+
       const handleBackPress = () => {
         router.push("/employees");
         addRecord(values);
@@ -110,6 +118,7 @@ const CalculatorPage = () => {
 
       return () => {
         backhandler.remove();
+        appStateHandler.remove();
       };
     }, [values])
   );
@@ -195,15 +204,6 @@ const CalculatorPage = () => {
                   Subtotal:{" "}
                   {formatNumber(getTotal(values[type], parent.rate, type))}
                 </Text>
-              </View>
-
-              <View>
-                <TouchableOpacity
-                  style={styles.saveButton}
-                  onPress={() => addRecord(values)}
-                >
-                  <Text style={styles.saveButtonText}>Save</Text>
-                </TouchableOpacity>
               </View>
             </View>
 

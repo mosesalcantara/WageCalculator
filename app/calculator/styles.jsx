@@ -67,13 +67,6 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     marginLeft: "3%",
   },
-  saveButton: {
-    backgroundColor: "#2196F3",
-    padding: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  saveButtonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 });
 
 export default styles;
