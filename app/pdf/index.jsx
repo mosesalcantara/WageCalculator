@@ -105,13 +105,14 @@ const PDFPage = () => {
         </p>
 
         ${renderFormula(period, rate, type)}
-        <p style="font-size: 5%">&nbsp</p>`;
+
+        <p class="space">&nbsp</p>`;
       }
     });
 
     violationType.periods.length > 1 &&
       (html += `
-        <p class="right"style="margin-top: -2%;">
+        <p class="right top-space">
           Subtotal: Php${formatNumber(subtotal)}
         </p>
       `);
@@ -257,6 +258,12 @@ const PDFPage = () => {
           }
           .right {
             text-align: right;
+          }
+          .space {
+            font-size: 5%;
+          }
+          .top-space {
+            margin-top: -2%;
           }
         </style>
       </head>
