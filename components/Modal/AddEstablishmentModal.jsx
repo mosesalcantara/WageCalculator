@@ -2,6 +2,7 @@ import { establishments } from "@/db/schema";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import * as Yup from "yup";
 import styles from "./styles";
 
@@ -24,9 +25,16 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
       setMutations((prev) => ++prev);
       resetForm();
       setIsAddModalVisible(false);
+      Toast.show({
+        type: "success",
+        text1: "Added Establishment",
+      });
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+      });
     }
   };
 

@@ -2,6 +2,7 @@ import { employees } from "@/db/schema";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import * as Yup from "yup";
 import styles from "./styles";
 
@@ -21,20 +22,25 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      await db
-        .insert(employees)
-        .values({
-          ...values,
-          first_name: `${values.first_name}`.trim(),
-          last_name: `${values.last_name}`.trim(),
-          establishment_id: parent.id,
-        });
+      await db.insert(employees).values({
+        ...values,
+        first_name: `${values.first_name}`.trim(),
+        last_name: `${values.last_name}`.trim(),
+        establishment_id: parent.id,
+      });
       setMutations((prev) => ++prev);
       resetForm();
       setIsAddModalVisible(false);
+      Toast.show({
+        type: "success",
+        text1: "Added Employee",
+      });
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+      });
     }
   };
 

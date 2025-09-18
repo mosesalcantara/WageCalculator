@@ -20,6 +20,7 @@ import {
   View,
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
+import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
@@ -82,9 +83,16 @@ const CalculatorPage = () => {
       await db
         .insert(violations)
         .values({ values: JSON.stringify(values), employee_id: parent_id });
+      Toast.show({
+        type: "success",
+        text1: "Changes Saved",
+      });
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+      });
     }
   };
 

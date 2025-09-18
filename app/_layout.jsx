@@ -5,6 +5,7 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
 import { Suspense } from "react";
+import Toast from "react-native-toast-message";
 
 const name = "WageCalculator.db";
 const expoDb = openDatabaseSync(name, { useNewConnection: true });
@@ -14,15 +15,19 @@ const RootLayout = () => {
   useMigrations(db, migrations);
 
   return (
-    <Suspense fallback={<Loader />}>
-      <SQLiteProvider
-        databaseName={name}
-        options={{ useNewConnection: false }}
-        useSuspense
-      >
-        <Stack screenOptions={{ headerShown: false }} />
-      </SQLiteProvider>
-    </Suspense>
+    <>
+      <Suspense fallback={<Loader />}>
+        <SQLiteProvider
+          databaseName={name}
+          options={{ useNewConnection: false }}
+          useSuspense
+        >
+          <Stack screenOptions={{ headerShown: false }} />
+        </SQLiteProvider>
+      </Suspense>
+
+      <Toast />
+    </>
   );
 };
 

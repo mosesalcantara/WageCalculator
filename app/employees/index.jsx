@@ -9,7 +9,6 @@ import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
   BackHandler,
   ScrollView,
   Text,
@@ -18,6 +17,7 @@ import {
   View,
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
+import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
@@ -42,9 +42,16 @@ const EmployeesPage = () => {
       await db.delete(violations).where(eq(violations.employee_id, id));
       await db.delete(employees).where(eq(employees.id, id));
       setMutations((prev) => ++prev);
+      Toast.show({
+        type: "success",
+        text1: "Deleted Employee",
+      });
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+      });
     }
   };
 
@@ -81,7 +88,10 @@ const EmployeesPage = () => {
         setRecords(data.employees);
       } catch (error) {
         console.error(error);
-        Alert.alert("Error", error.message || "An Error Eccurred");
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+        });
       }
     };
     getRecords();

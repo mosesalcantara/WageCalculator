@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as Yup from "yup";
 import styles from "./styles";
@@ -24,9 +25,16 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
       setMutations((prev) => ++prev);
       resetForm();
       setIsUpdateModalVisible(false);
+      Toast.show({
+        type: "success",
+        text1: "Updated Establishment",
+      });
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+      });
     }
   };
 
