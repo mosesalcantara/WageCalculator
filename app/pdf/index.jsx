@@ -75,7 +75,7 @@ const PDFPage = () => {
 
       valid > 0 &&
         (html += `
-          <p class="bold">
+          <p class="bold top-space">
             ${
               type == "Holiday Pay" ? "Non-payment" : "Underpayment"
             } of ${getType(type)}
@@ -93,6 +93,7 @@ const PDFPage = () => {
   const renderViolationType = (violationType, rate, type) => {
     let html = "";
     let subtotal = 0;
+
     violationType.periods.forEach((period, index) => {
       if (validate(period)) {
         subtotal += calculate(period, rate, type);
@@ -106,13 +107,17 @@ const PDFPage = () => {
 
         ${renderFormula(period, rate, type)}
 
-        <p class="space">&nbsp</p>`;
+        ${
+          index + 1 != violationType.periods.length
+            ? `<p class="space">&nbsp</p>`
+            : ""
+        }`;
       }
     });
 
     violationType.periods.length > 1 &&
       (html += `
-        <p class="right top-space">
+        <p class="right">
           Subtotal: Php${formatNumber(subtotal)}
         </p>
       `);
@@ -238,7 +243,7 @@ const PDFPage = () => {
             margin-bottom: 20px;
           }
           th, td {
-            padding: 6px;
+            padding: 0 6px;
             font-size: ${isPreview ? "32" : "12"}px;
           }
           h1 {
@@ -263,7 +268,7 @@ const PDFPage = () => {
             font-size: 5%;
           }
           .top-space {
-            margin-top: -2%;
+            margin-top: 2%;
           }
         </style>
       </head>
