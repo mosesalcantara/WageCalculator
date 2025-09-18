@@ -14,8 +14,9 @@ import { eq } from "drizzle-orm";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { useEffect, useState } from "react";
-import { Alert, Button, View } from "react-native";
+import { Button, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
+import Toast from "react-native-toast-message";
 import { WebView } from "react-native-webview";
 
 const PDFPage = () => {
@@ -298,12 +299,13 @@ const PDFPage = () => {
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(uri);
-      } else {
-        alert("PDF saved at: " + uri);
       }
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", error.message || "An Error Eccurred");
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+      });
     }
   };
 
@@ -318,7 +320,10 @@ const PDFPage = () => {
         setRecord(data);
       } catch (error) {
         console.error(error);
-        Alert.alert("Error", error.message || "An Error Eccurred");
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+        });
       }
     };
     getRecords();

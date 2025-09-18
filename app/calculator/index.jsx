@@ -8,7 +8,6 @@ import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
   BackHandler,
   Image,
   KeyboardAvoidingView,
@@ -127,7 +126,10 @@ const CalculatorPage = () => {
           setValues(JSON.parse(data.violations[0].values));
       } catch (error) {
         console.error(error);
-        Alert.alert("Error", error.message || "An Error Eccurred");
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+        });
       }
     };
     getRecords();
