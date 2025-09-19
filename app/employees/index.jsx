@@ -126,9 +126,7 @@ const EmployeesPage = () => {
                 <View style={[styles.row, styles.headerRow]}>
                   <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
                   <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
-                  <Text style={[styles.headerCell, { flex: 0.8 }]}>
-                    Actions
-                  </Text>
+                  <Text style={[styles.headerCell, { flex: 1.3 }]}>Actions</Text>
                 </View>
 
                 {filteredRecords.length > 0 ? (
@@ -141,7 +139,7 @@ const EmployeesPage = () => {
                         {record.rate}
                       </Text>
 
-                      <View style={[styles.actionCell, { flex: 0.8 }]}>
+                      <View style={[styles.actionCell, { flex: 1.3 }]}>
                         <TouchableOpacity
                           onPress={() => setEmployee(record.id)}
                         >
