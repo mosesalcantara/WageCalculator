@@ -126,7 +126,9 @@ const EmployeesPage = () => {
                 <View style={[styles.row, styles.headerRow]}>
                   <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
                   <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
-                  <Text style={[styles.headerCell, { flex: 1.3 }]}>Actions</Text>
+                  <Text style={[styles.headerCell, { flex: 1.3 }]}>
+                    Actions
+                  </Text>
                 </View>
 
                 {filteredRecords.length > 0 ? (

@@ -116,7 +116,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Work Week Start Day:</Text>
+                  <Text style={styles.label}>Work Week Start:</Text>
                   <Select
                     name="start_day"
                     options={days}
@@ -131,7 +131,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Work Week End Day:</Text>
+                  <Text style={styles.label}>Work Week End:</Text>
                   <Select
                     name="end_day"
                     options={days}
