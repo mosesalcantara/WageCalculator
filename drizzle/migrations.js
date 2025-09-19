@@ -6,6 +6,7 @@ import m0001 from './0001_easy_scourge.sql';
 import m0002 from './0002_brief_veda.sql';
 import m0003 from './0003_moaning_khan.sql';
 import m0004 from './0004_unknown_komodo.sql';
+import m0005 from './0005_rich_johnny_blaze.sql';
 
   export default {
     journal,
@@ -14,7 +15,8 @@ import m0004 from './0004_unknown_komodo.sql';
 m0001,
 m0002,
 m0003,
-m0004
+m0004,
+m0005
     }
   }
   

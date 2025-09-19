@@ -11,6 +11,8 @@ export const employees = sqliteTable("employees", {
   first_name: text("first_name").notNull(),
   last_name: text("last_name").notNull(),
   rate: real("rate").notNull(),
+  start_day: text("start_day").notNull(),
+  end_day: text("end_day").notNull(),
   establishment_id: integer("establishment_id")
     .notNull()
     .references(() => establishments.id),
