@@ -13,8 +13,8 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
     first_name: "",
     last_name: "",
     rate: "",
-    start_day: "",
-    end_day: "",
+    start_day: "Monday",
+    end_day: "Friday",
   };
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
@@ -24,8 +24,6 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
         ...values,
         first_name: `${values.first_name}`.trim(),
         last_name: `${values.last_name}`.trim(),
-        start_day: `${values.start_day}`.trim(),
-        end_day: `${values.end_day}`.trim(),
         establishment_id: parent.id,
       });
       setMutations((prev) => ++prev);
@@ -119,7 +117,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Work Week Start Day:</Text>
+                  <Text style={styles.label}>Work Week Start:</Text>
                   <Select
                     name="start_day"
                     options={days}
@@ -134,7 +132,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Work Week End Day:</Text>
+                  <Text style={styles.label}>Work Week End:</Text>
                   <Select
                     name="end_day"
                     options={days}

@@ -29,7 +29,7 @@ const Select = ({
           setIsFocus(false);
         }}
         onChange={(option) => {
-          setFieldValue(name, option);
+          setFieldValue(name, option.value);
           setIsFocus(false);
         }}
       />

@@ -22,8 +22,6 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
           ...values,
           first_name: `${values.first_name}`.trim(),
           last_name: `${values.last_name}`.trim(),
-          start_day: `${values.start_day}`.trim(),
-          end_day: `${values.end_day}`.trim(),
         })
         .where(eq(employees.id, values.id));
       setMutations((prev) => ++prev);
