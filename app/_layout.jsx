@@ -15,7 +15,6 @@ const toastConfig = {
   success: (props) => (
     <SuccessToast
       {...props}
-      style={{ width: "55%", borderLeftColor: "lightgreen", paddingRight: 10 }}
       text1Style={{
         fontSize: 14,
         textAlign: "center",
@@ -25,7 +24,6 @@ const toastConfig = {
   error: (props) => (
     <ErrorToast
       {...props}
-      style={{ width: "83%", borderLeftColor: "red", paddingRight: 10 }}
       text1Style={{
         fontSize: 14,
         textAlign: "center",
