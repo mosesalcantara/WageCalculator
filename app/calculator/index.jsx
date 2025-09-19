@@ -171,9 +171,7 @@ const CalculatorPage = () => {
                       styles.button,
                       type === item.name && styles.buttonActive,
                     ]}
-                    onPress={() => {
-                      setType(item.name);
-                    }}
+                    onPress={() => setType(item.name)}
                   >
                     <Icon
                       name={item.icon}
