@@ -1,20 +1,16 @@
+import Select from "@/components/Select";
 import { employees } from "@/db/schema";
+import { employee as validationSchema } from "@/schema/schema";
+import { days } from "@/utils/utils";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import * as Yup from "yup";
 import styles from "./styles";
 
 const UpdateEmployeeModal = ({ db, setMutations, values }) => {
-  const validationSchema = Yup.object().shape({
-    first_name: Yup.string().trim().required().label("First Name"),
-    last_name: Yup.string().trim().required().label("Last Name"),
-    rate: Yup.number().typeError().required().label("Rate"),
-  });
-
   const initialValues = values;
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
@@ -26,6 +22,8 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
           ...values,
           first_name: `${values.first_name}`.trim(),
           last_name: `${values.last_name}`.trim(),
+          start_day: `${values.start_day}`.trim(),
+          end_day: `${values.end_day}`.trim(),
         })
         .where(eq(employees.id, values.id));
       setMutations((prev) => ++prev);
@@ -72,6 +70,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
             handleSubmit,
             handleChange,
             setFieldTouched,
+            setFieldValue,
           }) => (
             <View style={styles.modalOverlay}>
               <View style={styles.form}>
@@ -115,6 +114,36 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                   />
                   {touched.rate && errors.rate && (
                     <Text style={styles.error}>{errors.rate}</Text>
+                  )}
+                </View>
+
+                <View>
+                  <Text style={styles.label}>Work Week Start Day:</Text>
+                  <Select
+                    name="start_day"
+                    options={days}
+                    placeholder="Select Day"
+                    value={values.start_day}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                  />
+                  {touched.start_day && errors.start_day && (
+                    <Text style={styles.error}>{errors.start_day}</Text>
+                  )}
+                </View>
+
+                <View>
+                  <Text style={styles.label}>Work Week End Day:</Text>
+                  <Select
+                    name="end_day"
+                    options={days}
+                    placeholder="Select Day"
+                    value={values.end_day}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                  />
+                  {touched.end_day && errors.end_day && (
+                    <Text style={styles.error}>{errors.end_day}</Text>
                   )}
                 </View>
 

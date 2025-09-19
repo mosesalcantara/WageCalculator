@@ -1,18 +1,14 @@
 import { establishments } from "@/db/schema";
+import { establishment as validationSchema } from "@/schema/schema";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import * as Yup from "yup";
 import styles from "./styles";
 
 const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required().label("Name"),
-  });
-
   const initialValues = values;
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 

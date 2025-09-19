@@ -34,6 +34,10 @@ const styles = StyleSheet.create({
     height: 35,
     marginTop: 2,
   },
+  selects: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   error: { color: "red", fontSize: 12 },
   actionButtons: { flexDirection: "row", justifyContent: "flex-end" },
   actionButton: {

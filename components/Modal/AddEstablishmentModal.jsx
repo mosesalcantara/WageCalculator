@@ -1,16 +1,12 @@
 import { establishments } from "@/db/schema";
+import { establishment as validationSchema } from "@/schema/schema";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import * as Yup from "yup";
 import styles from "./styles";
 
 const AddEstablishmentModal = ({ db, setMutations }) => {
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required().label("Name"),
-  });
-
   const initialValues = {
     name: "",
   };
