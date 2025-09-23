@@ -46,7 +46,7 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
       <Modal
         animationType="slide"
         transparent
-        visible={isAddModalVisible}
+        visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
         <Formik
