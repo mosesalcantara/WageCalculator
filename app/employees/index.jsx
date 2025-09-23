@@ -126,7 +126,8 @@ const EmployeesPage = () => {
                 <View style={[styles.row, styles.headerRow]}>
                   <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
                   <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
-                  <Text style={[styles.headerCell, { flex: 1.3 }]}>
+                  <Text style={[styles.headerCell, { flex: 2 }]}>Work Week</Text>
+                  <Text style={[styles.headerCell, { flex: 1.5 }]}>
                     Actions
                   </Text>
                 </View>
@@ -140,8 +141,12 @@ const EmployeesPage = () => {
                       <Text style={[styles.cellText, { flex: 1 }]}>
                         {record.rate}
                       </Text>
+                      <Text style={[styles.cellText, { flex: 2 }]}>
+                        {record.start_day.slice(0, 3)} -{" "}
+                        {record.end_day.slice(0, 3)}
+                      </Text>
 
-                      <View style={[styles.actionCell, { flex: 1.3 }]}>
+                      <View style={[styles.actionCell, { flex: 1.5 }]}>
                         <TouchableOpacity
                           onPress={() => setEmployee(record.id)}
                         >

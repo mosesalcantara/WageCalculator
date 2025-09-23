@@ -52,6 +52,10 @@ export const formatDate = (date) => {
   return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
 };
 
+export const validate = (object) => {
+  return Object.values(object).every((value) => value);
+}; 
+
 export const getRate = (startDate, rate) => {
   const minimumRate = isBefore(startDate, "2024-12-23") ? 395 : 430;
   const isBelow = rate < minimumRate;
@@ -61,10 +65,6 @@ export const getRate = (startDate, rate) => {
     isBelow: isBelow,
     rateToUse: rateToUse,
   };
-};
-
-export const validate = (object) => {
-  return Object.values(object).every((value) => value);
 };
 
 export const calculate = (period, rate, type) => {
