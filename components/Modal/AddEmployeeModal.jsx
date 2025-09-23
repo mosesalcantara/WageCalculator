@@ -1,7 +1,7 @@
 import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schema/schema";
-import { days } from "@/utils/utils";
+import { daysOptions } from "@/utils/utils";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -120,7 +120,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                   <Text style={styles.label}>Work Week Start:</Text>
                   <Select
                     name="start_day"
-                    options={days}
+                    options={daysOptions}
                     placeholder="Select Day"
                     value={values.start_day}
                     setFieldValue={setFieldValue}
@@ -135,7 +135,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                   <Text style={styles.label}>Work Week End:</Text>
                   <Select
                     name="end_day"
-                    options={days}
+                    options={daysOptions}
                     placeholder="Select Day"
                     value={values.end_day}
                     setFieldValue={setFieldValue}

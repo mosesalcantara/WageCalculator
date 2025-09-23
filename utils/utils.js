@@ -1,9 +1,9 @@
 import * as schema from "@/db/schema";
-import { format, isBefore, parse, parseISO } from "date-fns";
+import { format, isBefore, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
-export const days = [
+export const daysOptions = [
   { label: "Monday", value: "Monday" },
   { label: "Tuesday", value: "Tuesday" },
   { label: "Wednesday", value: "Wednesday" },
@@ -11,6 +11,16 @@ export const days = [
   { label: "Friday", value: "Friday" },
   { label: "Saturday", value: "Saturday" },
   { label: "Sunday", value: "Sunday" },
+];
+
+export const daysArray = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 
 export const periodFormat = {
@@ -42,14 +52,8 @@ export const formatDate = (date) => {
   return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
 };
 
-export const parseDate = (date) => {
-  return parseISO(new Date(date).toISOString());
-};
-
 export const getRate = (startDate, rate) => {
-  const minimumRate = isBefore(parseDate(startDate), parseDate("2024-12-23"))
-    ? 395
-    : 430;
+  const minimumRate = isBefore(startDate, "2024-12-23") ? 395 : 430;
   const isBelow = rate < minimumRate;
   const rateToUse = isBelow ? minimumRate : rate;
 
