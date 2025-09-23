@@ -180,9 +180,9 @@ const EmployeesPage = () => {
             </ScrollView>
 
             <AddEmployeeModal
+              parent={parent}
               db={db}
               setMutations={setMutations}
-              parent={parent}
             />
           </View>
         </>

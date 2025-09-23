@@ -10,7 +10,7 @@ import styles from "./styles";
 
 const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
   const initialValues = values;
-  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const onSubmit = async (values, { resetForm }) => {
     try {
@@ -20,7 +20,7 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
         .where(eq(establishments.id, values.id));
       setMutations((prev) => ++prev);
       resetForm();
-      setIsUpdateModalVisible(false);
+      setIsVisible(false);
       Toast.show({
         type: "success",
         text1: "Updated Establishment",
@@ -36,19 +36,15 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
 
   return (
     <>
-      <TouchableOpacity
-        onPress={() => {
-          setIsUpdateModalVisible(true);
-        }}
-      >
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
         <Icon name="edit" size={20} color="#2196F3" />
       </TouchableOpacity>
 
       <Modal
         animationType="slide"
         transparent
-        visible={isUpdateModalVisible}
-        onRequestClose={() => setIsUpdateModalVisible(false)}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
       >
         <Formik
           initialValues={initialValues}
@@ -83,7 +79,7 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
                 <View style={styles.actionButtons}>
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={() => setIsUpdateModalVisible(false)}
+                    onPress={() => setIsVisible(false)}
                   >
                     <Text style={styles.actionText}>Cancel</Text>
                   </TouchableOpacity>

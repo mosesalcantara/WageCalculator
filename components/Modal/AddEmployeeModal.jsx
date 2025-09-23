@@ -8,7 +8,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import styles from "./styles";
 
-const AddEmployeeModal = ({ db, setMutations, parent }) => {
+const AddEmployeeModal = ({ parent, db, setMutations }) => {
   const initialValues = {
     first_name: "",
     last_name: "",
@@ -16,7 +16,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
     start_day: "Monday",
     end_day: "Friday",
   };
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const onSubmit = async (values, { resetForm }) => {
     try {
@@ -28,7 +28,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
       });
       setMutations((prev) => ++prev);
       resetForm();
-      setIsAddModalVisible(false);
+      setIsVisible(false);
       Toast.show({
         type: "success",
         text1: "Added Employee",
@@ -46,7 +46,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
     <>
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => setIsAddModalVisible(true)}
+        onPress={() => setIsVisible(true)}
       >
         <Text style={styles.addText}>Add Employee</Text>
       </TouchableOpacity>
@@ -54,8 +54,8 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
       <Modal
         animationType="slide"
         transparent
-        visible={isAddModalVisible}
-        onRequestClose={() => setIsAddModalVisible(false)}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
       >
         <Formik
           initialValues={initialValues}
@@ -149,7 +149,7 @@ const AddEmployeeModal = ({ db, setMutations, parent }) => {
                 <View style={styles.actionButtons}>
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={() => setIsAddModalVisible(false)}
+                    onPress={() => setIsVisible(false)}
                   >
                     <Text style={styles.actionText}>Cancel</Text>
                   </TouchableOpacity>
