@@ -71,9 +71,8 @@ export const calculate = (period, rate, type) => {
   let result = 0;
 
   if (validate(period)) {
-    const startDate = period.start_date;
     const daysOrHours = period.daysOrHours;
-    const { isBelow, rateToUse } = getRate(startDate, rate);
+    const { isBelow, rateToUse } = getRate(period.start_date, rate);
 
     if (type == "Basic Wage" && isBelow) {
       result = (rateToUse - rate) * daysOrHours;

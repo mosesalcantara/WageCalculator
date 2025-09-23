@@ -6,8 +6,8 @@ import {
   periodFormat,
 } from "@/utils/utils";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { eachDayOfInterval } from "date-fns";
-import { useState } from "react";
+import { eachDayOfInterval, format } from "date-fns";
+import { useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
@@ -25,7 +25,7 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
     return ["Overtime Pay", "Night Differential"].includes(type);
   };
 
-  const getExcludedDays = (startDay, endDay) => {
+  const getIncludedDays = (startDay, endDay) => {
     const included = [];
 
     let i = daysArray.indexOf(startDay);
@@ -37,10 +37,10 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
       ++i;
     }
 
-    return daysArray.filter((day) => !included.includes(day));
+    return included;
   };
 
-  const excludedDays = getExcludedDays(parent.start_day, parent.end_day);
+  const includedDays = getIncludedDays(parent.start_day, parent.end_day);
 
   const handleChange = (key, value) => {
     handleInitialChange(key, value, index);
@@ -50,21 +50,26 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
     } else if (key == "end_date") {
       setIsEndDateModalVisible(false);
     }
-
-    if (
-      key.endsWith("_date") &&
-      values[type].periods[index].start_date &&
-      values[type].periods[index].end_date
-    ) {
-      getWorkingDays(
-        values[type].periods[index].start_date,
-        values[type].periods[index].end_date
-      );
-    }
   };
 
   const getWorkingDays = (startDate, endDate) => {
-    const days = eachDayOfInterval(startDate, endDate);
+    const dates = eachDayOfInterval({
+      start: startDate,
+      end: endDate,
+    });
+    const workingDates = dates.filter((date) =>
+      includedDays.includes(format(date, "EEEE"))
+    );
+    return workingDates.length;
+  };
+
+  const setWorkingDays = (startDate, endDate) => {
+    if (startDate && endDate) {
+      const workingDays = getWorkingDays(startDate, endDate);
+      if (type == "Basic Wage" || type == "13th Month Pay") {
+        handleInitialChange("daysOrHours", workingDays, index);
+      }
+    }
   };
 
   const addPeriod = () => {
@@ -92,6 +97,14 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
+
+  useEffect(() => {
+    const period = values[type].periods[index];
+    setWorkingDays(period.start_date, period.end_date);
+  }, [
+    values[type].periods[index].start_date,
+    values[type].periods[index].end_date,
+  ]);
 
   return (
     <>
