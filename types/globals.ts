@@ -3,7 +3,7 @@ export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 export type Establishment = {
   id: number;
   name: string;
-  employees?: Employee[],
+  employees?: Employee[];
 };
 
 export type Employee = {
@@ -23,17 +23,31 @@ export type Violations = {
   employee_id: number;
 };
 
+export type ViolationTypes =
+  | "Basic Wage"
+  | "Overtime Pay"
+  | "Night Differential"
+  | "Special Day"
+  | "Rest Day"
+  | "Holiday Pay"
+  | "13th Month Pay";
+
 export type ViolationValues = {
-  [key: string]: ViolationType;
+  "Basic Wage": ViolationType;
+  "Overtime Pay": ViolationType;
+  "Night Differential": ViolationType;
+  "Special Day": ViolationType;
+  "Rest Day": ViolationType;
+  "Holiday Pay": ViolationType;
+  "13th Month Pay": ViolationType & { received: string };
 };
 
 export type ViolationType = {
   periods: Period[];
-  received?: number;
 };
 
 export type Period = {
   start_date: string;
   end_date: string;
-  daysOrHours: number;
+  daysOrHours: string;
 };

@@ -101,7 +101,7 @@ const PDFPage = () => {
   };
 
   const renderViolationType = (
-    violationType: ViolationType,
+    violationType: ViolationType & { received?: string },
     rate: number,
     type: string
   ) => {
@@ -148,7 +148,7 @@ const PDFPage = () => {
         violationType.received || 0
       )} 
         <span>= Php${formatNumber(
-          subtotal - (violationType.received || 0)
+          subtotal - (Number(violationType.received) || 0)
         )}</span>
       </p>
       `);
@@ -170,7 +170,7 @@ const PDFPage = () => {
     return keyword;
   };
 
-  const getDaysOrHours = (type: string, daysOrHours: number) => {
+  const getDaysOrHours = (type: string, daysOrHours: string) => {
     let keyword = `${daysOrHours} `;
     if (type == "Basic Wage") {
       keyword += "day";
@@ -185,7 +185,7 @@ const PDFPage = () => {
     } else if (type == "13th Month Pay") {
       keyword += "day";
     }
-    daysOrHours > 1 && (keyword += "s");
+    Number(daysOrHours) > 1 && (keyword += "s");
     return keyword;
   };
 
@@ -340,7 +340,28 @@ const PDFPage = () => {
           where: eq(establishments.id, Number(id)),
           with: { employees: { with: { violations: true } } },
         });
-        setRecord(data);
+        if (data) {
+          const employeesData = data.employees.map((employee) => {
+            if (employee.violations.length == 0) {
+              return employee;
+            } else {
+              return {
+                ...employee,
+                violations: [
+                  {
+                    ...employee.violations[0],
+                    values: employee.violations[0].values as string,
+                  },
+                ],
+              };
+            }
+          });
+          const recordData = {
+            ...data,
+            employees: employeesData,
+          };
+          setRecord(recordData);
+        }
       } catch (error) {
         console.error(error);
         Toast.show({

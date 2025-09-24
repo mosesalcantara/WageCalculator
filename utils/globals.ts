@@ -1,5 +1,5 @@
 import * as schema from "@/db/schema";
-import { Period } from "@/types/globals";
+import { Period, ViolationType } from "@/types/globals";
 import { format, isBefore, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -38,7 +38,7 @@ export const getDb = () => {
   return drizzle(useSQLiteContext(), { schema });
 };
 
-export const formatNumber = (number: number) => {
+export const formatNumber = (number: string | number) => {
   return (number || 0).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -72,7 +72,7 @@ export const calculate = (period: Period, rate: number, type: string) => {
   let result = 0;
 
   if (validate(period)) {
-    const daysOrHours = period.daysOrHours;
+    const daysOrHours = Number(period.daysOrHours);
     const { isBelow, rateToUse } = getRate(period.start_date, rate);
 
     if (type == "Basic Wage" && isBelow) {
@@ -96,7 +96,7 @@ export const calculate = (period: Period, rate: number, type: string) => {
 };
 
 export const getTotal = (
-  violationType: { periods: Period[]; received?: number },
+  violationType: ViolationType & { received?: string },
   rate: number,
   type: string
 ) => {
@@ -104,6 +104,6 @@ export const getTotal = (
     (accumulator, period) => (accumulator += calculate(period, rate, type)),
     0
   );
-  violationType.received && (result -= violationType.received);
+  violationType.received && (result -= Number(violationType.received));
   return result;
 };

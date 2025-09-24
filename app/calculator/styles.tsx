@@ -34,6 +34,13 @@ const styles = StyleSheet.create({
   },
   buttonActive: { backgroundColor: "#2c3e50", borderColor: "#2c3e50" },
   buttonText: { marginLeft: 6, fontSize: 14, color: "#555" },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 4,
+    color: "#333",
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",

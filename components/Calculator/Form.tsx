@@ -1,3 +1,4 @@
+import { Employee, ViolationTypes, ViolationValues } from "@/types/globals";
 import {
   calculate,
   daysArray,
@@ -7,17 +8,35 @@ import {
 } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
+type Props = {
+  parent: Employee;
+  type: ViolationTypes;
+  index: number;
+  valuesState: [ViolationValues, Dispatch<SetStateAction<ViolationValues>>];
+  handleInitialChange: (
+    key: string,
+    value: string | number | Date,
+    index?: number
+  ) => void;
+};
+
+const Form = ({
+  parent,
+  type,
+  index,
+  valuesState,
+  handleInitialChange,
+}: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
 
-  const formatDate = (date) => {
+  const formatDate = (date: string) => {
     return date ? new Date(date) : new Date();
   };
 
@@ -25,7 +44,7 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
     return ["Overtime Pay", "Night Differential"].includes(type);
   };
 
-  const getIncludedDays = (startDay, endDay) => {
+  const getIncludedDays = (startDay: string, endDay: string) => {
     const included = [];
 
     let i = daysArray.indexOf(startDay);
@@ -42,7 +61,7 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
 
   const includedDays = getIncludedDays(parent.start_day, parent.end_day);
 
-  const handleChange = (key, value) => {
+  const handleChange = (key: string, value: string | number | Date) => {
     handleInitialChange(key, value, index);
 
     if (key == "start_date") {
@@ -52,7 +71,7 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
     }
   };
 
-  const getWorkingDays = (startDate, endDate) => {
+  const getWorkingDays = (startDate: string, endDate: string) => {
     const dates = eachDayOfInterval({
       start: startDate,
       end: endDate,
@@ -63,7 +82,7 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
     return workingDates.length;
   };
 
-  const setWorkingDays = (startDate, endDate) => {
+  const setWorkingDays = (startDate: string, endDate: string) => {
     if (startDate && endDate) {
       const workingDays = getWorkingDays(startDate, endDate);
       if (type == "Basic Wage" || type == "13th Month Pay") {
@@ -76,7 +95,9 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
     setValues((prev) => {
       return {
         ...prev,
-        [type]: { periods: [...prev[type].periods, periodFormat] },
+        [type]: {
+          periods: [...prev[type as ViolationTypes].periods, periodFormat],
+        },
       };
     });
   };
@@ -91,8 +112,8 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
 
   const clearPeriod = () => {
     setValues((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? periodFormat : period
+      const updatedPeriods = prev[type as ViolationTypes].periods.map(
+        (period, periodIndex) => (index == periodIndex ? periodFormat : period)
       );
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
@@ -209,7 +230,9 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
         <DateTimePicker
           value={formatDate(values[type].periods[index].start_date)}
           mode="date"
-          onChange={(_, value) => handleChange("start_date", value)}
+          onChange={(_, value) => {
+            value && handleChange("start_date", value);
+          }}
         />
       )}
 
@@ -217,7 +240,9 @@ const Form = ({ parent, type, index, valuesState, handleInitialChange }) => {
         <DateTimePicker
           value={formatDate(values[type].periods[index].end_date)}
           mode="date"
-          onChange={(_, value) => handleChange("end_date", value)}
+          onChange={(_, value) => {
+            value && handleChange("end_date", value);
+          }}
         />
       )}
     </>

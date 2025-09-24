@@ -1,11 +1,10 @@
-import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
-import Dole from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
+import { Employee, ViolationTypes, ViolationValues } from "@/types/globals";
 import { formatNumber, getDb, getTotal, periodsFormat } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   AppState,
@@ -27,7 +26,7 @@ import styles from "./styles";
 const CalculatorPage = () => {
   const db = getDb();
   const router = useRouter();
-  const parent_id = SessionStorage.getItem("employee_id");
+  const parent_id = SessionStorage.getItem("employee_id") as string;
 
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
@@ -39,8 +38,8 @@ const CalculatorPage = () => {
     { name: "13th Month Pay", icon: "card-giftcard" },
   ];
 
-  const [type, setType] = useState("Basic Wage");
-  const [parent, setParent] = useState(null);
+  const [type, setType] = useState<ViolationTypes>("Basic Wage");
+  const [parent, setParent] = useState<Employee | null>(null);
   const [values, setValues] = useState({
     "Basic Wage": periodsFormat,
     "Overtime Pay": periodsFormat,
@@ -54,9 +53,13 @@ const CalculatorPage = () => {
     },
   });
 
-  const handleInitialChange = (key, value, index) => {
+  const handleInitialChange = (
+    key: string,
+    value: string | number | Date,
+    index?: number
+  ) => {
     if (key.endsWith("_date")) {
-      value = value.toISOString().split("T")[0];
+      value = (value as Date).toISOString().split("T")[0];
     }
 
     if (key == "received") {
@@ -77,12 +80,15 @@ const CalculatorPage = () => {
     }
   };
 
-  const addRecord = async (values) => {
+  const addRecord = async (values: ViolationValues) => {
     try {
-      await db.delete(violations).where(eq(violations.employee_id, parent_id));
       await db
-        .insert(violations)
-        .values({ values: JSON.stringify(values), employee_id: parent_id });
+        .delete(violations)
+        .where(eq(violations.employee_id, Number(parent_id)));
+      await db.insert(violations).values({
+        values: JSON.stringify(values),
+        employee_id: Number(parent_id),
+      });
       Toast.show({
         type: "success",
         text1: "Changes Saved",
@@ -106,7 +112,7 @@ const CalculatorPage = () => {
       );
 
       const handleBackPress = () => {
-        router.push("/employees");
+        router.push("/employees" as Href);
         addRecord(values);
         return true;
       };
@@ -127,12 +133,29 @@ const CalculatorPage = () => {
     const getRecords = async () => {
       try {
         const data = await db.query.employees.findFirst({
-          where: eq(employees.id, parent_id),
+          where: eq(employees.id, Number(parent_id)),
           with: { violations: true },
         });
-        setParent(data);
-        data.violations.length > 0 &&
-          setValues(JSON.parse(data.violations[0].values));
+        if (data) {
+          let parentData = null;
+          if (data.violations.length == 0) {
+            parentData = data;
+          } else {
+            parentData = {
+              ...data,
+              violations: [
+                {
+                  ...data.violations[0],
+                  values: data.violations[0].values as string,
+                },
+              ],
+            };
+          }
+          setParent(parentData);
+          if (data.violations.length > 0) {
+            setValues(JSON.parse(data.violations[0].values as string));
+          }
+        }
       } catch (error) {
         console.error(error);
         Toast.show({
@@ -153,8 +176,14 @@ const CalculatorPage = () => {
               <Icon name="assignment" size={22} color="#fff" />
               <Text style={styles.headerText}>Inspector Wage Calculator</Text>
               <View style={styles.header}>
-                <Image source={Dole} style={styles.image} />
-                <Image source={BagongPilipinas} style={styles.image} />
+                <Image
+                  source={require("@/assets/images/dole.png")}
+                  style={styles.image}
+                />
+                <Image
+                  source={require("@/assets/images/bagongpilipinas.png")}
+                  style={styles.image}
+                />
               </View>
             </View>
 
@@ -171,7 +200,7 @@ const CalculatorPage = () => {
                       styles.button,
                       type === item.name && styles.buttonActive,
                     ]}
-                    onPress={() => setType(item.name)}
+                    onPress={() => setType(item.name as ViolationTypes)}
                   >
                     <Icon
                       name={item.icon}
@@ -232,7 +261,7 @@ const CalculatorPage = () => {
                       placeholder="Enter pay received"
                       value={values[type].received}
                       onChangeText={(value) =>
-                        handleInitialChange("received", value, null)
+                        handleInitialChange("received", value)
                       }
                     />
                   </View>
