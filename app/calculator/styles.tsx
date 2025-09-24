@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 10,
   },
-  image: { width: "28%", height: 60, resizeMode: "contain", marginLeft: "-5" },
+  image: { width: "28%", height: 60, resizeMode: "contain", marginLeft: -5 },
   types: {
     backgroundColor: "#fff",
     borderBottomWidth: 1,

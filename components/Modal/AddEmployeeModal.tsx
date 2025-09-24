@@ -1,35 +1,47 @@
 import Select from "@/components/Select";
 import { employees } from "@/db/schema";
-import { employee as validationSchema } from "@/schema/schema";
-import { daysOptions } from "@/utils/utils";
-import { eq } from "drizzle-orm";
+import { employee as validationSchema } from "@/schemas/globals";
+import { Employee, Establishment, Override } from "@/types/globals";
+import { daysOptions } from "@/utils/globals";
 import { Formik } from "formik";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const UpdateEmployeeModal = ({ db, setMutations, values }) => {
-  const initialValues = values;
+type Props = {
+  parent: Establishment;
+  db: any;
+  setMutations: Dispatch<SetStateAction<number>>;
+};
+
+const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
+  const initialValues = {
+    first_name: "",
+    last_name: "",
+    rate: 0,
+    start_day: "Monday",
+    end_day: "Friday",
+  };
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (
+    values: Override<Employee, { id?: number }>,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
-      await db
-        .update(employees)
-        .set({
-          ...values,
-          first_name: `${values.first_name}`.trim(),
-          last_name: `${values.last_name}`.trim(),
-        })
-        .where(eq(employees.id, values.id));
+      await db.insert(employees).values({
+        ...values,
+        first_name: `${values.first_name}`.trim(),
+        last_name: `${values.last_name}`.trim(),
+        establishment_id: parent.id,
+      });
       setMutations((prev) => ++prev);
       resetForm();
       setIsVisible(false);
       Toast.show({
         type: "success",
-        text1: "Updated Employee",
+        text1: "Added Employee",
       });
     } catch (error) {
       console.error(error);
@@ -42,8 +54,11 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
 
   return (
     <>
-      <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Icon name="edit" size={20} color="#2196F3" />
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setIsVisible(true)}
+      >
+        <Text style={styles.addText}>Add Employee</Text>
       </TouchableOpacity>
 
       <Modal
@@ -63,8 +78,8 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
             touched,
             handleSubmit,
             handleChange,
-            setFieldTouched,
             setFieldValue,
+            setFieldTouched,
           }) => (
             <View style={styles.modalOverlay}>
               <View style={styles.form}>
@@ -78,7 +93,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                     onBlur={() => setFieldTouched("first_name")}
                   />
                   {touched.first_name && errors.first_name && (
-                    <Text style={styles.eror}>{errors.first_name}</Text>
+                    <Text style={styles.error}>{errors.first_name}</Text>
                   )}
                 </View>
 
@@ -92,7 +107,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                     onBlur={() => setFieldTouched("last_name")}
                   />
                   {touched.last_name && errors.last_name && (
-                    <Text style={styles.eror}>{errors.last_name}</Text>
+                    <Text style={styles.error}>{errors.last_name}</Text>
                   )}
                 </View>
 
@@ -102,7 +117,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Enter rate"
-                    value={values.rate}
+                    value={values.rate ? `${values.rate}` : ""}
                     onChangeText={handleChange("rate")}
                     onBlur={() => setFieldTouched("rate")}
                   />
@@ -151,9 +166,9 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
 
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={handleSubmit}
+                    onPress={() => handleSubmit()}
                   >
-                    <Text style={styles.actionText}>Update</Text>
+                    <Text style={styles.actionText}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -165,4 +180,4 @@ const UpdateEmployeeModal = ({ db, setMutations, values }) => {
   );
 };
 
-export default UpdateEmployeeModal;
+export default AddEmployeeModal;

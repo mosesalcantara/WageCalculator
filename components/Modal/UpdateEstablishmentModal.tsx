@@ -1,29 +1,39 @@
 import { establishments } from "@/db/schema";
-import { establishment as validationSchema } from "@/schema/schema";
+import { establishment as validationSchema } from "@/schemas/globals";
+import { Establishment } from "@/types/globals";
+import { eq } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const AddEstablishmentModal = ({ db, setMutations }) => {
-  const initialValues = {
-    name: "",
-  };
+type Props = {
+  db: any;
+  setMutations: Dispatch<SetStateAction<number>>;
+  values: Establishment;
+};
 
+const UpdateEstablishmentModal = ({ db, setMutations, values }: Props) => {
+  const initialValues = values;
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (
+    values: Establishment,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
       await db
-        .insert(establishments)
-        .values({ ...values, name: `${values.name}`.trim() });
+        .update(establishments)
+        .set({ ...values, name: `${values.name}`.trim() })
+        .where(eq(establishments.id, values.id));
       setMutations((prev) => ++prev);
       resetForm();
       setIsVisible(false);
       Toast.show({
         type: "success",
-        text1: "Added Establishment",
+        text1: "Updated Establishment",
       });
     } catch (error) {
       console.error(error);
@@ -36,11 +46,8 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setIsVisible(true)}
-      >
-        <Text style={styles.addText}>Add Establishment</Text>
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
+        <Icon name="edit" size={20} color="#2196F3" />
       </TouchableOpacity>
 
       <Modal
@@ -89,9 +96,9 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
 
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={handleSubmit}
+                    onPress={() => handleSubmit()}
                   >
-                    <Text style={styles.actionText}>Save</Text>
+                    <Text style={styles.actionText}>Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -103,4 +110,4 @@ const AddEstablishmentModal = ({ db, setMutations }) => {
   );
 };
 
-export default AddEstablishmentModal;
+export default UpdateEstablishmentModal;

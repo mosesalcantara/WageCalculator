@@ -1,4 +1,5 @@
 import * as schema from "@/db/schema";
+import { Period } from "@/types/globals";
 import { format, isBefore, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -37,26 +38,26 @@ export const getDb = () => {
   return drizzle(useSQLiteContext(), { schema });
 };
 
-export const formatNumber = (number) => {
-  return (parseFloat(number) || 0).toLocaleString("en-US", {
+export const formatNumber = (number: number) => {
+  return (number || 0).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 };
 
-export const numberToLetter = (number) => {
+export const numberToLetter = (number: number) => {
   return String.fromCharCode(65 + number);
 };
 
-export const formatDate = (date) => {
+export const formatDate = (date: string) => {
   return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
 };
 
-export const validate = (object) => {
+export const validate = (object: { [key: string]: string | number }) => {
   return Object.values(object).every((value) => value);
-}; 
+};
 
-export const getRate = (startDate, rate) => {
+export const getRate = (startDate: string, rate: number) => {
   const minimumRate = isBefore(startDate, "2024-12-23") ? 395 : 430;
   const isBelow = rate < minimumRate;
   const rateToUse = isBelow ? minimumRate : rate;
@@ -67,7 +68,7 @@ export const getRate = (startDate, rate) => {
   };
 };
 
-export const calculate = (period, rate, type) => {
+export const calculate = (period: Period, rate: number, type: string) => {
   let result = 0;
 
   if (validate(period)) {
@@ -94,7 +95,11 @@ export const calculate = (period, rate, type) => {
   return result;
 };
 
-export const getTotal = (violationType, rate, type) => {
+export const getTotal = (
+  violationType: { periods: Period[]; received?: number },
+  rate: number,
+  type: string
+) => {
   let result = violationType.periods.reduce(
     (accumulator, period) => (accumulator += calculate(period, rate, type)),
     0

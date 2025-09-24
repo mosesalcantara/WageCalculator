@@ -1,37 +1,45 @@
 import Select from "@/components/Select";
 import { employees } from "@/db/schema";
-import { employee as validationSchema } from "@/schema/schema";
-import { daysOptions } from "@/utils/utils";
+import { employee as validationSchema } from "@/schemas/globals";
+import { Employee } from "@/types/globals";
+import { daysOptions } from "@/utils/globals";
+import { eq } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const AddEmployeeModal = ({ parent, db, setMutations }) => {
-  const initialValues = {
-    first_name: "",
-    last_name: "",
-    rate: "",
-    start_day: "Monday",
-    end_day: "Friday",
-  };
+type Props = {
+  db: any;
+  setMutations: Dispatch<SetStateAction<number>>;
+  values: Employee;
+};
+
+const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
+  const initialValues = values;
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (
+    values: Employee,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
-      await db.insert(employees).values({
-        ...values,
-        first_name: `${values.first_name}`.trim(),
-        last_name: `${values.last_name}`.trim(),
-        establishment_id: parent.id,
-      });
+      await db
+        .update(employees)
+        .set({
+          ...values,
+          first_name: `${values.first_name}`.trim(),
+          last_name: `${values.last_name}`.trim(),
+        })
+        .where(eq(employees.id, values.id));
       setMutations((prev) => ++prev);
       resetForm();
       setIsVisible(false);
       Toast.show({
         type: "success",
-        text1: "Added Employee",
+        text1: "Updated Employee",
       });
     } catch (error) {
       console.error(error);
@@ -44,11 +52,8 @@ const AddEmployeeModal = ({ parent, db, setMutations }) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setIsVisible(true)}
-      >
-        <Text style={styles.addText}>Add Employee</Text>
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
+        <Icon name="edit" size={20} color="#2196F3" />
       </TouchableOpacity>
 
       <Modal
@@ -107,7 +112,7 @@ const AddEmployeeModal = ({ parent, db, setMutations }) => {
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Enter rate"
-                    value={values.rate}
+                    value={values.rate ? `${values.rate}` : ""}
                     onChangeText={handleChange("rate")}
                     onBlur={() => setFieldTouched("rate")}
                   />
@@ -156,9 +161,9 @@ const AddEmployeeModal = ({ parent, db, setMutations }) => {
 
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={handleSubmit}
+                    onPress={() => handleSubmit()}
                   >
-                    <Text style={styles.actionText}>Save</Text>
+                    <Text style={styles.actionText}>Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -170,4 +175,4 @@ const AddEmployeeModal = ({ parent, db, setMutations }) => {
   );
 };
 
-export default AddEmployeeModal;
+export default UpdateEmployeeModal;

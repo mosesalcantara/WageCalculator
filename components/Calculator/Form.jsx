@@ -4,7 +4,7 @@ import {
   formatNumber,
   numberToLetter,
   periodFormat,
-} from "@/utils/utils";
+} from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
 import { useEffect, useState } from "react";

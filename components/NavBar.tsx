@@ -1,8 +1,10 @@
-import BagongPilipinasImage from "@/assets/images/bagongpilipinas.png";
-import DoleImage from "@/assets/images/dole.png";
 import { Image, Text, View } from "react-native";
 
-const NavBar = ({ title = "Wage Calculator" }) => {
+type Props = {
+  title?: string;
+};
+
+const NavBar = ({ title = "Wage Calculator" }: Props) => {
   return (
     <View
       style={{
@@ -16,7 +18,7 @@ const NavBar = ({ title = "Wage Calculator" }) => {
       }}
     >
       <Image
-        source={DoleImage}
+        source={require("@/assets/images/dole.png")}
         style={{
           width: 60,
           height: 60,
@@ -34,7 +36,7 @@ const NavBar = ({ title = "Wage Calculator" }) => {
         {title}
       </Text>
       <Image
-        source={BagongPilipinasImage}
+        source={require("@/assets/images/bagongpilipinas.png")}
         style={{
           width: 60,
           height: 60,

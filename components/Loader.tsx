@@ -1,6 +1,10 @@
 import { ActivityIndicator, Text, View } from "react-native";
 
-const Loader = ({ title = "Loading..." }) => {
+type Props = {
+  title?: string;
+};
+
+const Loader = ({ title = "Loading..." }: Props) => {
   return (
     <View style={{ flex: 1, gap: 3, justifyContent: "center" }}>
       <ActivityIndicator size="large" />

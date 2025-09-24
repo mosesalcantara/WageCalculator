@@ -2,7 +2,7 @@ import BagongPilipinas from "@/assets/images/bagongpilipinas.png";
 import Dole from "@/assets/images/dole.png";
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
-import { formatNumber, getDb, getTotal, periodsFormat } from "@/utils/utils";
+import { formatNumber, getDb, getTotal, periodsFormat } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";

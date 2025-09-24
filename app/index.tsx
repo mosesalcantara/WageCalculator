@@ -3,10 +3,11 @@ import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
 import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModal";
 import NavBar from "@/components/NavBar";
 import { employees, establishments, violations } from "@/db/schema";
-import { getDb } from "@/utils/utils";
+import { Establishment } from "@/types/globals";
+import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq, inArray } from "drizzle-orm";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   BackHandler,
@@ -24,17 +25,19 @@ const EstablishmentPage = () => {
   const db = getDb();
   const router = useRouter();
 
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState<Establishment[]>([]);
   const [mutations, setMutations] = useState(0);
 
-  const deleteRecord = async (id) => {
+  const deleteRecord = async (id: number) => {
     try {
       const data = await db.query.establishments.findFirst({
         where: eq(establishments.id, id),
         with: { employees: true },
       });
-      const ids = data.employees.map((employee) => employee.id);
-      await db.delete(violations).where(inArray(violations.employee_id, ids));
+      if (data && data.employees) {
+        const ids = data.employees.map((employee) => employee.id);
+        await db.delete(violations).where(inArray(violations.employee_id, ids));
+      }
       await db.delete(employees).where(eq(employees.establishment_id, id));
       await db.delete(establishments).where(eq(establishments.id, id));
       setMutations((prev) => ++prev);
@@ -51,9 +54,9 @@ const EstablishmentPage = () => {
     }
   };
 
-  const setEstablishment = (id, route) => {
+  const setEstablishment = (id: number, route: string) => {
     SessionStorage.setItem("establishment_id", `${id}`);
-    router.push(`/${route}`);
+    router.push(`/${route}` as Href);
   };
 
   useFocusEffect(
@@ -96,7 +99,7 @@ const EstablishmentPage = () => {
 
       <FlatList
         data={records}
-        keyExtractor={(record) => record.id}
+        keyExtractor={(record) => `${record.id}`}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.text}>{item.name}</Text>

@@ -1,6 +1,13 @@
 import NavBar from "@/components/NavBar";
 import { establishments } from "@/db/schema";
 import {
+  Employee,
+  Establishment,
+  Period,
+  ViolationType,
+  ViolationValues,
+} from "@/types/globals";
+import {
   calculate,
   formatDate,
   formatNumber,
@@ -9,7 +16,7 @@ import {
   getTotal,
   numberToLetter,
   validate,
-} from "@/utils/utils";
+} from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -22,16 +29,16 @@ import { WebView } from "react-native-webview";
 const PDFPage = () => {
   const db = getDb();
 
-  const [record, setRecord] = useState(null);
+  const [record, setRecord] = useState<Establishment | null>(null);
 
-  const renderEmployee = (employee, index) => {
+  const renderEmployee = (employee: Employee, index: number) => {
     let html = "";
 
-    if (employee.violations.length > 0) {
-      const violations = JSON.parse(employee.violations[0].values);
+    if (employee.violations && employee.violations.length > 0) {
+      const violations = JSON.parse(employee.violations[0].values as string);
 
       let valid = 0;
-      Object.values(violations).forEach((violationType) => {
+      Object.values(violations as ViolationValues).forEach((violationType) => {
         violationType.periods.forEach((period) => {
           validate(period) && (valid += 1);
         });
@@ -50,7 +57,7 @@ const PDFPage = () => {
                   <p>Actual Rate: Php${formatNumber(employee.rate)}/day</p>
                 </td>
             </tr>
-            <tr><td>${renderViolations(employee, index)}</td><tr>
+            <tr><td>${renderViolations(employee)}</td><tr>
           `;
       }
     }
@@ -58,24 +65,25 @@ const PDFPage = () => {
     return html;
   };
 
-  const renderViolations = (employee) => {
+  const renderViolations = (employee: Employee) => {
     let html = "";
 
-    const violations = JSON.parse(employee.violations[0].values);
-    const rate = employee.rate;
+    if (employee.violations && employee.violations.length > 0) {
+      const violations = JSON.parse(employee.violations[0].values as string);
+      const rate = employee.rate;
 
-    let total = 0;
-    Object.keys(violations).forEach((type) => {
-      const violationType = violations[type];
-      total += getTotal(violationType, rate, type);
+      let total = 0;
+      Object.keys(violations).forEach((type) => {
+        const violationType = violations[type];
+        total += getTotal(violationType, rate, type);
 
-      let valid = 0;
-      violationType.periods.forEach((period) => {
-        validate(period) && (valid += 1);
-      });
+        let valid = 0;
+        violationType.periods.forEach((period: Period) => {
+          validate(period) && (valid += 1);
+        });
 
-      valid > 0 &&
-        (html += `
+        valid > 0 &&
+          (html += `
           <p class="bold top-space">
             ${
               type == "Holiday Pay" ? "Non-payment" : "Underpayment"
@@ -84,14 +92,19 @@ const PDFPage = () => {
          
           ${renderViolationType(violations[type], rate, type)}
         `);
-    });
+      });
 
-    html += `<p class="bold right">Total: Php${formatNumber(total)}</p>`;
+      html += `<p class="bold right">Total: Php${formatNumber(total)}</p>`;
+    }
 
     return html;
   };
 
-  const renderViolationType = (violationType, rate, type) => {
+  const renderViolationType = (
+    violationType: ViolationType,
+    rate: number,
+    type: string
+  ) => {
     let html = "";
     let subtotal = 0;
 
@@ -127,19 +140,23 @@ const PDFPage = () => {
       (html += `
       <p>
         Actual 13th Month Pay Received: 
-        Php${formatNumber(violationType.received)}
+        Php${formatNumber(violationType.received || 0)}
       </p>
 
       <p>
-        Php${formatNumber(subtotal)} - ${formatNumber(violationType.received)} 
-        <span>= Php${formatNumber(subtotal - violationType.received)}</span>
+        Php${formatNumber(subtotal)} - ${formatNumber(
+        violationType.received || 0
+      )} 
+        <span>= Php${formatNumber(
+          subtotal - (violationType.received || 0)
+        )}</span>
       </p>
       `);
 
     return html;
   };
 
-  const getType = (type) => {
+  const getType = (type: string) => {
     let keyword = type;
     if (type == "Basic Wage") {
       keyword = "Wages";
@@ -153,26 +170,26 @@ const PDFPage = () => {
     return keyword;
   };
 
-  const getDaysOrHours = (type, daysOrHours) => {
+  const getDaysOrHours = (type: string, daysOrHours: number) => {
     let keyword = `${daysOrHours} `;
     if (type == "Basic Wage") {
       keyword += "day";
-    } else if ("Overtime Pay") {
+    } else if (type == "Overtime Pay") {
       keyword += "OT hour";
-    } else if ("Night Differential") {
+    } else if (type == "Night Differential") {
       keyword += "night-shift hour";
-    } else if ("Special Day") {
+    } else if (type == "Special Day") {
       keyword += "special day";
-    } else if ("Rest Day") {
+    } else if (type == "Rest Day") {
       keyword += "rest day";
-    } else if ("13th Month Pay") {
+    } else if (type == "13th Month Pay") {
       keyword += "day";
     }
     daysOrHours > 1 && (keyword += "s");
     return keyword;
   };
 
-  const renderFormula = (period, rate, type) => {
+  const renderFormula = (period: Period, rate: number, type: string) => {
     let html = "";
 
     const { isBelow, rateToUse } = getRate(period.start_date, rate);
@@ -225,7 +242,7 @@ const PDFPage = () => {
     return html;
   };
 
-  const generateHTML = (isPreview) =>
+  const generateHTML = (isPreview: boolean) =>
     `
     <!DOCTYPE html>
     <html>
@@ -274,19 +291,25 @@ const PDFPage = () => {
         </style>
       </head>
       <body>
-        <h1>${record.name.toUpperCase()}</h1>
+        ${
+          record &&
+          `<h1>${record.name.toUpperCase()}</h1>
 
-        <table>
-          <tbody>
-            ${record.employees
-              .map(
-                (employee, index) => `
-                ${renderEmployee(employee, index)}
-              `
-              )
-              .join("")}
-          </tbody>
-        </table>
+          <table>
+            <tbody>
+              ${
+                record.employees &&
+                record.employees
+                  .map(
+                    (employee, index) => `
+                  ${renderEmployee(employee, index)}
+                `
+                  )
+                  .join("")
+              }
+            </tbody>
+          </table>`
+        }
       </body>
     </html>
   `;
@@ -312,9 +335,9 @@ const PDFPage = () => {
   useEffect(() => {
     const getRecords = async () => {
       try {
-        const id = SessionStorage.getItem("establishment_id");
+        const id = SessionStorage.getItem("establishment_id") as string;
         const data = await db.query.establishments.findFirst({
-          where: eq(establishments.id, id),
+          where: eq(establishments.id, Number(id)),
           with: { employees: { with: { violations: true } } },
         });
         setRecord(data);

@@ -5,14 +5,14 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
 import { Suspense } from "react";
-import Toast, { ErrorToast, SuccessToast } from "react-native-toast-message";
+import Toast, { ErrorToast, SuccessToast, BaseToastProps } from "react-native-toast-message";
 
 const name = "WageCalculator.db";
 const expoDb = openDatabaseSync(name, { useNewConnection: true });
 const db = drizzle(expoDb);
 
 const toastConfig = {
-  success: (props) => (
+  success: (props: BaseToastProps) => (
     <SuccessToast
       {...props}
       text1Style={{
@@ -21,7 +21,7 @@ const toastConfig = {
       }}
     />
   ),
-  error: (props) => (
+  error: (props: BaseToastProps) => (
     <ErrorToast
       {...props}
       text1Style={{

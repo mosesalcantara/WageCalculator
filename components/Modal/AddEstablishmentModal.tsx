@@ -1,29 +1,38 @@
 import { establishments } from "@/db/schema";
-import { establishment as validationSchema } from "@/schema/schema";
-import { eq } from "drizzle-orm";
+import { establishment as validationSchema } from "@/schemas/globals";
+import { Establishment, Override } from "@/types/globals";
 import { Formik } from "formik";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 
-const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
-  const initialValues = values;
+type Props = {
+  db: any;
+  setMutations: Dispatch<SetStateAction<number>>;
+};
+
+const AddEstablishmentModal = ({ db, setMutations }: Props) => {
+  const initialValues = {
+    name: "",
+  };
+
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (
+    values: Override<Establishment, { id?: number }>,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
       await db
-        .update(establishments)
-        .set({ ...values, name: `${values.name}`.trim() })
-        .where(eq(establishments.id, values.id));
+        .insert(establishments)
+        .values({ ...values, name: `${values.name}`.trim() });
       setMutations((prev) => ++prev);
       resetForm();
       setIsVisible(false);
       Toast.show({
         type: "success",
-        text1: "Updated Establishment",
+        text1: "Added Establishment",
       });
     } catch (error) {
       console.error(error);
@@ -36,8 +45,11 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
 
   return (
     <>
-      <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Icon name="edit" size={20} color="#2196F3" />
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setIsVisible(true)}
+      >
+        <Text style={styles.addText}>Add Establishment</Text>
       </TouchableOpacity>
 
       <Modal
@@ -72,7 +84,7 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
                     onBlur={() => setFieldTouched("name")}
                   />
                   {touched.name && errors.name && (
-                    <Text style={styles.eror}>{errors.name}</Text>
+                    <Text style={styles.error}>{errors.name}</Text>
                   )}
                 </View>
 
@@ -86,9 +98,9 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
 
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={handleSubmit}
+                    onPress={() => handleSubmit()}
                   >
-                    <Text style={styles.actionText}>Update</Text>
+                    <Text style={styles.actionText}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -100,4 +112,4 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }) => {
   );
 };
 
-export default UpdateEstablishmentModal;
+export default AddEstablishmentModal;

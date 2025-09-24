@@ -2,6 +2,15 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
+type Props = {
+  name: string;
+  options: { label: string; value: string }[];
+  placeholder?: string;
+  value: string;
+  setFieldValue: (name: string, value: string) => void;
+  setFieldTouched: (name: string) => void;
+};
+
 const Select = ({
   name,
   options,
@@ -9,7 +18,7 @@ const Select = ({
   value,
   setFieldValue,
   setFieldTouched,
-}) => {
+}: Props) => {
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -23,13 +32,13 @@ const Select = ({
         valueField="value"
         placeholder={!isFocus ? placeholder : ""}
         value={value}
+        onChange={(option) => {
+          setFieldValue(name, option.value);
+          setIsFocus(false);
+        }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => {
           setFieldTouched(name);
-          setIsFocus(false);
-        }}
-        onChange={(option) => {
-          setFieldValue(name, option.value);
           setIsFocus(false);
         }}
       />

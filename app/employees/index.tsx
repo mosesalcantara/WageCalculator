@@ -3,10 +3,11 @@ import AddEmployeeModal from "@/components/Modal/AddEmployeeModal";
 import UpdateEmployeeModal from "@/components/Modal/UpdateEmployeeModal";
 import NavBar from "@/components/NavBar";
 import { employees, establishments, violations } from "@/db/schema";
-import { getDb } from "@/utils/utils";
+import { Employee, Establishment } from "@/types/globals";
+import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   BackHandler,
@@ -25,8 +26,8 @@ const EmployeesPage = () => {
   const db = getDb();
   const router = useRouter();
 
-  const [parent, setParent] = useState(null);
-  const [records, setRecords] = useState([]);
+  const [parent, setParent] = useState<Establishment | null>(null);
+  const [records, setRecords] = useState<Employee[]>([]);
   const [mutations, setMutations] = useState(0);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +38,7 @@ const EmployeesPage = () => {
     });
   });
 
-  const deleteRecord = async (id) => {
+  const deleteRecord = async (id: number) => {
     try {
       await db.delete(violations).where(eq(violations.employee_id, id));
       await db.delete(employees).where(eq(employees.id, id));
@@ -55,15 +56,15 @@ const EmployeesPage = () => {
     }
   };
 
-  const setEmployee = (id) => {
+  const setEmployee = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
-    router.push("/calculator");
+    router.push("/calculator" as Href);
   };
 
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
-        router.push("/");
+        router.push("/" as Href);
         return true;
       };
 
@@ -79,13 +80,15 @@ const EmployeesPage = () => {
   useEffect(() => {
     const getRecords = async () => {
       try {
-        const parent_id = SessionStorage.getItem("establishment_id");
+        const parent_id = SessionStorage.getItem("establishment_id") as string;
         const data = await db.query.establishments.findFirst({
-          where: eq(establishments.id, parent_id),
+          where: eq(establishments.id, Number(parent_id)),
           with: { employees: true },
         });
-        setParent(data);
-        setRecords(data.employees);
+        if (data && data.employees) {
+          setParent(data);
+          setRecords(data.employees);
+        }
       } catch (error) {
         console.error(error);
         Toast.show({
@@ -126,7 +129,9 @@ const EmployeesPage = () => {
                 <View style={[styles.row, styles.headerRow]}>
                   <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
                   <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
-                  <Text style={[styles.headerCell, { flex: 2 }]}>Work Week</Text>
+                  <Text style={[styles.headerCell, { flex: 2 }]}>
+                    Work Week
+                  </Text>
                   <Text style={[styles.headerCell, { flex: 1.5 }]}>
                     Actions
                   </Text>
@@ -160,7 +165,7 @@ const EmployeesPage = () => {
                         <UpdateEmployeeModal
                           db={db}
                           setMutations={setMutations}
-                          values={{ ...record, rate: `${record.rate}` }}
+                          values={record}
                         />
 
                         <TouchableOpacity
