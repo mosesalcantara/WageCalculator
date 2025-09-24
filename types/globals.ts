@@ -14,7 +14,7 @@ export type Employee = {
   start_day: string;
   end_day: string;
   establishment_id?: number;
-  violations?: Violations[];
+  violations?: Violations[] | [];
 };
 
 export type Violations = {

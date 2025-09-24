@@ -1,6 +1,11 @@
 import Form from "@/components/Calculator/Form";
 import { employees, violations } from "@/db/schema";
-import { Employee, ViolationTypes, ViolationValues } from "@/types/globals";
+import {
+  Employee,
+  Violations,
+  ViolationTypes,
+  ViolationValues,
+} from "@/types/globals";
 import { formatNumber, getDb, getTotal, periodsFormat } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
@@ -137,24 +142,17 @@ const CalculatorPage = () => {
           with: { violations: true },
         });
         if (data) {
-          let parentData = null;
-          if (data.violations.length == 0) {
-            parentData = data;
-          } else {
-            parentData = {
-              ...data,
-              violations: [
-                {
-                  ...data.violations[0],
-                  values: data.violations[0].values as string,
-                },
-              ],
-            };
-          }
-          setParent(parentData);
+          let violations: Violations[] = [];
           if (data.violations.length > 0) {
+            violations = [
+              {
+                ...data.violations[0],
+                values: data.violations[0].values as string,
+              },
+            ];
             setValues(JSON.parse(data.violations[0].values as string));
           }
+          setParent({ ...data, violations: violations });
         }
       } catch (error) {
         console.error(error);

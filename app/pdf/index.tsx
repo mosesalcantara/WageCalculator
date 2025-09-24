@@ -4,6 +4,7 @@ import {
   Employee,
   Establishment,
   Period,
+  Violations,
   ViolationType,
   ViolationValues,
 } from "@/types/globals";
@@ -342,25 +343,21 @@ const PDFPage = () => {
         });
         if (data) {
           const employeesData = data.employees.map((employee) => {
-            if (employee.violations.length == 0) {
-              return employee;
-            } else {
-              return {
-                ...employee,
-                violations: [
-                  {
-                    ...employee.violations[0],
-                    values: employee.violations[0].values as string,
-                  },
-                ],
-              };
+            let violations: Violations[] = [];
+            if (employee.violations.length > 0) {
+              violations = [
+                {
+                  ...employee.violations[0],
+                  values: employee.violations[0].values as string,
+                },
+              ];
             }
+            return { ...employee, violations: violations };
           });
-          const recordData = {
+          setRecord({
             ...data,
             employees: employeesData,
-          };
-          setRecord(recordData);
+          });
         }
       } catch (error) {
         console.error(error);

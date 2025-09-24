@@ -70,7 +70,6 @@ const AddEstablishmentModal = ({ db, setMutations }: Props) => {
             handleSubmit,
             handleChange,
             setFieldTouched,
-            setFieldValue,
           }) => (
             <View style={styles.modalOverlay}>
               <View style={styles.form}>
