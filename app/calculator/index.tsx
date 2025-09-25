@@ -171,10 +171,12 @@ const CalculatorPage = () => {
         <>
           <View style={tw`flex-1 bg-[#f5f5f5]`}>
             <View style={tw`flex-row items-center bg-[#2c3e50] p-2.5`}>
-              <Icon name="assignment" size={22} color="#fff" />
-              <Text style={tw`text-white text-lg font-bold ml-2.5`}>
-                Inspector Wage Calculator
-              </Text>
+              <View style={tw`flex-row items-center`}>
+                <Icon name="assignment" size={22} color="#fff" />
+                <Text style={tw`text-white text-lg font-bold ml-2.5`}>
+                  Wage Calculator
+                </Text>
+              </View>
 
               <View style={tw`flex-row items-center p-2.5 gap-2`}>
                 <Image
