@@ -19,6 +19,7 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import tw from "twrnc";
 import styles from "./styles";
 
 const EstablishmentPage = () => {
