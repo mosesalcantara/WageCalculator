@@ -68,11 +68,11 @@ const EstablishmentPage = () => {
 
       const backhandler = BackHandler.addEventListener(
         "hardwareBackPress",
-        handleBackPress
+        handleBackPress,
       );
 
       return () => backhandler.remove();
-    }, [])
+    }, []),
   );
 
   useEffect(() => {

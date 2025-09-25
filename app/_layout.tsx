@@ -5,7 +5,11 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
 import { Suspense } from "react";
-import Toast, { ErrorToast, SuccessToast, BaseToastProps } from "react-native-toast-message";
+import Toast, {
+  BaseToastProps,
+  ErrorToast,
+  SuccessToast,
+} from "react-native-toast-message";
 
 const name = "WageCalculator.db";
 const expoDb = openDatabaseSync(name, { useNewConnection: true });
