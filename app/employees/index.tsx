@@ -120,7 +120,7 @@ const EmployeesPage = () => {
             />
 
             <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-              <View style={tw`bg-white rounded-[10px] overflow-hidden`}>
+              <View style={tw`bg-white rounded-[0.625rem] overflow-hidden`}>
                 <View style={tw`flex-row items-center py-3 px-2 bg-[#2196F3]`}>
                   <Text
                     style={tw.style(`font-bold text-white text-base`, {

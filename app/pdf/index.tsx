@@ -254,24 +254,24 @@ const PDFPage = () => {
         <style>
           body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 1.25rem;
             padding: 0;
           }
           table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
           }
           th, td {
-            padding: 0 6px;
-            font-size: ${isPreview ? "32" : "12"}px;
+            padding: 0 0.375rem;
+            font-size: ${isPreview ? "2" : "0.75"}rem;
           }
           h1 {
             text-align: center; 
-            font-size: ${isPreview ? "40" : "20"}px;
+            font-size: ${isPreview ? "2.5" : "1.25"}rem;
             font-weight: bold;
             color: black;
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
           }
           p {
             margin: 0;
@@ -310,7 +310,8 @@ const PDFPage = () => {
                   .join("")
               }
             </tbody>
-          </table>`
+          </table>
+          `
         }
       </body>
     </html>
@@ -381,7 +382,7 @@ const PDFPage = () => {
             <View style={tw`flex-1 mb-2.5`}>
               <WebView source={{ html: generateHTML(true) }} />
             </View>
-            <View style={tw`mb-[50px] px-5`}>
+            <View style={tw`mb-[3.125rem] px-5`}>
               <Button title="Download/Export PDF" onPress={printToPDF} />
             </View>
           </View>

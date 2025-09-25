@@ -77,20 +77,20 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
             setFieldValue,
           }) => (
             <View
-              style={tw`flex-1 bg-black opacity-40 justify-center items-center`}
+              style={tw`flex-1 bg-[rgba(0,0,0,0.4)] justify-center items-center`}
             >
-              <View style={tw`bg-[#1E90FF] p-4 rounded-[10px] w-4/5 `}>
+              <View style={tw`bg-[#1E90FF] p-4 rounded-[0.625rem] w-4/5 `}>
                 <View>
                   <Text style={tw`text-white mt-2.5`}>First Name:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
+                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
                     placeholder="Enter first name"
                     value={values.first_name}
                     onChangeText={handleChange("first_name")}
                     onBlur={() => setFieldTouched("first_name")}
                   />
                   {touched.first_name && errors.first_name && (
-                    <Text style={tw`text-red-500 text-[12px]`}>
+                    <Text style={tw`text-red-500 text-[0.75rem]`}>
                       {errors.first_name}
                     </Text>
                   )}
@@ -99,14 +99,14 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
                 <View>
                   <Text style={tw`text-white mt-2.5`}>Last Name:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
+                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
                     placeholder="Enter last name"
                     value={values.last_name}
                     onChangeText={handleChange("last_name")}
                     onBlur={() => setFieldTouched("last_name")}
                   />
                   {touched.last_name && errors.last_name && (
-                    <Text style={tw`text-red-500 text-[12px]`}>
+                    <Text style={tw`text-red-500 text-[0.75rem]`}>
                       {errors.last_name}
                     </Text>
                   )}
@@ -115,7 +115,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
                 <View>
                   <Text style={tw`text-white mt-2.5`}>Rate:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
+                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
                     keyboardType="numeric"
                     placeholder="Enter rate"
                     value={values.rate ? `${values.rate}` : ""}
@@ -123,7 +123,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
                     onBlur={() => setFieldTouched("rate")}
                   />
                   {touched.rate && errors.rate && (
-                    <Text style={tw`text-red-500 text-[12px]`}>
+                    <Text style={tw`text-red-500 text-[0.75rem]`}>
                       {errors.rate}
                     </Text>
                   )}
@@ -140,7 +140,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.start_day && errors.start_day && (
-                    <Text style={tw`text-red-500 text-[12px]`}>
+                    <Text style={tw`text-red-500 text-[0.75rem]`}>
                       {errors.start_day}
                     </Text>
                   )}
@@ -157,7 +157,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.end_day && errors.end_day && (
-                    <Text style={tw`text-red-500 text-[12px]`}>
+                    <Text style={tw`text-red-500 text-[0.75rem]`}>
                       {errors.end_day}
                     </Text>
                   )}
@@ -165,14 +165,14 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
 
                 <View style={tw`flex-row justify-end`}>
                   <TouchableOpacity
-                    style={tw`bg-white py-[5px] px-2.5 rounded mt-2.5 mr-2`}
+                    style={tw`bg-white py-[0.3125rem] px-2.5 rounded mt-2.5 mr-2`}
                     onPress={() => setIsVisible(false)}
                   >
                     <Text style={tw`font-bold`}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={tw`bg-white py-[5px] px-2.5 rounded mt-2.5 mr-2`}
+                    style={tw`bg-white py-[0.3125rem] px-2.5 rounded mt-2.5 mr-2`}
                     onPress={() => handleSubmit()}
                   >
                     <Text style={tw`font-bold`}>Update</Text>

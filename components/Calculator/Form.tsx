@@ -130,7 +130,7 @@ const Form = ({
   return (
     <>
       <View
-        style={tw`mx-10 border border-[#0d3dff] rounded-lg p-2.5 border-t-[5px]`}
+        style={tw`mx-10 border border-[#0d3dff] rounded-lg p-2.5 border-t-[0.3125rem]`}
       >
         <View style={tw`gap-1`}>
           {values[type].periods.length > 1 && (

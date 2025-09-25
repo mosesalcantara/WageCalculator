@@ -179,11 +179,11 @@ const CalculatorPage = () => {
               <View style={tw`flex-row items-center p-2.5 gap-2`}>
                 <Image
                   source={require("@/assets/images/dole.png")}
-                  style={tw`w-[28%] h-[60px]`}
+                  style={tw`w-[28%] h-[3.75rem]`}
                 />
                 <Image
                   source={require("@/assets/images/bagongpilipinas.png")}
-                  style={tw`w-[28%] h-[54px]`}
+                  style={tw`w-[28%] h-[3.375rem]`}
                 />
               </View>
             </View>
@@ -198,7 +198,7 @@ const CalculatorPage = () => {
                   <TouchableOpacity
                     key={item.name}
                     style={tw.style(
-                      `flex-row items-center border border-[#ccc] rounded-lg bg-white px-3 mx-[5px] h-10`,
+                      `flex-row items-center border border-[#ccc] rounded-lg bg-white px-3 mx-[0.3125rem] h-10`,
                       type === item.name && `bg-[#2c3e50] border-[#2c3e50]`,
                     )}
                     onPress={() => setType(item.name as ViolationTypes)}
@@ -237,10 +237,10 @@ const CalculatorPage = () => {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={tw`h-[500px]`}
+              style={tw`h-[31.25rem]`}
             >
               <ScrollView>
-                <View style={tw`gap-[30px]`}>
+                <View style={tw`gap-[1.875rem]`}>
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
