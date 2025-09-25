@@ -10,6 +10,7 @@ import Toast, {
   ErrorToast,
   SuccessToast,
 } from "react-native-toast-message";
+import tw from "twrnc";
 
 const name = "WageCalculator.db";
 const expoDb = openDatabaseSync(name, { useNewConnection: true });
@@ -17,22 +18,10 @@ const db = drizzle(expoDb);
 
 const toastConfig = {
   success: (props: BaseToastProps) => (
-    <SuccessToast
-      {...props}
-      text1Style={{
-        fontSize: 14,
-        textAlign: "center",
-      }}
-    />
+    <SuccessToast {...props} text1Style={tw`text-sm text-center`} />
   ),
   error: (props: BaseToastProps) => (
-    <ErrorToast
-      {...props}
-      text1Style={{
-        fontSize: 14,
-        textAlign: "center",
-      }}
-    />
+    <ErrorToast {...props} text1Style={tw`text-sm text-center`} />
   ),
 };
 

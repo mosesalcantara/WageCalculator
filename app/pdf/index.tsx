@@ -26,6 +26,7 @@ import { Button, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import { WebView } from "react-native-webview";
+import tw from "twrnc";
 
 const PDFPage = () => {
   const db = getDb();
@@ -104,7 +105,7 @@ const PDFPage = () => {
   const renderViolationType = (
     violationType: ViolationType & { received?: string },
     rate: number,
-    type: string
+    type: string,
   ) => {
     let html = "";
     let subtotal = 0;
@@ -116,7 +117,7 @@ const PDFPage = () => {
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
         }: ${formatDate(period.start_date)} to ${formatDate(
-          period.end_date
+          period.end_date,
         )} (${getDaysOrHours(type, period.daysOrHours)})
         </p>
 
@@ -146,10 +147,10 @@ const PDFPage = () => {
 
       <p>
         Php${formatNumber(subtotal)} - ${formatNumber(
-        violationType.received || 0
-      )} 
+          violationType.received || 0,
+        )} 
         <span>= Php${formatNumber(
-          subtotal - (Number(violationType.received) || 0)
+          subtotal - (Number(violationType.received) || 0),
         )}</span>
       </p>
       `);
@@ -249,7 +250,7 @@ const PDFPage = () => {
     <html>
       <head>
         <meta charset="utf-8" />
-        <title>Static PDF Preview</title>
+        <title>PDF Preview</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -304,7 +305,7 @@ const PDFPage = () => {
                   .map(
                     (employee, index) => `
                   ${renderEmployee(employee, index)}
-                `
+                `,
                   )
                   .join("")
               }
@@ -376,11 +377,11 @@ const PDFPage = () => {
         <>
           <NavBar />
 
-          <View style={{ flex: 1, backgroundColor: "#fff" }}>
-            <View style={{ flex: 1, marginBottom: 10 }}>
+          <View style={tw`flex-1 bg-white`}>
+            <View style={tw`flex-1 mb-2.5`}>
               <WebView source={{ html: generateHTML(true) }} />
             </View>
-            <View style={{ marginBottom: 50, paddingHorizontal: 20 }}>
+            <View style={tw`mb-[50px] px-5`}>
               <Button title="Download/Export PDF" onPress={printToPDF} />
             </View>
           </View>

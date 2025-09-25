@@ -20,7 +20,6 @@ import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import tw from "twrnc";
-import styles from "./styles";
 
 const EstablishmentPage = () => {
   const db = getDb();
@@ -95,17 +94,19 @@ const EstablishmentPage = () => {
   }, [mutations]);
 
   return (
-    <View style={styles.container}>
+    <View style={tw`flex-1 p-4 bg-[#acb6e2ff]`}>
       <NavBar />
 
       <FlatList
         data={records}
         keyExtractor={(record) => `${record.id}`}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.text}>{item.name}</Text>
+          <View
+            style={tw`flex-row justify-between bg-white p-2.5 my-1.5 border rounded-md`}
+          >
+            <Text style={tw`font-bold`}>{item.name}</Text>
 
-            <View style={styles.icons}>
+            <View style={tw`flex-row gap-1`}>
               <TouchableOpacity
                 onPress={() => setEstablishment(item.id, "employees")}
               >

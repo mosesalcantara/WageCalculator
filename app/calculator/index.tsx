@@ -26,7 +26,7 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import styles from "./styles";
+import tw from "twrnc";
 
 const CalculatorPage = () => {
   const db = getDb();
@@ -61,7 +61,7 @@ const CalculatorPage = () => {
   const handleInitialChange = (
     key: string,
     value: string | number | Date,
-    index?: number
+    index?: number,
   ) => {
     if (key.endsWith("_date")) {
       value = (value as Date).toISOString().split("T")[0];
@@ -77,7 +77,7 @@ const CalculatorPage = () => {
     } else {
       setValues((prev) => {
         const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-          index == periodIndex ? { ...period, [key]: `${value}` } : period
+          index == periodIndex ? { ...period, [key]: `${value}` } : period,
         );
 
         return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
@@ -113,7 +113,7 @@ const CalculatorPage = () => {
         "change",
         (nextAppState) => {
           nextAppState == "background" && addRecord(values);
-        }
+        },
       );
 
       const handleBackPress = () => {
@@ -124,14 +124,14 @@ const CalculatorPage = () => {
 
       const backhandler = BackHandler.addEventListener(
         "hardwareBackPress",
-        handleBackPress
+        handleBackPress,
       );
 
       return () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [values])
+    }, [values]),
   );
 
   useEffect(() => {
@@ -169,18 +169,21 @@ const CalculatorPage = () => {
     <>
       {parent && values && (
         <>
-          <View style={styles.container}>
-            <View style={styles.header}>
+          <View style={tw`flex-1 bg-[#f5f5f5]`}>
+            <View style={tw`flex-row items-center bg-[#2c3e50] p-2.5`}>
               <Icon name="assignment" size={22} color="#fff" />
-              <Text style={styles.headerText}>Inspector Wage Calculator</Text>
-              <View style={styles.header}>
+              <Text style={tw`text-white text-lg font-bold ml-2.5`}>
+                Inspector Wage Calculator
+              </Text>
+
+              <View style={tw`flex-row items-center p-2.5 gap-2`}>
                 <Image
                   source={require("@/assets/images/dole.png")}
-                  style={styles.image}
+                  style={tw`w-[28%] h-[60px]`}
                 />
                 <Image
                   source={require("@/assets/images/bagongpilipinas.png")}
-                  style={styles.image}
+                  style={tw`w-[28%] h-[54px]`}
                 />
               </View>
             </View>
@@ -189,15 +192,15 @@ const CalculatorPage = () => {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={styles.types}
+                style={tw`bg-white border-b border-b-[#ddd] py-2.5`}
               >
                 {tabs.map((item) => (
                   <TouchableOpacity
                     key={item.name}
-                    style={[
-                      styles.button,
-                      type === item.name && styles.buttonActive,
-                    ]}
+                    style={tw.style(
+                      `flex-row items-center border border-[#ccc] rounded-lg bg-white px-3 mx-[5px] h-10`,
+                      type === item.name && `bg-[#2c3e50] border-[#2c3e50]`,
+                    )}
                     onPress={() => setType(item.name as ViolationTypes)}
                   >
                     <Icon
@@ -206,10 +209,10 @@ const CalculatorPage = () => {
                       color={type === item.name ? "#fff" : "#555"}
                     />
                     <Text
-                      style={[
-                        styles.buttonText,
-                        type === item.name && { color: "#fff" },
-                      ]}
+                      style={tw.style(
+                        `ml-1.5 text-sm text-[#555]`,
+                        type === item.name && `text-white`,
+                      )}
                     >
                       {item.name}
                     </Text>
@@ -218,14 +221,14 @@ const CalculatorPage = () => {
               </ScrollView>
             </View>
 
-            <View style={styles.employeeSave}>
-              <View style={styles.employeeContainer}>
-                <Text style={styles.employee}>
+            <View style={tw`flex-row justify-between items-center px-2.5`}>
+              <View style={tw`py-2.5`}>
+                <Text style={tw`font-bold text-xl ml-1.5`}>
                   {`${parent.first_name} ${parent.last_name} - ${formatNumber(
-                    parent.rate
+                    parent.rate,
                   )}`}
                 </Text>
-                <Text style={styles.subtotal}>
+                <Text style={tw`font-bold text-xl underline ml-1.5`}>
                   Subtotal:{" "}
                   {formatNumber(getTotal(values[type], parent.rate, type))}
                 </Text>
@@ -234,10 +237,10 @@ const CalculatorPage = () => {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={styles.periodsContainer}
+              style={tw`h-[500px]`}
             >
               <ScrollView>
-                <View style={styles.periods}>
+                <View style={tw`gap-[30px]`}>
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
@@ -251,10 +254,12 @@ const CalculatorPage = () => {
                 </View>
 
                 {type == "13th Month Pay" && (
-                  <View style={styles.receivedContainer}>
-                    <Text style={styles.label}>Received</Text>
+                  <View style={tw`mx-10 pt-4]`}>
+                    <Text style={tw`text-sm font-bold mt-2.5 mb-1 text-[#333]`}>
+                      Received
+                    </Text>
                     <TextInput
-                      style={styles.input}
+                      style={tw`border border-[#ccc] rounded-md px-2.5 bg-[#fafafa] h-10`}
                       keyboardType="numeric"
                       placeholder="Enter pay received"
                       value={values[type].received}

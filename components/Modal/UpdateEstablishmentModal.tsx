@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import styles from "./styles";
+import tw from "twrnc";
 
 type Props = {
   db: any;
@@ -21,7 +21,7 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }: Props) => {
 
   const onSubmit = async (
     values: Establishment,
-    { resetForm }: { resetForm: () => void }
+    { resetForm }: { resetForm: () => void },
   ) => {
     try {
       await db
@@ -70,35 +70,39 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }: Props) => {
             setFieldTouched,
             setFieldValue,
           }) => (
-            <View style={styles.modalOverlay}>
-              <View style={styles.form}>
+            <View
+              style={tw`flex-1 bg-black opacity-40 justify-center items-center`}
+            >
+              <View style={tw`bg-[#1E90FF] p-4 rounded-[10px] w-4/5 `}>
                 <View>
-                  <Text style={styles.label}>Name:</Text>
+                  <Text style={tw`text-white mt-2.5`}>Name:</Text>
                   <TextInput
-                    style={styles.input}
+                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
                     placeholder="Enter name"
                     value={values.name}
                     onChangeText={handleChange("name")}
                     onBlur={() => setFieldTouched("name")}
                   />
                   {touched.name && errors.name && (
-                    <Text style={styles.error}>{errors.name}</Text>
+                    <Text style={tw`text-red-500 text-[12px]`}>
+                      {errors.name}
+                    </Text>
                   )}
                 </View>
 
-                <View style={styles.actionButtons}>
+                <View style={tw`flex-row justify-end`}>
                   <TouchableOpacity
-                    style={styles.actionButton}
+                    style={tw`bg-white py-[5px] px-2.5 rounded mt-2.5 mr-2`}
                     onPress={() => setIsVisible(false)}
                   >
-                    <Text style={styles.actionText}>Cancel</Text>
+                    <Text style={tw`font-bold`}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={styles.actionButton}
+                    style={tw`bg-white py-[5px] px-2.5 rounded mt-2.5 mr-2`}
                     onPress={() => handleSubmit()}
                   >
-                    <Text style={styles.actionText}>Update</Text>
+                    <Text style={tw`font-bold`}>Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>

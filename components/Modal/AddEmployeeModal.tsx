@@ -7,7 +7,7 @@ import { Formik } from "formik";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import styles from "./styles";
+import tw from "twrnc";
 
 type Props = {
   parent: Establishment;
@@ -27,7 +27,7 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
 
   const onSubmit = async (
     values: Override<Employee, { id?: number }>,
-    { resetForm }: { resetForm: () => void }
+    { resetForm }: { resetForm: () => void },
   ) => {
     try {
       await db.insert(employees).values({
@@ -55,10 +55,10 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
   return (
     <>
       <TouchableOpacity
-        style={styles.addButton}
+        style={tw`bg-black p-3 rounded-[30px] mt-5 mb-10`}
         onPress={() => setIsVisible(true)}
       >
-        <Text style={styles.addText}>Add Employee</Text>
+        <Text style={tw`text-white text-center font-bold`}>Add Employee</Text>
       </TouchableOpacity>
 
       <Modal
@@ -81,40 +81,46 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
             setFieldValue,
             setFieldTouched,
           }) => (
-            <View style={styles.modalOverlay}>
-              <View style={styles.form}>
+            <View
+              style={tw`flex-1 bg-black opacity-40 justify-center items-center`}
+            >
+              <View style={tw`bg-[#1E90FF] p-4 rounded-[10px] w-4/5 `}>
                 <View>
-                  <Text style={styles.label}>First Name:</Text>
+                  <Text style={tw`text-white mt-2.5`}>First Name:</Text>
                   <TextInput
-                    style={styles.input}
+                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
                     placeholder="Enter first name"
                     value={values.first_name}
                     onChangeText={handleChange("first_name")}
                     onBlur={() => setFieldTouched("first_name")}
                   />
                   {touched.first_name && errors.first_name && (
-                    <Text style={styles.error}>{errors.first_name}</Text>
+                    <Text style={tw`text-red-500 text-[12px]`}>
+                      {errors.first_name}
+                    </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Last Name:</Text>
+                  <Text style={tw`text-white mt-2.5`}>Last Name:</Text>
                   <TextInput
-                    style={styles.input}
+                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
                     placeholder="Enter last name"
                     value={values.last_name}
                     onChangeText={handleChange("last_name")}
                     onBlur={() => setFieldTouched("last_name")}
                   />
                   {touched.last_name && errors.last_name && (
-                    <Text style={styles.error}>{errors.last_name}</Text>
+                    <Text style={tw`text-red-500 text-[12px]`}>
+                      {errors.last_name}
+                    </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Rate:</Text>
+                  <Text style={tw`text-white mt-2.5`}>Rate:</Text>
                   <TextInput
-                    style={styles.input}
+                    style={tw`bg-white rounded-[5px] px-2 h-[35px] mt-0.5`}
                     keyboardType="numeric"
                     placeholder="Enter rate"
                     value={values.rate ? `${values.rate}` : ""}
@@ -122,12 +128,14 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
                     onBlur={() => setFieldTouched("rate")}
                   />
                   {touched.rate && errors.rate && (
-                    <Text style={styles.error}>{errors.rate}</Text>
+                    <Text style={tw`text-red-500 text-[12px]`}>
+                      {errors.rate}
+                    </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Work Week Start:</Text>
+                  <Text style={tw`text-white mt-2.5`}>Work Week Start:</Text>
                   <Select
                     name="start_day"
                     options={daysOptions}
@@ -137,12 +145,14 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.start_day && errors.start_day && (
-                    <Text style={styles.error}>{errors.start_day}</Text>
+                    <Text style={tw`text-red-500 text-[12px]`}>
+                      {errors.start_day}
+                    </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Work Week End:</Text>
+                  <Text style={tw`text-white mt-2.5`}>Work Week End:</Text>
                   <Select
                     name="end_day"
                     options={daysOptions}
@@ -152,23 +162,25 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.end_day && errors.end_day && (
-                    <Text style={styles.error}>{errors.end_day}</Text>
+                    <Text style={tw`text-red-500 text-[12px]`}>
+                      {errors.end_day}
+                    </Text>
                   )}
                 </View>
 
-                <View style={styles.actionButtons}>
+                <View style={tw`flex-row justify-end`}>
                   <TouchableOpacity
-                    style={styles.actionButton}
+                    style={tw`bg-white py-[5px] px-2.5 rounded mt-2.5 mr-2`}
                     onPress={() => setIsVisible(false)}
                   >
-                    <Text style={styles.actionText}>Cancel</Text>
+                    <Text style={tw`font-bold`}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={styles.actionButton}
+                    style={tw`bg-white py-[5px] px-2.5 rounded mt-2.5 mr-2`}
                     onPress={() => handleSubmit()}
                   >
-                    <Text style={styles.actionText}>Save</Text>
+                    <Text style={tw`font-bold`}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </View>

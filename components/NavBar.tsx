@@ -1,4 +1,5 @@
 import { Image, Text, View } from "react-native";
+import tw from "twrnc";
 
 type Props = {
   title?: string;
@@ -7,41 +8,16 @@ type Props = {
 const NavBar = ({ title = "Wage Calculator" }: Props) => {
   return (
     <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        backgroundColor: "#acb6e2ff",
-        height: 60,
-      }}
+      style={tw`flex-row items-center justify-between px-2.5 border-b h-[60px] bg-[#acb6e2ff]`}
     >
       <Image
         source={require("@/assets/images/dole.png")}
-        style={{
-          width: 60,
-          height: 60,
-          resizeMode: "contain",
-        }}
+        style={tw.style(`w-[60px] h-[60px]`, { resizeMode: "contain" })}
       />
-      <Text
-        style={{
-          fontSize: 20,
-          fontWeight: "bold",
-          textAlign: "center",
-          flex: 1,
-        }}
-      >
-        {title}
-      </Text>
+      <Text style={tw`font-bold text-center text-xl`}>{title}</Text>
       <Image
         source={require("@/assets/images/bagongpilipinas.png")}
-        style={{
-          width: 60,
-          height: 60,
-          resizeMode: "contain",
-        }}
+        style={tw.style(`w-[60px] h-[60px]`, { resizeMode: "contain" })}
       />
     </View>
   );

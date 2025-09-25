@@ -20,7 +20,7 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import styles from "./styles";
+import tw from "twrnc";
 
 const EmployeesPage = () => {
   const db = getDb();
@@ -70,11 +70,11 @@ const EmployeesPage = () => {
 
       const backhandler = BackHandler.addEventListener(
         "hardwareBackPress",
-        handleBackPress
+        handleBackPress,
       );
 
       return () => backhandler.remove();
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
@@ -106,52 +106,86 @@ const EmployeesPage = () => {
         <>
           <NavBar />
 
-          <View style={styles.container}>
-            <Text style={styles.title}>{parent.name}</Text>
+          <View style={tw`flex-1 bg-[#f2f2f2] p-4`}>
+            <Text style={tw`text-lg font-bold text-center mb-3`}>
+              {parent.name}
+            </Text>
 
             <TextInput
               placeholder="Search employee"
               placeholderTextColor="#888"
               value={searchQuery}
               onChangeText={setSearchQuery}
-              style={{
-                borderWidth: 1,
-                borderColor: "#ccc",
-                borderRadius: 8,
-                padding: 10,
-                marginBottom: 10,
-                fontSize: 16,
-              }}
+              style={tw`border border-[#ccc] rounded-lg p-2.5 mb-2.5 text-base`}
             />
 
             <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-              <View style={styles.table}>
-                <View style={[styles.row, styles.headerRow]}>
-                  <Text style={[styles.headerCell, { flex: 2 }]}>Name</Text>
-                  <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
-                  <Text style={[styles.headerCell, { flex: 2 }]}>
+              <View style={tw`bg-white rounded-[10px] overflow-hidden`}>
+                <View style={tw`flex-row items-center py-3 px-2 bg-[#2196F3]`}>
+                  <Text
+                    style={tw.style(`font-bold text-white text-base`, {
+                      flex: 2,
+                    })}
+                  >
+                    Name
+                  </Text>
+                  <Text
+                    style={tw.style(`font-bold text-white text-base`, {
+                      flex: 1,
+                    })}
+                  >
+                    Rate
+                  </Text>
+                  <Text
+                    style={tw.style(`font-bold text-white text-base`, {
+                      flex: 2,
+                    })}
+                  >
                     Work Week
                   </Text>
-                  <Text style={[styles.headerCell, { flex: 1.5 }]}>
+                  <Text
+                    style={tw.style(`font-bold text-white text-base`, {
+                      flex: 1.5,
+                    })}
+                  >
                     Actions
                   </Text>
                 </View>
 
                 {filteredRecords.length > 0 ? (
                   filteredRecords.map((record) => (
-                    <View key={record.id} style={[styles.row]}>
-                      <Text style={[styles.cellText, { flex: 2 }]}>
+                    <View
+                      key={record.id}
+                      style={tw`flex-row items-center py-2.5 px-2`}
+                    >
+                      <Text
+                        style={tw.style(`text-[#333] text-sm`, {
+                          flex: 2,
+                        })}
+                      >
                         {record.first_name} {record.last_name}
                       </Text>
-                      <Text style={[styles.cellText, { flex: 1 }]}>
+                      <Text
+                        style={tw.style(`text-[#333] text-sm`, {
+                          flex: 1,
+                        })}
+                      >
                         {record.rate}
                       </Text>
-                      <Text style={[styles.cellText, { flex: 2 }]}>
+                      <Text
+                        style={tw.style(`text-[#333] text-sm`, {
+                          flex: 2,
+                        })}
+                      >
                         {record.start_day.slice(0, 3)} -{" "}
                         {record.end_day.slice(0, 3)}
                       </Text>
 
-                      <View style={[styles.actionCell, { flex: 1.5 }]}>
+                      <View
+                        style={tw.style(`flex-row justify-around`, {
+                          flex: 1.5,
+                        })}
+                      >
                         <TouchableOpacity
                           onPress={() => setEmployee(record.id)}
                         >
@@ -179,7 +213,9 @@ const EmployeesPage = () => {
                     </View>
                   ))
                 ) : (
-                  <Text style={styles.empty}>No employees found.</Text>
+                  <Text style={tw`text-center my-2.5`}>
+                    No employees found.
+                  </Text>
                 )}
               </View>
             </ScrollView>
