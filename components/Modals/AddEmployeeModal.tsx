@@ -4,18 +4,18 @@ import { employee as validationSchema } from "@/schemas/globals";
 import { Employee, Establishment, Override } from "@/types/globals";
 import { daysOptions } from "@/utils/globals";
 import { Formik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import tw from "twrnc";
 
 type Props = {
-  parent: Establishment;
   db: any;
-  setMutations: Dispatch<SetStateAction<number>>;
+  parent: Establishment;
+  refetch: () => void;
 };
 
-const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
+const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
   const initialValues = {
     first_name: "",
     last_name: "",
@@ -36,7 +36,7 @@ const AddEmployeeModal = ({ parent, db, setMutations }: Props) => {
         last_name: `${values.last_name}`.trim(),
         establishment_id: parent.id,
       });
-      setMutations((prev) => ++prev);
+      refetch();
       resetForm();
       setIsVisible(false);
       Toast.show({

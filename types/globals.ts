@@ -1,4 +1,13 @@
+import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
+import { SQLiteDatabase } from "expo-sqlite";
+
 export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
+
+export type Db = ExpoSQLiteDatabase<
+  typeof import("c:/laragon/www/WageCalculator/db/schema")
+> & {
+  $client: SQLiteDatabase;
+};
 
 export type Establishment = {
   id: number;

@@ -13,11 +13,11 @@ import tw from "twrnc";
 
 type Props = {
   db: any;
-  setMutations: Dispatch<SetStateAction<number>>;
   values: Employee;
+  refetch: () => void;
 };
 
-const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
+const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
   const initialValues = values;
   const [isVisible, setIsVisible] = useState(false);
 
@@ -34,7 +34,7 @@ const UpdateEmployeeModal = ({ db, setMutations, values }: Props) => {
           last_name: `${values.last_name}`.trim(),
         })
         .where(eq(employees.id, values.id));
-      setMutations((prev) => ++prev);
+      refetch()
       resetForm();
       setIsVisible(false);
       Toast.show({

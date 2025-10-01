@@ -3,7 +3,7 @@ import { establishment as validationSchema } from "@/schemas/globals";
 import { Establishment } from "@/types/globals";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -11,11 +11,11 @@ import tw from "twrnc";
 
 type Props = {
   db: any;
-  setMutations: Dispatch<SetStateAction<number>>;
   values: Establishment;
+  refetch: () => void;
 };
 
-const UpdateEstablishmentModal = ({ db, setMutations, values }: Props) => {
+const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
   const initialValues = values;
   const [isVisible, setIsVisible] = useState(false);
 
@@ -28,7 +28,7 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }: Props) => {
         .update(establishments)
         .set({ ...values, name: `${values.name}`.trim() })
         .where(eq(establishments.id, values.id));
-      setMutations((prev) => ++prev);
+      refetch();
       resetForm();
       setIsVisible(false);
       Toast.show({
@@ -68,7 +68,6 @@ const UpdateEstablishmentModal = ({ db, setMutations, values }: Props) => {
             handleSubmit,
             handleChange,
             setFieldTouched,
-            setFieldValue,
           }) => (
             <View
               style={tw`flex-1 bg-[rgba(0,0,0,0.4)] justify-center items-center`}

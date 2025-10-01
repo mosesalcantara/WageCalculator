@@ -2,17 +2,17 @@ import { establishments } from "@/db/schema";
 import { establishment as validationSchema } from "@/schemas/globals";
 import { Establishment, Override } from "@/types/globals";
 import { Formik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import tw from "twrnc";
 
 type Props = {
   db: any;
-  setMutations: Dispatch<SetStateAction<number>>;
+  refetch: () => void;
 };
 
-const AddEstablishmentModal = ({ db, setMutations }: Props) => {
+const AddEstablishmentModal = ({ db, refetch }: Props) => {
   const initialValues = {
     name: "",
   };
@@ -27,7 +27,7 @@ const AddEstablishmentModal = ({ db, setMutations }: Props) => {
       await db
         .insert(establishments)
         .values({ ...values, name: `${values.name}`.trim() });
-      setMutations((prev) => ++prev);
+      refetch();
       resetForm();
       setIsVisible(false);
       Toast.show({

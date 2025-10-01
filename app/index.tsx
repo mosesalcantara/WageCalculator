@@ -1,63 +1,21 @@
-import confirmAlert from "@/components/ConfirmAlert";
-import AddEstablishmentModal from "@/components/Modal/AddEstablishmentModal";
-import UpdateEstablishmentModal from "@/components/Modal/UpdateEstablishmentModal";
+import AddEstablishmentModal from "@/components/Modals/AddEstablishmentModal";
 import NavBar from "@/components/NavBar";
-import { employees, establishments, violations } from "@/db/schema";
-import { Establishment } from "@/types/globals";
+import EstablishmentsTable from "@/components/Tables/EstablishmentsTable";
+import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
+import useFetchEstablishments from "@/hooks/useFetchEstablishments";
 import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
-import { eq, inArray } from "drizzle-orm";
-import { Href, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import {
-  BackHandler,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import SessionStorage from "react-native-session-storage";
-import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
+import { useCallback } from "react";
+import { BackHandler, View } from "react-native";
 import tw from "twrnc";
 
 const EstablishmentPage = () => {
   const db = getDb();
   const router = useRouter();
 
-  const [records, setRecords] = useState<Establishment[]>([]);
-  const [mutations, setMutations] = useState(0);
-
-  const deleteRecord = async (id: number) => {
-    try {
-      const data = await db.query.establishments.findFirst({
-        where: eq(establishments.id, id),
-        with: { employees: true },
-      });
-      if (data && data.employees) {
-        const ids = data.employees.map((employee) => employee.id);
-        await db.delete(violations).where(inArray(violations.employee_id, ids));
-      }
-      await db.delete(employees).where(eq(employees.establishment_id, id));
-      await db.delete(establishments).where(eq(establishments.id, id));
-      setMutations((prev) => ++prev);
-      Toast.show({
-        type: "success",
-        text1: "Deleted Establishment",
-      });
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "An Error Has Occured. Please Try Again.",
-      });
-    }
-  };
-
-  const setEstablishment = (id: number, route: string) => {
-    SessionStorage.setItem("establishment_id", `${id}`);
-    router.push(`/${route}` as Href);
-  };
+  const { records, refetch } = useFetchEstablishments(db);
+  const { handleDelete } = useDeleteEstablishment(db, refetch);
 
   useFocusEffect(
     useCallback(() => {
@@ -75,69 +33,19 @@ const EstablishmentPage = () => {
     }, []),
   );
 
-  useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const data = await db.query.establishments.findMany({
-          with: { employees: true },
-        });
-        setRecords(data);
-      } catch (error) {
-        console.error(error);
-        Toast.show({
-          type: "error",
-          text1: "An Error Has Occured. Please Try Again.",
-        });
-      }
-    };
-    getRecords();
-  }, [mutations]);
-
   return (
     <View style={tw`flex-1 p-4 bg-[#acb6e2ff]`}>
       <NavBar />
 
-      <FlatList
-        data={records}
-        keyExtractor={(record) => `${record.id}`}
-        renderItem={({ item }) => (
-          <View
-            style={tw`flex-row justify-between bg-white p-2.5 my-1.5 border rounded-md`}
-          >
-            <Text style={tw`font-bold`}>{item.name}</Text>
-
-            <View style={tw`flex-row gap-1`}>
-              <TouchableOpacity
-                onPress={() => setEstablishment(item.id, "employees")}
-              >
-                <Icon name="remove-red-eye" size={20} color="#2196F3" />
-              </TouchableOpacity>
-
-              <UpdateEstablishmentModal
-                db={db}
-                setMutations={setMutations}
-                values={item}
-              />
-
-              <TouchableOpacity
-                onPress={() =>
-                  confirmAlert("Establishment", deleteRecord, item.id)
-                }
-              >
-                <Icon name="delete" size={20} color="#E53935" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => setEstablishment(item.id, "pdf")}
-              >
-                <Icon name="file-download" size={20} color="#2196F3" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+      <EstablishmentsTable
+        db={db}
+        router={router}
+        records={records}
+        refetch={refetch}
+        onDelete={handleDelete}
       />
 
-      <AddEstablishmentModal db={db} setMutations={setMutations} />
+      <AddEstablishmentModal db={db} refetch={refetch} />
     </View>
   );
 };
