@@ -1,10 +1,8 @@
 import NavBar from "@/components/NavBar";
-import { establishments } from "@/db/schema";
+import useFetchEstablishmentViolations from "@/hooks/useFetchEstablishmentViolations";
 import {
   Employee,
-  Establishment,
   Period,
-  Violations,
   ViolationType,
   ViolationValues,
 } from "@/types/globals";
@@ -18,12 +16,9 @@ import {
   numberToLetter,
   validate,
 } from "@/utils/globals";
-import { eq } from "drizzle-orm";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
-import { useEffect, useState } from "react";
 import { Button, View } from "react-native";
-import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import { WebView } from "react-native-webview";
 import tw from "twrnc";
@@ -31,7 +26,7 @@ import tw from "twrnc";
 const PDFPage = () => {
   const db = getDb();
 
-  const [record, setRecord] = useState<Establishment | null>(null);
+  const { record } = useFetchEstablishmentViolations(db);
 
   const renderEmployee = (employee: Employee, index: number) => {
     let html = "";
@@ -244,6 +239,51 @@ const PDFPage = () => {
     return html;
   };
 
+  const getStyles = (isPreview: boolean) => {
+    return `
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 1.25rem;
+          padding: 0;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 1.25rem;
+        }
+        th, td {
+          padding: 0 0.375rem;
+          font-size: ${isPreview ? "2" : "0.75"}rem;
+        }
+        h1 {
+          text-align: center; 
+          font-size: ${isPreview ? "2.5" : "1.25"}rem;
+          font-weight: bold;
+          color: black;
+          margin-bottom: 1.25rem;
+        }
+        p {
+          margin: 0;
+          padding: 0;
+        }
+        .bold {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+        .right {
+          text-align: right;
+        }
+        .space {
+          font-size: 5%;
+        }
+        .top-space {
+          margin-top: 2%;
+        }
+      </style>
+    `;
+  };
+
   const generateHTML = (isPreview: boolean) =>
     `
     <!DOCTYPE html>
@@ -251,46 +291,7 @@ const PDFPage = () => {
       <head>
         <meta charset="utf-8" />
         <title>PDF Preview</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 1.25rem;
-            padding: 0;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1.25rem;
-          }
-          th, td {
-            padding: 0 0.375rem;
-            font-size: ${isPreview ? "2" : "0.75"}rem;
-          }
-          h1 {
-            text-align: center; 
-            font-size: ${isPreview ? "2.5" : "1.25"}rem;
-            font-weight: bold;
-            color: black;
-            margin-bottom: 1.25rem;
-          }
-          p {
-            margin: 0;
-            padding: 0;
-          }
-          .bold {
-            font-weight: bold;
-            text-decoration: underline;
-          }
-          .right {
-            text-align: right;
-          }
-          .space {
-            font-size: 5%;
-          }
-          .top-space {
-            margin-top: 2%;
-          }
-        </style>
+        ${getStyles(isPreview)}
       </head>
       <body>
         ${
@@ -323,9 +324,7 @@ const PDFPage = () => {
         html: generateHTML(false),
       });
 
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(uri);
-      }
+      (await Sharing.isAvailableAsync()) && (await Sharing.shareAsync(uri));
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -334,43 +333,6 @@ const PDFPage = () => {
       });
     }
   };
-
-  useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const id = SessionStorage.getItem("establishment_id") as string;
-        const data = await db.query.establishments.findFirst({
-          where: eq(establishments.id, Number(id)),
-          with: { employees: { with: { violations: true } } },
-        });
-        if (data) {
-          const employeesData = data.employees.map((employee) => {
-            let violations: Violations[] = [];
-            if (employee.violations.length > 0) {
-              violations = [
-                {
-                  ...employee.violations[0],
-                  values: employee.violations[0].values as string,
-                },
-              ];
-            }
-            return { ...employee, violations: violations };
-          });
-          setRecord({
-            ...data,
-            employees: employeesData,
-          });
-        }
-      } catch (error) {
-        console.error(error);
-        Toast.show({
-          type: "error",
-          text1: "An Error Has Occured. Please Try Again.",
-        });
-      }
-    };
-    getRecords();
-  }, []);
 
   return (
     <>
