@@ -1,20 +1,16 @@
 import Form from "@/components/Calculator/Form";
-import { employees, violations } from "@/db/schema";
-import {
-  Employee,
-  Violations,
-  ViolationTypes,
-  ViolationValues,
-} from "@/types/globals";
-import { formatNumber, getDb, getTotal, periodsFormat } from "@/utils/globals";
+import NavBar from "@/components/NavBar";
+import { violations } from "@/db/schema";
+import useFetchViolations from "@/hooks/useFetchViolations";
+import { ViolationTypes, ViolationValues } from "@/types/globals";
+import { formatNumber, getDb, getTotal } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   AppState,
   BackHandler,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -44,45 +40,15 @@ const CalculatorPage = () => {
   ];
 
   const [type, setType] = useState<ViolationTypes>("Basic Wage");
-  const [parent, setParent] = useState<Employee | null>(null);
-  const [values, setValues] = useState({
-    "Basic Wage": periodsFormat,
-    "Overtime Pay": periodsFormat,
-    "Night Differential": periodsFormat,
-    "Special Day": periodsFormat,
-    "Rest Day": periodsFormat,
-    "Holiday Pay": periodsFormat,
-    "13th Month Pay": {
-      ...periodsFormat,
-      received: "",
-    },
-  });
+  const { parent, values, setValues } = useFetchViolations(db);
 
-  const handleInitialChange = (
-    key: string,
-    value: string | number | Date,
-    index?: number,
-  ) => {
-    if (key.endsWith("_date")) {
-      value = (value as Date).toISOString().split("T")[0];
-    }
-
-    if (key == "received") {
-      setValues((prev) => {
-        return {
-          ...prev,
-          [type]: { periods: prev[type].periods, [key]: value },
-        };
-      });
-    } else {
-      setValues((prev) => {
-        const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-          index == periodIndex ? { ...period, [key]: `${value}` } : period,
-        );
-
-        return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
-      });
-    }
+  const handleReceivedChange = (value: string) => {
+    setValues((prev) => {
+      return {
+        ...prev,
+        [type]: { periods: prev[type].periods, received: value },
+      };
+    });
   };
 
   const addRecord = async (values: ViolationValues) => {
@@ -134,61 +100,12 @@ const CalculatorPage = () => {
     }, [values]),
   );
 
-  useEffect(() => {
-    const getRecords = async () => {
-      try {
-        const data = await db.query.employees.findFirst({
-          where: eq(employees.id, Number(parent_id)),
-          with: { violations: true },
-        });
-        if (data) {
-          let violations: Violations[] = [];
-          if (data.violations.length > 0) {
-            violations = [
-              {
-                ...data.violations[0],
-                values: data.violations[0].values as string,
-              },
-            ];
-            setValues(JSON.parse(data.violations[0].values as string));
-          }
-          setParent({ ...data, violations: violations });
-        }
-      } catch (error) {
-        console.error(error);
-        Toast.show({
-          type: "error",
-          text1: "An Error Has Occured. Please Try Again.",
-        });
-      }
-    };
-    getRecords();
-  }, []);
-
   return (
     <>
       {parent && values && (
         <>
           <View style={tw`flex-1 bg-[#f5f5f5]`}>
-            <View style={tw`flex-row items-center bg-[#2c3e50] p-2.5`}>
-              <View style={tw`flex-row items-center`}>
-                <Icon name="assignment" size={22} color="#fff" />
-                <Text style={tw`text-white text-lg font-bold ml-2.5`}>
-                  Wage Calculator
-                </Text>
-              </View>
-
-              <View style={tw`flex-row items-center p-2.5 gap-2`}>
-                <Image
-                  source={require("@/assets/images/dole.png")}
-                  style={tw`w-[28%] h-[3.75rem]`}
-                />
-                <Image
-                  source={require("@/assets/images/bagongpilipinas.png")}
-                  style={tw`w-[28%] h-[3.375rem]`}
-                />
-              </View>
-            </View>
+            <NavBar />
 
             <View>
               <ScrollView
@@ -196,27 +113,27 @@ const CalculatorPage = () => {
                 showsHorizontalScrollIndicator={false}
                 style={tw`bg-white border-b border-b-[#ddd] py-2.5`}
               >
-                {tabs.map((item) => (
+                {tabs.map((tab) => (
                   <TouchableOpacity
-                    key={item.name}
+                    key={tab.name}
                     style={tw.style(
                       `flex-row items-center border border-[#ccc] rounded-lg bg-white px-3 mx-[0.3125rem] h-10`,
-                      type === item.name && `bg-[#2c3e50] border-[#2c3e50]`,
+                      type === tab.name && `bg-[#2c3e50] border-[#2c3e50]`,
                     )}
-                    onPress={() => setType(item.name as ViolationTypes)}
+                    onPress={() => setType(tab.name as ViolationTypes)}
                   >
                     <Icon
-                      name={item.icon}
+                      name={tab.icon}
                       size={18}
-                      color={type === item.name ? "#fff" : "#555"}
+                      color={type === tab.name ? "#fff" : "#555"}
                     />
                     <Text
                       style={tw.style(
                         `ml-1.5 text-sm text-[#555]`,
-                        type === item.name && `text-white`,
+                        type === tab.name && `text-white`,
                       )}
                     >
-                      {item.name}
+                      {tab.name}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -250,7 +167,6 @@ const CalculatorPage = () => {
                       type={type}
                       index={index}
                       valuesState={[values, setValues]}
-                      handleInitialChange={handleInitialChange}
                     />
                   ))}
                 </View>
@@ -265,9 +181,7 @@ const CalculatorPage = () => {
                       keyboardType="numeric"
                       placeholder="Enter pay received"
                       value={values[type].received}
-                      onChangeText={(value) =>
-                        handleInitialChange("received", value)
-                      }
+                      onChangeText={(value) => handleReceivedChange(value)}
                     />
                   </View>
                 )}

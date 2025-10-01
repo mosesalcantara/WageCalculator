@@ -18,20 +18,9 @@ type Props = {
   type: ViolationTypes;
   index: number;
   valuesState: [ViolationValues, Dispatch<SetStateAction<ViolationValues>>];
-  handleInitialChange: (
-    key: string,
-    value: string | number | Date,
-    index?: number,
-  ) => void;
 };
 
-const Form = ({
-  parent,
-  type,
-  index,
-  valuesState,
-  handleInitialChange,
-}: Props) => {
+const Form = ({ parent, type, index, valuesState }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
@@ -60,6 +49,24 @@ const Form = ({
   };
 
   const includedDays = getIncludedDays(parent.start_day, parent.end_day);
+
+  const handleInitialChange = (
+    key: string,
+    value: string | number | Date,
+    index: number,
+  ) => {
+    if (key.endsWith("_date")) {
+      value = (value as Date).toISOString().split("T")[0];
+    }
+
+    setValues((prev) => {
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+        index == periodIndex ? { ...period, [key]: `${value}` } : period,
+      );
+
+      return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
+    });
+  };
 
   const handleChange = (key: string, value: string | number | Date) => {
     handleInitialChange(key, value, index);
