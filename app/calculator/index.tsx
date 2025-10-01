@@ -22,7 +22,6 @@ import {
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import tw from "twrnc";
 
 const CalculatorPage = () => {
   const db = getDb();
@@ -104,22 +103,19 @@ const CalculatorPage = () => {
     <>
       {parent && values && (
         <>
-          <View style={tw`flex-1 bg-[#f5f5f5]`}>
+          <View className="flex-1 bg-[#f5f5f5]">
             <NavBar />
 
             <View>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={tw`bg-white border-b border-b-[#ddd] py-2.5`}
+                className="border-b border-b-[#ddd] bg-white py-2.5"
               >
                 {tabs.map((tab) => (
                   <TouchableOpacity
                     key={tab.name}
-                    style={tw.style(
-                      `flex-row items-center border border-[#ccc] rounded-lg bg-white px-3 mx-[0.3125rem] h-10`,
-                      type === tab.name && `bg-[#2c3e50] border-[#2c3e50]`,
-                    )}
+                    className={`mx-[0.3125rem] h-10 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
                     onPress={() => setType(tab.name as ViolationTypes)}
                   >
                     <Icon
@@ -128,10 +124,7 @@ const CalculatorPage = () => {
                       color={type === tab.name ? "#fff" : "#555"}
                     />
                     <Text
-                      style={tw.style(
-                        `ml-1.5 text-sm text-[#555]`,
-                        type === tab.name && `text-white`,
-                      )}
+                      className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
                     >
                       {tab.name}
                     </Text>
@@ -140,14 +133,14 @@ const CalculatorPage = () => {
               </ScrollView>
             </View>
 
-            <View style={tw`flex-row justify-between items-center px-2.5`}>
-              <View style={tw`py-2.5`}>
-                <Text style={tw`font-bold text-xl ml-1.5`}>
+            <View className="flex-row items-center justify-between px-2.5">
+              <View className="py-2.5">
+                <Text className="ml-1.5 text-xl font-bold">
                   {`${parent.first_name} ${parent.last_name} - ${formatNumber(
                     parent.rate,
                   )}`}
                 </Text>
-                <Text style={tw`font-bold text-xl underline ml-1.5`}>
+                <Text className="ml-1.5 text-xl font-bold underline">
                   Subtotal:{" "}
                   {formatNumber(getTotal(values[type], parent.rate, type))}
                 </Text>
@@ -156,10 +149,10 @@ const CalculatorPage = () => {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={tw`h-[31.25rem]`}
+              className="h-[31.25rem]"
             >
               <ScrollView>
-                <View style={tw`gap-[1.875rem]`}>
+                <View className="gap-[1.875rem]">
                   {values[type].periods.map((_, index) => (
                     <Form
                       key={index}
@@ -172,12 +165,12 @@ const CalculatorPage = () => {
                 </View>
 
                 {type == "13th Month Pay" && (
-                  <View style={tw`mx-10 pt-4]`}>
-                    <Text style={tw`text-sm font-bold mt-2.5 mb-1 text-[#333]`}>
+                  <View className="mx-10 pt-4">
+                    <Text className="mb-1 mt-2.5 text-sm font-bold text-[#333]">
                       Received
                     </Text>
                     <TextInput
-                      style={tw`border border-[#ccc] rounded-md px-2.5 bg-[#fafafa] h-10`}
+                      className="h-10 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       keyboardType="numeric"
                       placeholder="Enter pay received"
                       value={values[type].received}

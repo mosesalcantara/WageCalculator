@@ -5,11 +5,10 @@ import { Employee } from "@/types/globals";
 import { daysOptions } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import tw from "twrnc";
 
 type Props = {
   db: any;
@@ -34,7 +33,7 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
           last_name: `${values.last_name}`.trim(),
         })
         .where(eq(employees.id, values.id));
-      refetch()
+      refetch();
       resetForm();
       setIsVisible(false);
       Toast.show({
@@ -76,46 +75,44 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
             setFieldTouched,
             setFieldValue,
           }) => (
-            <View
-              style={tw`flex-1 bg-[rgba(0,0,0,0.4)] justify-center items-center`}
-            >
-              <View style={tw`bg-[#1E90FF] p-4 rounded-[0.625rem] w-4/5 `}>
+            <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
+              <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View>
-                  <Text style={tw`text-white mt-2.5`}>First Name:</Text>
+                  <Text className="mt-2.5 text-white">First Name:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
+                    className="mt-0.5 h-[2.1875rem] rounded-[0.3125rem] bg-white px-2"
                     placeholder="Enter first name"
                     value={values.first_name}
                     onChangeText={handleChange("first_name")}
                     onBlur={() => setFieldTouched("first_name")}
                   />
                   {touched.first_name && errors.first_name && (
-                    <Text style={tw`text-red-500 text-[0.75rem]`}>
+                    <Text className="text-[0.75rem] text-red-500">
                       {errors.first_name}
                     </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={tw`text-white mt-2.5`}>Last Name:</Text>
+                  <Text className="mt-2.5 text-white">Last Name:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
+                    className="mt-0.5 h-[2.1875rem] rounded-[0.3125rem] bg-white px-2"
                     placeholder="Enter last name"
                     value={values.last_name}
                     onChangeText={handleChange("last_name")}
                     onBlur={() => setFieldTouched("last_name")}
                   />
                   {touched.last_name && errors.last_name && (
-                    <Text style={tw`text-red-500 text-[0.75rem]`}>
+                    <Text className="text-[0.75rem] text-red-500">
                       {errors.last_name}
                     </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={tw`text-white mt-2.5`}>Rate:</Text>
+                  <Text className="mt-2.5 text-white">Rate:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
+                    className="mt-0.5 h-[2.1875rem] rounded-[0.3125rem] bg-white px-2"
                     keyboardType="numeric"
                     placeholder="Enter rate"
                     value={values.rate ? `${values.rate}` : ""}
@@ -123,14 +120,14 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
                     onBlur={() => setFieldTouched("rate")}
                   />
                   {touched.rate && errors.rate && (
-                    <Text style={tw`text-red-500 text-[0.75rem]`}>
+                    <Text className="text-[0.75rem] text-red-500">
                       {errors.rate}
                     </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={tw`text-white mt-2.5`}>Work Week Start:</Text>
+                  <Text className="mt-2.5 text-white">Work Week Start:</Text>
                   <Select
                     name="start_day"
                     options={daysOptions}
@@ -140,14 +137,14 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.start_day && errors.start_day && (
-                    <Text style={tw`text-red-500 text-[0.75rem]`}>
+                    <Text className="text-[0.75rem] text-red-500">
                       {errors.start_day}
                     </Text>
                   )}
                 </View>
 
                 <View>
-                  <Text style={tw`text-white mt-2.5`}>Work Week End:</Text>
+                  <Text className="mt-2.5 text-white">Work Week End:</Text>
                   <Select
                     name="end_day"
                     options={daysOptions}
@@ -157,25 +154,25 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.end_day && errors.end_day && (
-                    <Text style={tw`text-red-500 text-[0.75rem]`}>
+                    <Text className="text-[0.75rem] text-red-500">
                       {errors.end_day}
                     </Text>
                   )}
                 </View>
 
-                <View style={tw`flex-row justify-end`}>
+                <View className="flex-row justify-end">
                   <TouchableOpacity
-                    style={tw`bg-white py-[0.3125rem] px-2.5 rounded mt-2.5 mr-2`}
+                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => setIsVisible(false)}
                   >
-                    <Text style={tw`font-bold`}>Cancel</Text>
+                    <Text className="font-bold">Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={tw`bg-white py-[0.3125rem] px-2.5 rounded mt-2.5 mr-2`}
+                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => handleSubmit()}
                   >
-                    <Text style={tw`font-bold`}>Update</Text>
+                    <Text className="font-bold">Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>

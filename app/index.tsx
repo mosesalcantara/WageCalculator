@@ -8,7 +8,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { BackHandler, View } from "react-native";
-import tw from "twrnc";
 
 const EstablishmentPage = () => {
   const db = getDb();
@@ -34,7 +33,7 @@ const EstablishmentPage = () => {
   );
 
   return (
-    <View style={tw`flex-1 p-4 bg-[#acb6e2ff]`}>
+    <View className="flex-1 bg-[#acb6e2ff] p-4">
       <NavBar />
 
       <EstablishmentsTable

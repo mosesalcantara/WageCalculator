@@ -1,5 +1,4 @@
 import { ActivityIndicator, Text, View } from "react-native";
-import tw from "twrnc";
 
 type Props = {
   title?: string;
@@ -7,9 +6,9 @@ type Props = {
 
 const Loader = ({ title = "Loading..." }: Props) => {
   return (
-    <View style={tw`flex-1 gap-1 justify-center`}>
+    <View className="flex-1 justify-center gap-1">
       <ActivityIndicator size="large" />
-      <Text style={tw`text-center font-bold`}>{title}</Text>
+      <Text className="text-center font-bold">{title}</Text>
     </View>
   );
 };

@@ -21,7 +21,6 @@ import * as Sharing from "expo-sharing";
 import { Button, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { WebView } from "react-native-webview";
-import tw from "twrnc";
 
 const PDFPage = () => {
   const db = getDb();
@@ -340,11 +339,11 @@ const PDFPage = () => {
         <>
           <NavBar />
 
-          <View style={tw`flex-1 bg-white`}>
-            <View style={tw`flex-1 mb-2.5`}>
+          <View className="flex-1 bg-white">
+            <View className="mb-2.5 flex-1">
               <WebView source={{ html: generateHTML(true) }} />
             </View>
-            <View style={tw`mb-[3.125rem] px-5`}>
+            <View className="mb-[3.125rem] px-5">
               <Button title="Download/Export PDF" onPress={printToPDF} />
             </View>
           </View>

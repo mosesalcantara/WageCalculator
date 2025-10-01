@@ -11,7 +11,6 @@ import { eachDayOfInterval, format } from "date-fns";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import tw from "twrnc";
 
 type Props = {
   parent: Employee;
@@ -136,22 +135,20 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
 
   return (
     <>
-      <View
-        style={tw`mx-10 border border-[#0d3dff] rounded-lg p-2.5 border-t-[0.3125rem]`}
-      >
-        <View style={tw`gap-1`}>
+      <View className="mx-10 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] p-2.5">
+        <View className="gap-1">
           {values[type].periods.length > 1 && (
-            <Text style={tw`text-center font-bold`}>
+            <Text className="text-center font-bold">
               Period {numberToLetter(index)}
             </Text>
           )}
 
           <View>
-            <Text style={tw`text-sm font-bold mb-1 text-[#333]`}>
+            <Text className="mb-1 text-sm font-bold text-[#333]">
               Start Date
             </Text>
             <TouchableOpacity
-              style={tw`border border-[#ccc] rounded-md px-2.5 bg-[#fafafa] h-10 flex-row items-center justify-between`}
+              className="h-10 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsStartDateModalVisible(true)}
             >
               <Text>
@@ -162,9 +159,9 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
 
           <View>
-            <Text style={tw`text-sm font-bold mb-1 text-[#333]`}>End Date</Text>
+            <Text className="mb-1 text-sm font-bold text-[#333]">End Date</Text>
             <TouchableOpacity
-              style={tw`border border-[#ccc] rounded-md px-2.5 bg-[#fafafa] h-10 flex-row items-center justify-between`}
+              className="h-10 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsEndDateModalVisible(true)}
             >
               <Text>
@@ -175,11 +172,11 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
 
           <View>
-            <Text style={tw`text-sm font-bold mb-1 text-[#333]`}>
+            <Text className="mb-1 text-sm font-bold text-[#333]">
               {checkType() ? "Hours" : "Days"}
             </Text>
             <TextInput
-              style={tw`border border-[#ccc] rounded-md px-2.5 bg-[#fafafa] h-10`}
+              className="h-10 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               keyboardType="numeric"
               placeholder={`Enter ${checkType() ? "hours" : "days"}`}
               value={values[type].periods[index].daysOrHours}
@@ -188,12 +185,10 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
         </View>
 
-        <View
-          style={tw`mt-4 p-3 bg-[#eafaf1] border border-[#27ae60] rounded-md`}
-        >
-          <Text style={tw`text-base text-[#27ae60]`}>
+        <View className="mt-4 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
+          <Text className="text-base text-[#27ae60]">
             Total:{" "}
-            <Text style={tw`text-base font-bold text-[#27ae60] mt-1`}>
+            <Text className="mt-1 text-base font-bold text-[#27ae60]">
               ₱
               {formatNumber(
                 calculate(values[type].periods[index], parent.rate, type),
@@ -202,29 +197,23 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </Text>
         </View>
 
-        <View style={tw`flex-row gap-2.5 mt-2.5`}>
+        <View className="mt-2.5 flex-row gap-2.5">
           {values[type].periods.length - 1 == index && (
             <TouchableOpacity onPress={addPeriod}>
-              <Text
-                style={tw`px-2.5 py-1.5 text-white border rounded-md bg-[#008000] border-[#008000]`}
-              >
+              <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 text-white">
                 Add
               </Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={clearPeriod}>
-            <Text
-              style={tw`px-2.5 py-1.5 text-white border rounded-md bg-[#f79812ff] border-[#f79812ff]`}
-            >
+            <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 text-white">
               Clear
             </Text>
           </TouchableOpacity>
 
           {values[type].periods.length > 1 && (
             <TouchableOpacity onPress={removePeriod}>
-              <Text
-                style={tw`px-2.5 py-1.5 text-white border rounded-md bg-[#e71414ff] border-[#e71414ff]`}
-              >
+              <Text className="rounded-md border border-[#e71414ff] bg-[#e71414ff] px-2.5 py-1.5 text-white">
                 Remove
               </Text>
             </TouchableOpacity>

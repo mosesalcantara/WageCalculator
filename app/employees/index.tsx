@@ -8,7 +8,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Href, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
-import tw from "twrnc";
 
 const EmployeesPage = () => {
   const db = getDb();
@@ -39,8 +38,8 @@ const EmployeesPage = () => {
         <>
           <NavBar />
 
-          <View style={tw`flex-1 bg-[#f2f2f2] p-4`}>
-            <Text style={tw`text-lg font-bold text-center mb-3`}>
+          <View className="flex-1 bg-[#f2f2f2] p-4">
+            <Text className="mb-3 text-center text-lg font-bold">
               {parent.name}
             </Text>
 

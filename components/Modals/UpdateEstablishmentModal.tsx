@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import tw from "twrnc";
 
 type Props = {
   db: any;
@@ -69,39 +68,37 @@ const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
             handleChange,
             setFieldTouched,
           }) => (
-            <View
-              style={tw`flex-1 bg-[rgba(0,0,0,0.4)] justify-center items-center`}
-            >
-              <View style={tw`bg-[#1E90FF] p-4 rounded-[0.625rem] w-4/5 `}>
+            <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
+              <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View>
-                  <Text style={tw`text-white mt-2.5`}>Name:</Text>
+                  <Text className="mt-2.5 text-white">Name:</Text>
                   <TextInput
-                    style={tw`bg-white rounded-[0.3125rem] px-2 h-[2.1875rem] mt-0.5`}
+                    className="mt-0.5 h-[2.1875rem] rounded-[0.3125rem] bg-white px-2"
                     placeholder="Enter name"
                     value={values.name}
                     onChangeText={handleChange("name")}
                     onBlur={() => setFieldTouched("name")}
                   />
                   {touched.name && errors.name && (
-                    <Text style={tw`text-red-500 text-[0.75rem]`}>
+                    <Text className="text-[0.75rem] text-red-500">
                       {errors.name}
                     </Text>
                   )}
                 </View>
 
-                <View style={tw`flex-row justify-end`}>
+                <View className="flex-row justify-end">
                   <TouchableOpacity
-                    style={tw`bg-white py-[0.3125rem] px-2.5 rounded mt-2.5 mr-2`}
+                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => setIsVisible(false)}
                   >
-                    <Text style={tw`font-bold`}>Cancel</Text>
+                    <Text className="font-bold">Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={tw`bg-white py-[0.3125rem] px-2.5 rounded mt-2.5 mr-2`}
+                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => handleSubmit()}
                   >
-                    <Text style={tw`font-bold`}>Update</Text>
+                    <Text className="font-bold">Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>

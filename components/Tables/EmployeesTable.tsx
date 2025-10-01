@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import tw from "twrnc";
 
 type Props = {
   db: Db;
@@ -49,37 +48,41 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
         placeholderTextColor="#888"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        style={tw`border border-[#ccc] rounded-lg p-2.5 mb-2.5 text-base`}
+        className="mb-2.5 rounded-lg border border-[#ccc] p-2.5 text-base"
       />
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-        <View style={tw`bg-white rounded-[0.625rem] overflow-hidden`}>
-          <View style={tw`flex-row items-center py-3 px-2 bg-[#2196F3]`}>
+        <View className="overflow-hidden rounded-[0.625rem] bg-white">
+          <View className="flex-row items-center bg-[#2196F3] px-2 py-3">
             <Text
-              style={tw.style(`font-bold text-white text-base`, {
+              className="text-base font-bold text-white"
+              style={{
                 flex: 2,
-              })}
+              }}
             >
               Name
             </Text>
             <Text
-              style={tw.style(`font-bold text-white text-base`, {
+              className="text-base font-bold text-white"
+              style={{
                 flex: 1,
-              })}
+              }}
             >
               Rate
             </Text>
             <Text
-              style={tw.style(`font-bold text-white text-base`, {
+              className="text-base font-bold text-white"
+              style={{
                 flex: 2,
-              })}
+              }}
             >
               Work Week
             </Text>
             <Text
-              style={tw.style(`font-bold text-white text-base`, {
+              className="text-base font-bold text-white"
+              style={{
                 flex: 1.5,
-              })}
+              }}
             >
               Actions
             </Text>
@@ -89,34 +92,38 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
             filteredRecords.map((record) => (
               <View
                 key={record.id}
-                style={tw`flex-row items-center py-2.5 px-2`}
+                className="flex-row items-center px-2 py-2.5"
               >
                 <Text
-                  style={tw.style(`text-[#333] text-sm`, {
+                  className="text-sm text-[#333]"
+                  style={{
                     flex: 2,
-                  })}
+                  }}
                 >
                   {record.first_name} {record.last_name}
                 </Text>
                 <Text
-                  style={tw.style(`text-[#333] text-sm`, {
+                  className="text-sm text-[#333]"
+                  style={{
                     flex: 1,
-                  })}
+                  }}
                 >
                   {record.rate}
                 </Text>
                 <Text
-                  style={tw.style(`text-[#333] text-sm`, {
+                  className="text-sm text-[#333]"
+                  style={{
                     flex: 2,
-                  })}
+                  }}
                 >
                   {record.start_day.slice(0, 3)} - {record.end_day.slice(0, 3)}
                 </Text>
 
                 <View
-                  style={tw.style(`flex-row justify-around`, {
+                  className="flex-row justify-around"
+                  style={{
                     flex: 1.5,
-                  })}
+                  }}
                 >
                   <TouchableOpacity onPress={() => setEmployee(record.id)}>
                     <Icon name="remove-red-eye" size={20} color="#2196F3" />
@@ -139,7 +146,7 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
               </View>
             ))
           ) : (
-            <Text style={tw`text-center my-2.5`}>No employees found.</Text>
+            <Text className="my-2.5 text-center">No employees found.</Text>
           )}
         </View>
       </ScrollView>

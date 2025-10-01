@@ -1,11 +1,10 @@
+import confirmAlert from "@/components/ConfirmAlert";
+import UpdateEstablishmentModal from "@/components/Modals/UpdateEstablishmentModal";
 import { Db, Establishment } from "@/types/globals";
 import { Href, Router } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import tw from "twrnc";
-import confirmAlert from "@/components/ConfirmAlert";
-import UpdateEstablishmentModal from "@/components/Modals/UpdateEstablishmentModal";
 
 type Props = {
   db: Db;
@@ -32,12 +31,10 @@ const EstablishmentsTable = ({
       data={records}
       keyExtractor={(record) => `${record.id}`}
       renderItem={({ item: record }) => (
-        <View
-          style={tw`flex-row justify-between bg-white p-2.5 my-1.5 border rounded-md`}
-        >
-          <Text style={tw`font-bold`}>{record.name}</Text>
+        <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
+          <Text className="font-bold">{record.name}</Text>
 
-          <View style={tw`flex-row gap-1`}>
+          <View className="flex-row gap-1">
             <TouchableOpacity
               onPress={() => setEstablishment(record.id, "employees")}
             >
