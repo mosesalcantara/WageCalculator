@@ -73,7 +73,7 @@ const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
                 <View>
                   <Text className="mt-2.5 text-white">Name:</Text>
                   <TextInput
-                    className="mt-0.5 h-[2.1875rem] rounded-[0.3125rem] bg-white px-2"
+                    className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                     placeholder="Enter name"
                     value={values.name}
                     onChangeText={handleChange("name")}
