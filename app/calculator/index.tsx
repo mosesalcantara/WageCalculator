@@ -149,7 +149,7 @@ const CalculatorPage = () => {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              className="h-[40rem]"
+              className="h-[41rem]"
             >
               <ScrollView>
                 <View className="gap-[1.875rem]">
