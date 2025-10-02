@@ -144,7 +144,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           )}
 
           <View>
-            <Text className="mb-1 text-sm font-bold text-[#333]">
+            <Text className="mb-1 text-base font-bold text-[#333]">
               Start Date
             </Text>
             <TouchableOpacity
@@ -159,7 +159,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
 
           <View>
-            <Text className="mb-1 text-sm font-bold text-[#333]">End Date</Text>
+            <Text className="mb-1 text-base font-bold text-[#333]">End Date</Text>
             <TouchableOpacity
               className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsEndDateModalVisible(true)}
@@ -172,7 +172,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
 
           <View>
-            <Text className="mb-1 text-sm font-bold text-[#333]">
+            <Text className="mb-1 text-base font-bold text-[#333]">
               {checkType() ? "Hours" : "Days"}
             </Text>
             <TextInput

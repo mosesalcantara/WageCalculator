@@ -166,7 +166,7 @@ const CalculatorPage = () => {
 
                 {type == "13th Month Pay" && (
                   <View className="mx-10 pt-4">
-                    <Text className="mb-1 mt-2.5 text-sm font-bold text-[#333]">
+                    <Text className="mb-1 mt-2.5 text-base font-bold text-[#333]">
                       Received
                     </Text>
                     <TextInput
