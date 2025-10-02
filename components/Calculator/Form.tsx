@@ -6,7 +6,7 @@ import {
   numberToLetter,
   periodFormat,
 } from "@/utils/globals";
-// import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -159,7 +159,9 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
 
           <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">End Date</Text>
+            <Text className="mb-1 text-base font-bold text-[#333]">
+              End Date
+            </Text>
             <TouchableOpacity
               className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsEndDateModalVisible(true)}
@@ -221,7 +223,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
         </View>
       </View>
 
-      {/* {isStartDateModalVisible && (
+      {isStartDateModalVisible && (
         <DateTimePicker
           value={formatDate(values[type].periods[index].start_date)}
           mode="date"
@@ -239,7 +241,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
             value && handleChange("end_date", value);
           }}
         />
-      )} */}
+      )}
     </>
   );
 };
