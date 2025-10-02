@@ -115,7 +115,7 @@ const CalculatorPage = () => {
                 {tabs.map((tab) => (
                   <TouchableOpacity
                     key={tab.name}
-                    className={`mx-[0.3125rem] h-10 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
+                    className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
                     onPress={() => setType(tab.name as ViolationTypes)}
                   >
                     <Icon
@@ -170,7 +170,7 @@ const CalculatorPage = () => {
                       Received
                     </Text>
                     <TextInput
-                      className="h-10 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       keyboardType="numeric"
                       placeholder="Enter pay received"
                       value={values[type].received}

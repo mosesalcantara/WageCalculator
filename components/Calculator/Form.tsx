@@ -148,7 +148,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               Start Date
             </Text>
             <TouchableOpacity
-              className="h-10 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsStartDateModalVisible(true)}
             >
               <Text>
@@ -161,7 +161,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           <View>
             <Text className="mb-1 text-sm font-bold text-[#333]">End Date</Text>
             <TouchableOpacity
-              className="h-10 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsEndDateModalVisible(true)}
             >
               <Text>
@@ -176,7 +176,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               {checkType() ? "Hours" : "Days"}
             </Text>
             <TextInput
-              className="h-10 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               keyboardType="numeric"
               placeholder={`Enter ${checkType() ? "hours" : "days"}`}
               value={values[type].periods[index].daysOrHours}
