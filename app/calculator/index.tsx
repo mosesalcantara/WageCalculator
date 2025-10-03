@@ -41,6 +41,8 @@ const CalculatorPage = () => {
   const [type, setType] = useState<ViolationTypes>("Basic Wage");
   const { parent, values, setValues } = useFetchViolations(db);
 
+  const violationType = values[type];
+
   const handleReceivedChange = (value: string) => {
     setValues((prev) => {
       return {
@@ -142,7 +144,7 @@ const CalculatorPage = () => {
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
                   Subtotal:{" "}
-                  {formatNumber(getTotal(values[type], parent.rate, type))}
+                  {formatNumber(getTotal(violationType, type))}
                 </Text>
               </View>
             </View>
@@ -153,7 +155,7 @@ const CalculatorPage = () => {
             >
               <ScrollView>
                 <View className="gap-[1.875rem]">
-                  {values[type].periods.map((_, index) => (
+                  {violationType.periods.map((_, index) => (
                     <Form
                       key={index}
                       parent={parent}
@@ -173,7 +175,7 @@ const CalculatorPage = () => {
                       className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       keyboardType="numeric"
                       placeholder="Enter pay received"
-                      value={values[type].received}
+                      value={violationType.received}
                       onChangeText={(value) => handleReceivedChange(value)}
                     />
                   </View>

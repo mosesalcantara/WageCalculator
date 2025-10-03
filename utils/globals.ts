@@ -1,5 +1,5 @@
 import * as schema from "@/db/schema";
-import { Period, ViolationType } from "@/types/globals";
+import { Period, ViolationTypes, ViolationValues } from "@/types/globals";
 import { format, isBefore, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -24,10 +24,21 @@ export const daysArray = [
   "Sunday",
 ];
 
+export const violationTypesArray = [
+  "Basic Wage",
+  "Overtime Pay",
+  "Night Differential",
+  "Special Day",
+  "Rest Day",
+  "Holiday Pay",
+  "13th Month Pay",
+];
+
 export const periodFormat = {
   start_date: "",
   end_date: "",
   daysOrHours: "",
+  rate: "",
 };
 
 export const periodsFormat = {
@@ -57,25 +68,24 @@ export const validate = (object: { [key: string]: string | number }) => {
   return Object.values(object).every((value) => value);
 };
 
-export const getRate = (startDate: string, rate: number) => {
-  const minimumRate = isBefore(startDate, "2024-12-23") ? 395 : 430;
-  const isBelow = rate < minimumRate;
-  const rateToUse = isBelow ? minimumRate : rate;
-
-  return {
-    isBelow: isBelow,
-    rateToUse: rateToUse,
-  };
+export const getMinimumRate = (startDate: string) => {
+  let minimumRate = 0;
+  if (startDate) {
+    minimumRate = isBefore(startDate, "2024-12-23") ? 395 : 430;
+  }
+  return minimumRate;
 };
 
-export const calculate = (period: Period, rate: number, type: string) => {
+export const calculate = (period: Period, type: string) => {
   let result = 0;
 
   if (validate(period)) {
     const daysOrHours = Number(period.daysOrHours);
-    const { isBelow, rateToUse } = getRate(period.start_date, rate);
+    const rate = Number(period.rate);
+    const minimumRate = getMinimumRate(period.start_date);
+    const rateToUse = Math.max(rate, minimumRate);
 
-    if (type == "Basic Wage" && isBelow) {
+    if (type == "Basic Wage") {
       result = (rateToUse - rate) * daysOrHours;
     } else if (type == "Overtime Pay") {
       result = (rateToUse / 8) * 0.25 * daysOrHours;
@@ -96,14 +106,29 @@ export const calculate = (period: Period, rate: number, type: string) => {
 };
 
 export const getTotal = (
-  violationType: ViolationType & { received?: string },
-  rate: number,
-  type: string
+  violationType: { periods: Period[]; received?: string },
+  type: string,
 ) => {
-  let result = violationType.periods.reduce(
-    (accumulator, period) => (accumulator += calculate(period, rate, type)),
-    0
-  );
+  let result = 0;
+  violationType.periods.forEach((period) => {
+    result += calculate(period, type);
+  });
   violationType.received && (result -= Number(violationType.received));
   return result;
+};
+
+export const getPeriodFormat = (rate?: number) => {
+  return { ...periodFormat, rate: `${rate ? `${rate}` : ""}` };
+};
+
+export const getInitialViolations = (rate?: number) => {
+  const values = {} as ViolationValues;
+  violationTypesArray.forEach((type) => {
+    const periodsFormat = { periods: [getPeriodFormat(rate)] };
+    values[type as ViolationTypes] =
+      type == "13th Month Pay"
+        ? { ...periodsFormat, received: "" }
+        : periodsFormat;
+  });
+  return values;
 };

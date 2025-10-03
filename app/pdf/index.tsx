@@ -1,11 +1,6 @@
 import NavBar from "@/components/NavBar";
 import useFetchEstablishmentViolations from "@/hooks/useFetchEstablishmentViolations";
-import {
-  Employee,
-  Period,
-  ViolationType,
-  ViolationValues,
-} from "@/types/globals";
+import { Employee, Period, ViolationValues } from "@/types/globals";
 import {
   calculate,
   formatDate,
@@ -97,7 +92,7 @@ const PDFPage = () => {
   };
 
   const renderViolationType = (
-    violationType: ViolationType & { received?: string },
+    violationType: { periods: Period[]; received?: string },
     rate: number,
     type: string,
   ) => {

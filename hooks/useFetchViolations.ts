@@ -1,6 +1,6 @@
 import { employees } from "@/db/schema";
-import { Db, Employee, Violations } from "@/types/globals";
-import { periodsFormat } from "@/utils/globals";
+import { Db, Employee, Violation, ViolationValues } from "@/types/globals";
+import { getInitialViolations } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
 import SessionStorage from "react-native-session-storage";
@@ -10,18 +10,7 @@ const useFetchViolations = (db: Db) => {
   const parent_id = SessionStorage.getItem("employee_id") as string;
 
   const [parent, setParent] = useState<Employee | undefined>();
-  const [values, setValues] = useState({
-    "Basic Wage": periodsFormat,
-    "Overtime Pay": periodsFormat,
-    "Night Differential": periodsFormat,
-    "Special Day": periodsFormat,
-    "Rest Day": periodsFormat,
-    "Holiday Pay": periodsFormat,
-    "13th Month Pay": {
-      ...periodsFormat,
-      received: "",
-    },
-  });
+  const [values, setValues] = useState<ViolationValues>(getInitialViolations());
 
   const handleFetch = useCallback(async () => {
     try {
@@ -30,7 +19,7 @@ const useFetchViolations = (db: Db) => {
         with: { violations: true },
       });
       if (data) {
-        let violations: Violations[] = [];
+        let violations: Violation[] = [];
         if (data.violations.length > 0) {
           violations = [
             {
@@ -39,6 +28,8 @@ const useFetchViolations = (db: Db) => {
             },
           ];
           setValues(JSON.parse(data.violations[0].values as string));
+        } else {
+          setValues(getInitialViolations(data.rate));
         }
         setParent({ ...data, violations: violations });
       }

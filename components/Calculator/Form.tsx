@@ -3,8 +3,9 @@ import {
   calculate,
   daysArray,
   formatNumber,
+  getMinimumRate,
+  getPeriodFormat,
   numberToLetter,
-  periodFormat,
 } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
@@ -23,6 +24,9 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
+
+  const periods = values[type].periods;
+  const period = values[type].periods[index];
 
   const formatDate = (date: string) => {
     return date ? new Date(date) : new Date();
@@ -89,20 +93,20 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
   };
 
   const setWorkingDays = (startDate: string, endDate: string) => {
-    if (startDate && endDate) {
-      const workingDays = getWorkingDays(startDate, endDate);
-      if (type == "Basic Wage" || type == "13th Month Pay") {
-        handleInitialChange("daysOrHours", workingDays, index);
-      }
+    const workingDays = getWorkingDays(startDate, endDate);
+    if (type == "Basic Wage" || type == "13th Month Pay") {
+      handleInitialChange("daysOrHours", workingDays, index);
     }
   };
+
+  const minimumRate = getMinimumRate(period.start_date);
 
   const addPeriod = () => {
     setValues((prev) => {
       return {
         ...prev,
         [type]: {
-          periods: [...prev[type as ViolationTypes].periods, periodFormat],
+          periods: [...prev[type].periods, getPeriodFormat(parent.rate)],
         },
       };
     });
@@ -118,26 +122,25 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
 
   const clearPeriod = () => {
     setValues((prev) => {
-      const updatedPeriods = prev[type as ViolationTypes].periods.map(
-        (period, periodIndex) => (index == periodIndex ? periodFormat : period),
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+        index == periodIndex ? getPeriodFormat() : period,
       );
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
 
   useEffect(() => {
-    const period = values[type].periods[index];
-    setWorkingDays(period.start_date, period.end_date);
-  }, [
-    values[type].periods[index].start_date,
-    values[type].periods[index].end_date,
-  ]);
+    const { start_date, end_date } = period;
+    if (start_date && end_date) {
+      setWorkingDays(start_date, end_date);
+    }
+  }, [period.start_date, period.end_date]);
 
   return (
     <>
       <View className="mx-10 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] p-2.5">
         <View className="gap-1">
-          {values[type].periods.length > 1 && (
+          {periods.length > 1 && (
             <Text className="text-center font-bold">
               Period {numberToLetter(index)}
             </Text>
@@ -151,9 +154,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsStartDateModalVisible(true)}
             >
-              <Text>
-                {values[type].periods[index].start_date || "Select start date"}
-              </Text>
+              <Text>{period.start_date || "Select start date"}</Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
           </View>
@@ -166,9 +167,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               onPress={() => setIsEndDateModalVisible(true)}
             >
-              <Text>
-                {values[type].periods[index].end_date || "Select end date"}
-              </Text>
+              <Text>{period.end_date || "Select end date"}</Text>
               <Icon name="date-range" size={20} color="#555" />
             </TouchableOpacity>
           </View>
@@ -181,8 +180,32 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               keyboardType="numeric"
               placeholder={`Enter ${checkType() ? "hours" : "days"}`}
-              value={values[type].periods[index].daysOrHours}
+              value={period.daysOrHours}
               onChangeText={(value) => handleChange("daysOrHours", value)}
+            />
+          </View>
+
+          <View>
+            <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
+            <TextInput
+              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              keyboardType="numeric"
+              placeholder="Enter Rate"
+              value={period.rate}
+              onChangeText={(value) => handleChange("rate", value)}
+            />
+          </View>
+
+          <View>
+            <Text className="mb-1 text-base font-bold text-[#333]">
+              Prevailing Rate
+            </Text>
+            <TextInput
+              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              keyboardType="numeric"
+              placeholder="Enter Prevailing Rate"
+              value={`${minimumRate == 0 ? "" : minimumRate}`}
+              onChangeText={(value) => handleChange("minimumRate", value)}
             />
           </View>
         </View>
@@ -191,16 +214,13 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           <Text className="text-base text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱
-              {formatNumber(
-                calculate(values[type].periods[index], parent.rate, type),
-              )}
+              ₱{formatNumber(calculate(period, type))}
             </Text>
           </Text>
         </View>
 
         <View className="mt-2.5 flex-row gap-2.5">
-          {values[type].periods.length - 1 == index && (
+          {periods.length - 1 == index && (
             <TouchableOpacity onPress={addPeriod}>
               <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 text-white">
                 Add
@@ -213,7 +233,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
             </Text>
           </TouchableOpacity>
 
-          {values[type].periods.length > 1 && (
+          {periods.length > 1 && (
             <TouchableOpacity onPress={removePeriod}>
               <Text className="rounded-md border border-[#e71414ff] bg-[#e71414ff] px-2.5 py-1.5 text-white">
                 Remove
@@ -225,7 +245,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
 
       {isStartDateModalVisible && (
         <DateTimePicker
-          value={formatDate(values[type].periods[index].start_date)}
+          value={formatDate(period.start_date)}
           mode="date"
           onChange={(_, value) => {
             value && handleChange("start_date", value);
@@ -235,7 +255,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
 
       {isEndDateModalVisible && (
         <DateTimePicker
-          value={formatDate(values[type].periods[index].end_date)}
+          value={formatDate(period.end_date)}
           mode="date"
           onChange={(_, value) => {
             value && handleChange("end_date", value);

@@ -23,10 +23,10 @@ export type Employee = {
   start_day: string;
   end_day: string;
   establishment_id?: number;
-  violations?: Violations[] | [];
+  violations?: Violation[] | [];
 };
 
-export type Violations = {
+export type Violation = {
   id: number;
   values: ViolationValues | string;
   employee_id: number;
@@ -42,21 +42,12 @@ export type ViolationTypes =
   | "13th Month Pay";
 
 export type ViolationValues = {
-  "Basic Wage": ViolationType;
-  "Overtime Pay": ViolationType;
-  "Night Differential": ViolationType;
-  "Special Day": ViolationType;
-  "Rest Day": ViolationType;
-  "Holiday Pay": ViolationType;
-  "13th Month Pay": ViolationType & { received: string };
-};
-
-export type ViolationType = {
-  periods: Period[];
+  [key in ViolationTypes]: { periods: Period[]; received?: string };
 };
 
 export type Period = {
   start_date: string;
   end_date: string;
   daysOrHours: string;
+  rate: string;
 };
