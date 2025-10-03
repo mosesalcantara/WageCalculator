@@ -154,7 +154,7 @@ const CalculatorPage = () => {
               className="h-[41rem]"
             >
               <ScrollView>
-                <View className="gap-[1.875rem]">
+                <View className="gap-7">
                   {violationType.periods.map((_, index) => (
                     <Form
                       key={index}

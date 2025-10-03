@@ -82,40 +82,42 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
           }) => (
             <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-                <View>
-                  <Text className="mt-2.5 text-white">First Name:</Text>
-                  <TextInput
-                    className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                    placeholder="Enter first name"
-                    value={values.first_name}
-                    onChangeText={handleChange("first_name")}
-                    onBlur={() => setFieldTouched("first_name")}
-                  />
-                  {touched.first_name && errors.first_name && (
-                    <Text className="text-[0.75rem] text-red-500">
-                      {errors.first_name}
-                    </Text>
-                  )}
+                <View className="flex-row flex-wrap justify-between gap-1">
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">First Name:</Text>
+                    <TextInput
+                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter first name"
+                      value={values.first_name}
+                      onChangeText={handleChange("first_name")}
+                      onBlur={() => setFieldTouched("first_name")}
+                    />
+                    {touched.first_name && errors.first_name && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.first_name}
+                      </Text>
+                    )}
+                  </View>
+
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">Last Name:</Text>
+                    <TextInput
+                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter last name"
+                      value={values.last_name}
+                      onChangeText={handleChange("last_name")}
+                      onBlur={() => setFieldTouched("last_name")}
+                    />
+                    {touched.last_name && errors.last_name && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.last_name}
+                      </Text>
+                    )}
+                  </View>
                 </View>
 
                 <View>
-                  <Text className="mt-2.5 text-white">Last Name:</Text>
-                  <TextInput
-                    className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                    placeholder="Enter last name"
-                    value={values.last_name}
-                    onChangeText={handleChange("last_name")}
-                    onBlur={() => setFieldTouched("last_name")}
-                  />
-                  {touched.last_name && errors.last_name && (
-                    <Text className="text-[0.75rem] text-red-500">
-                      {errors.last_name}
-                    </Text>
-                  )}
-                </View>
-
-                <View>
-                  <Text className="mt-2.5 text-white">Rate:</Text>
+                  <Text className="mt-1 text-white">Rate:</Text>
                   <TextInput
                     className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                     keyboardType="numeric"
@@ -131,38 +133,40 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                   )}
                 </View>
 
-                <View>
-                  <Text className="mt-2.5 text-white">Work Week Start:</Text>
-                  <Select
-                    name="start_day"
-                    options={daysOptions}
-                    placeholder="Select Day"
-                    value={values.start_day}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                  />
-                  {touched.start_day && errors.start_day && (
-                    <Text className="text-[0.75rem] text-red-500">
-                      {errors.start_day}
-                    </Text>
-                  )}
-                </View>
+                <View className="flex-row flex-wrap justify-between gap-1">
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">Work Week Start:</Text>
+                    <Select
+                      name="start_day"
+                      options={daysOptions}
+                      placeholder="Select Day"
+                      value={values.start_day}
+                      setFieldValue={setFieldValue}
+                      setFieldTouched={setFieldTouched}
+                    />
+                    {touched.start_day && errors.start_day && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.start_day}
+                      </Text>
+                    )}
+                  </View>
 
-                <View>
-                  <Text className="mt-2.5 text-white">Work Week End:</Text>
-                  <Select
-                    name="end_day"
-                    options={daysOptions}
-                    placeholder="Select Day"
-                    value={values.end_day}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                  />
-                  {touched.end_day && errors.end_day && (
-                    <Text className="text-[0.75rem] text-red-500">
-                      {errors.end_day}
-                    </Text>
-                  )}
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">Work Week End:</Text>
+                    <Select
+                      name="end_day"
+                      options={daysOptions}
+                      placeholder="Select Day"
+                      value={values.end_day}
+                      setFieldValue={setFieldValue}
+                      setFieldTouched={setFieldTouched}
+                    />
+                    {touched.end_day && errors.end_day && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.end_day}
+                      </Text>
+                    )}
+                  </View>
                 </View>
 
                 <View className="flex-row justify-end">

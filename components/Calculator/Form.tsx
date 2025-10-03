@@ -146,71 +146,72 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
             </Text>
           )}
 
-          <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">
-              Start Date
-            </Text>
-            <TouchableOpacity
-              className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-              onPress={() => setIsStartDateModalVisible(true)}
-            >
-              <Text>{period.start_date || "Select start date"}</Text>
-              <Icon name="date-range" size={20} color="#555" />
-            </TouchableOpacity>
+          <View className="flex-row flex-wrap justify-between gap-1">
+            <View className="w-[49%]">
+              <Text className="mb-1 text-base font-bold text-[#333]">
+                Start Date
+              </Text>
+              <TouchableOpacity
+                className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                onPress={() => setIsStartDateModalVisible(true)}
+              >
+                <Text>{period.start_date || "Select start date"}</Text>
+                <Icon name="date-range" size={20} color="#555" />
+              </TouchableOpacity>
+            </View>
+            <View className="w-[49%]">
+              <Text className="mb-1 text-base font-bold text-[#333]">
+                End Date
+              </Text>
+              <TouchableOpacity
+                className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                onPress={() => setIsEndDateModalVisible(true)}
+              >
+                <Text>{period.end_date || "Select end date"}</Text>
+                <Icon name="date-range" size={20} color="#555" />
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">
-              End Date
-            </Text>
-            <TouchableOpacity
-              className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-              onPress={() => setIsEndDateModalVisible(true)}
-            >
-              <Text>{period.end_date || "Select end date"}</Text>
-              <Icon name="date-range" size={20} color="#555" />
-            </TouchableOpacity>
-          </View>
-
-          <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">
-              {checkType() ? "Hours" : "Days"}
-            </Text>
-            <TextInput
-              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-              keyboardType="numeric"
-              placeholder={`Enter ${checkType() ? "hours" : "days"}`}
-              value={period.daysOrHours}
-              onChangeText={(value) => handleChange("daysOrHours", value)}
-            />
-          </View>
-
-          <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
-            <TextInput
-              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-              keyboardType="numeric"
-              placeholder="Enter Rate"
-              value={period.rate}
-              onChangeText={(value) => handleChange("rate", value)}
-            />
-          </View>
-
-          <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">
-              Prevailing Rate
-            </Text>
-            <TextInput
-              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-              keyboardType="numeric"
-              placeholder="Enter Prevailing Rate"
-              value={`${minimumRate == 0 ? "" : minimumRate}`}
-              onChangeText={(value) => handleChange("minimumRate", value)}
-            />
+          <View className="flex-row flex-wrap justify-between gap-1">
+            <View className="w-[32%]">
+              <Text className="mb-1 text-base font-bold text-[#333]">
+                {checkType() ? "Hours" : "Days"}
+              </Text>
+              <TextInput
+                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                keyboardType="numeric"
+                placeholder={`Enter ${checkType() ? "hours" : "days"}`}
+                value={period.daysOrHours}
+                onChangeText={(value) => handleChange("daysOrHours", value)}
+              />
+            </View>
+            <View className="w-[32%]">
+              <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
+              <TextInput
+                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                keyboardType="numeric"
+                placeholder="Enter Rate"
+                value={period.rate}
+                onChangeText={(value) => handleChange("rate", value)}
+              />
+            </View>
+            <View className="w-[32%]">
+              <Text className="mb-1 text-base font-bold text-[#333]">
+                Prevailing Rate
+              </Text>
+              <TextInput
+                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                keyboardType="numeric"
+                placeholder="Enter Rate"
+                value={`${minimumRate == 0 ? "" : minimumRate}`}
+                onChangeText={(value) => handleChange("minimumRate", value)}
+              />
+            </View>
           </View>
         </View>
 
-        <View className="mt-4 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
+        <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
           <Text className="text-base text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
