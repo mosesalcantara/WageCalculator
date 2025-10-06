@@ -55,7 +55,7 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
         <View className="overflow-hidden rounded-[0.625rem] bg-white">
           <View className="flex-row items-center bg-[#2196F3] px-2 py-3">
             <Text
-              className="text-base font-bold text-white"
+              className="text-base font-bold text-white text-center"
               style={{
                 flex: 2,
               }}
@@ -73,13 +73,13 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
             <Text
               className="text-base font-bold text-white"
               style={{
-                flex: 2,
+                flex: 1,
               }}
             >
-              Work Week
+              Schedule
             </Text>
             <Text
-              className="text-base font-bold text-white"
+              className="text-base font-bold text-white text-center"
               style={{
                 flex: 1.5,
               }}
@@ -100,7 +100,8 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
                     flex: 2,
                   }}
                 >
-                  {record.first_name} {record.last_name}
+                  {record.last_name}, {record.first_name}{" "}
+                  {record.middle_name.slice(0, 1).toUpperCase()}.
                 </Text>
                 <Text
                   className="text-sm text-[#333]"
@@ -113,7 +114,7 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
                 <Text
                   className="text-sm text-[#333]"
                   style={{
-                    flex: 2,
+                    flex: 1,
                   }}
                 >
                   {record.start_day.slice(0, 3)} - {record.end_day.slice(0, 3)}

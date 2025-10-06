@@ -79,22 +79,6 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">First Name:</Text>
-                    <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                      placeholder="Enter first name"
-                      value={values.first_name}
-                      onChangeText={handleChange("first_name")}
-                      onBlur={() => setFieldTouched("first_name")}
-                    />
-                    {touched.first_name && errors.first_name && (
-                      <Text className="text-[0.75rem] text-red-500">
-                        {errors.first_name}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View className="w-[49%]">
                     <Text className="mt-1 text-white">Last Name:</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
@@ -106,6 +90,22 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
                     {touched.last_name && errors.last_name && (
                       <Text className="text-[0.75rem] text-red-500">
                         {errors.last_name}
+                      </Text>
+                    )}
+                  </View>
+
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">First Name:</Text>
+                    <TextInput
+                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter first name"
+                      value={values.first_name}
+                      onChangeText={handleChange("first_name")}
+                      onBlur={() => setFieldTouched("first_name")}
+                    />
+                    {touched.first_name && errors.first_name && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.first_name}
                       </Text>
                     )}
                   </View>
