@@ -152,8 +152,6 @@ const PDFPage = () => {
     let keyword = type;
     if (type == "Basic Wage") {
       keyword = "Wages";
-    } else if (type == "Night Differential") {
-      keyword = "Night Shift Differential";
     } else if (type == "Special Day") {
       keyword = "Premium Pay on Special Day";
     } else if (type == "Rest Day") {
@@ -168,7 +166,7 @@ const PDFPage = () => {
       keyword += "day";
     } else if (type == "Overtime Pay") {
       keyword += "OT hour";
-    } else if (type == "Night Differential") {
+    } else if (type == "Night Shift Differential") {
       keyword += "night-shift hour";
     } else if (type == "Special Day") {
       keyword += "special day";
@@ -219,7 +217,7 @@ const PDFPage = () => {
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
-      case "Night Differential":
+      case "Night Shift Differential":
         html += `<p>Php${formattedRateToUse} / 8 x 10% x ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "Special Day":

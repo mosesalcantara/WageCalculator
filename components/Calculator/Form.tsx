@@ -33,7 +33,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
   };
 
   const checkType = () => {
-    return ["Overtime Pay", "Night Differential"].includes(type);
+    return ["Overtime Pay", "Night Shift Differential"].includes(type);
   };
 
   const getIncludedDays = (startDay: string, endDay: string) => {

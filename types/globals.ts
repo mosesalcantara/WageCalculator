@@ -37,7 +37,7 @@ export type Violation = {
 export type ViolationTypes =
   | "Basic Wage"
   | "Overtime Pay"
-  | "Night Differential"
+  | "Night Shift Differential"
   | "Special Day"
   | "Rest Day"
   | "Holiday Pay"

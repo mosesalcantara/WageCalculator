@@ -42,7 +42,7 @@ const CalculatorPage = () => {
     const tabs = [
       { name: "Basic Wage", icon: "payments" },
       { name: "Overtime Pay", icon: "access-time" },
-      { name: "Night Differential", icon: "nights-stay" },
+      { name: "Night Shift Differential", icon: "nights-stay" },
       { name: "Special Day", icon: "star" },
       { name: "Rest Day", icon: "coffee" },
       { name: "Holiday Pay", icon: "event-available" },
@@ -51,7 +51,7 @@ const CalculatorPage = () => {
 
     let excluded: string[] = [];
     if (size == "Employing 1 to 5 workers") {
-      excluded = ["Holiday Pay", "Night Differential"];
+      excluded = ["Holiday Pay", "Night Shift Differential"];
     } else if (size == "Employing 1 to 9 workers") {
       excluded = ["Holiday Pay"];
     }

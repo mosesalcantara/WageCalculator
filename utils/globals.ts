@@ -64,7 +64,7 @@ export const daysArray = [
 export const violationTypesArray = [
   "Basic Wage",
   "Overtime Pay",
-  "Night Differential",
+  "Night Shift Differential",
   "Special Day",
   "Rest Day",
   "Holiday Pay",
@@ -155,7 +155,7 @@ export const calculate = (period: Period, type: string) => {
       result = (rateToUse - rate) * daysOrHours;
     } else if (type == "Overtime Pay") {
       result = (rateToUse / 8) * 0.25 * daysOrHours;
-    } else if (type == "Night Differential") {
+    } else if (type == "Night Shift Differential") {
       result = (rateToUse / 8) * 0.1 * daysOrHours;
     } else if (type == "Special Day") {
       result = rateToUse * 0.3 * daysOrHours;
