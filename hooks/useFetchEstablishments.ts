@@ -1,4 +1,5 @@
 import { Db, Establishment } from "@/types/globals";
+import { toastVisibilityTime } from "@/utils/globals";
 import { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
@@ -16,6 +17,7 @@ const useFetchEstablishments = (db: Db) => {
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   }, []);
@@ -24,7 +26,7 @@ const useFetchEstablishments = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { records, refetch: handleFetch }
+  return { records, refetch: handleFetch };
 };
 
 export default useFetchEstablishments;

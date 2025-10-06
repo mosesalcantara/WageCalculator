@@ -4,6 +4,8 @@ import { differenceInDays, format, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
+export const toastVisibilityTime = 1000
+
 export const wageOrders = [
   {
     name: "RB-MIMAROPA-09",

@@ -3,7 +3,12 @@ import NavBar from "@/components/NavBar";
 import { violations } from "@/db/schema";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import { ViolationTypes, ViolationValues } from "@/types/globals";
-import { formatNumber, getDb, getTotal } from "@/utils/globals";
+import {
+  formatNumber,
+  getDb,
+  getTotal,
+  toastVisibilityTime,
+} from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
@@ -79,12 +84,14 @@ const CalculatorPage = () => {
       Toast.show({
         type: "success",
         text1: "Changes Saved",
+        visibilityTime: toastVisibilityTime,
       });
     } catch (error) {
       console.error(error);
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   };

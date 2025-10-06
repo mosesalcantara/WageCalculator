@@ -1,5 +1,6 @@
 import { establishments } from "@/db/schema";
-import { Db, Establishment, Violations } from "@/types/globals";
+import { Db, Establishment, Violation } from "@/types/globals";
+import { toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
 import SessionStorage from "react-native-session-storage";
@@ -17,7 +18,7 @@ const useFetchEstablishmentViolations = (db: Db) => {
       });
       if (data) {
         const employeesData = data.employees.map((employee) => {
-          let violations: Violations[] = [];
+          let violations: Violation[] = [];
           if (employee.violations.length > 0) {
             violations = [
               {
@@ -38,6 +39,7 @@ const useFetchEstablishmentViolations = (db: Db) => {
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   }, []);

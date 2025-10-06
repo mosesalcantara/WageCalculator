@@ -6,7 +6,7 @@ import {
   Violation,
   ViolationValues,
 } from "@/types/globals";
-import { getInitialViolations } from "@/utils/globals";
+import { getInitialViolations, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
 import SessionStorage from "react-native-session-storage";
@@ -49,6 +49,7 @@ const useFetchViolations = (db: Db) => {
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   }, []);

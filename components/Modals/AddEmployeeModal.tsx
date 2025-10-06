@@ -2,7 +2,7 @@ import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
 import { Employee, Establishment, Override } from "@/types/globals";
-import { daysOptions } from "@/utils/globals";
+import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -42,12 +42,14 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
       Toast.show({
         type: "success",
         text1: "Added Employee",
+        visibilityTime: toastVisibilityTime,
       });
     } catch (error) {
       console.error(error);
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   };

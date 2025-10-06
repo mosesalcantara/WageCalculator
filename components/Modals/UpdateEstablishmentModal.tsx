@@ -2,6 +2,7 @@ import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import { establishment as validationSchema } from "@/schemas/globals";
 import { Establishment } from "@/types/globals";
+import { toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
@@ -34,12 +35,14 @@ const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
       Toast.show({
         type: "success",
         text1: "Updated Establishment",
+        visibilityTime: toastVisibilityTime,
       });
     } catch (error) {
       console.error(error);
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   };

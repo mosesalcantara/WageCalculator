@@ -2,7 +2,7 @@ import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
 import { Employee } from "@/types/globals";
-import { daysOptions } from "@/utils/globals";
+import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
@@ -39,12 +39,14 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
       Toast.show({
         type: "success",
         text1: "Updated Employee",
+        visibilityTime: toastVisibilityTime,
       });
     } catch (error) {
       console.error(error);
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   };

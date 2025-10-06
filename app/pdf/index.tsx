@@ -9,6 +9,7 @@ import {
   getMinimumRate,
   getTotal,
   numberToLetter,
+  toastVisibilityTime,
   validate,
 } from "@/utils/globals";
 import * as Print from "expo-print";
@@ -334,6 +335,7 @@ const PDFPage = () => {
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
       });
     }
   };
