@@ -1,0 +1,99 @@
+{
+    "2020": [
+        {
+            "name": "New Year's Day",
+            "date": "2020-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2020-01-25",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "EDSA People Power Revolution Anniversary",
+            "date": "2020-02-25",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2020-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2020-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2020-04-10",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2020-04-11",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2020-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2020-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2020-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2020-08-31",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saint's Day",
+            "date": "2020-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Additional special (non-working) day",
+            "date": "2020-11-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2020-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2020-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Additional special (non-working) day",
+            "date": "2020-04-11",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2020-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2020-12-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Last Day of the Year",
+            "date": "2020-12-31",
+            "type": "Special (Non-Working) Holiday"
+        }
+    ]
+}
