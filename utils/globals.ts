@@ -4,14 +4,14 @@ import { differenceInDays, format, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
-export const toastVisibilityTime = 1000
+export const toastVisibilityTime = 1000;
 
 export const wageOrders = [
   {
     name: "RB-MIMAROPA-09",
     date: "2019-02-01",
     rates: {
-      oneToNine: 283,
+      lessThanTen: 283,
       tenOrMore: 320,
     },
   },
@@ -19,23 +19,23 @@ export const wageOrders = [
     name: "RB-MIMAROPA-10",
     date: "2022-06-10",
     rates: {
-      oneToNine: 329,
+      lessThanTen: 329,
       tenOrMore: 355,
     },
   },
-    {
+  {
     name: "RB-MIMAROPA-11",
     date: "2023-12-07",
     rates: {
-      oneToNine: 369,
+      lessThanTen: 369,
       tenOrMore: 395,
     },
   },
-   {
+  {
     name: "RB-MIMAROPA-12",
     date: "2024-12-23",
     rates: {
-      oneToNine: 404,
+      lessThanTen: 404,
       tenOrMore: 430,
     },
   },
@@ -105,33 +105,37 @@ export const validate = (object: { [key: string]: string | number }) => {
   return Object.values(object).every((value) => value);
 };
 
-export const getMinimumRate = (startDate: string, endDate: string) => {
-  const minimumRates = [
-    { name: "RB-MIMAROPA-10", date: "2022-06-22", minimum_rate: 355 },
-    { name: "RB-MIMAROPA-11", date: "2023-12-07", minimum_rate: 395 },
-    { name: "RB-MIMAROPA-12", date: "2024-12-23", minimum_rate: 430 },
-  ];
-
-  minimumRates.sort((a, b) => {
+export const getMinimumRate = (
+  startDate: string,
+  endDate: string,
+  size: string,
+) => {
+  wageOrders.sort((a, b) => {
     return Number(new Date(a.date)) - Number(new Date(b.date));
   });
 
   let rate = 0;
   const isValid =
-    startDate && endDate && differenceInDays(endDate, startDate) >= 0;
+    startDate && endDate && size && differenceInDays(endDate, startDate) >= 0;
 
   if (isValid) {
-    if (differenceInDays(minimumRates[0].date, startDate) > 0) {
-      rate = minimumRates[0].minimum_rate;
+    if (differenceInDays(wageOrders[0].date, startDate) > 0) {
+      rate =
+        size == "Employing 10 or more workers"
+          ? wageOrders[0].rates.tenOrMore
+          : wageOrders[0].rates.lessThanTen;
     } else {
       let index = 0;
-      for (const minimumRate of minimumRates) {
-        if (differenceInDays(minimumRate.date, startDate) <= 0) {
+      for (const wageOrder of wageOrders) {
+        if (differenceInDays(wageOrder.date, startDate) <= 0) {
           if (
-            index == minimumRates.length - 1 ||
-            differenceInDays(minimumRates[index + 1].date, endDate) > 0
+            index == wageOrders.length - 1 ||
+            differenceInDays(wageOrders[index + 1].date, endDate) > 0
           ) {
-            rate = minimumRate.minimum_rate;
+            rate =
+              size == "Employing 10 or more workers"
+                ? wageOrder.rates.tenOrMore
+                : wageOrder.rates.lessThanTen;
             break;
           }
         }
@@ -142,13 +146,17 @@ export const getMinimumRate = (startDate: string, endDate: string) => {
   return rate;
 };
 
-export const calculate = (period: Period, type: string) => {
+export const calculate = (period: Period, type: string, size: string) => {
   let result = 0;
 
   if (validate(period)) {
     const daysOrHours = Number(period.daysOrHours);
     const rate = Number(period.rate);
-    const minimumRate = getMinimumRate(period.start_date, period.end_date);
+    const minimumRate = getMinimumRate(
+      period.start_date,
+      period.end_date,
+      size,
+    );
     const rateToUse = Math.max(rate, minimumRate);
 
     if (type == "Basic Wage") {
@@ -174,10 +182,11 @@ export const calculate = (period: Period, type: string) => {
 export const getTotal = (
   violationType: { periods: Period[]; received?: string },
   type: string,
+  size: string,
 ) => {
   let result = 0;
   violationType.periods.forEach((period) => {
-    result += calculate(period, type);
+    result += calculate(period, type, size);
   });
   violationType.received && (result -= Number(violationType.received));
   return result;

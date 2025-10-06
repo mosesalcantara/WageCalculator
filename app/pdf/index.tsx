@@ -67,7 +67,7 @@ const PDFPage = () => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(violationType, type);
+        total += getTotal(violationType, type, record!.size);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -102,7 +102,7 @@ const PDFPage = () => {
 
     violationType.periods.forEach((period, index) => {
       if (validate(period)) {
-        subtotal += calculate(period, type);
+        subtotal += calculate(period, type, record!.size);
         html += `
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
@@ -188,7 +188,7 @@ const PDFPage = () => {
       { name: "RB-MIMAROPA-12", date: "2024-12-23", minimum_rate: 430 },
     ];
 
-    const rateToUse = getMinimumRate(period.start_date, period.end_date);
+    const rateToUse = getMinimumRate(period.start_date, period.end_date, record!.size);
 
     const minimumRate = minimumRates.find((minimumRate) => {
       return minimumRate.minimum_rate == rateToUse;
@@ -201,7 +201,7 @@ const PDFPage = () => {
         </p>`);
 
     const formattedRateToUse = formatNumber(rateToUse);
-    const total = formatNumber(calculate(period, type));
+    const total = formatNumber(calculate(period, type, record!.size));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {

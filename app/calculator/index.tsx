@@ -165,7 +165,7 @@ const CalculatorPage = () => {
                   )}`}
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
-                  Subtotal: {formatNumber(getTotal(violationType, type))}
+                  Subtotal: {formatNumber(getTotal(violationType, type, grandparent.size))}
                 </Text>
               </View>
             </View>
@@ -179,6 +179,7 @@ const CalculatorPage = () => {
                   {violationType.periods.map((_, index) => (
                     <Form
                       key={index}
+                      grandparent={grandparent}
                       parent={parent}
                       type={type}
                       index={index}

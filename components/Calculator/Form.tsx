@@ -1,4 +1,9 @@
-import { Employee, ViolationTypes, ViolationValues } from "@/types/globals";
+import {
+  Employee,
+  Establishment,
+  ViolationTypes,
+  ViolationValues,
+} from "@/types/globals";
 import {
   calculate,
   daysArray,
@@ -14,13 +19,14 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
+  grandparent: Establishment;
   parent: Employee;
   type: ViolationTypes;
   index: number;
   valuesState: [ViolationValues, Dispatch<SetStateAction<ViolationValues>>];
 };
 
-const Form = ({ parent, type, index, valuesState }: Props) => {
+const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [values, setValues] = valuesState;
@@ -99,7 +105,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
     }
   };
 
-  const minimumRate = getMinimumRate(period.start_date, period.end_date);
+  const minimumRate = getMinimumRate(period.start_date, period.end_date, grandparent.size);
 
   const addPeriod = () => {
     setValues((prev) => {
@@ -219,7 +225,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           <Text className="text-base text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱{formatNumber(calculate(period, type))}
+              ₱{formatNumber(calculate(period, type, grandparent.size))}
             </Text>
           </Text>
         </View>
