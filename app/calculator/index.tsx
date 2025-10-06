@@ -160,12 +160,15 @@ const CalculatorPage = () => {
             <View className="flex-row items-center justify-between px-2.5">
               <View className="py-2.5">
                 <Text className="ml-1.5 text-xl font-bold">
-                  {`${parent.first_name} ${parent.last_name} - ${formatNumber(
+                  {`${parent.last_name}, ${parent.first_name} ${parent.middle_name.slice(0, 1).toUpperCase()}. - ${formatNumber(
                     parent.rate,
                   )}`}
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
-                  Subtotal: {formatNumber(getTotal(violationType, type, grandparent.size))}
+                  Subtotal:{" "}
+                  {formatNumber(
+                    getTotal(violationType, type, grandparent.size),
+                  )}
                 </Text>
               </View>
             </View>

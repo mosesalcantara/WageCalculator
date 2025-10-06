@@ -188,7 +188,11 @@ const PDFPage = () => {
       { name: "RB-MIMAROPA-12", date: "2024-12-23", minimum_rate: 430 },
     ];
 
-    const rateToUse = getMinimumRate(period.start_date, period.end_date, record!.size);
+    const rateToUse = getMinimumRate(
+      period.start_date,
+      period.end_date,
+      record!.size,
+    );
 
     const minimumRate = minimumRates.find((minimumRate) => {
       return minimumRate.minimum_rate == rateToUse;
