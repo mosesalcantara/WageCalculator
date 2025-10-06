@@ -1,3 +1,4 @@
+import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import { establishment as validationSchema } from "@/schemas/globals";
 import { Establishment, Override } from "@/types/globals";
@@ -14,6 +15,7 @@ type Props = {
 const AddEstablishmentModal = ({ db, refetch }: Props) => {
   const initialValues = {
     name: "",
+    size: "Employing 10 or more workers",
   };
 
   const [isVisible, setIsVisible] = useState(false);
@@ -71,6 +73,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
             handleSubmit,
             handleChange,
             setFieldTouched,
+            setFieldValue,
           }) => (
             <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
@@ -86,6 +89,36 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                   {touched.name && errors.name && (
                     <Text className="text-[0.75rem] text-red-500">
                       {errors.name}
+                    </Text>
+                  )}
+                </View>
+
+                <View>
+                  <Text className="mt-1 text-white">Size:</Text>
+                  <Select
+                    name="size"
+                    options={[
+                      {
+                        label: "Employing 1 to 5 workers",
+                        value: "Employing 1 to 5 workers",
+                      },
+                      {
+                        label: "Employing 1 to 9 workers",
+                        value: "Employing 1 to 9 workers",
+                      },
+                      {
+                        label: "Employing 10 or more workers",
+                        value: "Employing 10 or more workers",
+                      },
+                    ]}
+                    placeholder="Select Size"
+                    value={values.size}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                  />
+                  {touched.size && errors.size && (
+                    <Text className="text-[0.75rem] text-red-500">
+                      {errors.size}
                     </Text>
                   )}
                 </View>

@@ -12,13 +12,15 @@ export type Db = ExpoSQLiteDatabase<
 export type Establishment = {
   id: number;
   name: string;
+  size: string;
   employees?: Employee[];
 };
 
 export type Employee = {
   id: number;
-  first_name: string;
   last_name: string;
+  first_name: string;
+  middle_name: string;
   rate: number;
   start_day: string;
   end_day: string;

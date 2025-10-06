@@ -111,21 +111,39 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
                   </View>
                 </View>
 
-                <View>
-                  <Text className="mt-1 text-white">Rate:</Text>
-                  <TextInput
-                    className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                    keyboardType="numeric"
-                    placeholder="Enter rate"
-                    value={values.rate ? `${values.rate}` : ""}
-                    onChangeText={handleChange("rate")}
-                    onBlur={() => setFieldTouched("rate")}
-                  />
-                  {touched.rate && errors.rate && (
-                    <Text className="text-[0.75rem] text-red-500">
-                      {errors.rate}
-                    </Text>
-                  )}
+                <View className="flex-row flex-wrap justify-between gap-1">
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">Middle Name:</Text>
+                    <TextInput
+                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter middle name"
+                      value={values.middle_name}
+                      onChangeText={handleChange("middle_name")}
+                      onBlur={() => setFieldTouched("middle_name")}
+                    />
+                    {touched.middle_name && errors.middle_name && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.middle_name}
+                      </Text>
+                    )}
+                  </View>
+
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white">Rate:</Text>
+                    <TextInput
+                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      keyboardType="numeric"
+                      placeholder="Enter rate"
+                      value={values.rate ? `${values.rate}` : ""}
+                      onChangeText={handleChange("rate")}
+                      onBlur={() => setFieldTouched("rate")}
+                    />
+                    {touched.rate && errors.rate && (
+                      <Text className="text-[0.75rem] text-red-500">
+                        {errors.rate}
+                      </Text>
+                    )}
+                  </View>
                 </View>
 
                 <View className="flex-row flex-wrap justify-between gap-1">

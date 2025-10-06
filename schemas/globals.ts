@@ -2,12 +2,17 @@ import * as Yup from "yup";
 
 export const establishment = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
+  size: Yup.string().trim().required().label("Size"),
 });
 
 export const employee = Yup.object().shape({
-  first_name: Yup.string().trim().required().label("First Name"),
   last_name: Yup.string().trim().required().label("Last Name"),
-  rate: Yup.number().typeError("Rate must be a number").required().label("Rate"),
+  first_name: Yup.string().trim().required().label("First Name"),
+  middle_name: Yup.string().trim().required().label("Middle Name"),
+  rate: Yup.number()
+    .typeError("Rate must be a number")
+    .required()
+    .label("Rate"),
   start_day: Yup.string().required().label("Start Day"),
   end_day: Yup.string().required().label("End Day"),
 });

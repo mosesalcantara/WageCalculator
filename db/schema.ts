@@ -4,12 +4,14 @@ import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 export const establishments = sqliteTable("establishments", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   name: text("name").notNull(),
+  size: text("size").notNull(),
 });
 
 export const employees = sqliteTable("employees", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
-  first_name: text("first_name").notNull(),
   last_name: text("last_name").notNull(),
+  first_name: text("first_name").notNull(),
+  middle_name: text("middle_name").notNull(),
   rate: real("rate").notNull(),
   start_day: text("start_day").notNull(),
   end_day: text("end_day").notNull(),

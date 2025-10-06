@@ -1,0 +1,1 @@
+ALTER TABLE `employees` ADD `middle_name` text NOT NULL;
