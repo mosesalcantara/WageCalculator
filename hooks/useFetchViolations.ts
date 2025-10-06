@@ -1,5 +1,11 @@
-import { employees } from "@/db/schema";
-import { Db, Employee, Violation, ViolationValues } from "@/types/globals";
+import { employees, establishments } from "@/db/schema";
+import {
+  Db,
+  Employee,
+  Establishment,
+  Violation,
+  ViolationValues,
+} from "@/types/globals";
 import { getInitialViolations } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
@@ -9,6 +15,7 @@ import Toast from "react-native-toast-message";
 const useFetchViolations = (db: Db) => {
   const parent_id = SessionStorage.getItem("employee_id") as string;
 
+  const [grandparent, setGrandparent] = useState<Establishment | undefined>();
   const [parent, setParent] = useState<Employee | undefined>();
   const [values, setValues] = useState<ViolationValues>(getInitialViolations());
 
@@ -32,6 +39,10 @@ const useFetchViolations = (db: Db) => {
           setValues(getInitialViolations(data.rate));
         }
         setParent({ ...data, violations: violations });
+        const establishmentData = await db.query.establishments.findFirst({
+          where: eq(establishments.id, Number(data.establishment_id)),
+        });
+        setGrandparent(establishmentData);
       }
     } catch (error) {
       console.error(error);
@@ -46,7 +57,7 @@ const useFetchViolations = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { parent, values, setValues };
+  return { grandparent, parent, values, setValues };
 };
 
 export default useFetchViolations;

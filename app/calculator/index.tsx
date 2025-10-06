@@ -28,20 +28,35 @@ const CalculatorPage = () => {
   const router = useRouter();
   const parent_id = SessionStorage.getItem("employee_id") as string;
 
-  const tabs = [
-    { name: "Basic Wage", icon: "payments" },
-    { name: "Overtime Pay", icon: "access-time" },
-    { name: "Night Differential", icon: "nights-stay" },
-    { name: "Special Day", icon: "star" },
-    { name: "Rest Day", icon: "coffee" },
-    { name: "Holiday Pay", icon: "event-available" },
-    { name: "13th Month Pay", icon: "card-giftcard" },
-  ];
-
   const [type, setType] = useState<ViolationTypes>("Basic Wage");
-  const { parent, values, setValues } = useFetchViolations(db);
+  const { grandparent, parent, values, setValues } = useFetchViolations(db);
 
   const violationType = values[type];
+
+  const getTabs = (size: string) => {
+    const tabs = [
+      { name: "Basic Wage", icon: "payments" },
+      { name: "Overtime Pay", icon: "access-time" },
+      { name: "Night Differential", icon: "nights-stay" },
+      { name: "Special Day", icon: "star" },
+      { name: "Rest Day", icon: "coffee" },
+      { name: "Holiday Pay", icon: "event-available" },
+      { name: "13th Month Pay", icon: "card-giftcard" },
+    ];
+
+    let excluded: string[] = [];
+    if (size == "Employing 1 to 5 workers") {
+      excluded = ["Holiday Pay", "Night Differential"];
+    } else if (size == "Employing 1 to 9 workers") {
+      excluded = ["Holiday Pay"];
+    }
+
+    const filteredTabs = tabs.filter((tab) => {
+      return !excluded.includes(tab.name);
+    });
+
+    return filteredTabs;
+  };
 
   const handleReceivedChange = (value: string) => {
     setValues((prev) => {
@@ -103,7 +118,7 @@ const CalculatorPage = () => {
 
   return (
     <>
-      {parent && values && (
+      {grandparent && parent && values && (
         <>
           <View className="flex-1 bg-[#f5f5f5]">
             <NavBar />
@@ -114,7 +129,7 @@ const CalculatorPage = () => {
                 showsHorizontalScrollIndicator={false}
                 className="border-b border-b-[#ddd] bg-white py-2.5"
               >
-                {tabs.map((tab) => (
+                {getTabs(grandparent.size).map((tab) => (
                   <TouchableOpacity
                     key={tab.name}
                     className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
@@ -143,8 +158,7 @@ const CalculatorPage = () => {
                   )}`}
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
-                  Subtotal:{" "}
-                  {formatNumber(getTotal(violationType, type))}
+                  Subtotal: {formatNumber(getTotal(violationType, type))}
                 </Text>
               </View>
             </View>
