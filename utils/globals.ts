@@ -4,6 +4,41 @@ import { differenceInDays, format, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
+export const wageOrders = [
+  {
+    name: "RB-MIMAROPA-09",
+    date: "2019-02-01",
+    rates: {
+      oneToNine: 283,
+      tenOrMore: 320,
+    },
+  },
+  {
+    name: "RB-MIMAROPA-10",
+    date: "2022-06-10",
+    rates: {
+      oneToNine: 329,
+      tenOrMore: 355,
+    },
+  },
+    {
+    name: "RB-MIMAROPA-11",
+    date: "2023-12-07",
+    rates: {
+      oneToNine: 369,
+      tenOrMore: 395,
+    },
+  },
+   {
+    name: "RB-MIMAROPA-12",
+    date: "2024-12-23",
+    rates: {
+      oneToNine: 404,
+      tenOrMore: 430,
+    },
+  },
+];
+
 export const daysOptions = [
   { label: "Monday", value: "Monday" },
   { label: "Tuesday", value: "Tuesday" },
