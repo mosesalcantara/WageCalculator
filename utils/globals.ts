@@ -1,6 +1,6 @@
 import * as schema from "@/db/schema";
 import { Period, ViolationTypes, ViolationValues } from "@/types/globals";
-import { format, isBefore, parse } from "date-fns";
+import { differenceInDays, format, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
@@ -68,12 +68,41 @@ export const validate = (object: { [key: string]: string | number }) => {
   return Object.values(object).every((value) => value);
 };
 
-export const getMinimumRate = (startDate: string) => {
-  let minimumRate = 0;
-  if (startDate) {
-    minimumRate = isBefore(startDate, "2024-12-23") ? 395 : 430;
+export const getMinimumRate = (startDate: string, endDate: string) => {
+  const minimumRates = [
+    { name: "RB-MIMAROPA-10", date: "2022-06-22", minimum_rate: 355 },
+    { name: "RB-MIMAROPA-11", date: "2023-12-07", minimum_rate: 395 },
+    { name: "RB-MIMAROPA-12", date: "2024-12-23", minimum_rate: 430 },
+  ];
+
+  minimumRates.sort((a, b) => {
+    return Number(new Date(a.date)) - Number(new Date(b.date));
+  });
+
+  let rate = 0;
+  const isValid =
+    startDate && endDate && differenceInDays(endDate, startDate) >= 0;
+
+  if (isValid) {
+    if (differenceInDays(minimumRates[0].date, startDate) > 0) {
+      rate = minimumRates[0].minimum_rate;
+    } else {
+      let index = 0;
+      for (const minimumRate of minimumRates) {
+        if (differenceInDays(minimumRate.date, startDate) <= 0) {
+          if (
+            index == minimumRates.length - 1 ||
+            differenceInDays(minimumRates[index + 1].date, endDate) > 0
+          ) {
+            rate = minimumRate.minimum_rate;
+            break;
+          }
+        }
+        ++index;
+      }
+    }
   }
-  return minimumRate;
+  return rate;
 };
 
 export const calculate = (period: Period, type: string) => {
@@ -82,7 +111,7 @@ export const calculate = (period: Period, type: string) => {
   if (validate(period)) {
     const daysOrHours = Number(period.daysOrHours);
     const rate = Number(period.rate);
-    const minimumRate = getMinimumRate(period.start_date);
+    const minimumRate = getMinimumRate(period.start_date, period.end_date);
     const rateToUse = Math.max(rate, minimumRate);
 
     if (type == "Basic Wage") {

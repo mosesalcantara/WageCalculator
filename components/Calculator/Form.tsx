@@ -99,7 +99,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
     }
   };
 
-  const minimumRate = getMinimumRate(period.start_date);
+  const minimumRate = getMinimumRate(period.start_date, period.end_date);
 
   const addPeriod = () => {
     setValues((prev) => {
@@ -159,6 +159,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
                 <Icon name="date-range" size={20} color="#555" />
               </TouchableOpacity>
             </View>
+
             <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">
                 End Date
@@ -186,6 +187,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
                 onChangeText={(value) => handleChange("daysOrHours", value)}
               />
             </View>
+
             <View className="w-[32%]">
               <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
               <TextInput
@@ -196,6 +198,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
                 onChangeText={(value) => handleChange("rate", value)}
               />
             </View>
+
             <View className="w-[32%]">
               <Text className="mb-1 text-base font-bold text-[#333]">
                 Prevailing Rate
@@ -203,7 +206,8 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               <TextInput
                 className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                 keyboardType="numeric"
-                placeholder="Enter Rate"
+                placeholder=""
+                editable={false}
                 value={`${minimumRate == 0 ? "" : minimumRate}`}
                 onChangeText={(value) => handleChange("minimumRate", value)}
               />

@@ -6,7 +6,7 @@ import {
   formatDate,
   formatNumber,
   getDb,
-  getRate,
+  getMinimumRate,
   getTotal,
   numberToLetter,
   validate,
@@ -66,7 +66,7 @@ const PDFPage = () => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(violationType, rate, type);
+        total += getTotal(violationType, type);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -101,7 +101,7 @@ const PDFPage = () => {
 
     violationType.periods.forEach((period, index) => {
       if (validate(period)) {
-        subtotal += calculate(period, rate, type);
+        subtotal += calculate(period, type);
         html += `
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
@@ -163,7 +163,7 @@ const PDFPage = () => {
 
   const getDaysOrHours = (type: string, daysOrHours: string) => {
     let keyword = `${daysOrHours} `;
-    if (type == "Basic Wage") {
+    if (type == "Basic Wage" || type == "Holiday Pay") {
       keyword += "day";
     } else if (type == "Overtime Pay") {
       keyword += "OT hour";
@@ -183,16 +183,26 @@ const PDFPage = () => {
   const renderFormula = (period: Period, rate: number, type: string) => {
     let html = "";
 
-    const { isBelow, rateToUse } = getRate(period.start_date, rate);
+    const minimumRates = [
+      { name: "RB-MIMAROPA-10", date: "2022-06-22", minimum_rate: 355 },
+      { name: "RB-MIMAROPA-11", date: "2023-12-07", minimum_rate: 395 },
+      { name: "RB-MIMAROPA-12", date: "2024-12-23", minimum_rate: 430 },
+    ];
 
-    isBelow &&
+    const rateToUse = getMinimumRate(period.start_date, period.end_date);
+
+    const minimumRate = minimumRates.find((minimumRate) => {
+      return minimumRate.minimum_rate == rateToUse;
+    });
+
+    rateToUse >= rate &&
       (html += `
         <p>
-          Prevailing Rate: Php${formatNumber(rateToUse)} (RB-MIMAROPA-12)
+          Prevailing Rate: Php${formatNumber(rateToUse)} (${minimumRate!.name})
         </p>`);
 
     const formattedRateToUse = formatNumber(rateToUse);
-    const total = formatNumber(calculate(period, rate, type));
+    const total = formatNumber(calculate(period, type));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
