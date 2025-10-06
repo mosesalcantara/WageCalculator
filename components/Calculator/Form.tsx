@@ -175,7 +175,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
           </View>
 
           <View className="flex-row flex-wrap justify-between gap-1">
-            <View className="w-[32%]">
+            <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">
                 {checkType() ? "Hours" : "Days"}
               </Text>
@@ -188,7 +188,7 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
               />
             </View>
 
-            <View className="w-[32%]">
+            <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
               <TextInput
                 className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
@@ -198,21 +198,21 @@ const Form = ({ parent, type, index, valuesState }: Props) => {
                 onChangeText={(value) => handleChange("rate", value)}
               />
             </View>
-
-            <View className="w-[32%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
-                Prevailing Rate
-              </Text>
-              <TextInput
-                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                keyboardType="numeric"
-                placeholder=""
-                editable={false}
-                value={`${minimumRate == 0 ? "" : minimumRate}`}
-                onChangeText={(value) => handleChange("minimumRate", value)}
-              />
-            </View>
           </View>
+        </View>
+
+        <View>
+          <Text className="mb-1 text-base font-bold text-[#333]">
+            Prevailing Rate
+          </Text>
+          <TextInput
+            className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+            keyboardType="numeric"
+            placeholder=""
+            editable={false}
+            value={`${minimumRate == 0 ? "" : minimumRate}`}
+            onChangeText={(value) => handleChange("minimumRate", value)}
+          />
         </View>
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
