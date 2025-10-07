@@ -22,19 +22,31 @@ type Props = {
 };
 
 const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
+  const sortedRecords = useMemo(() => {
+    return records?.sort((a, b) => {
+      if (a.last_name < b.last_name) {
+        return -1;
+      }
+      if (a.last_name > b.last_name) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [records]);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredRecords = useMemo(() => {
-    if (records && searchQuery) {
-      return records.filter((record) => {
+    if (sortedRecords && searchQuery) {
+      return sortedRecords.filter((record) => {
         return Object.values(record).some((value) => {
           return `${value}`.toLowerCase().includes(searchQuery.toLowerCase());
         });
       });
     } else {
-      return records;
+      return sortedRecords;
     }
-  }, [records, searchQuery]);
+  }, [sortedRecords, searchQuery]);
 
   const setEmployee = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
@@ -55,7 +67,7 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
         <View className="overflow-hidden rounded-[0.625rem] bg-white">
           <View className="flex-row items-center bg-[#2196F3] px-2 py-3">
             <Text
-              className="text-base font-bold text-white text-center"
+              className="text-center text-base font-bold text-white"
               style={{
                 flex: 2,
               }}
@@ -79,7 +91,7 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
               Schedule
             </Text>
             <Text
-              className="text-base font-bold text-white text-center"
+              className="text-center text-base font-bold text-white"
               style={{
                 flex: 1.5,
               }}
