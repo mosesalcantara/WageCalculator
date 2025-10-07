@@ -105,6 +105,10 @@ export const validate = (object: { [key: string]: string | number }) => {
   return Object.values(object).every((value) => value);
 };
 
+export const validateDateRange = (startDate: string, endDate: string) => {
+  return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
+};
+
 export const getMinimumRate = (
   startDate: string,
   endDate: string,
@@ -115,10 +119,8 @@ export const getMinimumRate = (
   });
 
   let rate = 0;
-  const isValid =
-    startDate && endDate && size && differenceInDays(endDate, startDate) >= 0;
 
-  if (isValid) {
+  if (validateDateRange(startDate, endDate) && size) {
     if (differenceInDays(wageOrders[0].date, startDate) > 0) {
       rate =
         size == "Employing 10 or more workers"

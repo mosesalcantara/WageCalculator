@@ -11,10 +11,12 @@ import {
   getMinimumRate,
   getPeriodFormat,
   numberToLetter,
+  validateDateRange,
 } from "@/utils/globals";
+import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -87,25 +89,59 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     }
   };
 
-  const getWorkingDays = (startDate: string, endDate: string) => {
+  const getEstimated = (startDate: string, endDate: string) => {
+    if (!validateDateRange(startDate, endDate)) {
+      return "";
+    }
+
+    let workingDays = 0;
+    let restDays = 0;
+    let specialDays = 0;
+    let regularHolidays = 0;
+
     const dates = eachDayOfInterval({
       start: startDate,
       end: endDate,
     });
-    const workingDates = dates.filter((date) =>
-      includedDays.includes(format(date, "EEEE")),
-    );
-    return workingDates.length;
-  };
 
-  const setWorkingDays = (startDate: string, endDate: string) => {
-    const workingDays = getWorkingDays(startDate, endDate);
+    dates.forEach((date) => {
+      includedDays.includes(format(date, "EEEE")) && ++workingDays;
+      if (type == "Special Day" || type == "Holiday Pay") {
+        const formattedDate = format(date, "yyyy-MM-dd");
+        const year = formattedDate.split("-")[0];
+        const yearHolidays = holidaysJSON[year as keyof typeof holidaysJSON];
+        if (yearHolidays) {
+          const holiday = yearHolidays.find(
+            (holiday) => formattedDate == holiday.date,
+          );
+          if (holiday) {
+            holiday.type == "Regular Holiday" && ++regularHolidays;
+            holiday.type == "Special (Non-Working) Holiday" && ++specialDays;
+          }
+        }
+      }
+    });
+
+    restDays = dates.length - workingDays;
     if (type == "Basic Wage" || type == "13th Month Pay") {
-      handleInitialChange("daysOrHours", workingDays, index);
+      return workingDays;
+    } else if (type == "Rest Day") {
+      return restDays;
+    } else if (type == "Special Day") {
+      return specialDays
+    } else if (type == "Holiday Pay") {
+      return regularHolidays
     }
+    return "";
   };
 
-  const minimumRate = getMinimumRate(period.start_date, period.end_date, grandparent.size);
+  const estimated = getEstimated(period.start_date, period.end_date);
+
+  const minimumRate = getMinimumRate(
+    period.start_date,
+    period.end_date,
+    grandparent.size,
+  );
 
   const addPeriod = () => {
     setValues((prev) => {
@@ -134,13 +170,6 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
-
-  useEffect(() => {
-    const { start_date, end_date } = period;
-    if (start_date && end_date) {
-      setWorkingDays(start_date, end_date);
-    }
-  }, [period.start_date, period.end_date]);
 
   return (
     <>
@@ -209,6 +238,19 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
         <View>
           <Text className="mb-1 text-base font-bold text-[#333]">
+            Estimated
+          </Text>
+          <TextInput
+            className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+            keyboardType="numeric"
+            placeholder=""
+            editable={false}
+            value={`${estimated}`}
+          />
+        </View>
+
+        <View>
+          <Text className="mb-1 text-base font-bold text-[#333]">
             Prevailing Rate
           </Text>
           <TextInput
@@ -217,7 +259,6 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
             placeholder=""
             editable={false}
             value={`${minimumRate == 0 ? "" : minimumRate}`}
-            onChangeText={(value) => handleChange("minimumRate", value)}
           />
         </View>
 
