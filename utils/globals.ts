@@ -194,14 +194,26 @@ export const getTotal = (
   return result;
 };
 
-export const getPeriodFormat = (rate?: number) => {
-  return { ...periodFormat, rate: `${rate ? `${rate}` : ""}` };
-};
+// export const getPeriodFormat = (rate?: number) => {
+//   return { ...periodFormat, rate: `${rate ? `${rate}` : ""}` };
+// };
 
-export const getInitialViolations = (rate?: number) => {
+// export const getInitialViolations1 = (rate?: number) => {
+//   const values = {} as ViolationValues;
+//   violationTypesArray.forEach((type) => {
+//     const periodsFormat = { periods: [getPeriodFormat(rate)] };
+//     values[type as ViolationTypes] =
+//       type == "13th Month Pay"
+//         ? { ...periodsFormat, received: "" }
+//         : periodsFormat;
+//   });
+//   return values;
+// };
+
+export const getInitialViolations = () => {
   const values = {} as ViolationValues;
   violationTypesArray.forEach((type) => {
-    const periodsFormat = { periods: [getPeriodFormat(rate)] };
+    const periodsFormat = { periods: [periodFormat] };
     values[type as ViolationTypes] =
       type == "13th Month Pay"
         ? { ...periodsFormat, received: "" }

@@ -9,8 +9,8 @@ import {
   daysArray,
   formatNumber,
   getMinimumRate,
-  getPeriodFormat,
   numberToLetter,
+  periodFormat,
   validateDateRange,
 } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
@@ -128,9 +128,9 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     } else if (type == "Rest Day") {
       return restDays;
     } else if (type == "Special Day") {
-      return specialDays
+      return specialDays;
     } else if (type == "Holiday Pay") {
-      return regularHolidays
+      return regularHolidays;
     }
     return "";
   };
@@ -143,12 +143,16 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     grandparent.size,
   );
 
+  const setRate = () => {
+    handleInitialChange("rate", `${parent.rate}`, index);
+  };
+
   const addPeriod = () => {
     setValues((prev) => {
       return {
         ...prev,
         [type]: {
-          periods: [...prev[type].periods, getPeriodFormat(parent.rate)],
+          periods: [...prev[type].periods, periodFormat],
         },
       };
     });
@@ -165,7 +169,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   const clearPeriod = () => {
     setValues((prev) => {
       const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? getPeriodFormat() : period,
+        index == periodIndex ? periodFormat : period,
       );
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
@@ -224,7 +228,10 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
             </View>
 
             <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
+              <Text className="mb-1 text-base font-bold text-[#333]">
+                Rate
+                <Text onPress={setRate}> (Set Rate)</Text>
+              </Text>
               <TextInput
                 className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                 keyboardType="numeric"
