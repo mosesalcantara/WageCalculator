@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 type Props = {
@@ -22,11 +22,11 @@ const Select = ({
   const [isFocus, setIsFocus] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View className="mt-1 rounded-md bg-white p-2">
       <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
+        style={[{ height: 20 }, isFocus && { borderColor: "blue" }]}
+        placeholderStyle={{ fontSize: 14 }}
+        selectedTextStyle={{ fontSize: 14 }}
         data={options}
         labelField="label"
         valueField="value"
@@ -47,21 +47,3 @@ const Select = ({
 };
 
 export default Select;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    padding: 7,
-    marginTop: 3,
-    borderRadius: 5,
-  },
-  dropdown: {
-    height: 20,
-  },
-  placeholderStyle: {
-    fontSize: 14,
-  },
-  selectedTextStyle: {
-    fontSize: 14,
-  },
-});

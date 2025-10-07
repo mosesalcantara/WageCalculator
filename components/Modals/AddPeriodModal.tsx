@@ -32,6 +32,7 @@ const AddPeriodModal = ({}: Props) => {
     }>>,
   ) => {
     const formattedValue = (value as Date).toISOString().split("T")[0];
+    console.log(key, formattedValue);
     setFieldValue(key, formattedValue);
 
     if (key == "start_date") {

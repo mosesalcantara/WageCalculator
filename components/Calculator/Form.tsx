@@ -240,19 +240,21 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
           </View>
         </View>
 
-        <View>
-          <Text className="mb-1 text-base font-bold text-[#333]">
-            Estimated
-          </Text>
-          <TextInput
-            className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-            keyboardType="numeric"
-            placeholder=""
-            editable={false}
-            value={`${estimated}`}
-          />
-        </View>
-
+        {!["Overtime Pay", "Night Shift Differential"].includes(type) && (
+          <View>
+            <Text className="mb-1 text-base font-bold text-[#333]">
+              Estimated
+            </Text>
+            <TextInput
+              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              keyboardType="numeric"
+              placeholder=""
+              editable={false}
+              value={`${estimated}`}
+            />
+          </View>
+        )}
+        
         <View>
           <Text className="mb-1 text-base font-bold text-[#333]">
             Prevailing Rate
