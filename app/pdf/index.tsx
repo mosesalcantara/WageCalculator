@@ -71,7 +71,9 @@ const PDFPage = () => {
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
-          validate(period) && (valid += 1);
+          if (validate(period)) {
+            valid += 1;
+          }
         });
 
         valid > 0 &&
@@ -101,8 +103,9 @@ const PDFPage = () => {
     let subtotal = 0;
 
     violationType.periods.forEach((period, index) => {
+      const result = calculate(period, type, record!.size);
       if (validate(period)) {
-        subtotal += calculate(period, type, record!.size);
+        subtotal += result;
         html += `
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
