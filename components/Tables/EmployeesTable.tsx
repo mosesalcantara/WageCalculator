@@ -58,38 +58,14 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
       />
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-        <View className="overflow-hidden rounded-[0.625rem] bg-white">
-          <View className="flex-row items-center bg-[#2196F3] px-2 py-3">
-            <Text
-              className="text-center text-base font-bold text-white"
-              style={{
-                flex: 2,
-              }}
-            >
-              Name
-            </Text>
-            <Text
-              className="text-base font-bold text-white"
-              style={{
-                flex: 1,
-              }}
-            >
-              Rate
-            </Text>
-            <Text
-              className="text-base font-bold text-white"
-              style={{
-                flex: 1,
-              }}
-            >
+        <View className="rounded-[0.625rem] bg-white">
+          <View className="flex-row justify-around gap-2 bg-[#2196F3] px-2 py-3">
+            <Text className="w-[35%] text-base font-bold text-white">Name</Text>
+            <Text className="w-[15%] text-base font-bold text-white">Rate</Text>
+            <Text className="w-1/5 text-base font-bold text-white">
               Schedule
             </Text>
-            <Text
-              className="text-center text-base font-bold text-white"
-              style={{
-                flex: 1.5,
-              }}
-            >
+            <Text className="w-1/4 text-base font-bold text-white">
               Actions
             </Text>
           </View>
@@ -98,40 +74,20 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
             filteredRecords.map((record) => (
               <View
                 key={record.id}
-                className="flex-row items-center px-2 py-2.5"
+                className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
               >
-                <Text
-                  className="text-sm text-[#333]"
-                  style={{
-                    flex: 2,
-                  }}
-                >
+                <Text className="w-[35%] text-sm text-[#333]">
                   {record.last_name}, {record.first_name}{" "}
                   {record.middle_name.slice(0, 1).toUpperCase()}.
                 </Text>
-                <Text
-                  className="text-sm text-[#333]"
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  {record.rate}
-                </Text>
-                <Text
-                  className="text-sm text-[#333]"
-                  style={{
-                    flex: 1,
-                  }}
-                >
+
+                <Text className="w-[15%] text-sm text-[#333]">{record.rate}</Text>
+
+                <Text className="w-1/5 text-sm text-[#333]">
                   {record.start_day.slice(0, 3)} - {record.end_day.slice(0, 3)}
                 </Text>
 
-                <View
-                  className="flex-row justify-around"
-                  style={{
-                    flex: 1.5,
-                  }}
-                >
+                <View className="w-1/4 flex-row justify-around">
                   <TouchableOpacity onPress={() => setEmployee(record.id)}>
                     <Icon name="remove-red-eye" size={20} color="#2196F3" />
                   </TouchableOpacity>
