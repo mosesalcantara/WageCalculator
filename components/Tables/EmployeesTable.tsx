@@ -24,13 +24,7 @@ type Props = {
 const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
   const sortedRecords = useMemo(() => {
     return records?.sort((a, b) => {
-      if (a.last_name < b.last_name) {
-        return -1;
-      }
-      if (a.last_name > b.last_name) {
-        return 1;
-      }
-      return 0;
+      return a.last_name < b.last_name ? -1 : a.last_name > b.last_name ? 1 : 0;
     });
   }, [records]);
 
