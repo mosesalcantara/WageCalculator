@@ -20,7 +20,7 @@ const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
   const initialValues = values;
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (
+  const handleSubmit = async (
     values: Establishment,
     { resetForm }: { resetForm: () => void },
   ) => {
@@ -62,7 +62,7 @@ const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           {({
             values,

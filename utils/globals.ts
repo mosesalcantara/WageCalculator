@@ -97,6 +97,10 @@ export const numberToLetter = (number: number) => {
   return String.fromCharCode(65 + number);
 };
 
+  export const formatDateValue = (date: string) => {
+    return date ? new Date(date) : new Date();
+  };
+
 export const formatDate = (date: string) => {
   return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
 };
@@ -193,22 +197,6 @@ export const getTotal = (
   violationType.received && (result -= Number(violationType.received));
   return result;
 };
-
-// export const getPeriodFormat = (rate?: number) => {
-//   return { ...periodFormat, rate: `${rate ? `${rate}` : ""}` };
-// };
-
-// export const getInitialViolations1 = (rate?: number) => {
-//   const values = {} as ViolationValues;
-//   violationTypesArray.forEach((type) => {
-//     const periodsFormat = { periods: [getPeriodFormat(rate)] };
-//     values[type as ViolationTypes] =
-//       type == "13th Month Pay"
-//         ? { ...periodsFormat, received: "" }
-//         : periodsFormat;
-//   });
-//   return values;
-// };
 
 export const getInitialViolations = () => {
   const values = {} as ViolationValues;

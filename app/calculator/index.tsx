@@ -1,4 +1,5 @@
 import Form from "@/components/Calculator/Form";
+import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
 import { violations } from "@/db/schema";
 import useFetchViolations from "@/hooks/useFetchViolations";
@@ -175,7 +176,7 @@ const CalculatorPage = () => {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              className="h-[41rem]"
+              className="h-[37rem]"
             >
               <ScrollView>
                 <View className="gap-7">
@@ -207,6 +208,10 @@ const CalculatorPage = () => {
                 )}
               </ScrollView>
             </KeyboardAvoidingView>
+
+            <View className="px-4">
+              <AddPeriodModal />
+            </View>
           </View>
         </>
       )}

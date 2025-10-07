@@ -7,6 +7,7 @@ import {
 import {
   calculate,
   daysArray,
+  formatDateValue,
   formatNumber,
   getMinimumRate,
   numberToLetter,
@@ -35,10 +36,6 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
   const periods = values[type].periods;
   const period = values[type].periods[index];
-
-  const formatDate = (date: string) => {
-    return date ? new Date(date) : new Date();
-  };
 
   const checkType = () => {
     return ["Overtime Pay", "Night Shift Differential"].includes(type);
@@ -304,7 +301,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
       {isStartDateModalVisible && (
         <DateTimePicker
-          value={formatDate(period.start_date)}
+          value={formatDateValue(period.start_date)}
           mode="date"
           onChange={(_, value) => {
             value && handleChange("start_date", value);
@@ -314,7 +311,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
       {isEndDateModalVisible && (
         <DateTimePicker
-          value={formatDate(period.end_date)}
+          value={formatDateValue(period.end_date)}
           mode="date"
           onChange={(_, value) => {
             value && handleChange("end_date", value);

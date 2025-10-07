@@ -20,7 +20,7 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
   const initialValues = values;
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (
+  const handleSubmit = async (
     values: Employee,
     { resetForm }: { resetForm: () => void },
   ) => {
@@ -66,7 +66,7 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           {({
             values,

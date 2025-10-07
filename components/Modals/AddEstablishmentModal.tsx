@@ -21,7 +21,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (
+  const handleSubmit = async (
     values: Override<Establishment, { id?: number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
@@ -67,7 +67,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           {({
             values,

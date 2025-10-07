@@ -16,3 +16,8 @@ export const employee = Yup.object().shape({
   start_day: Yup.string().required().label("Start Day"),
   end_day: Yup.string().required().label("End Day"),
 });
+
+export const period = Yup.object().shape({
+  start_date: Yup.string().trim().required().label("Start Date"),
+  end_date: Yup.string().trim().required().label("End Date"),
+});

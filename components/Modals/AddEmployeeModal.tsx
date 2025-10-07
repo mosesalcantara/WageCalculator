@@ -25,7 +25,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
   };
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (
+  const handleSubmit = async (
     values: Override<Employee, { id?: number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
@@ -72,7 +72,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           {({
             values,

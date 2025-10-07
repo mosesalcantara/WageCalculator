@@ -1,4 +1,224 @@
 {
+    "2018" : [
+        {
+            "name": "New Year's Day",
+            "date": "2018-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2018-02-16",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "EDSA People Power Revolution Anniversary",
+            "date": "2018-02-25",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2018-03-29",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2018-03-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2018-03-31",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2018-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2018-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Barangay and Sangguniang Kabataan Elections",
+            "date": "2018-05-14",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2018-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Fitr (Feast of Ramadhan)",
+            "date": "2018-06-15",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2018-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Eid'l Adha (Feast of Sacrifice)",
+            "date": "2018-08-21",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2018-08-27",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saints' Day",
+            "date": "2018-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2018-11-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2018-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2018-12-24",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2018-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2018-12-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Last Day of the Year",
+            "date": "2018-12-31",
+            "type": "Special (Non-Working) Holiday"
+        }
+    ],
+    "2019" : [
+        {
+            "name": "New Year's Day",
+            "date": "2019-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2019-02-05",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "EDSA People Power Revolution Anniversary",
+            "date": "2019-02-25",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2019-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2019-04-18",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2019-04-19",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2019-04-20",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2019-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "National and Local Elections",
+            "date": "2019-05-13",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Eid'l Fitr (Feast of Ramadhan)",
+            "date": "2019-06-05",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2019-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Adha (Feast of Sacrifice)",
+            "date": "2019-08-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2019-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2019-08-26",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saints' Day",
+            "date": "2019-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2019-11-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2019-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2019-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2019-12-24",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2019-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2019-12-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Last Day of the Year",
+            "date": "2019-12-31",
+            "type": "Special (Non-Working) Holiday"
+        }
+
+    ],
     "2020": [
         {
             "name": "New Year's Day",
@@ -56,12 +276,12 @@
             "type": "Regular Holiday"
         },
         {
-            "name": "All Saint's Day",
+            "name": "All Saints' Day",
             "date": "2020-11-01",
             "type": "Special (Non-Working) Holiday"
         },
         {
-            "name": "Additional special (non-working) day",
+            "name": "Additional Special (Non-Working) Day",
             "date": "2020-11-02",
             "type": "Special (Non-Working) Holiday"
         },
@@ -76,8 +296,8 @@
             "type": "Special (Non-Working) Holiday"
         },
         {
-            "name": "Additional special (non-working) day",
-            "date": "2020-04-11",
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2020-12-24",
             "type": "Special (Non-Working) Holiday"
         },
         {
@@ -93,6 +313,532 @@
         {
             "name": "Last Day of the Year",
             "date": "2020-12-31",
+            "type": "Special (Non-Working) Holiday"
+        }
+    ],
+    "2021": [
+        {
+            "name": "New Year's Day",
+            "date": "2021-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2021-02-12",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "EDSA People Power Revolution",
+            "date": "2021-02-25",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2021-04-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2021-04-02",
+            "type": "Regular Holiday"
+        },
+                {
+            "name": "Black Saturday",
+            "date": "2021-04-03",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2021-04-09",
+            "type": "Regular Holiday"
+        },
+
+        {
+            "name": "Labor Day",
+            "date": "2021-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Fitr (Feast of Ramadhan)",
+            "date": "2021-05-13",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2021-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Adha (Feast of Sacrifice)",
+            "date": "2021-07-20",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2021-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2021-08-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saints' Day",
+            "date": "2021-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2021-11-30",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2021-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2021-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2021-12-30",
+            "type": "Regular Holiday"
+        }
+    ],
+    "2022" : [
+        {
+            "name": "New Year's Day",
+            "date": "2022-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2022-02-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "EDSA People Power Revolution Anniversary",
+            "date": "2022-02-25",
+            "type": "Special    (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2022-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2022-04-14",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2022-04-15",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2022-04-16",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2022-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Fitr (Feast of Ramadhan)",
+            "date": "2022-05-03",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "National and Local Elections",
+            "date": "2022-05-09",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2022-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Adha (Feast of Sacrifice)",
+            "date": "2022-07-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2022-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2022-08-29",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Proclamation No. 79",
+            "date": "2022-10-31",
+            "type": "Special (Non-Working) Holiday"
+        },
+                {
+            "name": "All Saints' Day",
+            "date": "2022-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2022-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2022-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2022-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2022-12-30",
+            "type": "Regular Holiday"
+        }
+    ],
+    "2023" : [
+        {
+            "name": "New Year's Day",
+            "date": "2023-01-01",
+            "type": "Regular Holiday"
+        },
+                {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2023-01-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "EDSA People Power Revolution Anniversary",
+            "date": "2023-02-24",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2023-04-06",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2023-04-07",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2023-04-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2023-04-10",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Fitr",
+            "date": "2023-04-21",
+            "type": "Regular Holiday"
+        },
+                {
+            "name": "Labor Day",
+            "date": "2023-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2023-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Adha",
+            "date": "2023-06-28",
+            "type": "Regular Holiday"
+        },
+                {
+            "name": "Ninoy Aquino Day",
+            "date": "2023-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2023-08-28",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2023-10-30",
+            "type": "Special (Non-Working) Holiday"
+        },
+                {
+            "name": "All Saints' Day",
+            "date": "2023-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2023-11-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2023-11-27",
+            "type": "Regular Holiday"
+        },
+                {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2023-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2023-12-25",
+            "type": "Regular Holiday"
+        },
+                        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2023-12-26",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2023-12-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Last Day of the Year",
+            "date": "2023-12-31",
+            "type": "Special (Non-Working) Holiday"
+        }
+    ],
+    "2024" : [
+        {
+            "name": "New Year's Day",
+            "date": "2024-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Additional Special (Non-Working) Day",
+            "date": "2024-02-09",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Chinese New Year - Additional Special (Non-Working) Day",
+            "date": "2024-02-10",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2024-03-28",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2024-03-29",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday- Additional Special (Non-Working) Day",
+            "date": "2024-03-30",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2024-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Fitr (Feast of Ramadhan)",
+            "date": "2024-04-10",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2024-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2024-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Eid'l Adha (Feast of Sacrifice)",
+            "date": "2024-06-17",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2024-08-23",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2024-08-26",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saints' Day",
+            "date": "2024-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+                {
+            "name": "All Souls' Day - Additional Special (Non-Working) Day",
+            "date": "2024-11-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2024-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2024-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Eve - Additional Special (Non-Working) Day",
+            "date": "2024-12-24",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2024-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2024-12-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Last Day of the Year",
+            "date": "2024-12-31",
+            "type": "Special (Non-Working) Holiday"
+        }
+    ],
+    "2025" : [
+        {
+            "name": "New Year's Day",
+            "date": "2025-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2025-01-29",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Eid'l Fitr (Feast of Ramadhan)",
+            "date": "2025-04-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2025-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2025-04-17",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2025-04-18",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2025-04-19",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2025-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "National and Local Elections",
+            "date": "2025-05-12",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Eidul Adha (Feast of Sacrifice)",
+            "date": "2025-06-06",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2025-06-12",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Proclamation No. 729",
+            "date": "2025-07-27",
+            "type": "Special (Non-Working) Holiday"
+        },        
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2025-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2025-08-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saints' Day Eve",
+            "date": "2025-10-31",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "All Saints' Day",
+            "date": "2025-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2025-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Feast of the Immaculate Conception of Mary",
+            "date": "2025-12-08",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Eve",
+            "date": "2025-12-24",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2025-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2025-12-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Last Day of the Year",
+            "date": "2025-12-31",
             "type": "Special (Non-Working) Holiday"
         }
     ]
