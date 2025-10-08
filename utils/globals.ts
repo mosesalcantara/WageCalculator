@@ -76,6 +76,7 @@ export const periodFormat = {
   end_date: "",
   rate: "",
   daysOrHours: "",
+  type: "Normal Day",
 };
 
 export const periodsFormat = {
@@ -168,7 +169,10 @@ export const calculate = (period: Period, type: string, size: string) => {
     if (type == "Basic Wage") {
       result = (rateToUse - rate) * daysOrHours;
     } else if (type == "Overtime Pay") {
-      result = (rateToUse / 8) * 0.25 * daysOrHours;
+      result =
+        (rateToUse / 8) *
+        (period.type == "Normal Day" ? 0.25 : 0.3) *
+        daysOrHours;
     } else if (type == "Night Shift Differential") {
       result = (rateToUse / 8) * 0.1 * daysOrHours;
     } else if (type == "Special Day") {

@@ -52,4 +52,5 @@ export type Period = {
   end_date: string;
   rate: string;
   daysOrHours: string;
+  type: string;
 };

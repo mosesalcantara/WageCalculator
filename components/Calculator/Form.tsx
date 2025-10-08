@@ -1,3 +1,4 @@
+import Select from "@/components/Select";
 import {
   Employee,
   Establishment,
@@ -36,10 +37,6 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
   const periods = values[type].periods;
   const period = values[type].periods[index];
-
-  const checkType = () => {
-    return ["Overtime Pay", "Night Shift Differential"].includes(type);
-  };
 
   const getIncludedDays = (startDay: string, endDay: string) => {
     const included = [];
@@ -246,18 +243,42 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
           </View>
 
           <View className="flex-row flex-wrap justify-between gap-1">
-            <View className={`${daysOrHours == "Days" ? "w-[49%]" : "w-full"}`}>
+            <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">
-                {checkType() ? "Hours" : "Days"}
+                {daysOrHours}
               </Text>
               <TextInput
                 className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                 keyboardType="numeric"
-                placeholder={`Enter ${checkType() ? "hours" : "days"}`}
+                placeholder={`Enter ${daysOrHours.toLowerCase()}`}
                 value={period.daysOrHours}
                 onChangeText={(value) => handleChange("daysOrHours", value)}
               />
             </View>
+
+            {type == "Overtime Pay" && (
+              <View className="w-[49%]">
+                <Text className="mb-1 text-base font-bold text-[#333]">
+                  Type
+                </Text>
+                <Select
+                  name="type"
+                  options={[
+                    {
+                      label: "Normal Day",
+                      value: "Normal Day",
+                    },
+                    {
+                      label: "Rest Day",
+                      value: "Rest Day",
+                    },
+                  ]}
+                  placeholder="Select Type"
+                  value={period.type}
+                  onChange={handleChange}
+                />
+              </View>
+            )}
 
             {daysOrHours == "Days" && (
               <View className="w-[49%]">

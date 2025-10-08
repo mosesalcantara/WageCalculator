@@ -7,7 +7,8 @@ type Props = {
   options: { label: string; value: string }[];
   placeholder?: string;
   value: string;
-  onChange: (key: string, value: string) => void;
+  setFieldValue: (name: string, value: string) => void;
+  setFieldTouched: (name: string) => void;
 };
 
 const Select = ({
@@ -15,7 +16,8 @@ const Select = ({
   options,
   placeholder = "Select Item",
   value,
-  onChange,
+  setFieldValue,
+  setFieldTouched,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
 
@@ -31,11 +33,12 @@ const Select = ({
         placeholder={!isFocus ? placeholder : ""}
         value={value}
         onChange={(option) => {
-          onChange(name, option.value);
+          setFieldValue(name, option.value);
           setIsFocus(false);
         }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => {
+          setFieldTouched(name);
           setIsFocus(false);
         }}
       />

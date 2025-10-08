@@ -1,4 +1,4 @@
-import Select from "@/components/Select";
+import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
 import { Employee, Establishment, Override } from "@/types/globals";
