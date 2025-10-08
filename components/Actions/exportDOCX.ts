@@ -10,7 +10,7 @@ import {
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
-import { Packer, Paragraph, TextRun } from "docx";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
