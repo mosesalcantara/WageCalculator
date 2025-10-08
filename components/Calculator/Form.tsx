@@ -18,7 +18,7 @@ import {
 import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -83,7 +83,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     }
   };
 
-  const getEstimated = (startDate: string, endDate: string) => {
+  const getEstimate = (startDate: string, endDate: string) => {
     if (!validateDateRange(startDate, endDate)) {
       return "";
     }
@@ -129,7 +129,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     return "";
   };
 
-  const estimated = getEstimated(period.start_date, period.end_date);
+  const estimate = getEstimate(period.start_date, period.end_date);
 
   const minimumRate = getMinimumRate(
     period.start_date,
@@ -138,7 +138,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   );
 
   const setRate = () => {
-    handleInitialChange("rate", `${parent.rate}`, index);
+    handleChange("rate", `${parent.rate}`);
   };
 
   const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
@@ -149,18 +149,15 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
   const getLabel = () => {
     if (["Basic Wage", "13th Month Pay"].includes(type)) {
-      return "Working Days"
+      return "Working Days";
+    } else if (type == "Special Day") {
+      return "Special Days";
+    } else if (type == "Rest Day") {
+      return "Rest Days";
+    } else if (type == "Holiday Pay") {
+      return "Holidays";
     }
-    else if (type == "Special Day") {
-      return "Special Days"
-    }
-    else if (type == "Rest Day") {
-      return "Rest Days"
-    }
-    else if (type == "Holiday Pay") {
-      return "Holidays"
-    }
-  }
+  };
 
   const addPeriod = () => {
     setValues((prev) => {
@@ -189,6 +186,10 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
   };
+
+  useEffect(() => {
+    handleChange("daysOrHours", estimate);
+  }, [estimate]);
 
   return (
     <>
@@ -305,7 +306,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                   keyboardType="numeric"
                   placeholder=""
                   editable={false}
-                  value={`${estimated}`}
+                  value={`${estimate}`}
                 />
               </View>
             )}
