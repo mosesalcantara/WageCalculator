@@ -4,7 +4,6 @@ import exportXLSX from "@/components/Actions/exportXLSX";
 import generateHTML from "@/components/Actions/generateHTML";
 import NavBar from "@/components/NavBar";
 import useFetchEstablishmentViolations from "@/hooks/useFetchEstablishmentViolations";
-import { employee } from "@/schemas/globals";
 import { getDb } from "@/utils/globals";
 import { Button, View } from "react-native";
 import { WebView } from "react-native-webview";

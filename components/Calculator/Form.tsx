@@ -219,7 +219,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
               <Text className="mb-1 text-base font-bold text-[#333]">
                 End Date
               </Text>
-              
+
               <TouchableOpacity
                 className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                 onPress={() => setIsEndDateModalVisible(true)}
@@ -232,17 +232,22 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
-                Rate
-                <Text onPress={setRate}> (Rate Button)</Text>
-              </Text>
-              <TextInput
-                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                keyboardType="numeric"
-                placeholder="Enter Rate"
-                value={period.rate}
-                onChangeText={(value) => handleChange("rate", value)}
-              />
+              <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
+              <View className="h-11 flex-row items-center  rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
+                <TextInput
+                  className="w-[85%]"
+                  keyboardType="numeric"
+                  placeholder="Enter Rate"
+                  value={period.rate}
+                  onChangeText={(value) => handleChange("rate", value)}
+                />
+                <Icon
+                  name="download"
+                  size={20}
+                  color="#555"
+                  onPress={setRate}
+                />
+              </View>
             </View>
 
             <View className="w-[49%]">
