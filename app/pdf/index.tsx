@@ -22,19 +22,19 @@ const PDFPage = () => {
             <View className="mb-2.5 flex-1">
               <WebView source={{ html: generateHTML(record, true) }} />
             </View>
-            <View className="mb-[3.125rem] px-5">
+            <View className="flex-row  justify-around mb-[3.125rem] px-5">
               <Button
-                title="Download/Export PDF"
+                title="Export PDF"
                 onPress={() => exportPDF(record)}
               />
               <View className="h-2.5" />
               <Button
-                title="Download/Export DOCX"
+                title="Export DOCX"
                 onPress={() => exportDOCX(record)}
               />
               <View className="h-2.5" />
               <Button
-                title="Download/Export XLSX"
+                title="Export XLSX"
                 onPress={() => exportXLSX(record)}
               />
             </View>

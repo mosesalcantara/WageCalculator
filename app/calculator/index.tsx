@@ -306,9 +306,10 @@ const CalculatorPage = () => {
                       Received
                     </Text>
                     <TextInput
-                      className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      className="h-11 rounded-md border border-black px-2.5"
                       keyboardType="numeric"
                       placeholder="Enter pay received"
+                      placeholderTextColor="black"
                       value={violationType.received}
                       onChangeText={(value) => handleReceivedChange(value)}
                     />
