@@ -147,6 +147,21 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     ? "Hours"
     : "Days";
 
+  const getLabel = () => {
+    if (["Basic Wage", "13th Month Pay"].includes(type)) {
+      return "Working Days"
+    }
+    else if (type == "Special Day") {
+      return "Special Days"
+    }
+    else if (type == "Rest Day") {
+      return "Rest Days"
+    }
+    else if (type == "Holiday Pay") {
+      return "Holidays"
+    }
+  }
+
   const addPeriod = () => {
     setValues((prev) => {
       return {
@@ -283,7 +298,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
             {daysOrHours == "Days" && (
               <View className="w-[49%]">
                 <Text className="mb-1 text-base font-bold text-[#333]">
-                  Estimated
+                  {getLabel()}
                 </Text>
                 <TextInput
                   className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
