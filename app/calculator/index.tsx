@@ -128,37 +128,37 @@ const CalculatorPage = () => {
     <>
       {grandparent && parent && values && (
         <>
-          <View className="flex-1 bg-[#f5f5f5]">
-            <NavBar />
+          <NavBar />
 
-            <View>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="border-b border-b-[#ddd] bg-white py-2.5"
-              >
-                {getTabs(grandparent.size).map((tab) => (
-                  <TouchableOpacity
-                    key={tab.name}
-                    className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                    onPress={() => setType(tab.name as ViolationTypes)}
+          <View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="border-b border-b-[#ddd] bg-white py-2.5"
+            >
+              {getTabs(grandparent.size).map((tab) => (
+                <TouchableOpacity
+                  key={tab.name}
+                  className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
+                  onPress={() => setType(tab.name as ViolationTypes)}
+                >
+                  <Icon
+                    name={tab.icon}
+                    size={18}
+                    color={type === tab.name ? "#fff" : "#555"}
+                  />
+                  <Text
+                    className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
                   >
-                    <Icon
-                      name={tab.icon}
-                      size={18}
-                      color={type === tab.name ? "#fff" : "#555"}
-                    />
-                    <Text
-                      className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
-                    >
-                      {tab.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+                    {tab.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            <View className="flex-row items-center justify-between px-2.5">
+          <View className="flex-1 bg-[#f5f5f5] px-4">
+            <View className="flex-row items-center justify-between">
               <View className="py-2.5">
                 <Text className="ml-1.5 text-xl font-bold">
                   {`${parent.last_name}, ${parent.first_name} ${parent.middle_name.slice(0, 1).toUpperCase()}. - ${formatNumber(
@@ -209,9 +209,7 @@ const CalculatorPage = () => {
               </ScrollView>
             </KeyboardAvoidingView>
 
-            <View className="px-4">
-              <AddPeriodModal />
-            </View>
+            <AddPeriodModal />
           </View>
         </>
       )}

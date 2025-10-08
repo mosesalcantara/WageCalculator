@@ -1,3 +1,4 @@
+import { differenceInDays } from "date-fns";
 import * as Yup from "yup";
 
 export const establishment = Yup.object().shape({
@@ -19,5 +20,14 @@ export const employee = Yup.object().shape({
 
 export const period = Yup.object().shape({
   start_date: Yup.string().trim().required().label("Start Date"),
-  end_date: Yup.string().trim().required().label("End Date"),
+  end_date: Yup.string()
+    .trim()
+    .required()
+    .test(
+      "isBefore",
+      "End Date must be after Start Date",
+      (value, context) =>
+        differenceInDays(value, context.parent.start_date) >= 0,
+    )
+    .label("End Date"),
 });

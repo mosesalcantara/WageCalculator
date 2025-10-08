@@ -1,6 +1,11 @@
 import { period as validationSchema } from "@/schemas/globals";
-import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
+import {
+  formatDateValue,
+  toastVisibilityTime,
+  wageOrders,
+} from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { differenceInDays, subDays } from "date-fns";
 import { Formik, FormikErrors } from "formik";
 import { useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
@@ -14,8 +19,8 @@ const AddPeriodModal = ({}: Props) => {
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
 
   const initialValues = {
-    start_date: "",
-    end_date: "",
+    start_date: "2025-01-30",
+    end_date: "2025-01-01",
   };
   const [isVisible, setIsVisible] = useState(false);
 
@@ -31,9 +36,7 @@ const AddPeriodModal = ({}: Props) => {
       end_date: string;
     }>>,
   ) => {
-    const formattedValue = (value as Date).toISOString().split("T")[0];
-    console.log(key, formattedValue);
-    setFieldValue(key, formattedValue);
+    setFieldValue(key, (value as Date).toISOString().split("T")[0]);
 
     if (key == "start_date") {
       setIsStartDateModalVisible(false);
@@ -43,10 +46,13 @@ const AddPeriodModal = ({}: Props) => {
   };
 
   const handleSubmit = async (
-    values: { start_date: string; end_date: string },
+    values: typeof initialValues,
     { resetForm }: { resetForm: () => void },
   ) => {
     try {
+      const { start_date, end_date } = values;
+      splitDates(start_date, end_date);
+      resetForm();
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -55,6 +61,58 @@ const AddPeriodModal = ({}: Props) => {
         visibilityTime: toastVisibilityTime,
       });
     }
+  };
+
+  const splitDates = (start_date: string, end_date: string) => {
+    const dates = [];
+
+    wageOrders.sort((a, b) => {
+      return Number(new Date(a.date)) - Number(new Date(b.date));
+    });
+    const wageOrderDates = wageOrders.map((wageOrder) => wageOrder.date);
+
+    if (
+      differenceInDays(start_date, wageOrderDates[wageOrderDates.length - 1]) >=
+        0 &&
+      differenceInDays(end_date, wageOrderDates[wageOrderDates.length - 1]) >= 0
+    ) {
+      dates.push({
+        start_date: start_date,
+        end_date: end_date,
+      });
+    } else {
+      if (differenceInDays(start_date, wageOrderDates[0]) < 0) {
+        dates.push({
+          start_date: start_date,
+          end_date: subDays(wageOrderDates[0], 1).toISOString().split("T")[0],
+        });
+      }
+
+      let index = 0;
+      for (const wageOrderDate of wageOrderDates) {
+        if (index + 1 != wageOrderDates.length) {
+          dates.push({
+            start_date: wageOrderDate,
+            end_date: subDays(wageOrderDates[index + 1], 1)
+              .toISOString()
+              .split("T")[0],
+          });
+        }
+        ++index;
+      }
+
+      if (
+        differenceInDays(end_date, wageOrderDates[wageOrderDates.length - 1]) >=
+        0
+      ) {
+        dates.push({
+          start_date: wageOrderDates[wageOrderDates.length - 1],
+          end_date: end_date,
+        });
+      }
+    }
+
+    console.log(dates);
   };
 
   return (
@@ -90,14 +148,14 @@ const AddPeriodModal = ({}: Props) => {
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mb-1 text-base font-bold">Start Date</Text>
+                    <Text className="mb-1 text-base font-bold text-white">
+                      Start Date
+                    </Text>
                     <TouchableOpacity
                       className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       onPress={() => setIsStartDateModalVisible(true)}
                     >
-                      <Text>
-                        {initialValues.start_date || "Select start date"}
-                      </Text>
+                      <Text>{values.start_date || "Select start date"}</Text>
                       <Icon name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                     {touched.start_date && errors.start_date && (
@@ -108,12 +166,14 @@ const AddPeriodModal = ({}: Props) => {
                   </View>
 
                   <View className="w-[49%]">
-                    <Text className="mb-1 text-base font-bold">End Date</Text>
+                    <Text className="mb-1 text-base font-bold text-white">
+                      End Date
+                    </Text>
                     <TouchableOpacity
                       className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       onPress={() => setIsEndDateModalVisible(true)}
                     >
-                      <Text>{initialValues.end_date || "Select end date"}</Text>
+                      <Text>{values.end_date || "Select end date"}</Text>
                       <Icon name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                     {touched.end_date && errors.end_date && (
@@ -143,7 +203,7 @@ const AddPeriodModal = ({}: Props) => {
 
               {isStartDateModalVisible && (
                 <DateTimePicker
-                  value={formatDateValue(initialValues.start_date)}
+                  value={formatDateValue(values.start_date)}
                   mode="date"
                   onChange={(_, value) => {
                     handleDateChange("start_date", value, setFieldValue);
@@ -153,7 +213,7 @@ const AddPeriodModal = ({}: Props) => {
 
               {isEndDateModalVisible && (
                 <DateTimePicker
-                  value={formatDateValue(initialValues.end_date)}
+                  value={formatDateValue(values.end_date)}
                   mode="date"
                   onChange={(_, value) => {
                     handleDateChange("end_date", value, setFieldValue);
