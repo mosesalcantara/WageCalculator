@@ -207,7 +207,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 Start Date
               </Text>
               <TouchableOpacity
-                className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                className="h-11 flex-row items-center justify-between rounded-md border border-black px-2.5"
                 onPress={() => setIsStartDateModalVisible(true)}
               >
                 <Text>{period.start_date || "Select start date"}</Text>
@@ -221,7 +221,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
               </Text>
 
               <TouchableOpacity
-                className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                className="h-11 flex-row items-center justify-between rounded-md border border-black  px-2.5"
                 onPress={() => setIsEndDateModalVisible(true)}
               >
                 <Text>{period.end_date || "Select end date"}</Text>
@@ -233,11 +233,12 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
-              <View className="h-11 flex-row items-center  rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
+              <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
                 <TextInput
                   className="w-[85%]"
                   keyboardType="numeric"
                   placeholder="Enter Rate"
+                  placeholderTextColor="black"
                   value={period.rate}
                   onChangeText={(value) => handleChange("rate", value)}
                 />
@@ -270,9 +271,10 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 {daysOrHours}
               </Text>
               <TextInput
-                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                className="h-11 rounded-md border border-black px-2.5"
                 keyboardType="numeric"
                 placeholder={`Enter ${daysOrHours.toLowerCase()}`}
+                placeholderTextColor="black"
                 value={period.daysOrHours}
                 onChangeText={(value) => handleChange("daysOrHours", value)}
               />

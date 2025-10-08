@@ -265,7 +265,7 @@ const CalculatorPage = () => {
             </ScrollView>
           </View>
 
-          <View className="flex-1 bg-[#f5f5f5] px-4">
+          <View className="flex-1 bg-white px-4">
             <View className="flex-row items-center justify-between">
               <View className="py-2.5">
                 <Text className="ml-1.5 text-xl font-bold">
