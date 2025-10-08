@@ -63,7 +63,7 @@ const getStyles = (isPreview: boolean) => {
 };
 
 const generateHTML = (
-  record: Establishment | undefined,
+  record: Establishment,
   isPreview: boolean,
 ) => {
   const renderEmployee = (employee: Employee, index: number) => {
@@ -111,7 +111,7 @@ const generateHTML = (
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(violationType, type, record!.size);
+        total += getTotal(violationType, type, record.size);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -147,7 +147,7 @@ const generateHTML = (
     let subtotal = 0;
 
     violationType.periods.forEach((period, index) => {
-      const result = calculate(period, type, record!.size);
+      const result = calculate(period, type, record.size);
       if (validate(period)) {
         subtotal += result;
         html += `
@@ -201,12 +201,12 @@ const generateHTML = (
     const minimumRate = getMinimumRate(
       period.start_date,
       period.end_date,
-      record!.size,
+      record.size,
     );
 
     const wageOrder = wageOrders.find((wageOrder) => {
       const key =
-        record!.size == "Employing 10 or more workers"
+        record.size == "Employing 10 or more workers"
           ? "tenOrMore"
           : "lessThanTen";
       return wageOrder.rates[key] == minimumRate;
@@ -219,7 +219,7 @@ const generateHTML = (
         </p>`);
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(period, type, record!.size));
+    const total = formatNumber(calculate(period, type, record.size));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
