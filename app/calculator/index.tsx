@@ -111,7 +111,7 @@ const CalculatorPage = () => {
       resetForm();
       Toast.show({
         type: "success",
-        text1: "Added Periods",
+        text1: "Added Period",
         visibilityTime: toastVisibilityTime,
       });
     } catch (error) {
