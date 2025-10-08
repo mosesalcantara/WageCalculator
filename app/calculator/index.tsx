@@ -8,9 +8,12 @@ import {
   formatNumber,
   getDb,
   getTotal,
+  periodFormat,
   toastVisibilityTime,
+  wageOrders,
 } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
+import { differenceInDays, subDays } from "date-fns";
 import { eq } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -95,6 +98,109 @@ const CalculatorPage = () => {
         visibilityTime: toastVisibilityTime,
       });
     }
+  };
+
+  const handleSubmit = async (
+    values: { start_date: string; end_date: string },
+    { resetForm }: { resetForm: () => void },
+  ) => {
+    try {
+      const { start_date, end_date } = values;
+      const periods = getPeriods(start_date, end_date);
+      addPeriods(periods);
+      resetForm();
+      Toast.show({
+        type: "success",
+        text1: "Added Periods",
+        visibilityTime: toastVisibilityTime,
+      });
+    } catch (error) {
+      console.error(error);
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
+      });
+    }
+  };
+
+  const getPeriods = (start_date: string, end_date: string) => {
+    const periods = [];
+
+    wageOrders.sort((a, b) => {
+      return Number(new Date(a.date)) - Number(new Date(b.date));
+    });
+
+    const wageOrderDates = wageOrders.map((wageOrder) => wageOrder.date);
+    const isPast =
+      differenceInDays(start_date, wageOrderDates[0]) <= 0 &&
+      differenceInDays(end_date, wageOrderDates[0]) <= 0;
+    const isFuture =
+      differenceInDays(start_date, wageOrderDates[wageOrderDates.length - 1]) >=
+        0 &&
+      differenceInDays(end_date, wageOrderDates[wageOrderDates.length - 1]) >=
+        0;
+
+    if (isPast || isFuture) {
+      periods.push({
+        start_date: start_date,
+        end_date: end_date,
+      });
+    } else {
+      const start = wageOrderDates.findLast(
+        (wageOrderDate) => differenceInDays(start_date, wageOrderDate) >= 0,
+      ) || start_date;
+
+      const end = wageOrderDates.findLast(
+        (wageOrderDate) => differenceInDays(end_date, wageOrderDate) >= 0,
+      );
+
+      const filteredWageOrders = [];
+      for (const wageOrderDate of wageOrderDates) {
+        if (
+          differenceInDays(start!, wageOrderDate) <= 0 &&
+          differenceInDays(end!, wageOrderDate) >= 0
+        ) {
+          filteredWageOrders.push(wageOrderDate);
+        }
+      }
+
+      let index = 0;
+      for (const wageOrderDate of filteredWageOrders) {
+        periods.push({
+          start_date: index == 0 ? start_date : wageOrderDate,
+          end_date:
+            index == filteredWageOrders.length - 1
+              ? end_date
+              : subDays(filteredWageOrders[index + 1], 1)
+                  .toISOString()
+                  .split("T")[0],
+        });
+
+        ++index;
+      }
+    }
+
+    return periods;
+  };
+
+  const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
+    setValues((prev) => {
+      const periodsFormat = dates.map((date) => {
+        return {
+          ...periodFormat,
+          start_date: date.start_date,
+          end_date: date.end_date,
+        };
+      });
+
+      return {
+        ...prev,
+        [type]: {
+          periods: [...prev[type].periods, ...periodsFormat],
+        },
+      };
+    });
   };
 
   useFocusEffect(
@@ -209,7 +315,7 @@ const CalculatorPage = () => {
               </ScrollView>
             </KeyboardAvoidingView>
 
-            <AddPeriodModal />
+            <AddPeriodModal onSubmit={handleSubmit} />
           </View>
         </>
       )}

@@ -1,26 +1,32 @@
 import { period as validationSchema } from "@/schemas/globals";
-import {
-  formatDateValue,
-  toastVisibilityTime,
-  wageOrders,
-} from "@/utils/globals";
+import { formatDateValue } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { differenceInDays, subDays } from "date-fns";
 import { Formik, FormikErrors } from "formik";
 import { useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-type Props = {};
+type Props = {
+  onSubmit: (
+    values: {
+      start_date: string;
+      end_date: string;
+    },
+    {
+      resetForm,
+    }: {
+      resetForm: () => void;
+    },
+  ) => Promise<void>;
+};
 
-const AddPeriodModal = ({}: Props) => {
+const AddPeriodModal = ({ onSubmit }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
 
   const initialValues = {
-    start_date: "2025-01-30",
-    end_date: "2025-01-01",
+    start_date: "",
+    end_date: "",
   };
   const [isVisible, setIsVisible] = useState(false);
 
@@ -45,76 +51,6 @@ const AddPeriodModal = ({}: Props) => {
     }
   };
 
-  const handleSubmit = async (
-    values: typeof initialValues,
-    { resetForm }: { resetForm: () => void },
-  ) => {
-    try {
-      const { start_date, end_date } = values;
-      splitDates(start_date, end_date);
-      resetForm();
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "An Error Has Occured. Please Try Again.",
-        visibilityTime: toastVisibilityTime,
-      });
-    }
-  };
-
-  const splitDates = (start_date: string, end_date: string) => {
-    const dates = [];
-
-    wageOrders.sort((a, b) => {
-      return Number(new Date(a.date)) - Number(new Date(b.date));
-    });
-    const wageOrderDates = wageOrders.map((wageOrder) => wageOrder.date);
-
-    if (
-      differenceInDays(start_date, wageOrderDates[wageOrderDates.length - 1]) >=
-        0 &&
-      differenceInDays(end_date, wageOrderDates[wageOrderDates.length - 1]) >= 0
-    ) {
-      dates.push({
-        start_date: start_date,
-        end_date: end_date,
-      });
-    } else {
-      if (differenceInDays(start_date, wageOrderDates[0]) < 0) {
-        dates.push({
-          start_date: start_date,
-          end_date: subDays(wageOrderDates[0], 1).toISOString().split("T")[0],
-        });
-      }
-
-      let index = 0;
-      for (const wageOrderDate of wageOrderDates) {
-        if (index + 1 != wageOrderDates.length) {
-          dates.push({
-            start_date: wageOrderDate,
-            end_date: subDays(wageOrderDates[index + 1], 1)
-              .toISOString()
-              .split("T")[0],
-          });
-        }
-        ++index;
-      }
-
-      if (
-        differenceInDays(end_date, wageOrderDates[wageOrderDates.length - 1]) >=
-        0
-      ) {
-        dates.push({
-          start_date: wageOrderDates[wageOrderDates.length - 1],
-          end_date: end_date,
-        });
-      }
-    }
-
-    console.log(dates);
-  };
-
   return (
     <>
       <TouchableOpacity
@@ -133,7 +69,13 @@ const AddPeriodModal = ({}: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={(
+            values: { start_date: string; end_date: string },
+            { resetForm }: { resetForm: () => void },
+          ) => {
+            onSubmit(values, { resetForm });
+            // setIsVisible(false);
+          }}
         >
           {({
             values,
