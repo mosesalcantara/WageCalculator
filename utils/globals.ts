@@ -217,3 +217,34 @@ export const getInitialViolations = (rate?: number) => {
   });
   return values;
 };
+
+export const getViolationKeyword = (type: string) => {
+  let keyword = type;
+  if (type == "Basic Wage") {
+    keyword = "Wages";
+  } else if (type == "Special Day") {
+    keyword = "Premium Pay on Special Day";
+  } else if (type == "Rest Day") {
+    keyword = "Premium Pay on Rest Day";
+  }
+  return keyword;
+};
+
+export const getDaysOrHours = (type: string, daysOrHours: string) => {
+  let keyword = `${daysOrHours} `;
+  if (type == "Basic Wage" || type == "Holiday Pay") {
+    keyword += "day";
+  } else if (type == "Overtime Pay") {
+    keyword += "OT hour";
+  } else if (type == "Night Shift Differential") {
+    keyword += "night-shift hour";
+  } else if (type == "Special Day") {
+    keyword += "special day";
+  } else if (type == "Rest Day") {
+    keyword += "rest day";
+  } else if (type == "13th Month Pay") {
+    keyword += "day";
+  }
+  Number(daysOrHours) > 1 && (keyword += "s");
+  return keyword;
+};
