@@ -219,6 +219,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
               <Text className="mb-1 text-base font-bold text-[#333]">
                 End Date
               </Text>
+              
               <TouchableOpacity
                 className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                 onPress={() => setIsEndDateModalVisible(true)}
