@@ -20,9 +20,9 @@ const Select = ({
   const [isFocus, setIsFocus] = useState(false);
 
   return (
-    <View className="mt-1 rounded-md bg-white p-2">
+    <View className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] p-2">
       <Dropdown
-        style={[{ height: 20 }, isFocus && { borderColor: "blue" }]}
+        style={{ height: 20 }}
         placeholderStyle={{ fontSize: 14 }}
         selectedTextStyle={{ fontSize: 14 }}
         data={options}
