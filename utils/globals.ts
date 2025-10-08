@@ -74,8 +74,8 @@ export const violationTypesArray = [
 export const periodFormat = {
   start_date: "",
   end_date: "",
-  daysOrHours: "",
   rate: "",
+  daysOrHours: "",
 };
 
 export const periodsFormat = {
@@ -97,9 +97,9 @@ export const numberToLetter = (number: number) => {
   return String.fromCharCode(65 + number);
 };
 
-  export const formatDateValue = (date: string) => {
-    return date ? new Date(date) : new Date();
-  };
+export const formatDateValue = (date: string) => {
+  return date ? new Date(date) : new Date();
+};
 
 export const formatDate = (date: string) => {
   return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
@@ -198,10 +198,14 @@ export const getTotal = (
   return result;
 };
 
-export const getInitialViolations = () => {
+export const getPeriodFormat = (rate?: number) => {
+  return { ...periodFormat, rate: `${rate ? `${rate}` : ""}` };
+};
+
+export const getInitialViolations = (rate?: number) => {
   const values = {} as ViolationValues;
   violationTypesArray.forEach((type) => {
-    const periodsFormat = { periods: [periodFormat] };
+    const periodsFormat = { periods: [getPeriodFormat(rate)] };
     values[type as ViolationTypes] =
       type == "13th Month Pay"
         ? { ...periodsFormat, received: "" }

@@ -10,8 +10,8 @@ import {
   formatDateValue,
   formatNumber,
   getMinimumRate,
+  getPeriodFormat,
   numberToLetter,
-  periodFormat,
   validateDateRange,
 } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
@@ -144,12 +144,18 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     handleInitialChange("rate", `${parent.rate}`, index);
   };
 
+  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
+    type,
+  )
+    ? "Hours"
+    : "Days";
+
   const addPeriod = () => {
     setValues((prev) => {
       return {
         ...prev,
         [type]: {
-          periods: [...prev[type].periods, periodFormat],
+          periods: [...prev[type].periods, getPeriodFormat(parent.rate)],
         },
       };
     });
@@ -166,7 +172,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   const clearPeriod = () => {
     setValues((prev) => {
       const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? periodFormat : period,
+        index == periodIndex ? getPeriodFormat() : period,
       );
       return { ...prev, [type]: { periods: updatedPeriods } };
     });
@@ -174,7 +180,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
   return (
     <>
-      <View className="mx-10 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] p-2.5">
+      <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
             <Text className="text-center font-bold">
@@ -213,6 +219,35 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">
+                Rate
+                <Text onPress={setRate}> (Rate Button)</Text>
+              </Text>
+              <TextInput
+                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                keyboardType="numeric"
+                placeholder="Enter Rate"
+                value={period.rate}
+                onChangeText={(value) => handleChange("rate", value)}
+              />
+            </View>
+
+            <View className="w-[49%]">
+              <Text className="mb-1 text-base font-bold text-[#333]">
+                Prevailing Rate
+              </Text>
+              <TextInput
+                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                keyboardType="numeric"
+                placeholder=""
+                editable={false}
+                value={`${minimumRate == 0 ? "" : minimumRate}`}
+              />
+            </View>
+          </View>
+
+          <View className="flex-row flex-wrap justify-between gap-1">
+            <View className={`${daysOrHours == "Days" ? "w-[49%]" : "w-full"}`}>
+              <Text className="mb-1 text-base font-bold text-[#333]">
                 {checkType() ? "Hours" : "Days"}
               </Text>
               <TextInput
@@ -224,48 +259,21 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
               />
             </View>
 
-            <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
-                Rate
-                <Text onPress={setRate}> (Set Rate)</Text>
-              </Text>
-              <TextInput
-                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                keyboardType="numeric"
-                placeholder="Enter Rate"
-                value={period.rate}
-                onChangeText={(value) => handleChange("rate", value)}
-              />
-            </View>
+            {daysOrHours == "Days" && (
+              <View className="w-[49%]">
+                <Text className="mb-1 text-base font-bold text-[#333]">
+                  Estimated
+                </Text>
+                <TextInput
+                  className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                  keyboardType="numeric"
+                  placeholder=""
+                  editable={false}
+                  value={`${estimated}`}
+                />
+              </View>
+            )}
           </View>
-        </View>
-
-        {!["Overtime Pay", "Night Shift Differential"].includes(type) && (
-          <View>
-            <Text className="mb-1 text-base font-bold text-[#333]">
-              Estimated
-            </Text>
-            <TextInput
-              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-              keyboardType="numeric"
-              placeholder=""
-              editable={false}
-              value={`${estimated}`}
-            />
-          </View>
-        )}
-        
-        <View>
-          <Text className="mb-1 text-base font-bold text-[#333]">
-            Prevailing Rate
-          </Text>
-          <TextInput
-            className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-            keyboardType="numeric"
-            placeholder=""
-            editable={false}
-            value={`${minimumRate == 0 ? "" : minimumRate}`}
-          />
         </View>
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">

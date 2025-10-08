@@ -50,6 +50,6 @@ export type ViolationValues = {
 export type Period = {
   start_date: string;
   end_date: string;
-  daysOrHours: string;
   rate: string;
+  daysOrHours: string;
 };

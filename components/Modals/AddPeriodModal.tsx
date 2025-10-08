@@ -72,9 +72,10 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
           onSubmit={(
             values: { start_date: string; end_date: string },
             { resetForm }: { resetForm: () => void },
+            
           ) => {
             onSubmit(values, { resetForm });
-            // setIsVisible(false);
+            setIsVisible(false);
           }}
         >
           {({

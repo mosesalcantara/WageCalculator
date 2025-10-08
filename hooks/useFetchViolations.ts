@@ -35,6 +35,8 @@ const useFetchViolations = (db: Db) => {
             },
           ];
           setValues(JSON.parse(data.violations[0].values as string));
+        } else {
+          setValues(getInitialViolations(data.rate));
         }
         setParent({ ...data, violations: violations });
         const establishmentData = await db.query.establishments.findFirst({

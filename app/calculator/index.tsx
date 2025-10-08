@@ -147,19 +147,20 @@ const CalculatorPage = () => {
         end_date: end_date,
       });
     } else {
-      const start = wageOrderDates.findLast(
-        (wageOrderDate) => differenceInDays(start_date, wageOrderDate) >= 0,
-      ) || start_date;
+      const start =
+        wageOrderDates.findLast(
+          (wageOrderDate) => differenceInDays(start_date, wageOrderDate) >= 0,
+        ) || start_date;
 
       const end = wageOrderDates.findLast(
         (wageOrderDate) => differenceInDays(end_date, wageOrderDate) >= 0,
-      );
+      ) || end_date;
 
       const filteredWageOrders = [];
       for (const wageOrderDate of wageOrderDates) {
         if (
-          differenceInDays(start!, wageOrderDate) <= 0 &&
-          differenceInDays(end!, wageOrderDate) >= 0
+          differenceInDays(start, wageOrderDate) <= 0 &&
+          differenceInDays(end, wageOrderDate) >= 0
         ) {
           filteredWageOrders.push(wageOrderDate);
         }
@@ -191,6 +192,7 @@ const CalculatorPage = () => {
           ...periodFormat,
           start_date: date.start_date,
           end_date: date.end_date,
+          rate: `${parent ? parent.rate : ""}`,
         };
       });
 
