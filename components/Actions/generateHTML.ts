@@ -198,39 +198,40 @@ const generateHTML = (
   const renderFormula = (period: Period, rate: number, type: string) => {
     let html = "";
 
-    const rateToUse = getMinimumRate(
+    const minimumRate = getMinimumRate(
       period.start_date,
       period.end_date,
       record!.size,
     );
 
     const wageOrder = wageOrders.find((wageOrder) => {
-      return (
-        wageOrder.rates[record!.size as keyof typeof wageOrder.rates] ==
-        rateToUse
-      );
+      const key =
+        record!.size == "Employing 10 or more workers"
+          ? "tenOrMore"
+          : "lessThanTen";
+      return wageOrder.rates[key] == minimumRate;
     });
 
-    rateToUse >= rate &&
+    minimumRate >= rate &&
       (html += `
         <p>
-          Prevailing Rate: Php${formatNumber(rateToUse)} (${wageOrder!.name})
+          Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})
         </p>`);
 
-    const formattedRateToUse = formatNumber(rateToUse);
+    const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(calculate(period, type, record!.size));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
       case "Basic Wage":
         html += `<p>
-                  Php${formattedRateToUse} - ${formatNumber(rate)} x ${keyword} 
+                  Php${formatNumber(minimumRate)} - ${formatNumber(rate)} x ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Overtime Pay":
         html += `<p>
-                  Php${formattedRateToUse} / 8 x 25% x ${keyword} 
+                  Php${formattedRateToUse} / 8 x ${period.type == "Normal Day" ? "25%" : "30%"} x ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
@@ -275,6 +276,7 @@ const generateHTML = (
           <table>
             <tbody>
               ${
+                record &&
                 record.employees &&
                 record.employees
                   .map(
