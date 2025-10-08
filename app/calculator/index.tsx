@@ -133,12 +133,12 @@ const CalculatorPage = () => {
 
     const wageOrderDates = wageOrders.map((wageOrder) => wageOrder.date);
     const isPast =
-      differenceInDays(start_date, wageOrderDates[0]) <= 0 &&
-      differenceInDays(end_date, wageOrderDates[0]) <= 0;
+      differenceInDays(start_date, wageOrders[0].date) <= 0 &&
+      differenceInDays(end_date, wageOrders[0].date) <= 0;
     const isFuture =
-      differenceInDays(start_date, wageOrderDates[wageOrderDates.length - 1]) >=
+      differenceInDays(start_date, wageOrders[wageOrders.length - 1].date) >=
         0 &&
-      differenceInDays(end_date, wageOrderDates[wageOrderDates.length - 1]) >=
+      differenceInDays(end_date, wageOrders[wageOrderDates.length - 1].date) >=
         0;
 
     if (isPast || isFuture) {
@@ -147,33 +147,33 @@ const CalculatorPage = () => {
         end_date: end_date,
       });
     } else {
-      const start =
-        wageOrderDates.findLast(
-          (wageOrderDate) => differenceInDays(start_date, wageOrderDate) >= 0,
-        ) || start_date;
+      const start = wageOrders.findLast(
+        (wageOrder) => differenceInDays(start_date, wageOrder.date) >= 0,
+      );
 
-      const end = wageOrderDates.findLast(
-        (wageOrderDate) => differenceInDays(end_date, wageOrderDate) >= 0,
-      ) || end_date;
+      const end = wageOrders.findLast(
+        (wageOrder) => differenceInDays(end_date, wageOrder.date) >= 0,
+      );
 
       const filteredWageOrders = [];
-      for (const wageOrderDate of wageOrderDates) {
+      for (const wageOrder of wageOrders) {
         if (
-          differenceInDays(start, wageOrderDate) <= 0 &&
-          differenceInDays(end, wageOrderDate) >= 0
+          differenceInDays(start ? start.date : start_date, wageOrder.date) <=
+            0 &&
+          differenceInDays(end ? end.date : end_date, wageOrder.date) >= 0
         ) {
-          filteredWageOrders.push(wageOrderDate);
+          filteredWageOrders.push(wageOrder);
         }
       }
 
       let index = 0;
-      for (const wageOrderDate of filteredWageOrders) {
+      for (const wageOrder of filteredWageOrders) {
         periods.push({
-          start_date: index == 0 ? start_date : wageOrderDate,
+          start_date: index == 0 ? start_date : wageOrder.date,
           end_date:
             index == filteredWageOrders.length - 1
               ? end_date
-              : subDays(filteredWageOrders[index + 1], 1)
+              : subDays(filteredWageOrders[index + 1].date, 1)
                   .toISOString()
                   .split("T")[0],
         });

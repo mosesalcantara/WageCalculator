@@ -72,7 +72,6 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
           onSubmit={(
             values: { start_date: string; end_date: string },
             { resetForm }: { resetForm: () => void },
-            
           ) => {
             onSubmit(values, { resetForm });
             setIsVisible(false);
@@ -102,7 +101,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                       <Icon name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                     {touched.start_date && errors.start_date && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.start_date}
                       </Text>
                     )}
@@ -120,7 +119,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                       <Icon name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                     {touched.end_date && errors.end_date && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.end_date}
                       </Text>
                     )}

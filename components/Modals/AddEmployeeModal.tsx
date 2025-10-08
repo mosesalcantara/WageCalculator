@@ -19,14 +19,14 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
     last_name: "",
     first_name: "",
     middle_name: "",
-    rate: 0,
+    rate: "",
     start_day: "Monday",
     end_day: "Friday",
   };
   const [isVisible, setIsVisible] = useState(false);
 
   const handleSubmit = async (
-    values: Override<Employee, { id?: number }>,
+    values: Override<Employee, { id?: number, rate: string }>,
     { resetForm }: { resetForm: () => void },
   ) => {
     try {
@@ -96,7 +96,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                       onBlur={() => setFieldTouched("last_name")}
                     />
                     {touched.last_name && errors.last_name && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.last_name}
                       </Text>
                     )}
@@ -112,7 +112,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                       onBlur={() => setFieldTouched("first_name")}
                     />
                     {touched.first_name && errors.first_name && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.first_name}
                       </Text>
                     )}
@@ -130,7 +130,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                       onBlur={() => setFieldTouched("middle_name")}
                     />
                     {touched.middle_name && errors.middle_name && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.middle_name}
                       </Text>
                     )}
@@ -142,12 +142,12 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                       keyboardType="numeric"
                       placeholder="Enter rate"
-                      value={values.rate ? `${values.rate}` : ""}
+                      value={values.rate}
                       onChangeText={handleChange("rate")}
                       onBlur={() => setFieldTouched("rate")}
                     />
                     {touched.rate && errors.rate && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.rate}
                       </Text>
                     )}
@@ -166,7 +166,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                       setFieldTouched={setFieldTouched}
                     />
                     {touched.start_day && errors.start_day && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.start_day}
                       </Text>
                     )}
@@ -183,7 +183,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                       setFieldTouched={setFieldTouched}
                     />
                     {touched.end_day && errors.end_day && (
-                      <Text className="text-[0.75rem] text-red-500">
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                         {errors.end_day}
                       </Text>
                     )}

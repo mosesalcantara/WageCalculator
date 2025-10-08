@@ -90,7 +90,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                     onBlur={() => setFieldTouched("name")}
                   />
                   {touched.name && errors.name && (
-                    <Text className="text-[0.75rem] text-red-500">
+                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                       {errors.name}
                     </Text>
                   )}
@@ -120,7 +120,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                     setFieldTouched={setFieldTouched}
                   />
                   {touched.size && errors.size && (
-                    <Text className="text-[0.75rem] text-red-500">
+                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
                       {errors.size}
                     </Text>
                   )}

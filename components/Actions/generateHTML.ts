@@ -14,6 +14,7 @@ import {
   getViolationKeyword,
   numberToLetter,
   validate,
+  wageOrders,
 } from "@/utils/globals";
 
 const getStyles = (isPreview: boolean) => {
@@ -197,26 +198,23 @@ const generateHTML = (
   const renderFormula = (period: Period, rate: number, type: string) => {
     let html = "";
 
-    const minimumRates = [
-      { name: "RB-MIMAROPA-10", date: "2022-06-22", minimum_rate: 355 },
-      { name: "RB-MIMAROPA-11", date: "2023-12-07", minimum_rate: 395 },
-      { name: "RB-MIMAROPA-12", date: "2024-12-23", minimum_rate: 430 },
-    ];
-
     const rateToUse = getMinimumRate(
       period.start_date,
       period.end_date,
       record!.size,
     );
 
-    const minimumRate = minimumRates.find((minimumRate) => {
-      return minimumRate.minimum_rate == rateToUse;
+    const wageOrder = wageOrders.find((wageOrder) => {
+      return (
+        wageOrder.rates[record!.size as keyof typeof wageOrder.rates] ==
+        rateToUse
+      );
     });
 
     rateToUse >= rate &&
       (html += `
         <p>
-          Prevailing Rate: Php${formatNumber(rateToUse)} (${minimumRate!.name})
+          Prevailing Rate: Php${formatNumber(rateToUse)} (${wageOrder!.name})
         </p>`);
 
     const formattedRateToUse = formatNumber(rateToUse);
