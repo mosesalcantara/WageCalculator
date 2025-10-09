@@ -5,9 +5,9 @@ import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
 import useFetchEstablishments from "@/hooks/useFetchEstablishments";
 import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useCallback } from "react";
-import { BackHandler, View } from "react-native";
+import { BackHandler, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 const EstablishmentPage = () => {
   const db = getDb();
@@ -44,6 +44,14 @@ const EstablishmentPage = () => {
           refetch={refetch}
           onDelete={handleDelete}
         />
+
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/custom" as Href);
+          }}
+        >
+          <Text className="text-center font-bold text-white mb-20">Custom</Text>
+        </TouchableOpacity>
 
         <AddEstablishmentModal db={db} refetch={refetch} />
       </View>

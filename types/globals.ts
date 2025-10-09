@@ -55,6 +55,16 @@ export type Period = {
   type: string;
 };
 
+export type CustomPeriod = {
+  start_date: string;
+  end_date: string;
+  type: string;
+  rate: string;
+  days: string;
+  nightShiftHours: string;
+  overtimeHours: string;
+}
+
 export type Holiday = {
   name: string;
   date: string;

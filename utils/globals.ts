@@ -41,6 +41,169 @@ export const wageOrders = [
   },
 ];
 
+export const typesOptions = [
+  {
+    label: "Ordinary day",
+    value: "Ordinary day",
+  },
+  {
+    label: "Rest Day",
+    value: "Rest Day",
+  },
+    {
+    label: "Special (non-working) day",
+    value: "Special (non-working) day",
+  },
+  {
+    label: "Special (non-working) day falling on rest day",
+    value: "Special (non-working) day falling on rest day",
+  },
+  {
+    label: "Double special (non-working) day",
+    value: "Double special (non-working) day",
+  },
+  {
+    label: "Double special (non-working) day falling on rest day",
+    value: "Double special (non-working) day falling on rest day",
+  },
+  {
+    label: "Regular holiday",
+    value: "Regular holiday",
+  },
+  {
+    label: "Regular holiday falling on rest day",
+    value: "Regular holiday falling on rest day",
+  },
+  {
+    label: "Double regular holiday",
+    value: "Double regular holiday",
+  },
+  {
+    label: "Double regular holiday falling on rest day",
+    value: "Double regular holiday falling on rest day",
+  },
+  {
+    label: "Ordinary day, night shift",
+    value: "Ordinary day, night shift",
+  },
+  {
+    label: "Rest day, night shift",
+    value: "Rest day, night shift",
+  },
+  {
+    label: "Special (non-working) day, night shift",
+    value: "Special (non-working) day, night shift",
+  },
+  {
+    label: "Special (non-working) day, rest day, night shift",
+    value: "Special (non-working) day, rest day, night shift",
+  },
+  {
+    label: "Double special (non-working) day, night shift",
+    value: "Double special (non-working) day, night shift",
+  },
+  {
+    label: "Double special (non-working) day, rest day, night shift",
+    value: "Double special (non-working) day, rest day, night shift",
+  },
+  {
+    label: "Regular holiday, night shift",
+    value: "Regular holiday, night shift",
+  },
+  {
+    label: "Regular holiday, rest day, night shift",
+    value: "Regular holiday, rest day, night shift",
+  },
+  {
+    label: "Double holiday, night shift",
+    value: "Double holiday, night shift",
+  },
+  {
+    label: "Double holiday, rest day, night shift",
+    value: "Double holiday, rest day, night shift",
+  },
+  {
+    label: "Ordinary day, OT",
+    value: "Ordinary day, OT",
+  },
+  {
+    label: "Rest day, OT",
+    value: "Rest day, OT",
+  },
+  {
+    label: "Special (non-working) day, OT",
+    value: "Special (non-working) day, OT",
+  },
+  {
+    label: "Special (non-working) day, rest day, OT",
+    value: "Special (non-working) day, rest day, OT",
+  },
+  {
+    label: "Double special (non-working) day, OT",
+    value: "Double special (non-working) day, OT",
+  },
+  {
+    label: "Double special (non-working) day, rest day, OT",
+    value: "Double special (non-working) day, rest day, OT",
+  },
+  {
+    label: "Regular holiday, OT",
+    value: "Regular holiday, OT",
+  },
+  {
+    label: "Regular holiday, rest day, OT",
+    value: "Regular holiday, rest day, OT",
+  },
+  {
+    label: "Double holiday, OT",
+    value: "Double holiday, OT",
+  },
+  {
+    label: "Double holiday, rest day, OT",
+    value: "Double holiday, rest day, OT",
+  },
+  {
+    label: "Ordinary day, night shift, OT",
+    value: "Ordinary day, night shift, OT",
+  },
+  {
+    label: "Rest day, night shift, OT",
+    value: "Rest day, night shift, OT",
+  },
+  {
+    label: "Special (non-working) day, night shift, OT",
+    value: "Special (non-working) day, night shift, OT",
+  },
+  {
+    label: "Special (non-working) day, rest day, night shift, OT",
+    value: "Special (non-working) day, rest day, night shift, OT",
+  },
+  {
+    label: "Double special (non-working) day, night shift, OT",
+    value: "Double special (non-working) day, night shift, OT",
+  },
+  {
+    label: "Double special (non-working) day, rest day, night shift, OT",
+    value: "Double special (non-working) day, rest day, night shift, OT",
+  },
+  {
+    label: "Regular holiday, night shift, OT",
+    value: "Regular holiday, night shift, OT",
+  },
+  {
+    label: "Regular holiday, rest day, night shift, OT",
+    value: "Regular holiday, rest day, night shift, OT",
+  },
+  {
+    label: "Double holiday, night shift, OT",
+    value: "Double holiday, night shift, OT",
+  },
+  {
+    label: "Double holiday, rest day, night shift, OT",
+    value: "Double holiday, rest day, night shift, OT",
+  },
+];
+
 export const daysOptions = [
   { label: "Monday", value: "Monday" },
   { label: "Tuesday", value: "Tuesday" },
@@ -70,6 +233,16 @@ export const violationTypesArray = [
   "Holiday Pay",
   "13th Month Pay",
 ];
+
+export const customPeriodFormat = {
+  start_date: "",
+  end_date: "",
+  type: "",
+  rate: "",
+  days: "",
+  nightShiftHours: "",
+  overtimeHours: "",
+};
 
 export const periodFormat = {
   start_date: "",
