@@ -267,58 +267,58 @@ const CalculatorPage = () => {
               </ScrollView>
             </View>
 
-            <View className="flex-1 bg-[#acb6e2ff] px-4">
-              <View className="flex-row items-center justify-between">
-                <View className="py-2.5">
-                  <Text className="ml-1.5 text-xl font-bold">
-                    {`${parent.last_name}, ${parent.first_name} ${parent.middle_name.slice(0, 1).toUpperCase()}. - ${formatNumber(
-                      parent.rate,
-                    )}`}
-                  </Text>
-                  <Text className="ml-1.5 text-xl font-bold underline">
-                    Subtotal:{" "}
-                    {formatNumber(
-                      getTotal(violationType, type, grandparent.size),
-                    )}
-                  </Text>
-                </View>
-              </View>
-
-              <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                className="h-[32.5rem]"
-              >
-                <ScrollView>
-                  <View className="gap-7">
-                    {violationType.periods.map((_, index) => (
-                      <Form
-                        key={index}
-                        grandparent={grandparent}
-                        parent={parent}
-                        type={type}
-                        index={index}
-                        valuesState={[values, setValues]}
-                      />
-                    ))}
-                  </View>
-
-                  {type == "13th Month Pay" && (
-                    <View className="mx-10 mt-4 p-2.5 bg-white rounded-[0.625rem]">
-                      <Text className="text-base font-bold text-[#333]">
-                        Received
-                      </Text>
-                      <TextInput
-                        className="h-11 rounded-md border border-black px-2.5"
-                        keyboardType="numeric"
-                        placeholder="Enter pay received"
-                        value={violationType.received}
-                        onChangeText={(value) => handleReceivedChange(value)}
-                      />
-                    </View>
+            <View className="flex-row items-center justify-between px-4">
+              <View className="py-2.5">
+                <Text className="ml-1.5 text-xl font-bold">
+                  {`${parent.last_name}, ${parent.first_name} ${parent.middle_name.slice(0, 1).toUpperCase()}. - ${formatNumber(
+                    parent.rate,
+                  )}`}
+                </Text>
+                <Text className="ml-1.5 text-xl font-bold underline">
+                  Subtotal:{" "}
+                  {formatNumber(
+                    getTotal(violationType, type, grandparent.size),
                   )}
-                </ScrollView>
-              </KeyboardAvoidingView>
+                </Text>
+              </View>
+            </View>
 
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              className="h-[33rem] px-4"
+            >
+              <ScrollView>
+                <View className="gap-7">
+                  {violationType.periods.map((_, index) => (
+                    <Form
+                      key={index}
+                      grandparent={grandparent}
+                      parent={parent}
+                      type={type}
+                      index={index}
+                      valuesState={[values, setValues]}
+                    />
+                  ))}
+                </View>
+
+                {type == "13th Month Pay" && (
+                  <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
+                    <Text className="text-base font-bold text-[#333]">
+                      Received
+                    </Text>
+                    <TextInput
+                      className="h-11 rounded-md border border-black px-2.5"
+                      keyboardType="numeric"
+                      placeholder="Enter pay received"
+                      value={violationType.received}
+                      onChangeText={(value) => handleReceivedChange(value)}
+                    />
+                  </View>
+                )}
+              </ScrollView>
+            </KeyboardAvoidingView>
+
+            <View>
               <AddPeriodModal onSubmit={handleSubmit} />
             </View>
           </SafeAreaView>
