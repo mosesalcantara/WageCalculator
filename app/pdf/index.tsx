@@ -11,6 +11,8 @@ import { WebView } from "react-native-webview";
 const PDFPage = () => {
   const db = getDb();
   const { record } = useFetchEstablishmentViolations(db);
+  const previewHTML = record ? generateHTML(record, true) : "";
+  const exportHTML = record ? generateHTML(record, false) : "";
 
   return (
     <>
@@ -20,23 +22,17 @@ const PDFPage = () => {
 
           <View className="flex-1 bg-white">
             <View className="mb-2.5 flex-1">
-              <WebView source={{ html: generateHTML(record, true) }} />
+              <WebView source={{ html: previewHTML }} />
             </View>
-            <View className="flex-row  justify-around mb-[3.125rem] px-5">
+            <View className="mb-[3.125rem]  flex-row justify-around px-5">
               <Button
                 title="Export PDF"
-                onPress={() => exportPDF(record)}
+                onPress={() => exportPDF(exportHTML)}
               />
               <View className="h-2.5" />
-              <Button
-                title="Export DOCX"
-                onPress={() => exportDOCX(record)}
-              />
+              <Button title="Export DOCX" onPress={() => exportDOCX(record)} />
               <View className="h-2.5" />
-              <Button
-                title="Export XLSX"
-                onPress={() => exportXLSX(record)}
-              />
+              <Button title="Export XLSX" onPress={() => exportXLSX(record)} />
             </View>
           </View>
         </>
