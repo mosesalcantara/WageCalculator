@@ -1,4 +1,4 @@
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
@@ -22,17 +22,71 @@ const ViewDaysModal = ({ visibilityState }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="w-4/5 max-h-[70%] rounded-[0.625rem] bg-[#1E90FF] p-4">
+            <Text className="mb-3 text-center text-lg font-bold text-white">
+              Affected Holidays
+            </Text>
+
+            <ScrollView
+              className="mb-2 rounded-md bg-white p-3"
+              showsVerticalScrollIndicator={true}
+            >
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  1. Chinese New Year
+                </Text>
+                <Text>Feb 16, 2018</Text>
+              </View>
+
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  2. EDSA People Power Revolution Anniversary
+                </Text>
+                <Text>Feb 25, 2025</Text>
+              </View>
+
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  3. Maundy Thursday
+                </Text>
+                <Text>Mar 28, 2025</Text>
+              </View>
+
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  4. Rizal Day
+                </Text>
+                <Text>Dec 30, 2025</Text>
+              </View>
+
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  5. Bonifacio Day
+                </Text>
+                <Text>Nov 30, 2025</Text>
+              </View>
+
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  6. Ninoy Aquino Day
+                </Text>
+                <Text>Aug 21, 2025</Text>
+              </View>
+
+              <View className="mb-3 border-b border-gray-300 pb-2">
+                <Text className="text-base font-bold text-[#333]">
+                  7. Eid'l Adha
+                </Text>
+                <Text>Jun 7, 2025</Text>
+              </View>
+            </ScrollView>
+
             <View className="flex-row justify-end">
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-bold">Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]">
-                <Text className="font-bold">Add</Text>
+                <Text className="font-bold">Back</Text>
               </TouchableOpacity>
             </View>
           </View>
