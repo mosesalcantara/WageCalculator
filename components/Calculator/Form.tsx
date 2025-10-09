@@ -243,7 +243,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                   onChangeText={(value) => handleChange("rate", value)}
                 />
                 <Icon
-                  name="download"
+                  name="autorenew"
                   size={20}
                   color="#555"
                   onPress={setRate}
