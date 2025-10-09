@@ -1,14 +1,12 @@
-import generateHTML from "@/components/Actions/generateHTML";
-import { Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
+import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import Toast from "react-native-toast-message";
-import * as Print from "expo-print"
 
-const exportPDF = async (record: Establishment | undefined) => {
+const exportPDF = async (html: string) => {
   try {
     const { uri } = await Print.printToFileAsync({
-      html: generateHTML(record, false),
+      html: html,
     });
 
     (await Sharing.isAvailableAsync()) && (await Sharing.shareAsync(uri));
