@@ -28,6 +28,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -236,89 +237,91 @@ const CalculatorPage = () => {
     <>
       {grandparent && parent && values && (
         <>
-          <NavBar />
+          <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+            <NavBar />
 
-          <View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              className="border-b border-b-[#ddd] bg-white py-2.5"
-            >
-              {getTabs(grandparent.size).map((tab) => (
-                <TouchableOpacity
-                  key={tab.name}
-                  className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                  onPress={() => setType(tab.name as ViolationTypes)}
-                >
-                  <Icon
-                    name={tab.icon}
-                    size={18}
-                    color={type === tab.name ? "#fff" : "#555"}
-                  />
-                  <Text
-                    className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
+            <View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="border-b border-b-[#ddd] py-2.5"
+              >
+                {getTabs(grandparent.size).map((tab) => (
+                  <TouchableOpacity
+                    key={tab.name}
+                    className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
+                    onPress={() => setType(tab.name as ViolationTypes)}
                   >
-                    {tab.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-
-          <View className="flex-1 bg-white px-4">
-            <View className="flex-row items-center justify-between">
-              <View className="py-2.5">
-                <Text className="ml-1.5 text-xl font-bold">
-                  {`${parent.last_name}, ${parent.first_name} ${parent.middle_name.slice(0, 1).toUpperCase()}. - ${formatNumber(
-                    parent.rate,
-                  )}`}
-                </Text>
-                <Text className="ml-1.5 text-xl font-bold underline">
-                  Subtotal:{" "}
-                  {formatNumber(
-                    getTotal(violationType, type, grandparent.size),
-                  )}
-                </Text>
-              </View>
+                    <Icon
+                      name={tab.icon}
+                      size={18}
+                      color={type === tab.name ? "#fff" : "#555"}
+                    />
+                    <Text
+                      className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
+                    >
+                      {tab.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
 
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              className="h-[35rem]"
-            >
-              <ScrollView>
-                <View className="gap-7">
-                  {violationType.periods.map((_, index) => (
-                    <Form
-                      key={index}
-                      grandparent={grandparent}
-                      parent={parent}
-                      type={type}
-                      index={index}
-                      valuesState={[values, setValues]}
-                    />
-                  ))}
+            <View className="flex-1 bg-white px-4">
+              <View className="flex-row items-center justify-between">
+                <View className="py-2.5">
+                  <Text className="ml-1.5 text-xl font-bold">
+                    {`${parent.last_name}, ${parent.first_name} ${parent.middle_name.slice(0, 1).toUpperCase()}. - ${formatNumber(
+                      parent.rate,
+                    )}`}
+                  </Text>
+                  <Text className="ml-1.5 text-xl font-bold underline">
+                    Subtotal:{" "}
+                    {formatNumber(
+                      getTotal(violationType, type, grandparent.size),
+                    )}
+                  </Text>
                 </View>
+              </View>
 
-                {type == "13th Month Pay" && (
-                  <View className="mx-10 pt-4">
-                    <Text className="mb-1 mt-2.5 text-base font-bold text-[#333]">
-                      Received
-                    </Text>
-                    <TextInput
-                      className="h-11 rounded-md border border-black px-2.5"
-                      keyboardType="numeric"
-                      placeholder="Enter pay received"
-                      value={violationType.received}
-                      onChangeText={(value) => handleReceivedChange(value)}
-                    />
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                className="h-[32.5rem]"
+              >
+                <ScrollView>
+                  <View className="gap-7">
+                    {violationType.periods.map((_, index) => (
+                      <Form
+                        key={index}
+                        grandparent={grandparent}
+                        parent={parent}
+                        type={type}
+                        index={index}
+                        valuesState={[values, setValues]}
+                      />
+                    ))}
                   </View>
-                )}
-              </ScrollView>
-            </KeyboardAvoidingView>
 
-            <AddPeriodModal onSubmit={handleSubmit} />
-          </View>
+                  {type == "13th Month Pay" && (
+                    <View className="mx-10 pt-4">
+                      <Text className="mb-1 mt-2.5 text-base font-bold text-[#333]">
+                        Received
+                      </Text>
+                      <TextInput
+                        className="h-11 rounded-md border border-black px-2.5"
+                        keyboardType="numeric"
+                        placeholder="Enter pay received"
+                        value={violationType.received}
+                        onChangeText={(value) => handleReceivedChange(value)}
+                      />
+                    </View>
+                  )}
+                </ScrollView>
+              </KeyboardAvoidingView>
+
+              <AddPeriodModal onSubmit={handleSubmit} />
+            </View>
+          </SafeAreaView>
         </>
       )}
     </>

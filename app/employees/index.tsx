@@ -8,6 +8,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Href, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const EmployeesPage = () => {
   const db = getDb();
@@ -36,23 +37,25 @@ const EmployeesPage = () => {
     <>
       {parent && (
         <>
-          <NavBar />
+          <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+            <NavBar />
 
-          <View className="flex-1 bg-[#f2f2f2] p-4">
-            <Text className="mb-3 text-center text-lg font-bold">
-              {parent.name}
-            </Text>
+            <View className="flex-1 p-4">
+              <Text className="mb-3 text-center text-lg font-bold">
+                {parent.name}
+              </Text>
 
-            <EmployeesTable
-              db={db}
-              router={router}
-              records={records}
-              refetch={refetch}
-              onDelete={handleDelete}
-            />
+              <EmployeesTable
+                db={db}
+                router={router}
+                records={records}
+                refetch={refetch}
+                onDelete={handleDelete}
+              />
 
-            <AddEmployeeModal db={db} parent={parent} refetch={refetch} />
-          </View>
+              <AddEmployeeModal db={db} parent={parent} refetch={refetch} />
+            </View>
+          </SafeAreaView>
         </>
       )}
     </>

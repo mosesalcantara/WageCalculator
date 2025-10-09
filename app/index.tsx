@@ -8,7 +8,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { BackHandler, View } from "react-native";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 const EstablishmentPage = () => {
   const db = getDb();
   const router = useRouter();
@@ -33,19 +33,21 @@ const EstablishmentPage = () => {
   );
 
   return (
-    <View className="flex-1 bg-[#acb6e2ff] p-4">
+    <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
       <NavBar />
 
-      <EstablishmentsTable
-        db={db}
-        router={router}
-        records={records}
-        refetch={refetch}
-        onDelete={handleDelete}
-      />
+      <View className="flex-1 p-4">
+        <EstablishmentsTable
+          db={db}
+          router={router}
+          records={records}
+          refetch={refetch}
+          onDelete={handleDelete}
+        />
 
-      <AddEstablishmentModal db={db} refetch={refetch} />
-    </View>
+        <AddEstablishmentModal db={db} refetch={refetch} />
+      </View>
+    </SafeAreaView>
   );
 };
 
