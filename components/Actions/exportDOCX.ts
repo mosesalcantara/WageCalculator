@@ -32,7 +32,7 @@ const exportDOCX = async (record: Establishment) => {
         expr = `(Php${formatNumber(rateToUse)} - Php${formatNumber(empRate)}) x ${keyword}`;
         break;
       case "Overtime Pay":
-        expr = `Php${formatNumber(rateToUse)} / 8 x 25% x ${keyword}`;
+        expr = `Php${formatNumber(rateToUse)} / 8 x ${period.type == "Normal Day" ? "25" : "30"}% x ${keyword}`;
         break;
       case "Night Shift Differential":
         expr = `Php${formatNumber(rateToUse)} / 8 x 10% x ${keyword}`;
