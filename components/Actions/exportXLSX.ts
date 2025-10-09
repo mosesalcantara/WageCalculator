@@ -124,7 +124,7 @@ const exportXLSX = async (record: Establishment): Promise<void> => {
           index + 1,
           `${emp.last_name.toUpperCase()}, ${emp.first_name.toUpperCase()}${
             emp.middle_name
-              ? " " + emp.middle_name.charAt(0).toUpperCase() + "."
+              ? ` ${emp.middle_name.charAt(0).toUpperCase()}.`
               : ""
           }`,
           `₱${formatNumber(empRateNum)}/day`,

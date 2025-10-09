@@ -78,8 +78,8 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
                   className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
                 >
                   <Text className="w-[38%] text-sm text-[#333]">
-                    {record.last_name}, {record.first_name}{" "}
-                    {record.middle_name.slice(0, 1).toUpperCase()}.
+                    {record.last_name}, {record.first_name}
+                    {record.middle_name ? ` ${record.middle_name.slice(0, 1).toUpperCase()}.` : ""}
                   </Text>
 
                   <Text className="w-[10%] text-sm text-[#333]">

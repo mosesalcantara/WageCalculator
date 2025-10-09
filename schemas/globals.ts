@@ -9,7 +9,7 @@ export const establishment = Yup.object().shape({
 export const employee = Yup.object().shape({
   last_name: Yup.string().trim().required().label("Last Name"),
   first_name: Yup.string().trim().required().label("First Name"),
-  middle_name: Yup.string().trim().required().label("Middle Name"),
+  middle_name: Yup.string().trim().label("Middle Name"),
   rate: Yup.number()
     .typeError("Rate must be a number")
     .required()
