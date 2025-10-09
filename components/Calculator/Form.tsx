@@ -111,8 +111,8 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
             (holiday) => formattedDate == holiday.date,
           );
           if (holiday) {
-            holiday.type == "Regular Holiday" && ++regularHolidays;
             holiday.type == "Special (Non-Working) Holiday" && ++specialDays;
+            holiday.type == "Regular Holiday" && ++regularHolidays;
           }
         }
       }
@@ -317,12 +317,19 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                     editable={false}
                     value={`${estimate}`}
                   />
-                  <ViewDaysModal
-                    visibilityState={[
-                      isViewDaysModalVisible,
-                      setIsViewDaysModalVisible,
-                    ]}
-                  />
+
+                  {["Special Day", "Holiday Pay"].includes(type) &&
+                    validateDateRange(period.start_date, period.end_date) && (
+                      <ViewDaysModal
+                        startDate={period.start_date}
+                        endDate={period.end_date}
+                        type={type}
+                        visibilityState={[
+                          isViewDaysModalVisible,
+                          setIsViewDaysModalVisible,
+                        ]}
+                      />
+                    )}
                 </View>
               </View>
             )}

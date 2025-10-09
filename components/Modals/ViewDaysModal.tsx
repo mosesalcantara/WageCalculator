@@ -1,12 +1,67 @@
+import { Holiday, ViolationTypes } from "@/types/globals";
+import { validateDateRange } from "@/utils/globals";
+import holidaysJSON from "@/utils/holidays.json";
+import { eachDayOfInterval, format, parse } from "date-fns";
+import { Dispatch, SetStateAction } from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
-  visibilityState: any;
+  startDate: string;
+  endDate: string;
+  type: ViolationTypes;
+  visibilityState: [boolean, Dispatch<SetStateAction<boolean>>];
 };
 
-const ViewDaysModal = ({ visibilityState }: Props) => {
+const ViewDaysModal = ({
+  visibilityState,
+  startDate,
+  endDate,
+  type,
+}: Props) => {
   const [isVisible, setIsVisible] = visibilityState;
+
+  const getHolidays = () => {
+    if (!validateDateRange(startDate, endDate)) {
+      return [];
+    }
+
+    let specialDays: Holiday[] = [];
+    let regularHolidays: Holiday[] = [];
+
+    const dates = eachDayOfInterval({
+      start: startDate,
+      end: endDate,
+    });
+
+    dates.forEach((date) => {
+      if (type == "Special Day" || type == "Holiday Pay") {
+        const formattedDate = format(date, "yyyy-MM-dd");
+        const year = formattedDate.split("-")[0];
+        const yearHolidays = holidaysJSON[year as keyof typeof holidaysJSON];
+        if (yearHolidays) {
+          const holiday = yearHolidays.find(
+            (holiday) => formattedDate == holiday.date,
+          );
+          if (holiday) {
+            holiday.type == "Special (Non-Working) Holiday" &&
+              specialDays.push(holiday);
+            holiday.type == "Regular Holiday" && regularHolidays.push(holiday);
+          }
+        }
+      }
+    });
+
+    if (type == "Special Day") {
+      return specialDays;
+    } else {
+      return regularHolidays;
+    }
+  };
+
+  const formatDate = (date: string) => {
+    return format(parse(date, "yyyy-MM-dd", new Date()), "MMMM dd, yyyy");
+  };
 
   return (
     <>
@@ -22,63 +77,28 @@ const ViewDaysModal = ({ visibilityState }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 max-h-[70%] rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="max-h-[70%] w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <Text className="mb-3 text-center text-lg font-bold text-white">
-              Affected Holidays
+              {type == "Special Day"
+                ? "Special (Non-Working) Holidays"
+                : "Regular Holidays"}
             </Text>
 
             <ScrollView
               className="mb-2 rounded-md bg-white p-3"
               showsVerticalScrollIndicator={true}
             >
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  1. Chinese New Year
-                </Text>
-                <Text>Feb 16, 2018</Text>
-              </View>
-
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  2. EDSA People Power Revolution Anniversary
-                </Text>
-                <Text>Feb 25, 2025</Text>
-              </View>
-
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  3. Maundy Thursday
-                </Text>
-                <Text>Mar 28, 2025</Text>
-              </View>
-
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  4. Rizal Day
-                </Text>
-                <Text>Dec 30, 2025</Text>
-              </View>
-
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  5. Bonifacio Day
-                </Text>
-                <Text>Nov 30, 2025</Text>
-              </View>
-
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  6. Ninoy Aquino Day
-                </Text>
-                <Text>Aug 21, 2025</Text>
-              </View>
-
-              <View className="mb-3 border-b border-gray-300 pb-2">
-                <Text className="text-base font-bold text-[#333]">
-                  7. Eid'l Adha
-                </Text>
-                <Text>Jun 7, 2025</Text>
-              </View>
+              {getHolidays().map((holiday, index) => (
+                <View
+                  className="mb-3 border-b border-gray-300 pb-2"
+                  key={index}
+                >
+                  <Text className="text-base font-bold text-[#333]">
+                    {index + 1}. {holiday.name}
+                  </Text>
+                  <Text>{formatDate(holiday.date)}</Text>
+                </View>
+              ))}
             </ScrollView>
 
             <View className="flex-row justify-end">

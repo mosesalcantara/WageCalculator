@@ -54,3 +54,9 @@ export type Period = {
   daysOrHours: string;
   type: string;
 };
+
+export type Holiday = {
+  name: string;
+  date: string;
+  type: string;
+};
