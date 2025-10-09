@@ -52,11 +52,7 @@ const ViewDaysModal = ({
       }
     });
 
-    if (type == "Special Day") {
-      return specialDays;
-    } else {
-      return regularHolidays;
-    }
+    return type == "Special Day" ? specialDays : regularHolidays;
   };
 
   const formatDate = (date: string) => {
