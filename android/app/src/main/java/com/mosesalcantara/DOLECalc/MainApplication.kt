@@ -1,4 +1,4 @@
-package com.mosesalcantara.WageCalculator
+package com.mosesalcantara.DOLECalc
 
 import android.app.Application
 import android.content.res.Configuration

@@ -1,4 +1,4 @@
-package com.mosesalcantara.WageCalculator
+package com.mosesalcantara.DOLECalc
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

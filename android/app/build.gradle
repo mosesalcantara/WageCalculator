@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.mosesalcantara.WageCalculator'
+    namespace 'com.mosesalcantara.DOLECalc'
     defaultConfig {
-        applicationId 'com.mosesalcantara.WageCalculator'
+        applicationId 'com.mosesalcantara.DOLECalc'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
