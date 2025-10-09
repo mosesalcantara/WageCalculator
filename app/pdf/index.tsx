@@ -20,7 +20,7 @@ const PDFPage = () => {
       {record && (
         <>
           <SafeAreaView className="flex-1 bg-white">
-            <NavBar />
+            <NavBar className="bg-white" />
 
             <View className="flex-1">
               <View className="mb-2.5 flex-1">

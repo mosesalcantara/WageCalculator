@@ -52,66 +52,70 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
       <TextInput
         placeholder="Search employee"
         placeholderTextColor="#888"
-        backgroundColor="white"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        className="mb-2.5 rounded-lg border border-[#333] p-2.5 text-base"
+        className="mb-2.5 rounded-lg border border-[#333] bg-white p-2.5 text-base"
       />
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
-          <View className="flex-row justify-around gap-2 bg-[#2196F3] px-2 py-3">
-            <Text className="w-[35%] text-base font-bold text-white">Name</Text>
-            <Text className="w-[15%] text-base font-bold text-white">Rate</Text>
+          <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
+            <Text className="w-[38%] text-base font-bold text-white">Name</Text>
+            <Text className="w-[10%] text-base font-bold text-white">Rate</Text>
             <Text className="w-1/5 text-base font-bold text-white">
               Schedule
             </Text>
-            <Text className="w-1/4 text-base font-bold text-white">
+            <Text className="w-[27%] text-base font-bold text-white">
               Actions
             </Text>
           </View>
 
-          {filteredRecords && filteredRecords.length > 0 ? (
-            filteredRecords.map((record) => (
-              <View
-                key={record.id}
-                className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
-              >
-                <Text className="w-[35%] text-sm text-[#333]">
-                  {record.last_name}, {record.first_name}{" "}
-                  {record.middle_name.slice(0, 1).toUpperCase()}.
-                </Text>
+          <View>
+            {filteredRecords && filteredRecords.length > 0 ? (
+              filteredRecords.map((record) => (
+                <View
+                  key={record.id}
+                  className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
+                >
+                  <Text className="w-[38%] text-sm text-[#333]">
+                    {record.last_name}, {record.first_name}{" "}
+                    {record.middle_name.slice(0, 1).toUpperCase()}.
+                  </Text>
 
-                <Text className="w-[15%] text-sm text-[#333]">{record.rate}</Text>
+                  <Text className="w-[10%] text-sm text-[#333]">
+                    {record.rate}
+                  </Text>
 
-                <Text className="w-1/5 text-sm text-[#333]">
-                  {record.start_day.slice(0, 3)} - {record.end_day.slice(0, 3)}
-                </Text>
+                  <Text className="w-1/5 text-sm text-[#333]">
+                    {record.start_day.slice(0, 3)} -{" "}
+                    {record.end_day.slice(0, 3)}
+                  </Text>
 
-                <View className="w-1/4 flex-row justify-around">
-                  <TouchableOpacity onPress={() => setEmployee(record.id)}>
-                    <Icon name="remove-red-eye" size={20} color="#2196F3" />
-                  </TouchableOpacity>
+                  <View className="w-[27%] flex-row justify-around">
+                    <TouchableOpacity onPress={() => setEmployee(record.id)}>
+                      <Icon name="remove-red-eye" size={20} color="#2196F3" />
+                    </TouchableOpacity>
 
-                  <UpdateEmployeeModal
-                    db={db}
-                    values={record}
-                    refetch={refetch}
-                  />
+                    <UpdateEmployeeModal
+                      db={db}
+                      values={record}
+                      refetch={refetch}
+                    />
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      confirmAlert("Employee", onDelete, record.id);
-                    }}
-                  >
-                    <Icon name="delete" size={20} color="#E53935" />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        confirmAlert("Employee", onDelete, record.id);
+                      }}
+                    >
+                      <Icon name="delete" size={20} color="#E53935" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            ))
-          ) : (
-            <Text className="my-2.5 text-center">No employees found.</Text>
-          )}
+              ))
+            ) : (
+              <Text className="my-2.5 text-center">No employees found.</Text>
+            )}
+          </View>
         </View>
       </ScrollView>
     </>

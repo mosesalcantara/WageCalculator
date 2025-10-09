@@ -303,8 +303,8 @@ const CalculatorPage = () => {
                   </View>
 
                   {type == "13th Month Pay" && (
-                    <View className="mx-10 pt-4">
-                      <Text className="mb-1 mt-2.5 text-base font-bold text-[#333]">
+                    <View className="mx-10 mt-4 p-2.5 bg-white rounded-[0.625rem]">
+                      <Text className="text-base font-bold text-[#333]">
                         Received
                       </Text>
                       <TextInput

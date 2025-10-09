@@ -1,12 +1,15 @@
 import { Image, Text, View } from "react-native";
 
 type Props = {
+  className?: string;
   title?: string;
 };
 
-const NavBar = ({ title = "Wage Calculator" }: Props) => {
+const NavBar = ({ className, title = "Wage Calculator" }: Props) => {
   return (
-    <View className="h-[3.75rem] flex-row items-center justify-between border-b bg-[#acb6e2ff] px-2.5">
+    <View
+      className={`h-[3.75rem] flex-row items-center justify-between border-b bg-[#acb6e2ff] px-2.5 ${className}`}
+    >
       <Image
         source={require("@/assets/images/dole.png")}
         className="h-[3.75rem] w-[3.75rem]"

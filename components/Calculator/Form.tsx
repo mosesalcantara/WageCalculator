@@ -195,7 +195,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
   return (
     <>
-      <View className="mx-6 rounded-lg border bg-white border-t-[0.3125rem] border-[#0d3dff] p-2.5">
+      <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
             <Text className="text-center font-bold">
@@ -309,7 +309,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 <Text className="mb-1 text-base font-bold text-[#333]">
                   {getLabel()}
                 </Text>
-                <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
+                <View className="h-11 flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
                   <TextInput
                     className="w-[85%]"
                     keyboardType="numeric"
