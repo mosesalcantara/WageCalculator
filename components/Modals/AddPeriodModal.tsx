@@ -63,6 +63,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
       <Modal
         animationType="slide"
         transparent
+        statusBarTranslucent
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >

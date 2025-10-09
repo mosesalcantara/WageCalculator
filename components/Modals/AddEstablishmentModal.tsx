@@ -61,6 +61,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
       <Modal
         animationType="slide"
         transparent
+        statusBarTranslucent
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >

@@ -238,7 +238,6 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                   className="w-[85%]"
                   keyboardType="numeric"
                   placeholder="Enter Rate"
-                  placeholderTextColor="black"
                   value={period.rate}
                   onChangeText={(value) => handleChange("rate", value)}
                 />
@@ -274,7 +273,6 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 className="h-11 rounded-md border border-black px-2.5"
                 keyboardType="numeric"
                 placeholder={`Enter ${daysOrHours.toLowerCase()}`}
-                placeholderTextColor="black"
                 value={period.daysOrHours}
                 onChangeText={(value) => handleChange("daysOrHours", value)}
               />
