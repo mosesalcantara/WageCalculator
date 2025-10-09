@@ -1,3 +1,4 @@
+import ViewDaysModal from "@/components/Modals/ViewDaysModal";
 import Select from "@/components/Select";
 import {
   Employee,
@@ -33,6 +34,7 @@ type Props = {
 const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
+  const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useState(false);
   const [values, setValues] = valuesState;
 
   const periods = values[type].periods;
@@ -307,13 +309,21 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 <Text className="mb-1 text-base font-bold text-[#333]">
                   {getLabel()}
                 </Text>
-                <TextInput
-                  className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                  keyboardType="numeric"
-                  placeholder=""
-                  editable={false}
-                  value={`${estimate}`}
-                />
+                <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
+                  <TextInput
+                    className="w-[85%]"
+                    keyboardType="numeric"
+                    placeholder=""
+                    editable={false}
+                    value={`${estimate}`}
+                  />
+                  <ViewDaysModal
+                    visibilityState={[
+                      isViewDaysModalVisible,
+                      setIsViewDaysModalVisible,
+                    ]}
+                  />
+                </View>
               </View>
             )}
           </View>
