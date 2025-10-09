@@ -79,7 +79,7 @@ const exportXLSX = async (record: Establishment): Promise<void> => {
 
           case "Overtime Pay":
           case "Overtime": // accept both variant strings
-            formulaText = `Php${formattedRateToUse} / 8 x 25% x ${keyword}`;
+            formulaText = `Php${formattedRateToUse} / 8 x ${period.type == "Normal Day" ? "25" : "30"}% x ${keyword}`;
             break;
 
           case "Night Shift Differential":
