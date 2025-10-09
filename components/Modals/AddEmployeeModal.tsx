@@ -88,7 +88,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Last Name:</Text>
+                    <Text className="mt-1 text-white">Last Name</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter last name"
@@ -104,7 +104,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                   </View>
 
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">First Name:</Text>
+                    <Text className="mt-1 text-white">First Name</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter first name"
@@ -122,7 +122,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
 
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Middle Name:</Text>
+                    <Text className="mt-1 text-white">Middle Name</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter middle name"
@@ -138,7 +138,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                   </View>
 
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Rate:</Text>
+                    <Text className="mt-1 text-white">Rate</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                       keyboardType="numeric"
@@ -157,7 +157,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
 
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Work Week Start:</Text>
+                    <Text className="mt-1 text-white">Work Week Start</Text>
                     <Select
                       name="start_day"
                       options={daysOptions}
@@ -174,7 +174,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
                   </View>
 
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Work Week End:</Text>
+                    <Text className="mt-1 text-white">Work Week End</Text>
                     <Select
                       name="end_day"
                       options={daysOptions}
