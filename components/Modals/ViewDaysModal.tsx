@@ -11,7 +11,7 @@ const ViewDaysModal = ({ visibilityState }: Props) => {
   return (
     <>
       <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Icon name="remove-red-eye" size={20} color="#2196F3" />
+        <Icon name="remove-red-eye" size={20} color="black" />
       </TouchableOpacity>
 
       <Modal

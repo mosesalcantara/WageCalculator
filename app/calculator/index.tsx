@@ -240,11 +240,11 @@ const CalculatorPage = () => {
           <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
             <NavBar />
 
-            <View>
+            <View className="bg-[#acb6e2ff]">
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                className="border-b border-b-[#ddd] py-2.5"
+                className="border-b border-b-[#333] py-2.5 "
               >
                 {getTabs(grandparent.size).map((tab) => (
                   <TouchableOpacity
@@ -267,7 +267,7 @@ const CalculatorPage = () => {
               </ScrollView>
             </View>
 
-            <View className="flex-1 bg-white px-4">
+            <View className="flex-1 bg-[#acb6e2ff] px-4">
               <View className="flex-row items-center justify-between">
                 <View className="py-2.5">
                   <Text className="ml-1.5 text-xl font-bold">

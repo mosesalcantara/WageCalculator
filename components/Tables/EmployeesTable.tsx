@@ -52,9 +52,10 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
       <TextInput
         placeholder="Search employee"
         placeholderTextColor="#888"
+        backgroundColor="white"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        className="mb-2.5 rounded-lg border border-[#ccc] p-2.5 text-base"
+        className="mb-2.5 rounded-lg border border-[#333] p-2.5 text-base"
       />
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>

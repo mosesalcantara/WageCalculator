@@ -195,7 +195,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
 
   return (
     <>
-      <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] p-2.5">
+      <View className="mx-6 rounded-lg border bg-white border-t-[0.3125rem] border-[#0d3dff] p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
             <Text className="text-center font-bold">
