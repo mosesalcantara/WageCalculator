@@ -26,7 +26,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const handleSubmit = async (
-    values: Override<Employee, { id?: number, rate: string }>,
+    values: Override<Employee, { id?: number; rate: string }>,
     { resetForm }: { resetForm: () => void },
   ) => {
     try {
@@ -83,7 +83,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
             setFieldValue,
             setFieldTouched,
           }) => (
-            <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
+            <View className="flex-1 items-center justify-center bg-black/40">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">

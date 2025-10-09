@@ -78,7 +78,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
             setFieldTouched,
             setFieldValue,
           }) => (
-            <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
+            <View className="flex-1 items-center justify-center bg-black/40">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View>
                   <Text className="mt-1 text-white">Name:</Text>

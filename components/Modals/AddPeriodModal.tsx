@@ -86,7 +86,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
             setFieldValue,
             setFieldTouched,
           }) => (
-            <View className="flex-1 items-center justify-center bg-[rgba(0,0,0,0.4)]">
+            <View className="flex-1 items-center justify-center bg-black/40">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
@@ -97,7 +97,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                       className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       onPress={() => setIsStartDateModalVisible(true)}
                     >
-                      <Text>{values.start_date || "Select start date"}</Text>
+                      <Text>{values.start_date || "Select date"}</Text>
                       <Icon name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                     {touched.start_date && errors.start_date && (
@@ -115,7 +115,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                       className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       onPress={() => setIsEndDateModalVisible(true)}
                     >
-                      <Text>{values.end_date || "Select end date"}</Text>
+                      <Text>{values.end_date || "Select date"}</Text>
                       <Icon name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                     {touched.end_date && errors.end_date && (

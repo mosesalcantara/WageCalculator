@@ -210,7 +210,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 className="h-11 flex-row items-center justify-between rounded-md border border-black px-2.5"
                 onPress={() => setIsStartDateModalVisible(true)}
               >
-                <Text>{period.start_date || "Select start date"}</Text>
+                <Text>{period.start_date || "Select date"}</Text>
                 <Icon name="date-range" size={20} color="#555" />
               </TouchableOpacity>
             </View>
@@ -224,7 +224,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
                 className="h-11 flex-row items-center justify-between rounded-md border border-black  px-2.5"
                 onPress={() => setIsEndDateModalVisible(true)}
               >
-                <Text>{period.end_date || "Select end date"}</Text>
+                <Text>{period.end_date || "Select date"}</Text>
                 <Icon name="date-range" size={20} color="#555" />
               </TouchableOpacity>
             </View>
