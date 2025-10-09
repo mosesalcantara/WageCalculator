@@ -1,10 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-project.ext.react = [
-    enableHermes: true
-]
-def enableHermes = project.ext.react.get("enableHermes", true);
-
 buildscript {
   repositories {
     google()
