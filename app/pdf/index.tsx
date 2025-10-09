@@ -23,7 +23,7 @@ const PDFPage = () => {
             <NavBar className="bg-white" />
 
             <View className="flex-1">
-              <View className="mb-2.5 flex-1">
+              <View className="flex-1 mb-16">
                 <WebView source={{ html: previewHTML }} />
               </View>
 
