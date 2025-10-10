@@ -1,82 +1,51 @@
-import ViewDaysModal from "@/components/Modals/ViewDaysModal";
 import Select from "@/components/Select";
+import { CalculatorPeriod } from "@/types/globals";
 import {
-  Employee,
-  Establishment,
-  ViolationTypes,
-  ViolationValues,
-} from "@/types/globals";
-import {
-  calculate,
-  daysArray,
+  calculatorPeriodFormat,
   formatDateValue,
   formatNumber,
-  getMinimumRate,
-  getPeriodFormat,
   numberToLetter,
-  validateDateRange,
+  typesOptions,
 } from "@/utils/globals";
-import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { eachDayOfInterval, format } from "date-fns";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
-  grandparent: Establishment;
-  parent: Employee;
-  type: ViolationTypes;
   index: number;
-  valuesState: [ViolationValues, Dispatch<SetStateAction<ViolationValues>>];
+  periodsState: [CalculatorPeriod[], Dispatch<SetStateAction<CalculatorPeriod[]>>];
+  getTotal: (period: CalculatorPeriod) => {
+    rate: number;
+    daysMultiplier: number;
+    days: number;
+    nightShiftMultiplier: number;
+    nightShiftHours: number;
+    overtimeMultiplier: number;
+    overtimeHours: number;
+    total: number;
+  };
 };
 
-const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
+const Form = ({ index, periodsState, getTotal }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
-  const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useState(false);
-  const [values, setValues] = valuesState;
+  const [periods, setPeriods] = periodsState;
 
-  const periods = values[type].periods;
-  const period = values[type].periods[index];
+  const period = periods[index];
 
-  const getIncludedDays = (startDay: string, endDay: string) => {
-    const included = [];
-
-    let i = daysArray.indexOf(startDay);
-    let index = 0;
-
-    while (daysArray[index] != endDay) {
-      index = i % daysArray.length;
-      included.push(daysArray[index]);
-      ++i;
-    }
-
-    return included;
-  };
-
-  const includedDays = getIncludedDays(parent.start_day, parent.end_day);
-
-  const handleInitialChange = (
-    key: string,
-    value: string | number | Date,
-    index: number,
-  ) => {
+  const handleChange = (key: string, value: string | Date) => {
     if (key.endsWith("_date")) {
       value = (value as Date).toISOString().split("T")[0];
     }
 
-    setValues((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+    setPeriods((prev) => {
+      const updatedPeriods = prev.map((period, periodIndex) =>
         index == periodIndex ? { ...period, [key]: `${value}` } : period,
       );
 
-      return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
+      return updatedPeriods;
     });
-  };
-
-  const handleChange = (key: string, value: string | number | Date) => {
-    handleInitialChange(key, value, index);
 
     if (key == "start_date") {
       setIsStartDateModalVisible(false);
@@ -85,117 +54,43 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
     }
   };
 
-  const getEstimate = (startDate: string, endDate: string) => {
-    if (!validateDateRange(startDate, endDate)) {
-      return "";
-    }
-
-    let workingDays = 0;
-    let restDays = 0;
-    let specialDays = 0;
-    let regularHolidays = 0;
-
-    const dates = eachDayOfInterval({
-      start: startDate,
-      end: endDate,
-    });
-
-    dates.forEach((date) => {
-      includedDays.includes(format(date, "EEEE")) && ++workingDays;
-      if (type == "Special Day" || type == "Holiday Pay") {
-        const formattedDate = format(date, "yyyy-MM-dd");
-        const year = formattedDate.split("-")[0];
-        const yearHolidays = holidaysJSON[year as keyof typeof holidaysJSON];
-        if (yearHolidays) {
-          const holiday = yearHolidays.find(
-            (holiday) => formattedDate == holiday.date,
-          );
-          if (holiday) {
-            holiday.type == "Special (Non-Working) Holiday" && ++specialDays;
-            holiday.type == "Regular Holiday" && ++regularHolidays;
-          }
-        }
-      }
-    });
-
-    restDays = dates.length - workingDays;
-    if (type == "Basic Wage" || type == "13th Month Pay") {
-      return workingDays;
-    } else if (type == "Rest Day") {
-      return restDays;
-    } else if (type == "Special Day") {
-      return specialDays;
-    } else if (type == "Holiday Pay") {
-      return regularHolidays;
-    }
-    return "";
-  };
-
-  const estimate = getEstimate(period.start_date, period.end_date);
-
-  const minimumRate = getMinimumRate(
-    period.start_date,
-    period.end_date,
-    grandparent.size,
-  );
-
-  const setRate = () => {
-    handleChange("rate", `${parent.rate}`);
-  };
-
-  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
-    type,
-  )
-    ? "Hours"
-    : "Days";
-
-  const getLabel = () => {
-    if (["Basic Wage", "13th Month Pay"].includes(type)) {
-      return "Working Days";
-    } else if (type == "Special Day") {
-      return "Special Days";
-    } else if (type == "Rest Day") {
-      return "Rest Days";
-    } else if (type == "Holiday Pay") {
-      return "Holidays";
-    }
-  };
-
   const addPeriod = () => {
-    setValues((prev) => {
-      return {
-        ...prev,
-        [type]: {
-          periods: [...prev[type].periods, getPeriodFormat(parent.rate)],
-        },
-      };
+    setPeriods((prev) => {
+      return [...prev, calculatorPeriodFormat];
     });
   };
 
   const removePeriod = () => {
-    setValues((prev) => {
-      const updatedPeriods = prev[type].periods;
+    setPeriods((prev) => {
+      const updatedPeriods = prev;
       updatedPeriods.splice(index, 1);
-      return { ...prev, [type]: { periods: updatedPeriods } };
+      return [...updatedPeriods];
     });
   };
 
   const clearPeriod = () => {
-    setValues((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? getPeriodFormat() : period,
+    setPeriods((prev) => {
+      const updatedPeriods = prev.map((period, periodIndex) =>
+        index == periodIndex ? calculatorPeriodFormat : period,
       );
-      return { ...prev, [type]: { periods: updatedPeriods } };
+      return updatedPeriods;
     });
   };
 
-  useEffect(() => {
-    handleChange("daysOrHours", estimate);
-  }, [estimate]);
+  const {
+    rate,
+    daysMultiplier,
+    days,
+    nightShiftMultiplier,
+    nightShiftHours,
+    overtimeMultiplier,
+    overtimeHours,
+    total,
+  } = getTotal(period);
 
   return (
     <>
-      <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
+      <View className="mx-4 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
             <Text className="text-center font-bold">
@@ -231,116 +126,83 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
               </TouchableOpacity>
             </View>
           </View>
+        </View>
+        <View>
+          <Text className="mb-1 text-base font-bold text-[#333]">Type</Text>
+          <Select
+            name="type"
+            options={typesOptions}
+            placeholder="Select Type"
+            value={period.type}
+            onChange={handleChange}
+          />
+        </View>
 
-          <View className="flex-row flex-wrap justify-between gap-1">
-            <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
-              <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
-                <TextInput
-                  className="w-[85%]"
-                  keyboardType="numeric"
-                  placeholder="Enter Rate"
-                  value={period.rate}
-                  onChangeText={(value) => handleChange("rate", value)}
-                />
-                <Icon
-                  name="autorenew"
-                  size={20}
-                  color="#555"
-                  onPress={setRate}
-                />
-              </View>
-            </View>
-
-            <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
-                Prevailing Rate
-              </Text>
-              <TextInput
-                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                keyboardType="numeric"
-                placeholder=""
-                editable={false}
-                value={`${minimumRate == 0 ? "" : minimumRate}`}
-              />
-            </View>
+        <View className="flex-row flex-wrap justify-between gap-1">
+          <View className="w-[49%]">
+            <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
+            <TextInput
+              className="h-11 rounded-md border border-black px-2.5"
+              keyboardType="numeric"
+              placeholder="Enter Rate"
+              value={period.rate}
+              onChangeText={(value) => handleChange("rate", value)}
+            />
           </View>
 
-          <View className="flex-row flex-wrap justify-between gap-1">
-            <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
-                {daysOrHours}
-              </Text>
-              <TextInput
-                className="h-11 rounded-md border border-black px-2.5"
-                keyboardType="numeric"
-                placeholder={`Enter ${daysOrHours.toLowerCase()}`}
-                value={period.daysOrHours}
-                onChangeText={(value) => handleChange("daysOrHours", value)}
-              />
-            </View>
+          <View className="w-[49%]">
+            <Text className="mb-1 text-base font-bold text-[#333]">Days</Text>
+            <TextInput
+              className="h-11 rounded-md border border-black px-2.5"
+              keyboardType="numeric"
+              placeholder="Enter Days"
+              value={period.days}
+              onChangeText={(value) => handleChange("days", value)}
+            />
+          </View>
+        </View>
 
-            {type == "Overtime Pay" && (
-              <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-[#333]">
-                  Type
-                </Text>
-                <Select
-                  name="type"
-                  options={[
-                    {
-                      label: "Normal Day",
-                      value: "Normal Day",
-                    },
-                    {
-                      label: "Rest Day",
-                      value: "Rest Day",
-                    },
-                  ]}
-                  placeholder="Select Type"
-                  value={period.type}
-                  onChange={handleChange}
-                />
-              </View>
-            )}
+        <View className="flex-row flex-wrap justify-between gap-1">
+          <View className="w-[49%]">
+            <Text className="mb-1 text-base font-bold text-[#333]">
+              Night Shift Hours
+            </Text>
+            <TextInput
+              className="h-11 rounded-md border border-black px-2.5"
+              keyboardType="numeric"
+              placeholder="Enter Hours"
+              value={period.nightShiftHours}
+              onChangeText={(value) => handleChange("nightShiftHours", value)}
+            />
+          </View>
 
-            {daysOrHours == "Days" && (
-              <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-[#333]">
-                  {getLabel()}
-                </Text>
-                <View className="h-11 flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
-                  <TextInput
-                    className="w-[85%]"
-                    keyboardType="numeric"
-                    placeholder=""
-                    editable={false}
-                    value={`${estimate}`}
-                  />
-
-                  {["Special Day", "Holiday Pay"].includes(type) &&
-                    validateDateRange(period.start_date, period.end_date) && (
-                      <ViewDaysModal
-                        startDate={period.start_date}
-                        endDate={period.end_date}
-                        type={type}
-                        visibilityState={[
-                          isViewDaysModalVisible,
-                          setIsViewDaysModalVisible,
-                        ]}
-                      />
-                    )}
-                </View>
-              </View>
-            )}
+          <View className="w-[49%]">
+            <Text className="mb-1 text-base font-bold text-[#333]">
+              Overtime Hours
+            </Text>
+            <TextInput
+              className="h-11 rounded-md border border-black px-2.5"
+              keyboardType="numeric"
+              placeholder="Enter Hours"
+              value={period.overtimeHours}
+              onChangeText={(value) => handleChange("overtimeHours", value)}
+            />
           </View>
         </View>
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
           <Text className="text-base font-bold text-[#27ae60]">
+            ({rate} x {daysMultiplier} x {days}) +{" "}
+          </Text>
+          <Text className="text-base font-bold text-[#27ae60]"> 
+            ({rate} / 8 x {nightShiftMultiplier} x {nightShiftHours}) + ({rate}{" "}
+            / 8 x {overtimeMultiplier} x {overtimeHours})
+          </Text>
+
+          <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱{formatNumber(calculate(period, type, grandparent.size))}
+              = ₱{formatNumber(total)}
             </Text>
           </Text>
         </View>

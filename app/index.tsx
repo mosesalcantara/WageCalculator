@@ -45,18 +45,16 @@ const EstablishmentPage = () => {
           onDelete={handleDelete}
         />
 
-<TouchableOpacity
-  onPress={() => {
-    router.push("/custom" as Href);
-  }}
-  className="absolute bottom-6 right-4"
->
-  <Text className="font-bold text-white rounded-[1.875rem] bg-[#303d78] px-5 py-2 mb-16">
-    Calculator
-  </Text>
-</TouchableOpacity>
-
-
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/calculator" as Href);
+          }}
+          className="absolute bottom-6 right-4"
+        >
+          <Text className="mb-16 rounded-[1.875rem] bg-[#303d78] px-5 py-2 font-bold text-white">
+            Calculator
+          </Text>
+        </TouchableOpacity>
 
         <AddEstablishmentModal db={db} refetch={refetch} />
       </View>

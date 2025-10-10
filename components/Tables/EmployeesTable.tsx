@@ -44,7 +44,7 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
 
   const setEmployee = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
-    router.push("/calculator" as Href);
+    router.push("/violations" as Href);
   };
 
   return (

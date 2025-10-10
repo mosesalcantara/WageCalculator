@@ -55,7 +55,7 @@ export type Period = {
   type: string;
 };
 
-export type CustomPeriod = {
+export type CalculatorPeriod = {
   start_date: string;
   end_date: string;
   type: string;

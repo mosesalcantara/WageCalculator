@@ -234,7 +234,7 @@ export const violationTypesArray = [
   "13th Month Pay",
 ];
 
-export const customPeriodFormat = {
+export const calculatorPeriodFormat = {
   start_date: "",
   end_date: "",
   type: "",
