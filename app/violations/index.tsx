@@ -285,7 +285,7 @@ const ViolationsPage = () => {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              className="h-[33rem] px-4"
+              className="h-[69%] px-4"
             >
               <ScrollView>
                 <View className="gap-7">
