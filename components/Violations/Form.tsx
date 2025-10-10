@@ -190,7 +190,9 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   };
 
   useEffect(() => {
-    handleChange("daysOrHours", estimate);
+    if (estimate) {
+      handleChange("daysOrHours", estimate);
+    }
   }, [estimate]);
 
   return (

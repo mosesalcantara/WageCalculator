@@ -1,6 +1,6 @@
-import Form from "@/components/Violations/Form";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
+import Form from "@/components/Violations/Form";
 import { violations } from "@/db/schema";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import { ViolationTypes, ViolationValues } from "@/types/globals";
