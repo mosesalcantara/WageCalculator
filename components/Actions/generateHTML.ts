@@ -103,7 +103,6 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
 
     if (employee.violations && employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values as string);
-      const rate = employee.rate;
 
       let total = 0;
       Object.keys(violations).forEach((type) => {
@@ -125,7 +124,7 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
             } of ${getViolationKeyword(type)}
           </p>
          
-          ${renderViolationType(violations[type], rate, type)}
+          ${renderViolationType(violations[type], type)}
         `);
       });
 
@@ -137,7 +136,6 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
 
   const renderViolationType = (
     violationType: { periods: Period[]; received?: string },
-    rate: number,
     type: string,
   ) => {
     let html = "";
@@ -155,7 +153,7 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
         )} (${getDaysOrHours(type, period.daysOrHours)})
         </p>
 
-        ${renderFormula(period, rate, type)}
+        ${renderFormula(period, type)}
 
         ${
           index + 1 != violationType.periods.length
@@ -192,9 +190,10 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
     return html;
   };
 
-  const renderFormula = (period: Period, rate: number, type: string) => {
+  const renderFormula = (period: Period, type: string) => {
     let html = "";
 
+    const rate = Number(period.rate);
     const minimumRate = getMinimumRate(
       period.start_date,
       period.end_date,
