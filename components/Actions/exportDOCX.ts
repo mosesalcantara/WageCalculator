@@ -366,7 +366,10 @@ const exportDOCX = async (record: Establishment) => {
               }
             } catch (error) {
               console.error(error);
-              Toast.show({ type: "error", text1: "Save failed." });
+              Toast.show({
+                type: "error",
+                text1: "An Error Has Occured. Please Try Again.",
+              });
             }
           } else {
             Toast.show({
