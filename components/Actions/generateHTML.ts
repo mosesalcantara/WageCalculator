@@ -211,12 +211,10 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
       return wageOrder.rates[key] == minimumRate;
     });
 
-    if (minimumRate >= rate) {
-      html += `
+    html += `
         <p>
           Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})
         </p>`;
-    }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(calculate(period, type, record.size));
