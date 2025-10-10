@@ -116,8 +116,8 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
           }
         });
 
-        valid > 0 &&
-          (html += `
+        if (valid > 0) {
+          html += `
           <p class="bold top-space">
             ${
               type == "Holiday Pay" ? "Non-payment" : "Underpayment"
@@ -125,7 +125,8 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
           </p>
          
           ${renderViolationType(violations[type], type)}
-        `);
+        `;
+        }
       });
 
       html += `<p class="bold right">Total: Php${formatNumber(total)}</p>`;
@@ -163,15 +164,16 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
       }
     });
 
-    violationType.periods.length > 1 &&
-      (html += `
+    if (violationType.periods.length > 1) {
+      html += `
         <p class="right">
           Subtotal: Php${formatNumber(subtotal)}
         </p>
-      `);
+      `;
+    }
 
-    type == "13th Month Pay" &&
-      (html += `
+    if (type == "13th Month Pay") {
+      html += `
       <p>
         Actual 13th Month Pay Received: 
         Php${formatNumber(violationType.received || 0)}
@@ -185,7 +187,8 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
           subtotal - (Number(violationType.received) || 0),
         )}</span>
       </p>
-      `);
+      `;
+    }
 
     return html;
   };
@@ -208,11 +211,12 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
       return wageOrder.rates[key] == minimumRate;
     });
 
-    minimumRate >= rate &&
-      (html += `
+    if (minimumRate >= rate) {
+      html += `
         <p>
           Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})
-        </p>`);
+        </p>`;
+    }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(calculate(period, type, record.size));
