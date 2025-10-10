@@ -337,7 +337,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
         </View>
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
-          <Text className="text-base text-[#27ae60]">
+          <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
               ₱{formatNumber(calculate(period, type, grandparent.size))}

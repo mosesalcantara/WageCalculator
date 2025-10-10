@@ -90,7 +90,7 @@ const Form = ({ index, periodsState, getTotal }: Props) => {
 
   return (
     <>
-      <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
+      <View className="mx-4 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
             <Text className="text-center font-bold">
@@ -191,12 +191,18 @@ const Form = ({ index, periodsState, getTotal }: Props) => {
         </View>
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
-          <Text className="text-base text-[#27ae60]">
+          <Text className="text-base font-bold text-[#27ae60]">
+            ({rate} x {daysMultiplier} x {days}) +{" "}
+          </Text>
+          <Text className="text-base font-bold text-[#27ae60]"> 
+            ({rate} / 8 x {nightShiftMultiplier} x {nightShiftHours}) + ({rate}{" "}
+            / 8 x {overtimeMultiplier} x {overtimeHours})
+          </Text>
+
+          <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ({rate} x {daysMultiplier} x {days}) + ({rate} / 8 x{" "}
-              {nightShiftMultiplier} x {nightShiftHours}) + ({rate} / 8 x{" "}
-              {overtimeMultiplier} x {overtimeHours}) = ₱{formatNumber(total)}
+              = ₱{formatNumber(total)}
             </Text>
           </Text>
         </View>
