@@ -57,7 +57,6 @@ const exportXLSX = async (record: Establishment): Promise<void> => {
       validPeriods.forEach((period: Period) => {
         // ensure numeric values
         const empRateNum = Number(emp.rate ?? 0);
-        const daysOrHoursNum = Number(period.daysOrHours ?? 1);
         const daysOrHoursStr = String(period.daysOrHours ?? "1");
         const minimumRate = Number(
           getMinimumRate(period.start_date, period.end_date, record.size),
@@ -74,7 +73,7 @@ const exportXLSX = async (record: Establishment): Promise<void> => {
         switch (type) {
           case "Basic Wage":
             // Prevailing - Actual x days
-            formulaText = `Php${formattedRateToUse} - Php${formatNumber(empRateNum)} x ${keyword}`;
+            formulaText = `Php${formattedRateToUse} - Php${formatNumber(period.rate)} x ${keyword}`;
             break;
 
           case "Overtime Pay":
