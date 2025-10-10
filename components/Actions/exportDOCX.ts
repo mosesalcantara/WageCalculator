@@ -48,11 +48,12 @@ const exportDOCX = async (record: Establishment) => {
                     : ` ${employee.middle_initial.toUpperCase()}.`
                 }`,
                 bold: true,
-                size: 24,
-                font: "Arial",
+                size: 28,
+                font: {
+                  name: "Arial",
+                },
               }),
             ],
-            spacing: { after: 200 },
           }),
         );
 
@@ -61,8 +62,10 @@ const exportDOCX = async (record: Establishment) => {
             children: [
               new TextRun({
                 text: `Actual Rate: Php${formatNumber(employee.rate)}/day`,
-                size: 22,
-                font: "Arial",
+                size: 28,
+                font: {
+                  name: "Arial",
+                },
               }),
             ],
             spacing: { after: 200 },
@@ -98,8 +101,10 @@ const exportDOCX = async (record: Establishment) => {
                   text: `${type === "Holiday Pay" ? "Non-payment" : "Underpayment"} of ${getViolationKeyword(type)}`,
                   bold: true,
                   underline: {},
-                  size: 22,
-                  font: "Arial",
+                  size: 28,
+                  font: {
+                    name: "Arial",
+                  },
                 }),
               ],
               spacing: { before: 200, after: 100 },
@@ -115,8 +120,11 @@ const exportDOCX = async (record: Establishment) => {
             new TextRun({
               text: `Total: Php${formatNumber(total)}`,
               bold: true,
-              size: 24,
-              font: "Arial",
+              underline: {},
+              size: 28,
+              font: {
+                name: "Arial",
+              },
             }),
           ],
           alignment: "right",
@@ -144,8 +152,10 @@ const exportDOCX = async (record: Establishment) => {
                 text: `Period ${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
                 )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`,
-                size: 20,
-                font: "Arial",
+                size: 28,
+                font: {
+                  name: "Arial",
+                },
               }),
             ],
           }),
@@ -153,11 +163,18 @@ const exportDOCX = async (record: Establishment) => {
 
         renderFormula(period, type);
 
-        //   ${
-        //     index + 1 != violationType.periods.length
-        //       ? `<p class="space">&nbsp</p>`
-        //       : ""
-        //   }`;
+        if (index + 1 != violationType.periods.length) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: ``,
+                }),
+              ],
+              spacing: { after: 30 },
+            }),
+          );
+        }
       }
     });
 
@@ -167,9 +184,10 @@ const exportDOCX = async (record: Establishment) => {
           children: [
             new TextRun({
               text: `Subtotal: Php${formatNumber(subtotal)}`,
-              bold: true,
-              size: 22,
-              font: "Arial",
+              size: 28,
+              font: {
+                name: "Arial",
+              },
             }),
           ],
           alignment: "right",
@@ -183,10 +201,11 @@ const exportDOCX = async (record: Establishment) => {
         new Paragraph({
           children: [
             new TextRun({
-              text: `Actual 13th Month Pay Received:
-        Php${formatNumber(violationType.received || 0)}`,
-              size: 20,
-              font: "Arial",
+              text: `Actual 13th Month Pay Received: Php${formatNumber(violationType.received || 0)}`,
+              size: 28,
+              font: {
+                name: "Arial",
+              },
             }),
           ],
         }),
@@ -197,8 +216,10 @@ const exportDOCX = async (record: Establishment) => {
           children: [
             new TextRun({
               text: `Php${formatNumber(subtotal)} - ${formatNumber(violationType.received || 0)} = Php${formatNumber(subtotal - (Number(violationType.received) || 0))}`,
-              size: 20,
-              font: "Arial",
+              size: 28,
+              font: {
+                name: "Arial",
+              },
             }),
           ],
         }),
@@ -231,8 +252,10 @@ const exportDOCX = async (record: Establishment) => {
             new TextRun({
               text: `Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})`,
               italics: true,
-              size: 20,
-              font: "Arial",
+              size: 28,
+              font: {
+                name: "Arial",
+              },
             }),
           ],
         }),
@@ -273,15 +296,11 @@ const exportDOCX = async (record: Establishment) => {
       new Paragraph({
         children: [
           new TextRun({
-            text: `${text} = `,
-            size: 20,
-            font: "Arial",
-          }),
-          new TextRun({
-            text: `Php${formatNumber(total)}`,
-            bold: true,
-            size: 20,
-            font: "Arial",
+            text: `${text} = Php${formatNumber(total)}`,
+            size: 28,
+            font: {
+              name: "Arial",
+            },
           }),
         ],
         spacing: { after: 100 },
@@ -297,7 +316,9 @@ const exportDOCX = async (record: Establishment) => {
             text: record.name.toUpperCase(),
             bold: true,
             size: 32,
-            font: "Arial",
+            font: {
+              name: "Arial",
+            },
           }),
         ],
         alignment: "center",
