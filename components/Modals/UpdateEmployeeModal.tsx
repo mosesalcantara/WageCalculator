@@ -31,6 +31,7 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
           ...values,
           first_name: `${values.first_name}`.trim(),
           last_name: `${values.last_name}`.trim(),
+          middle_initial: `${values.middle_initial.trim()}`,
         })
         .where(eq(employees.id, values.id));
       refetch();
@@ -115,17 +116,17 @@ const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
 
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Middle Name</Text>
+                    <Text className="mt-1 text-white">Middle Initial</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                      placeholder="Enter middle name"
-                      value={values.middle_name}
-                      onChangeText={handleChange("middle_name")}
-                      onBlur={() => setFieldTouched("middle_name")}
+                      placeholder="Enter initial"
+                      value={values.middle_initial}
+                      onChangeText={handleChange("middle_initial")}
+                      onBlur={() => setFieldTouched("middle_initial")}
                     />
-                    {touched.middle_name && errors.middle_name && (
+                    {touched.middle_initial && errors.middle_initial && (
                       <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                        {errors.middle_name}
+                        {errors.middle_initial}
                       </Text>
                     )}
                   </View>

@@ -270,7 +270,7 @@ const CalculatorPage = () => {
             <View className="flex-row items-center justify-between px-4">
               <View className="py-2.5">
                 <Text className="ml-1.5 text-xl font-bold">
-                  {`${parent.last_name}, ${parent.first_name}${parent.middle_name ? ` ${parent.middle_name.slice(0, 1).toUpperCase()}.` : ""} - ${formatNumber(
+                  {`${parent.last_name}, ${parent.first_name}${["NA", "N/A"].includes(parent.middle_initial.toUpperCase()) ? "" : ` ${parent.middle_initial.toUpperCase()}.`} - ${formatNumber(
                     parent.rate,
                   )}`}
                 </Text>

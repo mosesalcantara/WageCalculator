@@ -123,9 +123,9 @@ const exportXLSX = async (record: Establishment): Promise<void> => {
         wsData.push([
           index + 1,
           `${emp.last_name.toUpperCase()}, ${emp.first_name.toUpperCase()}${
-            emp.middle_name
-              ? ` ${emp.middle_name.charAt(0).toUpperCase()}.`
-              : ""
+            ["NA", "N/A"].includes(emp.middle_initial.toUpperCase())
+              ? ""
+              : ` ${emp.middle_initial.toUpperCase()}.`
           }`,
           `₱${formatNumber(empRateNum)}/day`,
           `${type === "Holiday Pay" ? "Non-payment" : "Underpayment"} of ${getViolationKeyword(type)}`,

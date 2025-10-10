@@ -20,7 +20,7 @@ export type Employee = {
   id: number;
   last_name: string;
   first_name: string;
-  middle_name: string;
+  middle_initial: string;
   rate: number;
   start_day: string;
   end_day: string;

@@ -62,10 +62,7 @@ const getStyles = (isPreview: boolean) => {
     `;
 };
 
-const generateHTML = (
-  record: Establishment,
-  isPreview: boolean,
-) => {
+const generateHTML = (record: Establishment, isPreview: boolean) => {
   const renderEmployee = (employee: Employee, index: number) => {
     let html = "";
 
@@ -87,7 +84,7 @@ const generateHTML = (
                   ${index + 1}. 
                   ${employee.last_name.toUpperCase()}, 
                   ${employee.first_name.toUpperCase()} 
-                  ${employee.middle_name ? employee.middle_name.charAt(0).toUpperCase() + "." : ""}
+                  ${["NA", "N/A"].includes(employee.middle_initial.toUpperCase()) ? "" : ` ${employee.middle_initial.toUpperCase()}.`}
                 </p>
                 
                 <p>Actual Rate: Php${formatNumber(employee.rate)}/day</p>

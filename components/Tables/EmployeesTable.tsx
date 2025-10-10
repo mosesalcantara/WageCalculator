@@ -79,7 +79,9 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
                 >
                   <Text className="w-[38%] text-sm text-[#333]">
                     {record.last_name}, {record.first_name}
-                    {record.middle_name ? ` ${record.middle_name.slice(0, 1).toUpperCase()}.` : ""}
+                    {["NA", "N/A"].includes(record.middle_initial.toUpperCase())
+                      ? ""
+                      : ` ${record.middle_initial.toUpperCase()}.`}
                   </Text>
 
                   <Text className="w-[10%] text-sm text-[#333]">

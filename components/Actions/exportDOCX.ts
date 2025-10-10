@@ -78,9 +78,9 @@ const exportDOCX = async (record: Establishment) => {
         children: [
           new TextRun({
             text: `${index + 1}. ${emp.last_name?.toUpperCase()}, ${emp.first_name?.toUpperCase()}${
-              emp.middle_name
-                ? ` ${emp.middle_name.charAt(0).toUpperCase()}.`
-                : ""
+              ["NA", "N/A"].includes(emp.middle_initial.toUpperCase())
+                ? ""
+                : ` ${emp.middle_initial.toUpperCase()}.`
             }`,
             bold: true,
             size: 24,

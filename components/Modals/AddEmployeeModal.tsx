@@ -18,7 +18,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
   const initialValues = {
     last_name: "",
     first_name: "",
-    middle_name: "",
+    middle_initial: "",
     rate: "",
     start_day: "Monday",
     end_day: "Friday",
@@ -34,6 +34,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
         ...values,
         first_name: `${values.first_name}`.trim(),
         last_name: `${values.last_name}`.trim(),
+        middle_initial: `${values.middle_initial}`.trim(),
         establishment_id: parent.id,
       });
       refetch();
@@ -122,17 +123,17 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
 
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white">Middle Name</Text>
+                    <Text className="mt-1 text-white">Middle Initial</Text>
                     <TextInput
                       className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                      placeholder="Enter middle name"
-                      value={values.middle_name}
-                      onChangeText={handleChange("middle_name")}
-                      onBlur={() => setFieldTouched("middle_name")}
+                      placeholder="Ex. A or N/A"
+                      value={values.middle_initial}
+                      onChangeText={handleChange("middle_initial")}
+                      onBlur={() => setFieldTouched("middle_initial")}
                     />
-                    {touched.middle_name && errors.middle_name && (
+                    {touched.middle_initial && errors.middle_initial && (
                       <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                        {errors.middle_name}
+                        {errors.middle_initial}
                       </Text>
                     )}
                   </View>
