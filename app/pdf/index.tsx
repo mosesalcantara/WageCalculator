@@ -28,7 +28,7 @@ const PDFPage = () => {
               </View>
 
               <View className="absolute bottom-2 w-full">
-                <View className="flex-row justify-around mx-4">
+                <View className="flex-row justify-center gap-2">
                   <Button
                     title="Export PDF"
                     onPress={() => exportPDF(exportHTML)}
@@ -39,10 +39,10 @@ const PDFPage = () => {
                     onPress={() => exportDOCX(record)}
                   />
                   <View className="h-2.5" />
-                  <Button
+                  {/* <Button
                     title="Export XLSX"
                     onPress={() => exportXLSX(record)}
-                  />
+                  /> */}
                 </View>
               </View>
             </View>
