@@ -11,7 +11,7 @@ export const employees = sqliteTable("employees", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   last_name: text("last_name").notNull(),
   first_name: text("first_name").notNull(),
-  middle_name: text("middle_name"),
+  middle_initial: text("middle_initial").notNull(),
   rate: real("rate").notNull(),
   start_day: text("start_day").notNull(),
   end_day: text("end_day").notNull(),
