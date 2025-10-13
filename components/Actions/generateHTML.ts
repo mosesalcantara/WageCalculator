@@ -162,7 +162,8 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
         ${renderFormula(period, type)}
 
         ${
-          index + 1 != violationType.periods.length || (index + 1 == violationType.periods.length && received > 0)
+          index + 1 != violationType.periods.length ||
+          (index + 1 == violationType.periods.length && received > 0)
             ? `<p class="space">&nbsp</p>`
             : ""
         }`;
@@ -212,10 +213,12 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
       return wageOrder.rates[key] == minimumRate;
     });
 
-    html += `
+    if (wageOrder) {
+      html += `
         <p>
-          Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})
+          Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder.name})
         </p>`;
+    }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(calculate(period, type, record.size));

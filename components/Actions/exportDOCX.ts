@@ -252,19 +252,21 @@ const exportDOCX = async (record: Establishment) => {
       return wageOrder.rates[key] == minimumRate;
     });
 
-    children.push(
-      new Paragraph({
-        children: [
-          new TextRun({
-            text: `Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})`,
-            font: {
-              name: "Arial",
-            },
-            size: 28,
-          }),
-        ],
-      }),
-    );
+    if (wageOrder) {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder.name})`,
+              font: {
+                name: "Arial",
+              },
+              size: 28,
+            }),
+          ],
+        }),
+      );
+    }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(calculate(period, type, record.size));
