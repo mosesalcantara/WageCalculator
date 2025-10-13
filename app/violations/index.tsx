@@ -52,6 +52,7 @@ const ViolationsPage = () => {
       { name: "Rest Day", icon: "coffee" },
       { name: "Holiday Pay", icon: "event-available" },
       { name: "13th Month Pay", icon: "card-giftcard" },
+      { name: "Custom", icon: "build" },
     ];
 
     let excluded: string[] = [];
