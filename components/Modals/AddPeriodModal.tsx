@@ -54,7 +54,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="fixed bottom-6 mx-4 mt-5 w-[92%] rounded-[1.875rem] bg-black p-3"
+        className="fixed bottom-8 mx-4 mt-5 w-[92%] rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
         <Text className="text-center font-bold text-white">Add Period</Text>
