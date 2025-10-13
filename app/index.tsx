@@ -37,6 +37,11 @@ const EstablishmentPage = () => {
       <NavBar />
 
       <View className="flex-1 p-4">
+        <View className="flex-row justify-between items-center mb-2">
+          <Text className="text-center text-xl font-bold">Establishments</Text>
+          <AddEstablishmentModal db={db} refetch={refetch} />
+        </View>
+
         <EstablishmentsTable
           db={db}
           router={router}
@@ -49,14 +54,12 @@ const EstablishmentPage = () => {
           onPress={() => {
             router.push("/calculator" as Href);
           }}
-          className="absolute bottom-6 right-4"
+          className="absolute bottom-4 right-4"
         >
-          <Text className="mb-16 rounded-[1.875rem] bg-[#303d78] px-5 py-2 font-bold text-white">
+          <Text className="rounded-[1.875rem] bg-[#303d78] px-5 py-2 font-bold text-white">
             Calculator
           </Text>
         </TouchableOpacity>
-
-        <AddEstablishmentModal db={db} refetch={refetch} />
       </View>
     </SafeAreaView>
   );

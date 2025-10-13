@@ -267,12 +267,10 @@ const ViolationsPage = () => {
               </ScrollView>
             </View>
 
-            <View className="flex-row items-center justify-between px-4">
-              <View className="py-2.5">
+            <View className="flex-row items-center justify-between px-4 py-2.5">
+              <View>
                 <Text className="ml-1.5 text-xl font-bold">
-                  {`${parent.last_name}, ${parent.first_name}${["NA", "N/A"].includes(parent.middle_initial.toUpperCase()) ? "" : ` ${parent.middle_initial.toUpperCase()}.`} - ${formatNumber(
-                    parent.rate,
-                  )}`}
+                  {`${parent.last_name}, ${parent.first_name}${["NA", "N/A"].includes(parent.middle_initial.toUpperCase()) ? "" : ` ${parent.middle_initial.toUpperCase()}.`}`}
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
                   Subtotal:{" "}
@@ -281,11 +279,12 @@ const ViolationsPage = () => {
                   )}
                 </Text>
               </View>
+              <AddPeriodModal onSubmit={handleSubmit} />
             </View>
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              className="h-[69%] px-4"
+              className="h-[75%] px-4"
             >
               <ScrollView>
                 <View className="gap-7">
@@ -317,10 +316,6 @@ const ViolationsPage = () => {
                 )}
               </ScrollView>
             </KeyboardAvoidingView>
-
-            <View>
-              <AddPeriodModal onSubmit={handleSubmit} />
-            </View>
           </SafeAreaView>
         </>
       )}

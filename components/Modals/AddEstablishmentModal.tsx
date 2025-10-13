@@ -50,7 +50,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="absolute bottom-2 mx-4 mt-5 w-full rounded-[1.875rem] bg-black p-3"
+        className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
         <Text className="text-center font-bold text-white">

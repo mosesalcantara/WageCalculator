@@ -41,9 +41,12 @@ const EmployeesPage = () => {
             <NavBar />
 
             <View className="flex-1 p-4">
-              <Text className="mb-3 text-center text-lg font-bold">
-                {parent.name}
-              </Text>
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="text-center text-xl font-bold">
+                  {parent.name}
+                </Text>
+              <AddEmployeeModal db={db} parent={parent} refetch={refetch} />
+              </View>
 
               <EmployeesTable
                 db={db}
@@ -52,8 +55,6 @@ const EmployeesPage = () => {
                 refetch={refetch}
                 onDelete={handleDelete}
               />
-
-              <AddEmployeeModal db={db} parent={parent} refetch={refetch} />
             </View>
           </SafeAreaView>
         </>
