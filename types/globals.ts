@@ -44,7 +44,7 @@ export type ViolationTypes =
   | "13th Month Pay";
 
 export type ViolationValues = {
-  [key in ViolationTypes]: { periods: Period[]; received?: string };
+  [key in ViolationTypes]: { periods: Period[]; received: string };
 };
 
 export type Period = {

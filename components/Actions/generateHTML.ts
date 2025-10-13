@@ -47,6 +47,8 @@ const getStyles = (isPreview: boolean) => {
         }
         .bold {
           font-weight: bold;
+        }
+        .underline {
           text-decoration: underline;
         }
         .right {
@@ -118,9 +120,11 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
 
         if (valid > 0) {
           html += `
-          <p class="bold top-space">
+          <p class="bold underline top-space">
             ${
-              type == "Holiday Pay" ? "Non-payment" : "Underpayment"
+              !violationType.received || violationType.received == 0
+                ? "Non-payment"
+                : "Underpayment"
             } of ${getViolationKeyword(type)}
           </p>
          
@@ -136,11 +140,12 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
   };
 
   const renderViolationType = (
-    violationType: { periods: Period[]; received?: string },
+    violationType: { periods: Period[]; received: string },
     type: string,
   ) => {
     let html = "";
     let subtotal = 0;
+    const received = Number(violationType.received) || 0;
 
     violationType.periods.forEach((period, index) => {
       const result = calculate(period, type, record.size);
@@ -157,36 +162,32 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
         ${renderFormula(period, type)}
 
         ${
-          index + 1 != violationType.periods.length
+          index + 1 != violationType.periods.length || (index + 1 == violationType.periods.length && received > 0)
             ? `<p class="space">&nbsp</p>`
             : ""
         }`;
       }
     });
 
-    if (violationType.periods.length > 1) {
+    if (received > 0) {
       html += `
-        <p class="right">
-          Subtotal: Php${formatNumber(subtotal)}
-        </p>
+      <p>
+        Actual Pay Received: 
+        Php${formatNumber(received)}
+      </p>
+
+      <p>
+        Php${formatNumber(subtotal)} - ${formatNumber(received)} 
+        <span>= Php${formatNumber(subtotal - received)}</span>
+      </p>
       `;
     }
 
-    if (type == "13th Month Pay") {
+    if (violationType.periods.length > 1) {
       html += `
-      <p>
-        Actual 13th Month Pay Received: 
-        Php${formatNumber(violationType.received || 0)}
-      </p>
-
-      <p>
-        Php${formatNumber(subtotal)} - ${formatNumber(
-          violationType.received || 0,
-        )} 
-        <span>= Php${formatNumber(
-          subtotal - (Number(violationType.received) || 0),
-        )}</span>
-      </p>
+        <p class="right">
+          Subtotal: Php${formatNumber(subtotal - received)}
+        </p>
       `;
     }
 

@@ -47,11 +47,11 @@ const exportDOCX = async (record: Establishment) => {
                     ? ""
                     : ` ${employee.middle_initial.toUpperCase()}.`
                 }`,
-                bold: true,
-                size: 28,
                 font: {
                   name: "Arial",
                 },
+                size: 28,
+                bold: true,
               }),
             ],
           }),
@@ -62,13 +62,12 @@ const exportDOCX = async (record: Establishment) => {
             children: [
               new TextRun({
                 text: `Actual Rate: Php${formatNumber(employee.rate)}/day`,
-                size: 28,
                 font: {
                   name: "Arial",
                 },
+                size: 28,
               }),
             ],
-            spacing: { after: 200 },
           }),
         );
 
@@ -98,16 +97,20 @@ const exportDOCX = async (record: Establishment) => {
             new Paragraph({
               children: [
                 new TextRun({
-                  text: `${type === "Holiday Pay" ? "Non-payment" : "Underpayment"} of ${getViolationKeyword(type)}`,
-                  bold: true,
-                  underline: {},
-                  size: 28,
+                  text: `${
+                    !violationType.received || violationType.received == 0
+                      ? "Non-payment"
+                      : "Underpayment"
+                  } of ${getViolationKeyword(type)}`,
                   font: {
                     name: "Arial",
                   },
+                  size: 28,
+                  bold: true,
+                  underline: {},
+                  break: 1,
                 }),
               ],
-              spacing: { before: 200, after: 100 },
             }),
           );
           renderViolationType(violations[type], type);
@@ -119,26 +122,26 @@ const exportDOCX = async (record: Establishment) => {
           children: [
             new TextRun({
               text: `Total: Php${formatNumber(total)}`,
-              bold: true,
-              underline: {},
-              size: 28,
               font: {
                 name: "Arial",
               },
+              size: 28,
+              bold: true,
+              break: 1,
             }),
           ],
           alignment: "right",
-          spacing: { before: 200, after: 400 },
         }),
       );
     }
   };
 
   const renderViolationType = (
-    violationType: { periods: Period[]; received?: string },
+    violationType: { periods: Period[]; received: string },
     type: string,
   ) => {
     let subtotal = 0;
+    const received = Number(violationType.received) || 0;
 
     violationType.periods.forEach((period, index) => {
       const result = calculate(period, type, record.size);
@@ -149,13 +152,13 @@ const exportDOCX = async (record: Establishment) => {
           new Paragraph({
             children: [
               new TextRun({
-                text: `Period ${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
+                text: `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
                 )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`,
-                size: 28,
                 font: {
                   name: "Arial",
                 },
+                size: 28,
               }),
             ],
           }),
@@ -163,65 +166,69 @@ const exportDOCX = async (record: Establishment) => {
 
         renderFormula(period, type);
 
-        if (index + 1 != violationType.periods.length) {
+        if (
+          index + 1 != violationType.periods.length &&
+          index + 1 == violationType.periods.length &&
+          received > 0
+        ) {
           children.push(
             new Paragraph({
               children: [
                 new TextRun({
                   text: ``,
+                  break: 1,
                 }),
               ],
-              spacing: { after: 30 },
             }),
           );
         }
       }
     });
 
+    if (received > 0) {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Actual Pay Received: Php${formatNumber(received)}`,
+              font: {
+                name: "Arial",
+              },
+              size: 28,
+            }),
+          ],
+        }),
+      );
+
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Php${formatNumber(subtotal)} - ${formatNumber(received)} = Php${formatNumber(subtotal - received)}`,
+              font: {
+                name: "Arial",
+              },
+              size: 28,
+            }),
+          ],
+        }),
+      );
+    }
+
     if (violationType.periods.length > 1) {
       children.push(
         new Paragraph({
           children: [
             new TextRun({
-              text: `Subtotal: Php${formatNumber(subtotal)}`,
-              size: 28,
+              text: `Subtotal: Php${formatNumber(subtotal - received)}`,
               font: {
                 name: "Arial",
               },
+              size: 28,
+              break: 1,
             }),
           ],
           alignment: "right",
-          spacing: { after: 200 },
-        }),
-      );
-    }
-
-    if (type == "13th Month Pay") {
-      children.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: `Actual 13th Month Pay Received: Php${formatNumber(violationType.received || 0)}`,
-              size: 28,
-              font: {
-                name: "Arial",
-              },
-            }),
-          ],
-        }),
-      );
-
-      children.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: `Php${formatNumber(subtotal)} - ${formatNumber(violationType.received || 0)} = Php${formatNumber(subtotal - (Number(violationType.received) || 0))}`,
-              size: 28,
-              font: {
-                name: "Arial",
-              },
-            }),
-          ],
         }),
       );
     }
@@ -250,11 +257,10 @@ const exportDOCX = async (record: Establishment) => {
         children: [
           new TextRun({
             text: `Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder!.name})`,
-            italics: true,
-            size: 28,
             font: {
               name: "Arial",
             },
+            size: 28,
           }),
         ],
       }),
@@ -295,13 +301,13 @@ const exportDOCX = async (record: Establishment) => {
         children: [
           new TextRun({
             text: `${text} = Php${formatNumber(total)}`,
-            size: 28,
             font: {
               name: "Arial",
             },
+            size: 28,
           }),
         ],
-        spacing: { after: 100 },
+        spacing: { after: 300 },
       }),
     );
   };
@@ -312,11 +318,11 @@ const exportDOCX = async (record: Establishment) => {
         children: [
           new TextRun({
             text: record.name.toUpperCase(),
-            bold: true,
-            size: 32,
             font: {
               name: "Arial",
             },
+            size: 32,
+            bold: true,
           }),
         ],
         alignment: "center",

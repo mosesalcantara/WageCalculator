@@ -50,7 +50,7 @@ export const typesOptions = [
     label: "Rest Day",
     value: "Rest Day",
   },
-    {
+  {
     label: "Special (non-working) day",
     value: "Special (non-working) day",
   },
@@ -261,7 +261,7 @@ export const getDb = () => {
 };
 
 export const formatNumber = (number: string | number) => {
-  return (number || 0).toLocaleString("en-US", {
+  return (Number(number) || 0).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -363,7 +363,7 @@ export const calculate = (period: Period, type: string, size: string) => {
 };
 
 export const getTotal = (
-  violationType: { periods: Period[]; received?: string },
+  violationType: { periods: Period[]; received: string },
   type: string,
   size: string,
 ) => {
@@ -376,17 +376,16 @@ export const getTotal = (
 };
 
 export const getPeriodFormat = (rate?: number) => {
-  return { ...periodFormat, rate: `${rate ? `${rate}` : ""}` };
+  return { ...periodFormat, rate: rate ? `${rate}` : "" };
 };
 
 export const getInitialViolations = (rate?: number) => {
   const values = {} as ViolationValues;
   violationTypesArray.forEach((type) => {
-    const periodsFormat = { periods: [getPeriodFormat(rate)] };
-    values[type as ViolationTypes] =
-      type == "13th Month Pay"
-        ? { ...periodsFormat, received: "" }
-        : periodsFormat;
+    values[type as ViolationTypes] = {
+      periods: [getPeriodFormat(rate)],
+      received: "",
+    };
   });
   return values;
 };
