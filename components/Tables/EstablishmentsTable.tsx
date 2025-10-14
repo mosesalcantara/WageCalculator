@@ -29,32 +29,32 @@ const EstablishmentsTable = ({
   return (
     <FlatList
       data={establishments}
-      keyExtractor={(record) => `${record.id}`}
-      renderItem={({ item: record }) => (
+      keyExtractor={(establishment) => `${establishment.id}`}
+      renderItem={({ item: establishment }) => (
         <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
-          <Text className="font-bold">{record.name}</Text>
+          <Text className="font-bold">{establishment.name}</Text>
 
           <View className="flex-row gap-1">
             <TouchableOpacity
-              onPress={() => setEstablishment(record.id, "employees")}
+              onPress={() => setEstablishment(establishment.id, "employees")}
             >
               <Icon name="remove-red-eye" size={20} color="#2196F3" />
             </TouchableOpacity>
 
             <UpdateEstablishmentModal
               db={db}
-              values={record}
+              establishment={establishment}
               refetch={refetch}
             />
 
             <TouchableOpacity
-              onPress={() => confirmAlert("Establishment", onDelete, record.id)}
+              onPress={() => confirmAlert("Establishment", onDelete, establishment.id)}
             >
               <Icon name="delete" size={20} color="#E53935" />
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => setEstablishment(record.id, "pdf")}
+              onPress={() => setEstablishment(establishment.id, "pdf")}
             >
               <Icon name="file-download" size={20} color="#2196F3" />
             </TouchableOpacity>

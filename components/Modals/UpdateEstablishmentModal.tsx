@@ -1,7 +1,7 @@
 import Select from "@/components/FormikSelect";
 import { establishments } from "@/db/schema";
 import { establishment as validationSchema } from "@/schemas/globals";
-import { Establishment } from "@/types/globals";
+import { Db, Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
@@ -11,13 +11,13 @@ import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
-  db: any;
-  values: Establishment;
+  db: Db;
+  establishment: Establishment;
   refetch: () => void;
 };
 
-const UpdateEstablishmentModal = ({ db, values, refetch }: Props) => {
-  const initialValues = values;
+const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
+  const initialValues = establishment;
   const [isVisible, setIsVisible] = useState(false);
 
   const handleSubmit = async (

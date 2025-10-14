@@ -6,17 +6,17 @@ import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
+  type: ViolationKeys;
   startDate: string;
   endDate: string;
-  type: ViolationKeys;
   isVisible: boolean;
   onToggle: (isVisible: boolean) => void;
 };
 
 const ViewDaysModal = ({
+  type,
   startDate,
   endDate,
-  type,
   isVisible,
   onToggle,
 }: Props) => {

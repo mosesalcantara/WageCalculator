@@ -278,9 +278,9 @@ const Form = ({
                   {["Special Day", "Holiday Pay"].includes(type) &&
                     validateDateRange(period.start_date, period.end_date) && (
                       <ViewDaysModal
+                        type={type}
                         startDate={period.start_date}
                         endDate={period.end_date}
-                        type={type}
                         isVisible={isViewDaysModalVisible}
                         onToggle={handleViewDaysModalToggle}
                       />

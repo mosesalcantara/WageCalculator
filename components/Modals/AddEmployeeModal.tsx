@@ -1,7 +1,7 @@
 import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
-import { Employee, Establishment, Override } from "@/types/globals";
+import { Db, Employee, Establishment, Override } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { Formik } from "formik";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 type Props = {
-  db: any;
+  db: Db;
   establishment: Establishment;
   refetch: () => void;
 };
@@ -32,9 +32,10 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
     try {
       await db.insert(employees).values({
         ...values,
-        first_name: `${values.first_name}`.trim(),
         last_name: `${values.last_name}`.trim(),
+        first_name: `${values.first_name}`.trim(),
         middle_initial: `${values.middle_initial}`.trim(),
+        rate: Number(values.rate),
         establishment_id: establishment.id,
       });
       refetch();

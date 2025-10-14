@@ -1,7 +1,7 @@
 import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
-import { Employee } from "@/types/globals";
+import { Db, Employee } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { Formik } from "formik";
@@ -11,7 +11,7 @@ import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
-  db: any;
+  db: Db;
   employee: Employee;
   refetch: () => void;
 };
@@ -29,9 +29,10 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
         .update(employees)
         .set({
           ...values,
-          first_name: `${values.first_name}`.trim(),
           last_name: `${values.last_name}`.trim(),
+          first_name: `${values.first_name}`.trim(),
           middle_initial: `${values.middle_initial.trim()}`,
+          rate: Number(values.rate),
         })
         .where(eq(employees.id, values.id));
       refetch();

@@ -1,7 +1,7 @@
 import Select from "@/components/FormikSelect";
 import { establishments } from "@/db/schema";
 import { establishment as validationSchema } from "@/schemas/globals";
-import { Establishment, Override } from "@/types/globals";
+import { Db, Establishment, Override } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { Formik } from "formik";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 type Props = {
-  db: any;
+  db: Db;
   refetch: () => void;
 };
 
