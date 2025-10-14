@@ -234,7 +234,15 @@ export const violationTypesArray = [
   "13th Month Pay",
 ];
 
-export const calculatorPeriodFormat = {
+export const periodFormat = {
+  start_date: "",
+  end_date: "",
+  rate: "",
+  daysOrHours: "",
+  type: "Normal Day",
+};
+
+export const customPeriodFormat = {
   start_date: "",
   end_date: "",
   type: "",
@@ -242,14 +250,6 @@ export const calculatorPeriodFormat = {
   days: "",
   nightShiftHours: "",
   overtimeHours: "",
-};
-
-export const periodFormat = {
-  start_date: "",
-  end_date: "",
-  rate: "",
-  daysOrHours: "",
-  type: "Normal Day",
 };
 
 export const periodsFormat = {
@@ -379,7 +379,11 @@ export const getPeriodFormat = (rate?: number) => {
   return { ...periodFormat, rate: rate ? `${rate}` : "" };
 };
 
-export const getInitialViolations = (rate?: number) => {
+export const getCustomPeriodFormat = (rate?: number) => {
+  return { ...customPeriodFormat, rate: rate ? `${rate}` : "" };
+};
+
+export const getInitialViolationTypes = (rate?: number) => {
   const values = {} as ViolationTypes;
   violationTypesArray.forEach((type) => {
     values[type as ViolationKeys] = {
@@ -388,6 +392,13 @@ export const getInitialViolations = (rate?: number) => {
     };
   });
   return values;
+};
+
+export const getInitialCustomViolationType = (rate?: number) => {
+  return {
+    periods: [getCustomPeriodFormat(rate)],
+    received: "",
+  };
 };
 
 export const getViolationKeyword = (type: string) => {

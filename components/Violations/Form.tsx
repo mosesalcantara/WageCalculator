@@ -189,12 +189,6 @@ const Form = ({ grandparent, parent, type, index, violationTypesState }: Props) 
     });
   };
 
-  useEffect(() => {
-    if (estimate) {
-      handleChange("daysOrHours", estimate);
-    }
-  }, [estimate]);
-
   return (
     <>
       <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">

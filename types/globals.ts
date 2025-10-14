@@ -31,7 +31,13 @@ export type Employee = {
 export type Violation = {
   id: number;
   values: ViolationTypes | string;
-  employee_id: number;
+  employee_id?: number;
+};
+
+export type CustomViolation = {
+  id: number;
+  values: CustomViolationType | string;
+  employee_id?: number;
 };
 
 export type ViolationKeys =
@@ -41,10 +47,16 @@ export type ViolationKeys =
   | "Special Day"
   | "Rest Day"
   | "Holiday Pay"
-  | "13th Month Pay";
+  | "13th Month Pay"
+  | "Custom";
 
 export type ViolationTypes = {
   [key in ViolationKeys]: { periods: Period[]; received: string };
+};
+
+export type CustomViolationType = {
+  periods: CustomPeriod[];
+  received: string;
 };
 
 export type Period = {
@@ -63,7 +75,7 @@ export type CustomPeriod = {
   days: string;
   nightShiftHours: string;
   overtimeHours: string;
-}
+};
 
 export type Holiday = {
   name: string;

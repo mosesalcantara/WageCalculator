@@ -1,9 +1,16 @@
+import CustomForm from "@/components/Custom/Form";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
 import Form from "@/components/Violations/Form";
-import { violations } from "@/db/schema";
+import { customViolations, violations } from "@/db/schema";
+import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
 import useFetchViolations from "@/hooks/useFetchViolations";
-import { ViolationKeys, ViolationTypes } from "@/types/globals";
+import {
+  CustomPeriod,
+  CustomViolationType,
+  ViolationKeys,
+  ViolationTypes,
+} from "@/types/globals";
 import {
   formatNumber,
   getDb,
@@ -39,7 +46,10 @@ const ViolationsPage = () => {
   const parent_id = SessionStorage.getItem("employee_id") as string;
 
   const [type, setType] = useState<ViolationKeys>("Basic Wage");
-  const { grandparent, parent, violationTypes, setViolationTypes } = useFetchViolations(db);
+  const { grandparent, parent, violationTypes, setViolationTypes } =
+    useFetchViolations(db);
+  const { customViolationType, setCustomViolationType } =
+    useFetchCustomViolations(db);
 
   const violationType = violationTypes[type];
 
@@ -78,13 +88,20 @@ const ViolationsPage = () => {
     });
   };
 
-  const addRecord = async (values: ViolationTypes) => {
+  const addRecord = async (
+    violationTypes: ViolationTypes,
+    customViolationType: CustomViolationType,
+  ) => {
     try {
       await db
         .delete(violations)
         .where(eq(violations.employee_id, Number(parent_id)));
       await db.insert(violations).values({
-        values: JSON.stringify(values),
+        values: JSON.stringify(violationTypes),
+        employee_id: Number(parent_id),
+      });
+      await db.insert(customViolations).values({
+        values: JSON.stringify(customViolationType),
         employee_id: Number(parent_id),
       });
       Toast.show({
@@ -207,18 +224,105 @@ const ViolationsPage = () => {
     });
   };
 
+  const customCalculate = (period: CustomPeriod) => {
+    const values = {
+      ...period,
+      rate: period.rate ? Number(period.rate) : 0,
+      days: period.days ? Number(period.days) : 0,
+      nightShiftHours: period.nightShiftHours
+        ? Number(period.nightShiftHours)
+        : 0,
+      overtimeHours: period.overtimeHours ? Number(period.overtimeHours) : 0,
+    };
+
+    const type = period.type.toLowerCase();
+    let nightShiftMultiplier = 0;
+    if (type.includes("night shift")) {
+      nightShiftMultiplier = 1.1;
+    }
+
+    let overtimeMultiplier = 0;
+    if (type.includes("ot")) {
+      overtimeMultiplier = 1.3;
+      if (type.includes("ordinary day")) {
+        overtimeMultiplier = 1.25;
+      }
+    }
+
+    let daysMultiplier = 0;
+    if (type.includes("ordinary day")) {
+      daysMultiplier = 1;
+    } else if (
+      type.includes("rest day") &&
+      type.includes("special (non-working) day")
+    ) {
+      daysMultiplier = 1.5;
+      if (type.includes("double")) {
+        daysMultiplier = 1.95;
+      }
+    } else if (type.includes("holiday")) {
+      daysMultiplier = 2;
+      if (type.includes("double")) {
+        daysMultiplier = 3;
+        if (type.includes("rest day")) {
+          daysMultiplier = 3.9;
+        }
+      } else {
+        if (type.includes("rest day")) {
+          daysMultiplier = 2.6;
+        }
+      }
+    } else if (
+      type.includes("rest day") ||
+      type.includes("special (non-working) day")
+    ) {
+      daysMultiplier = 1.3;
+      if (type.includes("double")) {
+        daysMultiplier = 1.5;
+      }
+    }
+
+    const { rate, days, nightShiftHours, overtimeHours } = values;
+
+    let total = 0;
+    total =
+      rate * daysMultiplier * days +
+      (rate / 8) * nightShiftMultiplier * nightShiftHours +
+      (rate / 8) * overtimeMultiplier * overtimeHours;
+
+    return {
+      rate,
+      daysMultiplier,
+      days,
+      nightShiftMultiplier,
+      nightShiftHours,
+      overtimeMultiplier,
+      overtimeHours,
+      total,
+    };
+  };
+
+  const getCustomTotal = () => {
+    let result = 0;
+    customViolationType.periods.forEach((period) => {
+      result += customCalculate(period).total;
+    });
+    return result;
+  };
+
   useFocusEffect(
     useCallback(() => {
       const appStateHandler = AppState.addEventListener(
         "change",
         (nextAppState) => {
-          nextAppState == "background" && addRecord(violationTypes);
+          nextAppState == "background" &&
+            addRecord(violationTypes, customViolationType);
         },
       );
 
       const handleBackPress = () => {
         router.push("/employees" as Href);
-        addRecord(violationTypes);
+        addRecord(violationTypes, customViolationType);
         return true;
       };
 
@@ -276,7 +380,9 @@ const ViolationsPage = () => {
                 <Text className="ml-1.5 text-xl font-bold underline">
                   Subtotal:{" "}
                   {formatNumber(
-                    getTotal(violationType, type, grandparent.size),
+                    type == "Custom"
+                      ? getCustomTotal()
+                      : getTotal(violationType, type, grandparent.size),
                   )}
                 </Text>
               </View>
@@ -288,31 +394,54 @@ const ViolationsPage = () => {
               className="h-[75%] px-4"
             >
               <ScrollView>
-                <View className="gap-7">
-                  {violationType.periods.map((_, index) => (
-                    <Form
-                      key={index}
-                      grandparent={grandparent}
-                      parent={parent}
-                      type={type}
-                      index={index}
-                      violationTypesState={[violationTypes, setViolationTypes]}
-                    />
-                  ))}
-                </View>
+                {type == "Custom" ? (
+                  <>
+                    <View className="gap-7">
+                      {customViolationType.periods.map((_, index) => (
+                        <CustomForm
+                          key={index}
+                          index={index}
+                          customViolationTypeState={[
+                            customViolationType,
+                            setCustomViolationType,
+                          ]}
+                          calculate={customCalculate}
+                        />
+                      ))}
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <View className="gap-7">
+                      {violationType.periods.map((_, index) => (
+                        <Form
+                          key={index}
+                          grandparent={grandparent}
+                          parent={parent}
+                          type={type}
+                          index={index}
+                          violationTypesState={[
+                            violationTypes,
+                            setViolationTypes,
+                          ]}
+                        />
+                      ))}
+                    </View>
 
-                <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                  <Text className="text-base font-bold text-[#333]">
-                    Received
-                  </Text>
-                  <TextInput
-                    className="h-11 rounded-md border border-black px-2.5"
-                    keyboardType="numeric"
-                    placeholder="Enter pay received"
-                    value={violationType.received}
-                    onChangeText={(value) => handleReceivedChange(value)}
-                  />
-                </View>
+                    <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
+                      <Text className="text-base font-bold text-[#333]">
+                        Received
+                      </Text>
+                      <TextInput
+                        className="h-11 rounded-md border border-black px-2.5"
+                        keyboardType="numeric"
+                        placeholder="Enter pay received"
+                        value={violationType.received}
+                        onChangeText={(value) => handleReceivedChange(value)}
+                      />
+                    </View>
+                  </>
+                )}
               </ScrollView>
             </KeyboardAvoidingView>
           </SafeAreaView>

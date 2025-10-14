@@ -6,7 +6,7 @@ import {
   Violation,
   ViolationTypes,
 } from "@/types/globals";
-import { getInitialViolations, toastVisibilityTime } from "@/utils/globals";
+import { getInitialViolationTypes, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
 import SessionStorage from "react-native-session-storage";
@@ -17,7 +17,7 @@ const useFetchViolations = (db: Db) => {
 
   const [grandparent, setGrandparent] = useState<Establishment | undefined>();
   const [parent, setParent] = useState<Employee | undefined>();
-  const [violationTypes, setViolationTypes] = useState<ViolationTypes>(getInitialViolations());
+  const [violationTypes, setViolationTypes] = useState<ViolationTypes>(getInitialViolationTypes());
 
   const handleFetch = useCallback(async () => {
     try {
@@ -36,7 +36,7 @@ const useFetchViolations = (db: Db) => {
           ];
           setViolationTypes(JSON.parse(data.violations[0].values as string));
         } else {
-          setViolationTypes(getInitialViolations(data.rate));
+          setViolationTypes(getInitialViolationTypes(data.rate));
         }
         setParent({ ...data, violations: violations });
         const establishmentData = await db.query.establishments.findFirst({
