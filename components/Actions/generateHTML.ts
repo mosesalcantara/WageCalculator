@@ -64,7 +64,7 @@ const getStyles = (isPreview: boolean) => {
     `;
 };
 
-const generateHTML = (record: Establishment, isPreview: boolean) => {
+const generateHTML = (establishment: Establishment, isPreview: boolean) => {
   const renderEmployee = (employee: Employee, index: number) => {
     let html = "";
 
@@ -109,7 +109,7 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(violationType, type, record.size);
+        total += getTotal(violationType, type, establishment.size);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -148,7 +148,7 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
     const received = Number(violationType.received) || 0;
 
     violationType.periods.forEach((period, index) => {
-      const result = calculate(period, type, record.size);
+      const result = calculate(period, type, establishment.size);
       if (validate(period)) {
         subtotal += result;
         html += `
@@ -202,12 +202,12 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
     const minimumRate = getMinimumRate(
       period.start_date,
       period.end_date,
-      record.size,
+      establishment.size,
     );
 
     const wageOrder = wageOrders.find((wageOrder) => {
       const key =
-        record.size == "Employing 10 or more workers"
+        establishment.size == "Employing 10 or more workers"
           ? "tenOrMore"
           : "lessThanTen";
       return wageOrder.rates[key] == minimumRate;
@@ -221,7 +221,7 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
     }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(period, type, record.size));
+    const total = formatNumber(calculate(period, type, establishment.size));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
@@ -272,15 +272,15 @@ const generateHTML = (record: Establishment, isPreview: boolean) => {
       </head>
       <body>
         ${
-          record &&
-          `<h1>${record.name.toUpperCase()}</h1>
+          establishment &&
+          `<h1>${establishment.name.toUpperCase()}</h1>
 
           <table>
             <tbody>
               ${
-                record &&
-                record.employees &&
-                record.employees
+                establishment &&
+                establishment.employees &&
+                establishment.employees
                   .map(
                     (employee, index) => `
                   ${renderEmployee(employee, index)}

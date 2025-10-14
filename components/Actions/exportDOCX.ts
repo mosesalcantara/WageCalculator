@@ -23,7 +23,7 @@ import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
 import Toast from "react-native-toast-message";
 
-const exportDOCX = async (record: Establishment) => {
+const exportDOCX = async (establishment: Establishment) => {
   const children: Paragraph[] = [];
 
   const renderEmployee = (employee: Employee, index: number) => {
@@ -83,7 +83,7 @@ const exportDOCX = async (record: Establishment) => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(violationType, type, record.size);
+        total += getTotal(violationType, type, establishment.size);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -144,7 +144,7 @@ const exportDOCX = async (record: Establishment) => {
     const received = Number(violationType.received) || 0;
 
     violationType.periods.forEach((period, index) => {
-      const result = calculate(period, type, record.size);
+      const result = calculate(period, type, establishment.size);
       if (validate(period)) {
         subtotal += result;
 
@@ -241,12 +241,12 @@ const exportDOCX = async (record: Establishment) => {
     const minimumRate = getMinimumRate(
       period.start_date,
       period.end_date,
-      record.size,
+      establishment.size,
     );
 
     const wageOrder = wageOrders.find((wageOrder) => {
       const key =
-        record.size == "Employing 10 or more workers"
+        establishment.size == "Employing 10 or more workers"
           ? "tenOrMore"
           : "lessThanTen";
       return wageOrder.rates[key] == minimumRate;
@@ -269,7 +269,7 @@ const exportDOCX = async (record: Establishment) => {
     }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(period, type, record.size));
+    const total = formatNumber(calculate(period, type, establishment.size));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
@@ -319,7 +319,7 @@ const exportDOCX = async (record: Establishment) => {
       new Paragraph({
         children: [
           new TextRun({
-            text: record.name.toUpperCase(),
+            text: establishment.name.toUpperCase(),
             font: {
               name: "Arial",
             },
@@ -332,8 +332,8 @@ const exportDOCX = async (record: Establishment) => {
       }),
     );
 
-    record.employees &&
-      record.employees.forEach((employee, index) => {
+    establishment.employees &&
+      establishment.employees.forEach((employee, index) => {
         renderEmployee(employee, index);
       });
   };
