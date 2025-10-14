@@ -14,6 +14,7 @@ import {
 import {
   formatNumber,
   getDb,
+  getPeriodFormat,
   getTotal,
   periodFormat,
   toastVisibilityTime,
@@ -310,6 +311,52 @@ const ViolationsPage = () => {
     return result;
   };
 
+  const handleChange = (
+    key: string,
+    value: string | number | Date,
+    index: number,
+  ) => {
+    if (key.endsWith("_date")) {
+      value = (value as Date).toISOString().split("T")[0];
+    }
+
+    setViolationTypes((prev) => {
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+        index == periodIndex ? { ...period, [key]: `${value}` } : period,
+      );
+
+      return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
+    });
+  };
+
+  const handleAddPeriod = () => {
+    setViolationTypes((prev) => {
+      return {
+        ...prev,
+        [type]: {
+          periods: [...prev[type].periods, getPeriodFormat(parent?.rate)],
+        },
+      };
+    });
+  };
+
+  const handleRemovePeriod = (index: number) => {
+    setViolationTypes((prev) => {
+      const updatedPeriods = prev[type].periods;
+      updatedPeriods.splice(index, 1);
+      return { ...prev, [type]: { periods: updatedPeriods } };
+    });
+  };
+
+  const handleClearPeriod = (index: number) => {
+    setViolationTypes((prev) => {
+      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
+        index == periodIndex ? getPeriodFormat() : period,
+      );
+      return { ...prev, [type]: { periods: updatedPeriods } };
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
       const appStateHandler = AppState.addEventListener(
@@ -420,10 +467,11 @@ const ViolationsPage = () => {
                           parent={parent}
                           type={type}
                           index={index}
-                          violationTypesState={[
-                            violationTypes,
-                            setViolationTypes,
-                          ]}
+                          violationTypes={violationTypes}
+                          onChange={handleChange}
+                          onAddPeriod={handleAddPeriod}
+                          onRemovePeriod={handleRemovePeriod}
+                          onClearPeriod={handleClearPeriod}
                         />
                       ))}
                     </View>

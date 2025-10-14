@@ -28,10 +28,15 @@ type Props = {
   parent: Employee;
   type: ViolationKeys;
   index: number;
-  violationTypesState: [
-    ViolationTypes,
-    Dispatch<SetStateAction<ViolationTypes>>,
-  ];
+  violationTypes: ViolationTypes;
+  onChange: (
+    key: string,
+    value: string | number | Date,
+    index: number,
+  ) => void;
+  onAddPeriod: () => void;
+  onRemovePeriod: (index: number) => void;
+  onClearPeriod: (index: number) => void;
 };
 
 const Form = ({
@@ -39,12 +44,15 @@ const Form = ({
   parent,
   type,
   index,
-  violationTypesState,
+  violationTypes,
+  onChange,
+  onAddPeriod,
+  onRemovePeriod,
+  onClearPeriod,
 }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useState(false);
-  const [violationTypes, setViolationTypes] = violationTypesState;
 
   const periods = violationTypes[type].periods;
   const period = violationTypes[type].periods[index];
@@ -65,34 +73,6 @@ const Form = ({
   };
 
   const includedDays = getIncludedDays(parent.start_day, parent.end_day);
-
-  const handleInitialChange = (
-    key: string,
-    value: string | number | Date,
-    index: number,
-  ) => {
-    if (key.endsWith("_date")) {
-      value = (value as Date).toISOString().split("T")[0];
-    }
-
-    setViolationTypes((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? { ...period, [key]: `${value}` } : period,
-      );
-
-      return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
-    });
-  };
-
-  const handleChange = (key: string, value: string | number | Date) => {
-    handleInitialChange(key, value, index);
-
-    if (key == "start_date") {
-      setIsStartDateModalVisible(false);
-    } else if (key == "end_date") {
-      setIsEndDateModalVisible(false);
-    }
-  };
 
   const getEstimate = (startDate: string, endDate: string) => {
     if (!validateDateRange(startDate, endDate)) {
@@ -149,7 +129,7 @@ const Form = ({
   );
 
   const setRate = () => {
-    handleChange("rate", `${parent.rate}`);
+    onChange("rate", `${parent.rate}`, index);
   };
 
   const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
@@ -168,34 +148,6 @@ const Form = ({
     } else if (type == "Holiday Pay") {
       return "Holidays";
     }
-  };
-
-  const addPeriod = () => {
-    setViolationTypes((prev) => {
-      return {
-        ...prev,
-        [type]: {
-          periods: [...prev[type].periods, getPeriodFormat(parent.rate)],
-        },
-      };
-    });
-  };
-
-  const removePeriod = () => {
-    setViolationTypes((prev) => {
-      const updatedPeriods = prev[type].periods;
-      updatedPeriods.splice(index, 1);
-      return { ...prev, [type]: { periods: updatedPeriods } };
-    });
-  };
-
-  const clearPeriod = () => {
-    setViolationTypes((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? getPeriodFormat() : period,
-      );
-      return { ...prev, [type]: { periods: updatedPeriods } };
-    });
   };
 
   const handleViewDaysModalToggle = (isVisible: boolean) => {
@@ -250,7 +202,7 @@ const Form = ({
                   keyboardType="numeric"
                   placeholder="Enter Rate"
                   value={period.rate}
-                  onChangeText={(value) => handleChange("rate", value)}
+                  onChangeText={(value) => onChange("rate", value, index)}
                 />
                 <Icon
                   name="autorenew"
@@ -285,7 +237,7 @@ const Form = ({
                 keyboardType="numeric"
                 placeholder={`Enter ${daysOrHours.toLowerCase()}`}
                 value={period.daysOrHours}
-                onChangeText={(value) => handleChange("daysOrHours", value)}
+                onChangeText={(value) => onChange("daysOrHours", value, index)}
               />
             </View>
 
@@ -308,7 +260,8 @@ const Form = ({
                   ]}
                   placeholder="Select Type"
                   value={period.type}
-                  onChange={handleChange}
+                  index={index}
+                  onChange={onChange}
                 />
               </View>
             )}
@@ -354,20 +307,20 @@ const Form = ({
 
         <View className="mt-2.5 flex-row gap-2.5">
           {periods.length - 1 == index && (
-            <TouchableOpacity onPress={addPeriod}>
+            <TouchableOpacity onPress={onAddPeriod}>
               <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 text-white">
                 Add
               </Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={clearPeriod}>
+          <TouchableOpacity onPress={() => onClearPeriod(index)}>
             <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 text-white">
               Clear
             </Text>
           </TouchableOpacity>
 
           {periods.length > 1 && (
-            <TouchableOpacity onPress={removePeriod}>
+            <TouchableOpacity onPress={() => onRemovePeriod(index)}>
               <Text className="rounded-md border border-[#e71414ff] bg-[#e71414ff] px-2.5 py-1.5 text-white">
                 Remove
               </Text>
@@ -381,7 +334,10 @@ const Form = ({
           value={formatDateValue(period.start_date)}
           mode="date"
           onChange={(_, value) => {
-            value && handleChange("start_date", value);
+            if (value) {
+              onChange("start_date", value, index);
+              setIsStartDateModalVisible(false);
+            }
           }}
         />
       )}
@@ -391,7 +347,10 @@ const Form = ({
           value={formatDateValue(period.end_date)}
           mode="date"
           onChange={(_, value) => {
-            value && handleChange("end_date", value);
+            if (value) {
+              onChange("end_date", value, index);
+              setIsEndDateModalVisible(false);
+            }
           }}
         />
       )}

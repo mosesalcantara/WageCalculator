@@ -7,7 +7,8 @@ type Props = {
   options: { label: string; value: string }[];
   placeholder?: string;
   value: string;
-  onChange: (key: string, value: string) => void;
+  index: number;
+  onChange: (key: string, value: string, index: number) => void;
 };
 
 const Select = ({
@@ -15,6 +16,7 @@ const Select = ({
   options,
   placeholder = "Select Item",
   value,
+  index,
   onChange,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
@@ -31,7 +33,7 @@ const Select = ({
         placeholder={!isFocus ? placeholder : ""}
         value={value}
         onChange={(option) => {
-          onChange(name, option.value);
+          onChange(name, option.value, index);
           setIsFocus(false);
         }}
         onFocus={() => setIsFocus(true)}
