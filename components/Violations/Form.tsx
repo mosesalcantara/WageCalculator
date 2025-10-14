@@ -118,9 +118,9 @@ const Form = ({
   const estimate = getEstimate(period.start_date, period.end_date);
 
   const minimumRate = getMinimumRate(
+    establishment.size,
     period.start_date,
     period.end_date,
-    establishment.size,
   );
 
   const setRate = () => {
@@ -295,7 +295,7 @@ const Form = ({
           <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱{formatNumber(calculate(period, type, establishment.size))}
+              ₱{formatNumber(calculate(type, establishment.size, period))}
             </Text>
           </Text>
         </View>

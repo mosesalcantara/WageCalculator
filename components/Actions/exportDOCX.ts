@@ -83,7 +83,7 @@ const exportDOCX = async (establishment: Establishment) => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(violationType, type, establishment.size);
+        total += getTotal(type, establishment.size, violationType);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -144,7 +144,7 @@ const exportDOCX = async (establishment: Establishment) => {
     const received = Number(violationType.received) || 0;
 
     violationType.periods.forEach((period, index) => {
-      const result = calculate(period, type, establishment.size);
+      const result = calculate(type, establishment.size, period);
       if (validate(period)) {
         subtotal += result;
 
@@ -239,9 +239,9 @@ const exportDOCX = async (establishment: Establishment) => {
 
     const rate = Number(period.rate);
     const minimumRate = getMinimumRate(
+      establishment.size,
       period.start_date,
       period.end_date,
-      establishment.size,
     );
 
     const wageOrder = wageOrders.find((wageOrder) => {
@@ -269,7 +269,7 @@ const exportDOCX = async (establishment: Establishment) => {
     }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(period, type, establishment.size));
+    const total = formatNumber(calculate(type, establishment.size, period));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {

@@ -429,7 +429,7 @@ const ViolationsPage = () => {
                   {formatNumber(
                     type == "Custom"
                       ? getCustomTotal()
-                      : getTotal(violationType, type, establishment.size),
+                      : getTotal(type, establishment.size, violationType),
                   )}
                 </Text>
               </View>

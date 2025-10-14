@@ -224,7 +224,7 @@ export const daysArray = [
   "Sunday",
 ];
 
-export const violationTypesArray = [
+export const violationKeysArray = [
   "Basic Wage",
   "Overtime Pay",
   "Night Shift Differential",
@@ -261,7 +261,7 @@ export const getDb = () => {
 };
 
 export const formatNumber = (number: string | number) => {
-  return (Number(number) || 0).toLocaleString("en-US", {
+  return Number(number).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -279,8 +279,13 @@ export const formatDate = (date: string) => {
   return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
 };
 
-export const validate = (object: { [key: string]: string | number }) => {
-  return Object.values(object).every((value) => value);
+export const validate = (
+  object: { [key: string]: string | number },
+  excluded: string[] = [],
+) => {
+  return Object.keys(object).every((key) => {
+    return excluded.includes(key) ? true : object[key];
+  });
 };
 
 export const validateDateRange = (startDate: string, endDate: string) => {
@@ -288,9 +293,9 @@ export const validateDateRange = (startDate: string, endDate: string) => {
 };
 
 export const getMinimumRate = (
+  size: string,
   startDate: string,
   endDate: string,
-  size: string,
 ) => {
   wageOrders.sort((a, b) => {
     return Number(new Date(a.date)) - Number(new Date(b.date));
@@ -326,16 +331,16 @@ export const getMinimumRate = (
   return rate;
 };
 
-export const calculate = (period: Period, type: string, size: string) => {
+export const calculate = (type: string, size: string, period: Period) => {
   let result = 0;
 
   if (validate(period)) {
     const daysOrHours = Number(period.daysOrHours);
     const rate = Number(period.rate);
     const minimumRate = getMinimumRate(
+      size,
       period.start_date,
       period.end_date,
-      size,
     );
     const rateToUse = Math.max(rate, minimumRate);
 
@@ -363,13 +368,13 @@ export const calculate = (period: Period, type: string, size: string) => {
 };
 
 export const getTotal = (
-  violationType: { periods: Period[]; received: string },
   type: string,
   size: string,
+  violationType: { periods: Period[]; received: string },
 ) => {
   let result = 0;
   violationType.periods.forEach((period) => {
-    result += calculate(period, type, size);
+    result += calculate(type, size, period);
   });
   violationType.received && (result -= Number(violationType.received));
   return result;
@@ -385,7 +390,7 @@ export const getCustomPeriodFormat = (rate?: number) => {
 
 export const getInitialViolationTypes = (rate?: number) => {
   const values = {} as ViolationTypes;
-  violationTypesArray.forEach((type) => {
+  violationKeysArray.forEach((type) => {
     values[type as ViolationKeys] = {
       periods: [getPeriodFormat(rate)],
       received: "",

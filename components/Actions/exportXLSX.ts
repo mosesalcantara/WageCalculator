@@ -59,13 +59,13 @@ const exportXLSX = async (record: Establishment): Promise<void> => {
         const empRateNum = Number(emp.rate ?? 0);
         const daysOrHoursStr = String(period.daysOrHours ?? "1");
         const minimumRate = Number(
-          getMinimumRate(period.start_date, period.end_date, record.size),
+          getMinimumRate(record.size, period.start_date, period.end_date),
         );
         const formattedRateToUse = formatNumber(minimumRate);
         const keyword = getDaysOrHours(type, daysOrHoursStr); // textual "12 OT hours" etc.
 
         // The single source of truth for numeric result:
-        const numericResult = Number(calculate(period, type, record.size)); // use your existing function
+        const numericResult = Number(calculate(type, record.size, period)); // use your existing function
         const resultStr = `₱${formatNumber(numericResult)}`;
 
         // Build formula text (mirror renderFormula)
