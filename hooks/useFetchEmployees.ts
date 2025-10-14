@@ -7,19 +7,19 @@ import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 
 const useFetchEmployees = (db: Db) => {
-  const [parent, setParent] = useState<Establishment | undefined>();
-  const [records, setRecords] = useState<Employee[] | undefined>();
+  const [establishment, setEstablishment] = useState<Establishment | undefined>();
+  const [employees, setEmployees] = useState<Employee[] | undefined>();
 
   const handleFetch = useCallback(async () => {
     try {
-      const parent_id = SessionStorage.getItem("establishment_id") as string;
-      const data = await db.query.establishments.findFirst({
-        where: eq(establishments.id, Number(parent_id)),
+      const establishment_id = SessionStorage.getItem("establishment_id") as string;
+      const establishment = await db.query.establishments.findFirst({
+        where: eq(establishments.id, Number(establishment_id)),
         with: { employees: true },
       });
-      if (data && data.employees) {
-        setParent(data);
-        setRecords(data.employees);
+      if (establishment && establishment.employees) {
+        setEstablishment(establishment);
+        setEmployees(establishment.employees);
       }
     } catch (error) {
       console.error(error);
@@ -35,7 +35,7 @@ const useFetchEmployees = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { parent, records, refetch: handleFetch };
+  return { establishment, employees, refetch: handleFetch };
 };
 
 export default useFetchEmployees;

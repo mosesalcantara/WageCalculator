@@ -10,11 +10,11 @@ import Toast from "react-native-toast-message";
 
 type Props = {
   db: any;
-  parent: Establishment;
+  establishment: Establishment;
   refetch: () => void;
 };
 
-const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
+const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   const initialValues = {
     last_name: "",
     first_name: "",
@@ -35,7 +35,7 @@ const AddEmployeeModal = ({ db, parent, refetch }: Props) => {
         first_name: `${values.first_name}`.trim(),
         last_name: `${values.last_name}`.trim(),
         middle_initial: `${values.middle_initial}`.trim(),
-        establishment_id: parent.id,
+        establishment_id: establishment.id,
       });
       refetch();
       resetForm();

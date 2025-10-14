@@ -16,31 +16,31 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 type Props = {
   db: Db;
   router: Router;
-  records: Employee[] | undefined;
+  employees: Employee[] | undefined;
   refetch: () => void;
   onDelete: (id: number) => Promise<void>;
 };
 
-const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
-  const sortedRecords = useMemo(() => {
-    return records?.sort((a, b) => {
+const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => {
+  const sortedEmployees = useMemo(() => {
+    return employees?.sort((a, b) => {
       return a.last_name < b.last_name ? -1 : a.last_name > b.last_name ? 1 : 0;
     });
-  }, [records]);
+  }, [employees]);
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredRecords = useMemo(() => {
-    if (sortedRecords && searchQuery) {
-      return sortedRecords.filter((record) => {
-        return Object.values(record).some((value) => {
+    const filteredEmployees = useMemo(() => {
+    if (sortedEmployees && searchQuery) {
+      return sortedEmployees.filter((employee) => {
+        return Object.values(employee).some((value) => {
           return `${value}`.toLowerCase().includes(searchQuery.toLowerCase());
         });
       });
     } else {
-      return sortedRecords;
+      return sortedEmployees;
     }
-  }, [sortedRecords, searchQuery]);
+  }, [sortedEmployees, searchQuery]);
 
   const setEmployee = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
@@ -71,42 +71,42 @@ const EmployeesTable = ({ db, router, records, refetch, onDelete }: Props) => {
           </View>
 
           <View>
-            {filteredRecords && filteredRecords.length > 0 ? (
-              filteredRecords.map((record) => (
+            {filteredEmployees && filteredEmployees.length > 0 ? (
+              filteredEmployees.map((employee) => (
                 <View
-                  key={record.id}
+                  key={employee.id}
                   className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
                 >
                   <Text className="w-[38%] text-sm text-[#333]">
-                    {record.last_name}, {record.first_name}
-                    {["NA", "N/A"].includes(record.middle_initial.toUpperCase())
+                    {employee.last_name}, {employee.first_name}
+                    {["NA", "N/A"].includes(employee.middle_initial.toUpperCase())
                       ? ""
-                      : ` ${record.middle_initial.toUpperCase()}.`}
+                      : ` ${employee.middle_initial.toUpperCase()}.`}
                   </Text>
 
                   <Text className="w-[10%] text-sm text-[#333]">
-                    {record.rate}
+                    {employee.rate}
                   </Text>
 
                   <Text className="w-1/5 text-sm text-[#333]">
-                    {record.start_day.slice(0, 3)} -{" "}
-                    {record.end_day.slice(0, 3)}
+                    {employee.start_day.slice(0, 3)} -{" "}
+                    {employee.end_day.slice(0, 3)}
                   </Text>
 
                   <View className="w-[27%] flex-row justify-around">
-                    <TouchableOpacity onPress={() => setEmployee(record.id)}>
+                    <TouchableOpacity onPress={() => setEmployee(employee.id)}>
                       <Icon name="remove-red-eye" size={20} color="#2196F3" />
                     </TouchableOpacity>
 
                     <UpdateEmployeeModal
                       db={db}
-                      values={record}
+                      employee={employee}
                       refetch={refetch}
                     />
 
                     <TouchableOpacity
                       onPress={() => {
-                        confirmAlert("Employee", onDelete, record.id);
+                        confirmAlert("Employee", onDelete, employee.id);
                       }}
                     >
                       <Icon name="delete" size={20} color="#E53935" />

@@ -10,13 +10,13 @@ import { WebView } from "react-native-webview";
 
 const PDFPage = () => {
   const db = getDb();
-  const { record } = useFetchEstablishmentViolations(db);
-  const previewHTML = record ? generateHTML(record, true) : "";
-  const exportHTML = record ? generateHTML(record, false) : "";
+  const { establishment } = useFetchEstablishmentViolations(db);
+  const previewHTML = establishment ? generateHTML(establishment, true) : "";
+  const exportHTML = establishment ? generateHTML(establishment, false) : "";
 
   return (
     <>
-      {record && (
+      {establishment && (
         <>
           <SafeAreaView className="flex-1 bg-white">
             <NavBar className="bg-white" />
@@ -39,7 +39,7 @@ const PDFPage = () => {
 
                   <TouchableOpacity
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
-                    onPress={() => exportDOCX(record)}
+                    onPress={() => exportDOCX(establishment)}
                   >
                     <Text className="text-center font-bold text-white">
                       Export DOCX

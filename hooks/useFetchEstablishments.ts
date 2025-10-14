@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
 const useFetchEstablishments = (db: Db) => {
-  const [records, setRecords] = useState<Establishment[] | undefined>();
+  const [establishments, setEstablishments] = useState<Establishment[] | undefined>();
 
   const handleFetch = useCallback(async () => {
     try {
-      const data = await db.query.establishments.findMany({
+      const establishments = await db.query.establishments.findMany({
         with: { employees: true },
       });
-      setRecords(data);
+      setEstablishments(establishments);
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -26,7 +26,7 @@ const useFetchEstablishments = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { records, refetch: handleFetch };
+  return { establishments, refetch: handleFetch };
 };
 
 export default useFetchEstablishments;

@@ -12,12 +12,12 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
   db: any;
-  values: Employee;
+  employee: Employee;
   refetch: () => void;
 };
 
-const UpdateEmployeeModal = ({ db, values, refetch }: Props) => {
-  const initialValues = values;
+const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
+  const initialValues = employee;
   const [isVisible, setIsVisible] = useState(false);
 
   const handleSubmit = async (

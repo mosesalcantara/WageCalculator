@@ -14,7 +14,7 @@ const EmployeesPage = () => {
   const db = getDb();
   const router = useRouter();
 
-  const { parent, records, refetch } = useFetchEmployees(db);
+  const { establishment, employees, refetch } = useFetchEmployees(db);
   const { handleDelete } = useDeleteEmployee(db, refetch);
 
   useFocusEffect(
@@ -35,7 +35,7 @@ const EmployeesPage = () => {
 
   return (
     <>
-      {parent && (
+      {establishment && (
         <>
           <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
             <NavBar />
@@ -43,15 +43,15 @@ const EmployeesPage = () => {
             <View className="flex-1 p-4">
               <View className="mb-2 flex-row items-center justify-between">
                 <Text className="text-center text-xl font-bold">
-                  {parent.name}
+                  {establishment.name}
                 </Text>
-              <AddEmployeeModal db={db} parent={parent} refetch={refetch} />
+              <AddEmployeeModal db={db} establishment={establishment} refetch={refetch} />
               </View>
 
               <EmployeesTable
                 db={db}
                 router={router}
-                records={records}
+                employees={employees}
                 refetch={refetch}
                 onDelete={handleDelete}
               />

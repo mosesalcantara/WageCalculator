@@ -7,17 +7,19 @@ import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 
 const useFetchEstablishmentViolations = (db: Db) => {
-  const [record, setRecord] = useState<Establishment | undefined>();
+  const [establishment, setEstablishment] = useState<
+    Establishment | undefined
+  >();
 
   const handleFetch = useCallback(async () => {
     try {
       const id = SessionStorage.getItem("establishment_id") as string;
-      const data = await db.query.establishments.findFirst({
+      const establishment = await db.query.establishments.findFirst({
         where: eq(establishments.id, Number(id)),
         with: { employees: { with: { violations: true } } },
       });
-      if (data) {
-        const employeesData = data.employees.map((employee) => {
+      if (establishment) {
+        const employees = establishment.employees.map((employee) => {
           let violations: Violation[] = [];
           if (employee.violations.length > 0) {
             violations = [
@@ -29,9 +31,9 @@ const useFetchEstablishmentViolations = (db: Db) => {
           }
           return { ...employee, violations: violations };
         });
-        setRecord({
-          ...data,
-          employees: employeesData,
+        setEstablishment({
+          ...establishment,
+          employees: employees,
         });
       }
     } catch (error) {
@@ -48,7 +50,7 @@ const useFetchEstablishmentViolations = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { record, refetch: handleFetch };
+  return { establishment, refetch: handleFetch };
 };
 
 export default useFetchEstablishmentViolations;

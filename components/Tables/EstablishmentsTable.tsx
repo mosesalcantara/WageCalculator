@@ -9,7 +9,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 type Props = {
   db: Db;
   router: Router;
-  records: Establishment[] | undefined;
+  establishments: Establishment[] | undefined;
   refetch: () => void;
   onDelete: (id: number) => Promise<void>;
 };
@@ -17,7 +17,7 @@ type Props = {
 const EstablishmentsTable = ({
   db,
   router,
-  records,
+  establishments,
   refetch,
   onDelete,
 }: Props) => {
@@ -28,7 +28,7 @@ const EstablishmentsTable = ({
 
   return (
     <FlatList
-      data={records}
+      data={establishments}
       keyExtractor={(record) => `${record.id}`}
       renderItem={({ item: record }) => (
         <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">

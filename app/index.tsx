@@ -13,7 +13,7 @@ const EstablishmentPage = () => {
   const db = getDb();
   const router = useRouter();
 
-  const { records, refetch } = useFetchEstablishments(db);
+  const { establishments, refetch } = useFetchEstablishments(db);
   const { handleDelete } = useDeleteEstablishment(db, refetch);
 
   useFocusEffect(
@@ -45,7 +45,7 @@ const EstablishmentPage = () => {
         <EstablishmentsTable
           db={db}
           router={router}
-          records={records}
+          establishments={establishments}
           refetch={refetch}
           onDelete={handleDelete}
         />
