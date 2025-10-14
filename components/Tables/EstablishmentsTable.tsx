@@ -48,7 +48,9 @@ const EstablishmentsTable = ({
             />
 
             <TouchableOpacity
-              onPress={() => confirmAlert("Establishment", onDelete, establishment.id)}
+              onPress={() =>
+                confirmAlert(establishment.id, "Establishment", onDelete)
+              }
             >
               <Icon name="delete" size={20} color="#E53935" />
             </TouchableOpacity>

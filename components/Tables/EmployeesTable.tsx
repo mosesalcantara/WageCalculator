@@ -106,7 +106,7 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
 
                     <TouchableOpacity
                       onPress={() => {
-                        confirmAlert("Employee", onDelete, employee.id);
+                        confirmAlert(employee.id, "Employee", onDelete, );
                       }}
                     >
                       <Icon name="delete" size={20} color="#E53935" />

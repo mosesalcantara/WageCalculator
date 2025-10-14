@@ -65,7 +65,7 @@ const getStyles = (isPreview: boolean) => {
 };
 
 const generateHTML = (establishment: Establishment, isPreview: boolean) => {
-  const renderEmployee = (employee: Employee, index: number) => {
+  const renderEmployee = (index: number, employee: Employee) => {
     let html = "";
 
     if (employee.violations && employee.violations.length > 0) {
@@ -128,7 +128,7 @@ const generateHTML = (establishment: Establishment, isPreview: boolean) => {
             } of ${getViolationKeyword(type)}
           </p>
          
-          ${renderViolationType(violations[type], type)}
+          ${renderViolationType(type, violations[type])}
         `;
         }
       });
@@ -140,8 +140,8 @@ const generateHTML = (establishment: Establishment, isPreview: boolean) => {
   };
 
   const renderViolationType = (
-    violationType: { periods: Period[]; received: string },
     type: string,
+    violationType: { periods: Period[]; received: string },
   ) => {
     let html = "";
     let subtotal = 0;
@@ -159,7 +159,7 @@ const generateHTML = (establishment: Establishment, isPreview: boolean) => {
         )} (${getDaysOrHours(type, period.daysOrHours)})
         </p>
 
-        ${renderFormula(period, type)}
+        ${renderFormula(type, period)}
 
         ${
           index + 1 != violationType.periods.length ||
@@ -195,7 +195,7 @@ const generateHTML = (establishment: Establishment, isPreview: boolean) => {
     return html;
   };
 
-  const renderFormula = (period: Period, type: string) => {
+  const renderFormula = (type: string, period: Period) => {
     let html = "";
 
     const rate = Number(period.rate);
@@ -283,7 +283,7 @@ const generateHTML = (establishment: Establishment, isPreview: boolean) => {
                 establishment.employees
                   .map(
                     (employee, index) => `
-                  ${renderEmployee(employee, index)}
+                  ${renderEmployee(index, employee)}
                 `,
                   )
                   .join("")

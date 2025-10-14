@@ -26,7 +26,7 @@ import Toast from "react-native-toast-message";
 const exportDOCX = async (establishment: Establishment) => {
   const children: Paragraph[] = [];
 
-  const renderEmployee = (employee: Employee, index: number) => {
+  const renderEmployee = (index: number, employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values as string);
 
@@ -113,7 +113,7 @@ const exportDOCX = async (establishment: Establishment) => {
               ],
             }),
           );
-          renderViolationType(violations[type], type);
+          renderViolationType(type, violations[type]);
         }
       });
 
@@ -137,8 +137,8 @@ const exportDOCX = async (establishment: Establishment) => {
   };
 
   const renderViolationType = (
-    violationType: { periods: Period[]; received: string },
     type: string,
+    violationType: { periods: Period[]; received: string },
   ) => {
     let subtotal = 0;
     const received = Number(violationType.received) || 0;
@@ -164,7 +164,7 @@ const exportDOCX = async (establishment: Establishment) => {
           }),
         );
 
-        renderFormula(period, type);
+        renderFormula(type, period);
 
         if (
           index + 1 != violationType.periods.length &&
@@ -234,7 +234,7 @@ const exportDOCX = async (establishment: Establishment) => {
     }
   };
 
-  const renderFormula = (period: Period, type: string) => {
+  const renderFormula = (type: string, period: Period) => {
     let text = "";
 
     const rate = Number(period.rate);
@@ -334,7 +334,7 @@ const exportDOCX = async (establishment: Establishment) => {
 
     establishment.employees &&
       establishment.employees.forEach((employee, index) => {
-        renderEmployee(employee, index);
+        renderEmployee(index, employee);
       });
   };
 

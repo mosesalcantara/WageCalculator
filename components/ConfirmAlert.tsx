@@ -1,9 +1,9 @@
 import { Alert } from "react-native";
 
 const confirmAlert = (
+  id: number,
   model: string,
   onDelete: (id: number) => Promise<void>,
-  id: number,
 ) => {
   Alert.alert(
     `Delete ${model}`,

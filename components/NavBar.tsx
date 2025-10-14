@@ -1,11 +1,11 @@
 import { Image, Text, View } from "react-native";
 
 type Props = {
-  className?: string;
   title?: string;
+  className?: string;
 };
 
-const NavBar = ({ className, title = "DOLECalc" }: Props) => {
+const NavBar = ({ title = "DOLECalc", className = "" }: Props) => {
   return (
     <View
       className={`h-[3.75rem] flex-row items-center justify-between border-b bg-[#acb6e2ff] px-2.5 ${className}`}
