@@ -1,4 +1,4 @@
-import { Holiday, ViolationTypes } from "@/types/globals";
+import { Holiday, ViolationKeys } from "@/types/globals";
 import { validateDateRange } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
 import { eachDayOfInterval, format, parse } from "date-fns";
@@ -9,7 +9,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 type Props = {
   startDate: string;
   endDate: string;
-  type: ViolationTypes;
+  type: ViolationKeys;
   visibilityState: [boolean, Dispatch<SetStateAction<boolean>>];
 };
 

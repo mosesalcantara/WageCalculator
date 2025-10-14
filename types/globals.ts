@@ -30,11 +30,11 @@ export type Employee = {
 
 export type Violation = {
   id: number;
-  values: ViolationValues | string;
+  values: ViolationTypes | string;
   employee_id: number;
 };
 
-export type ViolationTypes =
+export type ViolationKeys =
   | "Basic Wage"
   | "Overtime Pay"
   | "Night Shift Differential"
@@ -43,8 +43,8 @@ export type ViolationTypes =
   | "Holiday Pay"
   | "13th Month Pay";
 
-export type ViolationValues = {
-  [key in ViolationTypes]: { periods: Period[]; received: string };
+export type ViolationTypes = {
+  [key in ViolationKeys]: { periods: Period[]; received: string };
 };
 
 export type Period = {
@@ -55,7 +55,7 @@ export type Period = {
   type: string;
 };
 
-export type CalculatorPeriod = {
+export type CustomPeriod = {
   start_date: string;
   end_date: string;
   type: string;

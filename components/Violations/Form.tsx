@@ -3,8 +3,8 @@ import Select from "@/components/Select";
 import {
   Employee,
   Establishment,
+  ViolationKeys,
   ViolationTypes,
-  ViolationValues,
 } from "@/types/globals";
 import {
   calculate,
@@ -26,19 +26,19 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 type Props = {
   grandparent: Establishment;
   parent: Employee;
-  type: ViolationTypes;
+  type: ViolationKeys;
   index: number;
-  valuesState: [ViolationValues, Dispatch<SetStateAction<ViolationValues>>];
+  violationTypesState: [ViolationTypes, Dispatch<SetStateAction<ViolationTypes>>];
 };
 
-const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
+const Form = ({ grandparent, parent, type, index, violationTypesState }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useState(false);
-  const [values, setValues] = valuesState;
+  const [violationTypes, setViolationTypes] = violationTypesState;
 
-  const periods = values[type].periods;
-  const period = values[type].periods[index];
+  const periods = violationTypes[type].periods;
+  const period = violationTypes[type].periods[index];
 
   const getIncludedDays = (startDay: string, endDay: string) => {
     const included = [];
@@ -66,7 +66,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
       value = (value as Date).toISOString().split("T")[0];
     }
 
-    setValues((prev) => {
+    setViolationTypes((prev) => {
       const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
         index == periodIndex ? { ...period, [key]: `${value}` } : period,
       );
@@ -162,7 +162,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   };
 
   const addPeriod = () => {
-    setValues((prev) => {
+    setViolationTypes((prev) => {
       return {
         ...prev,
         [type]: {
@@ -173,7 +173,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   };
 
   const removePeriod = () => {
-    setValues((prev) => {
+    setViolationTypes((prev) => {
       const updatedPeriods = prev[type].periods;
       updatedPeriods.splice(index, 1);
       return { ...prev, [type]: { periods: updatedPeriods } };
@@ -181,7 +181,7 @@ const Form = ({ grandparent, parent, type, index, valuesState }: Props) => {
   };
 
   const clearPeriod = () => {
-    setValues((prev) => {
+    setViolationTypes((prev) => {
       const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
         index == periodIndex ? getPeriodFormat() : period,
       );

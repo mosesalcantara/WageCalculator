@@ -1,5 +1,5 @@
 import * as schema from "@/db/schema";
-import { Period, ViolationTypes, ViolationValues } from "@/types/globals";
+import { Period, ViolationKeys, ViolationTypes } from "@/types/globals";
 import { differenceInDays, format, parse } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -380,9 +380,9 @@ export const getPeriodFormat = (rate?: number) => {
 };
 
 export const getInitialViolations = (rate?: number) => {
-  const values = {} as ViolationValues;
+  const values = {} as ViolationTypes;
   violationTypesArray.forEach((type) => {
-    values[type as ViolationTypes] = {
+    values[type as ViolationKeys] = {
       periods: [getPeriodFormat(rate)],
       received: "",
     };

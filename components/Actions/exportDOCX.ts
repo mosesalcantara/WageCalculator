@@ -2,7 +2,7 @@ import {
   Employee,
   Establishment,
   Period,
-  ViolationValues,
+  ViolationTypes,
 } from "@/types/globals";
 import {
   calculate,
@@ -31,7 +31,7 @@ const exportDOCX = async (record: Establishment) => {
       const violations = JSON.parse(employee.violations[0].values as string);
 
       let valid = 0;
-      Object.values(violations as ViolationValues).forEach((violationType) => {
+      Object.values(violations as ViolationTypes).forEach((violationType) => {
         violationType.periods.forEach((period) => {
           validate(period) && (valid += 1);
         });

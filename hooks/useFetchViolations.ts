@@ -4,7 +4,7 @@ import {
   Employee,
   Establishment,
   Violation,
-  ViolationValues,
+  ViolationTypes,
 } from "@/types/globals";
 import { getInitialViolations, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
@@ -17,7 +17,7 @@ const useFetchViolations = (db: Db) => {
 
   const [grandparent, setGrandparent] = useState<Establishment | undefined>();
   const [parent, setParent] = useState<Employee | undefined>();
-  const [values, setValues] = useState<ViolationValues>(getInitialViolations());
+  const [violationTypes, setViolationTypes] = useState<ViolationTypes>(getInitialViolations());
 
   const handleFetch = useCallback(async () => {
     try {
@@ -34,9 +34,9 @@ const useFetchViolations = (db: Db) => {
               values: data.violations[0].values as string,
             },
           ];
-          setValues(JSON.parse(data.violations[0].values as string));
+          setViolationTypes(JSON.parse(data.violations[0].values as string));
         } else {
-          setValues(getInitialViolations(data.rate));
+          setViolationTypes(getInitialViolations(data.rate));
         }
         setParent({ ...data, violations: violations });
         const establishmentData = await db.query.establishments.findFirst({
@@ -58,7 +58,7 @@ const useFetchViolations = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { grandparent, parent, values, setValues };
+  return { grandparent, parent, violationTypes, setViolationTypes };
 };
 
 export default useFetchViolations;

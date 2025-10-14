@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import Form from "@/components/Violations/Form";
 import { violations } from "@/db/schema";
 import useFetchViolations from "@/hooks/useFetchViolations";
-import { ViolationTypes, ViolationValues } from "@/types/globals";
+import { ViolationKeys, ViolationTypes } from "@/types/globals";
 import {
   formatNumber,
   getDb,
@@ -38,10 +38,10 @@ const ViolationsPage = () => {
   const router = useRouter();
   const parent_id = SessionStorage.getItem("employee_id") as string;
 
-  const [type, setType] = useState<ViolationTypes>("Basic Wage");
-  const { grandparent, parent, values, setValues } = useFetchViolations(db);
+  const [type, setType] = useState<ViolationKeys>("Basic Wage");
+  const { grandparent, parent, violationTypes, setViolationTypes } = useFetchViolations(db);
 
-  const violationType = values[type];
+  const violationType = violationTypes[type];
 
   const getTabs = (size: string) => {
     const tabs = [
@@ -70,7 +70,7 @@ const ViolationsPage = () => {
   };
 
   const handleReceivedChange = (value: string) => {
-    setValues((prev) => {
+    setViolationTypes((prev) => {
       return {
         ...prev,
         [type]: { periods: prev[type].periods, received: value },
@@ -78,7 +78,7 @@ const ViolationsPage = () => {
     });
   };
 
-  const addRecord = async (values: ViolationValues) => {
+  const addRecord = async (values: ViolationTypes) => {
     try {
       await db
         .delete(violations)
@@ -188,7 +188,7 @@ const ViolationsPage = () => {
   };
 
   const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
-    setValues((prev) => {
+    setViolationTypes((prev) => {
       const periodsFormat = dates.map((date) => {
         return {
           ...periodFormat,
@@ -212,13 +212,13 @@ const ViolationsPage = () => {
       const appStateHandler = AppState.addEventListener(
         "change",
         (nextAppState) => {
-          nextAppState == "background" && addRecord(values);
+          nextAppState == "background" && addRecord(violationTypes);
         },
       );
 
       const handleBackPress = () => {
         router.push("/employees" as Href);
-        addRecord(values);
+        addRecord(violationTypes);
         return true;
       };
 
@@ -231,12 +231,12 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [values]),
+    }, [violationTypes]),
   );
 
   return (
     <>
-      {grandparent && parent && values && (
+      {grandparent && parent && violationTypes && (
         <>
           <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
             <NavBar />
@@ -251,7 +251,7 @@ const ViolationsPage = () => {
                   <TouchableOpacity
                     key={tab.name}
                     className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                    onPress={() => setType(tab.name as ViolationTypes)}
+                    onPress={() => setType(tab.name as ViolationKeys)}
                   >
                     <Icon
                       name={tab.icon}
@@ -296,7 +296,7 @@ const ViolationsPage = () => {
                       parent={parent}
                       type={type}
                       index={index}
-                      valuesState={[values, setValues]}
+                      violationTypesState={[violationTypes, setViolationTypes]}
                     />
                   ))}
                 </View>
