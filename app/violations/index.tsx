@@ -44,10 +44,10 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 const ViolationsPage = () => {
   const db = getDb();
   const router = useRouter();
-  const parent_id = SessionStorage.getItem("employee_id") as string;
+  const employee_id = SessionStorage.getItem("employee_id") as string;
 
   const [type, setType] = useState<ViolationKeys>("Basic Wage");
-  const { grandparent, parent, violationTypes, setViolationTypes } =
+  const { establishment, employee, violationTypes, setViolationTypes } =
     useFetchViolations(db);
   const { customViolationType, setCustomViolationType } =
     useFetchCustomViolations(db);
@@ -96,14 +96,14 @@ const ViolationsPage = () => {
     try {
       await db
         .delete(violations)
-        .where(eq(violations.employee_id, Number(parent_id)));
+        .where(eq(violations.employee_id, Number(employee_id)));
       await db.insert(violations).values({
         values: JSON.stringify(violationTypes),
-        employee_id: Number(parent_id),
+        employee_id: Number(employee_id),
       });
       await db.insert(customViolations).values({
         values: JSON.stringify(customViolationType),
-        employee_id: Number(parent_id),
+        employee_id: Number(employee_id),
       });
       Toast.show({
         type: "success",
@@ -212,7 +212,7 @@ const ViolationsPage = () => {
           ...periodFormat,
           start_date: date.start_date,
           end_date: date.end_date,
-          rate: `${parent ? parent.rate : ""}`,
+          rate: `${employee ? employee.rate : ""}`,
         };
       });
 
@@ -334,7 +334,7 @@ const ViolationsPage = () => {
       return {
         ...prev,
         [type]: {
-          periods: [...prev[type].periods, getPeriodFormat(parent?.rate)],
+          periods: [...prev[type].periods, getPeriodFormat(employee?.rate)],
         },
       };
     });
@@ -387,7 +387,7 @@ const ViolationsPage = () => {
 
   return (
     <>
-      {grandparent && parent && violationTypes && (
+      {establishment && employee && violationTypes && (
         <>
           <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
             <NavBar />
@@ -398,7 +398,7 @@ const ViolationsPage = () => {
                 showsHorizontalScrollIndicator={false}
                 className="border-b border-b-[#333] py-2.5 "
               >
-                {getTabs(grandparent.size).map((tab) => (
+                {getTabs(establishment.size).map((tab) => (
                   <TouchableOpacity
                     key={tab.name}
                     className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
@@ -422,14 +422,14 @@ const ViolationsPage = () => {
             <View className="flex-row items-center justify-between px-4 py-2.5">
               <View>
                 <Text className="ml-1.5 text-xl font-bold">
-                  {`${parent.last_name}, ${parent.first_name}${["NA", "N/A"].includes(parent.middle_initial.toUpperCase()) ? "" : ` ${parent.middle_initial.toUpperCase()}.`}`}
+                  {`${employee.last_name}, ${employee.first_name}${["NA", "N/A"].includes(employee.middle_initial.toUpperCase()) ? "" : ` ${employee.middle_initial.toUpperCase()}.`}`}
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
                   Subtotal:{" "}
                   {formatNumber(
                     type == "Custom"
                       ? getCustomTotal()
-                      : getTotal(violationType, type, grandparent.size),
+                      : getTotal(violationType, type, establishment.size),
                   )}
                 </Text>
               </View>
@@ -463,10 +463,10 @@ const ViolationsPage = () => {
                       {violationType.periods.map((_, index) => (
                         <Form
                           key={index}
-                          grandparent={grandparent}
-                          parent={parent}
                           type={type}
                           index={index}
+                          establishment={establishment}
+                          employee={employee}
                           violationTypes={violationTypes}
                           onChange={handleChange}
                           onAddPeriod={handleAddPeriod}

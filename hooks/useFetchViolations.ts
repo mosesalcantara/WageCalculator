@@ -13,36 +13,42 @@ import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 
 const useFetchViolations = (db: Db) => {
-  const parent_id = SessionStorage.getItem("employee_id") as string;
+  const employee_id = SessionStorage.getItem("employee_id") as string;
 
-  const [grandparent, setGrandparent] = useState<Establishment | undefined>();
-  const [parent, setParent] = useState<Employee | undefined>();
-  const [violationTypes, setViolationTypes] = useState<ViolationTypes>(getInitialViolationTypes());
+  const [establishment, setEstablishment] = useState<
+    Establishment | undefined
+  >();
+  const [employee, setEmployee] = useState<Employee | undefined>();
+  const [violationTypes, setViolationTypes] = useState<ViolationTypes>(
+    getInitialViolationTypes(),
+  );
 
   const handleFetch = useCallback(async () => {
     try {
-      const data = await db.query.employees.findFirst({
-        where: eq(employees.id, Number(parent_id)),
+      const employee = await db.query.employees.findFirst({
+        where: eq(employees.id, Number(employee_id)),
         with: { violations: true },
       });
-      if (data) {
+      if (employee) {
         let violations: Violation[] = [];
-        if (data.violations.length > 0) {
+        if (employee.violations.length > 0) {
           violations = [
             {
-              ...data.violations[0],
-              values: data.violations[0].values as string,
+              ...employee.violations[0],
+              values: employee.violations[0].values as string,
             },
           ];
-          setViolationTypes(JSON.parse(data.violations[0].values as string));
+          setViolationTypes(
+            JSON.parse(employee.violations[0].values as string),
+          );
         } else {
-          setViolationTypes(getInitialViolationTypes(data.rate));
+          setViolationTypes(getInitialViolationTypes(employee.rate));
         }
-        setParent({ ...data, violations: violations });
-        const establishmentData = await db.query.establishments.findFirst({
-          where: eq(establishments.id, Number(data.establishment_id)),
+        setEmployee({ ...employee, violations: violations });
+        const establishment = await db.query.establishments.findFirst({
+          where: eq(establishments.id, Number(employee.establishment_id)),
         });
-        setGrandparent(establishmentData);
+        setEstablishment(establishment);
       }
     } catch (error) {
       console.error(error);
@@ -58,7 +64,7 @@ const useFetchViolations = (db: Db) => {
     handleFetch();
   }, []);
 
-  return { grandparent, parent, violationTypes, setViolationTypes };
+  return { establishment, employee, violationTypes, setViolationTypes };
 };
 
 export default useFetchViolations;

@@ -12,38 +12,33 @@ import {
   formatDateValue,
   formatNumber,
   getMinimumRate,
-  getPeriodFormat,
   numberToLetter,
   validateDateRange,
 } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
-  grandparent: Establishment;
-  parent: Employee;
   type: ViolationKeys;
   index: number;
+  establishment: Establishment;
+  employee: Employee;
   violationTypes: ViolationTypes;
-  onChange: (
-    key: string,
-    value: string | number | Date,
-    index: number,
-  ) => void;
+  onChange: (key: string, value: string | number | Date, index: number) => void;
   onAddPeriod: () => void;
   onRemovePeriod: (index: number) => void;
   onClearPeriod: (index: number) => void;
 };
 
 const Form = ({
-  grandparent,
-  parent,
   type,
   index,
+  establishment,
+  employee,
   violationTypes,
   onChange,
   onAddPeriod,
@@ -72,7 +67,7 @@ const Form = ({
     return included;
   };
 
-  const includedDays = getIncludedDays(parent.start_day, parent.end_day);
+  const includedDays = getIncludedDays(employee.start_day, employee.end_day);
 
   const getEstimate = (startDate: string, endDate: string) => {
     if (!validateDateRange(startDate, endDate)) {
@@ -125,11 +120,11 @@ const Form = ({
   const minimumRate = getMinimumRate(
     period.start_date,
     period.end_date,
-    grandparent.size,
+    establishment.size,
   );
 
   const setRate = () => {
-    onChange("rate", `${parent.rate}`, index);
+    onChange("rate", `${employee.rate}`, index);
   };
 
   const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
@@ -300,7 +295,7 @@ const Form = ({
           <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱{formatNumber(calculate(period, type, grandparent.size))}
+              ₱{formatNumber(calculate(period, type, establishment.size))}
             </Text>
           </Text>
         </View>
