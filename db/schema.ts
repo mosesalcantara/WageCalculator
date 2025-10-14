@@ -28,14 +28,6 @@ export const violations = sqliteTable("violations", {
     .references(() => employees.id),
 });
 
-export const customViolations = sqliteTable("custom_violations", {
-  id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
-  values: text("values", { mode: "json" }).notNull(),
-  employee_id: integer("employee_id")
-    .notNull()
-    .references(() => employees.id),
-});
-
 export const establishmentsRelation = relations(establishments, ({ many }) => ({
   employees: many(employees),
 }));
@@ -54,13 +46,3 @@ export const violationsRelation = relations(violations, ({ one }) => ({
     references: [employees.id],
   }),
 }));
-
-export const customViolationsRelation = relations(
-  customViolations,
-  ({ one }) => ({
-    employee: one(employees, {
-      fields: [customViolations.employee_id],
-      references: [employees.id],
-    }),
-  }),
-);
