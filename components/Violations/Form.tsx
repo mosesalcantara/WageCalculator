@@ -19,7 +19,7 @@ import {
 import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -28,10 +28,19 @@ type Props = {
   parent: Employee;
   type: ViolationKeys;
   index: number;
-  violationTypesState: [ViolationTypes, Dispatch<SetStateAction<ViolationTypes>>];
+  violationTypesState: [
+    ViolationTypes,
+    Dispatch<SetStateAction<ViolationTypes>>,
+  ];
 };
 
-const Form = ({ grandparent, parent, type, index, violationTypesState }: Props) => {
+const Form = ({
+  grandparent,
+  parent,
+  type,
+  index,
+  violationTypesState,
+}: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
   const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useState(false);
@@ -189,6 +198,10 @@ const Form = ({ grandparent, parent, type, index, violationTypesState }: Props) 
     });
   };
 
+  const handleViewDaysModalToggle = (isVisible: boolean) => {
+    setIsViewDaysModalVisible(isVisible);
+  };
+
   return (
     <>
       <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
@@ -320,10 +333,8 @@ const Form = ({ grandparent, parent, type, index, violationTypesState }: Props) 
                         startDate={period.start_date}
                         endDate={period.end_date}
                         type={type}
-                        visibilityState={[
-                          isViewDaysModalVisible,
-                          setIsViewDaysModalVisible,
-                        ]}
+                        isVisible={isViewDaysModalVisible}
+                        onToggle={handleViewDaysModalToggle}
                       />
                     )}
                 </View>

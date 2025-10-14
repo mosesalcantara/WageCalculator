@@ -2,7 +2,6 @@ import { Holiday, ViolationKeys } from "@/types/globals";
 import { validateDateRange } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
 import { eachDayOfInterval, format, parse } from "date-fns";
-import { Dispatch, SetStateAction } from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -10,17 +9,17 @@ type Props = {
   startDate: string;
   endDate: string;
   type: ViolationKeys;
-  visibilityState: [boolean, Dispatch<SetStateAction<boolean>>];
+  isVisible: boolean;
+  onToggle: (isVisible: boolean) => void;
 };
 
 const ViewDaysModal = ({
-  visibilityState,
   startDate,
   endDate,
   type,
+  isVisible,
+  onToggle,
 }: Props) => {
-  const [isVisible, setIsVisible] = visibilityState;
-
   const getHolidays = () => {
     if (!validateDateRange(startDate, endDate)) {
       return [];
@@ -61,7 +60,7 @@ const ViewDaysModal = ({
 
   return (
     <>
-      <TouchableOpacity onPress={() => setIsVisible(true)}>
+      <TouchableOpacity onPress={() => onToggle(true)}>
         <Icon name="remove-red-eye" size={20} color="#555" />
       </TouchableOpacity>
 
@@ -70,7 +69,7 @@ const ViewDaysModal = ({
         transparent
         statusBarTranslucent
         visible={isVisible}
-        onRequestClose={() => setIsVisible(false)}
+        onRequestClose={() => onToggle(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="max-h-[70%] w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
@@ -100,7 +99,7 @@ const ViewDaysModal = ({
             <View className="flex-row justify-end">
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
-                onPress={() => setIsVisible(false)}
+                onPress={() => onToggle(false)}
               >
                 <Text className="font-bold">Close</Text>
               </TouchableOpacity>
