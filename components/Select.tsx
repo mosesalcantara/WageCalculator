@@ -3,20 +3,20 @@ import { View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 type Props = {
+  index: number;
   name: string;
+  value: string;
   options: { label: string; value: string }[];
   placeholder?: string;
-  value: string;
-  index: number;
-  onChange: (key: string, value: string, index: number) => void;
+  onChange: (index: number, key: string, value: string) => void;
 };
 
 const Select = ({
+  index,
   name,
+  value,
   options,
   placeholder = "Select Item",
-  value,
-  index,
   onChange,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
@@ -33,7 +33,7 @@ const Select = ({
         placeholder={!isFocus ? placeholder : ""}
         value={value}
         onChange={(option) => {
-          onChange(name, option.value, index);
+          onChange(index, name, option.value);
           setIsFocus(false);
         }}
         onFocus={() => setIsFocus(true)}

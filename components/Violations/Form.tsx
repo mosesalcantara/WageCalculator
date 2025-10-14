@@ -28,7 +28,7 @@ type Props = {
   establishment: Establishment;
   employee: Employee;
   violationTypes: ViolationTypes;
-  onChange: (key: string, value: string | number | Date, index: number) => void;
+  onChange: (index: number, key: string, value: string | number | Date) => void;
   onAddPeriod: () => void;
   onRemovePeriod: (index: number) => void;
   onClearPeriod: (index: number) => void;
@@ -124,7 +124,7 @@ const Form = ({
   );
 
   const setRate = () => {
-    onChange("rate", `${employee.rate}`, index);
+    onChange(index, "rate", `${employee.rate}`);
   };
 
   const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
@@ -197,7 +197,7 @@ const Form = ({
                   keyboardType="numeric"
                   placeholder="Enter Rate"
                   value={period.rate}
-                  onChangeText={(value) => onChange("rate", value, index)}
+                  onChangeText={(value) => onChange(index, "rate", value)}
                 />
                 <Icon
                   name="autorenew"
@@ -232,7 +232,7 @@ const Form = ({
                 keyboardType="numeric"
                 placeholder={`Enter ${daysOrHours.toLowerCase()}`}
                 value={period.daysOrHours}
-                onChangeText={(value) => onChange("daysOrHours", value, index)}
+                onChangeText={(value) => onChange(index, "daysOrHours", value)}
               />
             </View>
 
@@ -242,7 +242,9 @@ const Form = ({
                   Type
                 </Text>
                 <Select
+                  index={index}
                   name="type"
+                  value={period.type}
                   options={[
                     {
                       label: "Normal Day",
@@ -254,8 +256,6 @@ const Form = ({
                     },
                   ]}
                   placeholder="Select Type"
-                  value={period.type}
-                  index={index}
                   onChange={onChange}
                 />
               </View>
@@ -330,7 +330,7 @@ const Form = ({
           mode="date"
           onChange={(_, value) => {
             if (value) {
-              onChange("start_date", value, index);
+              onChange(index, "start_date", value);
               setIsStartDateModalVisible(false);
             }
           }}
@@ -343,7 +343,7 @@ const Form = ({
           mode="date"
           onChange={(_, value) => {
             if (value) {
-              onChange("end_date", value, index);
+              onChange(index, "end_date", value);
               setIsEndDateModalVisible(false);
             }
           }}

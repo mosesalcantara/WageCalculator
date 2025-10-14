@@ -312,9 +312,9 @@ const ViolationsPage = () => {
   };
 
   const handleChange = (
+    index: number,
     key: string,
     value: string | number | Date,
-    index: number,
   ) => {
     if (key.endsWith("_date")) {
       value = (value as Date).toISOString().split("T")[0];

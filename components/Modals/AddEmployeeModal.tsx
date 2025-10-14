@@ -161,9 +161,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                     <Text className="mt-1 text-white">Work Week Start</Text>
                     <Select
                       name="start_day"
+                      value={values.start_day}
                       options={daysOptions}
                       placeholder="Select Day"
-                      value={values.start_day}
                       setFieldValue={setFieldValue}
                       setFieldTouched={setFieldTouched}
                     />
@@ -178,9 +178,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                     <Text className="mt-1 text-white">Work Week End</Text>
                     <Select
                       name="end_day"
+                      value={values.end_day}
                       options={daysOptions}
                       placeholder="Select Day"
-                      value={values.end_day}
                       setFieldValue={setFieldValue}
                       setFieldTouched={setFieldTouched}
                     />

@@ -101,6 +101,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                   <Text className="mt-1 text-white">Size</Text>
                   <Select
                     name="size"
+                    value={values.size}
                     options={[
                       {
                         label: "Employing 1 to 5 workers",
@@ -116,7 +117,6 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                       },
                     ]}
                     placeholder="Select Size"
-                    value={values.size}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
                   />

@@ -4,18 +4,18 @@ import { Dropdown } from "react-native-element-dropdown";
 
 type Props = {
   name: string;
+  value: string;
   options: { label: string; value: string }[];
   placeholder?: string;
-  value: string;
   setFieldValue: (name: string, value: string) => void;
   setFieldTouched: (name: string) => void;
 };
 
 const Select = ({
   name,
+  value,
   options,
   placeholder = "Select Item",
-  value,
   setFieldValue,
   setFieldTouched,
 }: Props) => {
