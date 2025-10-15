@@ -302,7 +302,7 @@ const exportDOCX = async (establishment: Establishment) => {
       new Paragraph({
         children: [
           new TextRun({
-            text: `${text} = Php${formatNumber(total)}`,
+            text: `${text} = Php${total}`,
             font: {
               name: "Arial",
             },

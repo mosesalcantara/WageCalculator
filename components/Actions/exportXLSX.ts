@@ -93,14 +93,15 @@ const exportXLSX = async (establishment: Establishment) => {
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
         )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`;
-        const formulaText = renderFormula(type, period);
-        
+        const { formulaText, totalText } = renderFormula(type, period);
+
         worksheetData.push([
           nameText,
           rateText,
           typeText,
           periodText,
           formulaText,
+          totalText,
         ]);
       }
     });
@@ -146,8 +147,9 @@ const exportXLSX = async (establishment: Establishment) => {
         text = "";
     }
 
-    const formulaText = `${text} = Php${formatNumber(total)}`;
-    return formulaText;
+    const formulaText = `${text}`;
+    const totalText = `Php${total}`;
+    return { formulaText, totalText };
   };
 
   const generateFile = async () => {
@@ -162,8 +164,8 @@ const exportXLSX = async (establishment: Establishment) => {
       worksheet["!cols"] = [
         { wch: 30 },
         { wch: 18 },
-        { wch: 30 },
-        { wch: 36 },
+        { wch: 40 },
+        { wch: 60 },
         { wch: 40 },
         { wch: 18 },
       ];
