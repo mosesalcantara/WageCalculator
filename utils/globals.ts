@@ -1,6 +1,6 @@
 import * as schema from "@/db/schema";
 import { Period, ViolationKeys, ViolationTypes } from "@/types/globals";
-import { differenceInDays, format, parse } from "date-fns";
+import { differenceInDays, format, parse, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
 
@@ -435,4 +435,68 @@ export const getDaysOrHours = (type: string, daysOrHours: string) => {
   }
   Number(daysOrHours) > 1 && (keyword += "s");
   return keyword;
+};
+
+export const getPeriods = (start_date: string, end_date: string) => {
+  const periods = [];
+
+  const sortedWageOrders = wageOrders.sort((a, b) => {
+    return Number(new Date(a.date)) - Number(new Date(b.date));
+  });
+
+  const isPast =
+    differenceInDays(start_date, sortedWageOrders[0].date) <= 0 &&
+    differenceInDays(end_date, sortedWageOrders[0].date) <= 0;
+  const isFuture =
+    differenceInDays(
+      start_date,
+      sortedWageOrders[sortedWageOrders.length - 1].date,
+    ) >= 0 &&
+    differenceInDays(
+      end_date,
+      sortedWageOrders[sortedWageOrders.length - 1].date,
+    ) >= 0;
+
+  if (isPast || isFuture) {
+    periods.push({
+      start_date: start_date,
+      end_date: end_date,
+    });
+  } else {
+    const start = sortedWageOrders.findLast(
+      (wageOrder) => differenceInDays(start_date, wageOrder.date) >= 0,
+    );
+
+    const end = sortedWageOrders.findLast(
+      (wageOrder) => differenceInDays(end_date, wageOrder.date) >= 0,
+    );
+
+    const filteredWageOrders = [];
+    for (const wageOrder of sortedWageOrders) {
+      if (
+        differenceInDays(start ? start.date : start_date, wageOrder.date) <=
+          0 &&
+        differenceInDays(end ? end.date : end_date, wageOrder.date) >= 0
+      ) {
+        filteredWageOrders.push(wageOrder);
+      }
+    }
+
+    let index = 0;
+    for (const wageOrder of filteredWageOrders) {
+      periods.push({
+        start_date: index == 0 ? start_date : wageOrder.date,
+        end_date:
+          index == filteredWageOrders.length - 1
+            ? end_date
+            : subDays(filteredWageOrders[index + 1].date, 1)
+                .toISOString()
+                .split("T")[0],
+      });
+
+      ++index;
+    }
+  }
+
+  return periods;
 };

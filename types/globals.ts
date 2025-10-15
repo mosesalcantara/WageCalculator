@@ -3,10 +3,14 @@ import { SQLiteDatabase } from "expo-sqlite";
 
 export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
-export type Db = ExpoSQLiteDatabase<
-  typeof import("@/db/schema")
-> & {
+export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
   $client: SQLiteDatabase;
+};
+
+export type Holiday = {
+  name: string;
+  date: string;
+  type: string;
 };
 
 export type Establishment = {
@@ -26,17 +30,12 @@ export type Employee = {
   end_day: string;
   establishment_id?: number;
   violations?: Violation[] | [];
+  custom_violations?: CustomViolation[] | [];
 };
 
 export type Violation = {
   id: number;
   values: ViolationTypes | string;
-  employee_id?: number;
-};
-
-export type CustomViolation = {
-  id: number;
-  values: CustomViolationType | string;
   employee_id?: number;
 };
 
@@ -54,17 +53,23 @@ export type ViolationTypes = {
   [key in ViolationKeys]: { periods: Period[]; received: string };
 };
 
-export type CustomViolationType = {
-  periods: CustomPeriod[];
-  received: string;
-};
-
 export type Period = {
   start_date: string;
   end_date: string;
   rate: string;
   daysOrHours: string;
   type: string;
+};
+
+export type CustomViolation = {
+  id: number;
+  values: CustomViolationType | string;
+  employee_id?: number;
+};
+
+export type CustomViolationType = {
+  periods: CustomPeriod[];
+  received: string;
 };
 
 export type CustomPeriod = {
@@ -75,10 +80,4 @@ export type CustomPeriod = {
   days: string;
   nightShiftHours: string;
   overtimeHours: string;
-};
-
-export type Holiday = {
-  name: string;
-  date: string;
-  type: string;
 };
