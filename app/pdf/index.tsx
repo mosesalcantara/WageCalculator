@@ -1,5 +1,7 @@
 import exportDOCX from "@/components/Actions/exportDOCX";
 import exportPDF from "@/components/Actions/exportPDF";
+import exportTest from "@/components/Actions/exportTest";
+import exportXLSX from "@/components/Actions/exportXLSX";
 import generateHTML from "@/components/Actions/generateHTML";
 import NavBar from "@/components/NavBar";
 import useFetchEstablishmentViolations from "@/hooks/useFetchEstablishmentViolations";
@@ -46,11 +48,14 @@ const PDFPage = () => {
                     </Text>
                   </TouchableOpacity>
 
-                  <View className="h-2.5" />
-                  {/* <Button
-                    title="Export XLSX"
-                    onPress={() => exportXLSX(record)}
-                  /> */}
+                  <TouchableOpacity
+                    className="rounded-[1.875rem] bg-[#2397f3] p-3"
+                    onPress={() => exportTest(establishment)}
+                  >
+                    <Text className="text-center font-bold text-white">
+                      Export XLSX
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

@@ -341,10 +341,9 @@ const exportDOCX = async (establishment: Establishment) => {
   const exportFile = async () => {
     const doc = new Document({ sections: [{ children: children }] });
     const base64 = await Packer.toBase64String(doc);
-    const filename = "DOLECalcReport.docx";
-    const tempUri = FileSystem.documentDirectory + filename;
+    const uri = FileSystem.documentDirectory + `${establishment.name}.docx`;
 
-    await FileSystem.writeAsStringAsync(tempUri, base64, {
+    await FileSystem.writeAsStringAsync(uri, base64, {
       encoding: FileSystem.EncodingType.Base64,
     });
 
@@ -354,7 +353,7 @@ const exportDOCX = async (establishment: Establishment) => {
         text: "Share",
         onPress: async () => {
           if (await Sharing.isAvailableAsync()) {
-            await Sharing.shareAsync(tempUri, {
+            await Sharing.shareAsync(uri, {
               mimeType:
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
               dialogTitle: "Share Report",
@@ -370,18 +369,18 @@ const exportDOCX = async (establishment: Establishment) => {
               const permissions =
                 await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
               if (permissions.granted && permissions.directoryUri) {
-                const base64File = await FileSystem.readAsStringAsync(tempUri, {
+                const base64 = await FileSystem.readAsStringAsync(uri, {
                   encoding: FileSystem.EncodingType.Base64,
                 });
 
-                const newFileUri =
+                const newUri =
                   await FileSystem.StorageAccessFramework.createFileAsync(
                     permissions.directoryUri,
-                    filename,
+                    uri,
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                   );
 
-                await FileSystem.writeAsStringAsync(newFileUri, base64File, {
+                await FileSystem.writeAsStringAsync(newUri, base64, {
                   encoding: FileSystem.EncodingType.Base64,
                 });
 
@@ -401,7 +400,7 @@ const exportDOCX = async (establishment: Establishment) => {
           } else {
             Toast.show({
               type: "info",
-              text1: "Save not supported on this platform.",
+              text1: "Saving Not Supported",
             });
           }
         },
