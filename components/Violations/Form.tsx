@@ -242,12 +242,14 @@ const Form = ({
                       onChange(index, "daysOrHours", value)
                     }
                   />
-                  <Icon
-                    name="autorenew"
-                    size={20}
-                    color="#555"
-                    onPress={setDays}
-                  />
+                  {estimate && (
+                    <Icon
+                      name="autorenew"
+                      size={20}
+                      color="#555"
+                      onPress={setDays}
+                    />
+                  )}
                 </View>
               </View>
             ) : (
