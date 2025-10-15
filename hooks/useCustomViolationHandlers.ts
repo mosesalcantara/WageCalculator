@@ -1,7 +1,9 @@
 import { CustomPeriod, CustomViolationType } from "@/types/globals";
+import { customPeriodFormat } from "@/utils/globals";
 
 const useCustomViolationHandlers = (
   customViolationType: CustomViolationType,
+  setter: (value: React.SetStateAction<CustomViolationType>) => void,
 ) => {
   const calculate = (period: CustomPeriod) => {
     const values = {
@@ -89,7 +91,58 @@ const useCustomViolationHandlers = (
     return result;
   };
 
-  return {calculate, getTotal};
+  const handleChange = (
+    index: number,
+    key: string,
+    value: string | number | Date,
+  ) => {
+    if (key.endsWith("_date")) {
+      value = (value as Date).toISOString().split("T")[0];
+    }
+
+    setter((prev) => {
+      const updatedPeriods = prev.periods.map((period, periodIndex) =>
+        index == periodIndex ? { ...period, [key]: `${value}` } : period,
+      );
+
+      return { periods: updatedPeriods, received: prev.received };
+    });
+  };
+
+  const handleAddPeriod = () => {
+    setter((prev) => {
+      return {
+        periods: [...prev.periods, customPeriodFormat],
+        received: prev.received,
+      };
+    });
+  };
+
+  const handleRemovePeriod = (index: number) => {
+    setter((prev) => {
+      const updatedPeriods = prev.periods;
+      updatedPeriods.splice(index, 1);
+      return { periods: updatedPeriods, received: prev.received };
+    });
+  };
+
+  const handleClearPeriod = (index: number) => {
+    setter((prev) => {
+      const updatedPeriods = prev.periods.map((period, periodIndex) =>
+        index == periodIndex ? customPeriodFormat : period,
+      );
+      return { periods: updatedPeriods, received: prev.received };
+    });
+  };
+
+  return {
+    calculate,
+    getTotal,
+    handleChange,
+    handleAddPeriod,
+    handleClearPeriod,
+    handleRemovePeriod,
+  };
 };
 
 export default useCustomViolationHandlers;

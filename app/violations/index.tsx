@@ -1,9 +1,9 @@
-import CustomForm from "@/components/Custom/Form";
+import CustomViolationForm from "@/components/CustomViolation/Form";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
 import Form from "@/components/Violations/Form";
 import { customViolations, violations } from "@/db/schema";
-import useCustomViolationHandlers from "@/hooks/useCustomHandlers";
+import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
 import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
@@ -59,7 +59,10 @@ const ViolationsPage = () => {
     handleClearPeriod,
     handleRemovePeriod,
   } = useViolationHandlers(type, employee, setViolationTypes);
-  const customHandlers = useCustomViolationHandlers(customViolationType);
+  const customViolationHandlers = useCustomViolationHandlers(
+    customViolationType,
+    setCustomViolationType,
+  );
 
   const violationType = violationTypes[type];
 
@@ -235,7 +238,7 @@ const ViolationsPage = () => {
                   Subtotal:{" "}
                   {formatNumber(
                     type == "Custom"
-                      ? customHandlers.getTotal()
+                      ? customViolationHandlers.getTotal()
                       : getTotal(type, establishment.size, violationType),
                   )}
                 </Text>
@@ -252,14 +255,19 @@ const ViolationsPage = () => {
                   {type == "Custom" ? (
                     <>
                       {customViolationType.periods.map((_, index) => (
-                        <CustomForm
+                        <CustomViolationForm
                           key={index}
                           index={index}
-                          customViolationTypeState={[
-                            customViolationType,
-                            setCustomViolationType,
-                          ]}
-                          calculate={customHandlers.calculate}
+                          customViolationType={customViolationType}
+                          calculate={customViolationHandlers.calculate}
+                          onChange={customViolationHandlers.handleChange}
+                          onAddPeriod={customViolationHandlers.handleAddPeriod}
+                          onRemovePeriod={
+                            customViolationHandlers.handleRemovePeriod
+                          }
+                          onClearPeriod={
+                            customViolationHandlers.handleClearPeriod
+                          }
                         />
                       ))}
                     </>

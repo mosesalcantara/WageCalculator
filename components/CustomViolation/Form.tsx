@@ -1,23 +1,19 @@
 import Select from "@/components/Select";
 import { CustomPeriod, CustomViolationType } from "@/types/globals";
 import {
-  customPeriodFormat,
   formatDateValue,
   formatNumber,
   numberToLetter,
   typesOptions,
 } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
   index: number;
-  customViolationTypeState: [
-    CustomViolationType,
-    Dispatch<SetStateAction<CustomViolationType>>,
-  ];
+  customViolationType: CustomViolationType;
   calculate: (period: CustomPeriod) => {
     rate: number;
     daysMultiplier: number;
@@ -28,62 +24,26 @@ type Props = {
     overtimeHours: number;
     total: number;
   };
+  onChange: (index: number, key: string, value: string | number | Date) => void;
+  onAddPeriod: () => void;
+  onClearPeriod: (index: number) => void;
+  onRemovePeriod: (index: number) => void;
 };
 
-const Form = ({ index, customViolationTypeState, calculate }: Props) => {
+const Form = ({
+  index,
+  customViolationType,
+  calculate,
+  onChange,
+  onAddPeriod,
+  onClearPeriod,
+  onRemovePeriod,
+}: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
-  const [customViolationType, setCustomViolationType] =
-    customViolationTypeState;
 
-  const periods = customViolationType.periods
+  const periods = customViolationType.periods;
   const period = customViolationType.periods[index];
-
-  const handleChange = (key: string, value: string | Date) => {
-    if (key.endsWith("_date")) {
-      value = (value as Date).toISOString().split("T")[0];
-    }
-
-    setCustomViolationType((prev) => {
-      const updatedPeriods = prev.periods.map((period, periodIndex) =>
-        index == periodIndex ? { ...period, [key]: `${value}` } : period,
-      );
-
-      return { periods: updatedPeriods, received: prev.received };
-    });
-
-    if (key == "start_date") {
-      setIsStartDateModalVisible(false);
-    } else if (key == "end_date") {
-      setIsEndDateModalVisible(false);
-    }
-  };
-
-  const addPeriod = () => {
-    setCustomViolationType((prev) => {
-      return {
-        periods: [...prev.periods, customPeriodFormat],
-        received: prev.received,
-      };
-    });
-  };
-
-  const removePeriod = () => {
-    setCustomViolationType((prev) => {
-      const updatedPeriods = prev.periods;
-      updatedPeriods.splice(index, 1);
-      return { periods: updatedPeriods, received: prev.received };
-    });
-  };
-
-  const clearPeriod = () => {
-    setCustomViolationType((prev) => {
-      const updatedPeriods = prev.periods.map((period, periodIndex) =>
-        index == periodIndex ? customPeriodFormat : period,
-      );
-      return { periods: updatedPeriods, received: prev.received };
-    });
-  };
 
   const {
     rate,
@@ -138,11 +98,12 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
         <View>
           <Text className="mb-1 text-base font-bold text-[#333]">Type</Text>
           <Select
+            index={index}
             name="type"
+            value={period.type}
             options={typesOptions}
             placeholder="Select Type"
-            value={period.type}
-            onChange={handleChange}
+            onChange={onChange}
           />
         </View>
 
@@ -154,7 +115,7 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
               keyboardType="numeric"
               placeholder="Enter Rate"
               value={period.rate}
-              onChangeText={(value) => handleChange("rate", value)}
+              onChangeText={(value) => onChange(index, "rate", value)}
             />
           </View>
 
@@ -165,7 +126,7 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
               keyboardType="numeric"
               placeholder="Enter Days"
               value={period.days}
-              onChangeText={(value) => handleChange("days", value)}
+              onChangeText={(value) => onChange(index, "days", value)}
             />
           </View>
         </View>
@@ -180,7 +141,9 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
               keyboardType="numeric"
               placeholder="Enter Hours"
               value={period.nightShiftHours}
-              onChangeText={(value) => handleChange("nightShiftHours", value)}
+              onChangeText={(value) =>
+                onChange(index, "nightShiftHours", value)
+              }
             />
           </View>
 
@@ -193,7 +156,7 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
               keyboardType="numeric"
               placeholder="Enter Hours"
               value={period.overtimeHours}
-              onChangeText={(value) => handleChange("overtimeHours", value)}
+              onChangeText={(value) => onChange(index, "overtimeHours", value)}
             />
           </View>
         </View>
@@ -217,20 +180,20 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
 
         <View className="mt-2.5 flex-row gap-2.5">
           {periods.length - 1 == index && (
-            <TouchableOpacity onPress={addPeriod}>
+            <TouchableOpacity onPress={onAddPeriod}>
               <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 text-white">
                 Add
               </Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={clearPeriod}>
+          <TouchableOpacity onPress={() => onClearPeriod(index)}>
             <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 text-white">
               Clear
             </Text>
           </TouchableOpacity>
 
           {periods.length > 1 && (
-            <TouchableOpacity onPress={removePeriod}>
+            <TouchableOpacity onPress={() => onRemovePeriod(index)}>
               <Text className="rounded-md border border-[#e71414ff] bg-[#e71414ff] px-2.5 py-1.5 text-white">
                 Remove
               </Text>
@@ -244,7 +207,10 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
           value={formatDateValue(period.start_date)}
           mode="date"
           onChange={(_, value) => {
-            value && handleChange("start_date", value);
+            if (value) {
+              onChange(index, "start_date", value);
+              setIsStartDateModalVisible(false);
+            }
           }}
         />
       )}
@@ -254,7 +220,10 @@ const Form = ({ index, customViolationTypeState, calculate }: Props) => {
           value={formatDateValue(period.end_date)}
           mode="date"
           onChange={(_, value) => {
-            value && handleChange("end_date", value);
+            if (value) {
+              onChange(index, "end_date", value);
+              setIsEndDateModalVisible(false);
+            }
           }}
         />
       )}

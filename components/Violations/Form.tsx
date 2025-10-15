@@ -30,8 +30,8 @@ type Props = {
   violationTypes: ViolationTypes;
   onChange: (index: number, key: string, value: string | number | Date) => void;
   onAddPeriod: () => void;
-  onRemovePeriod: (index: number) => void;
   onClearPeriod: (index: number) => void;
+  onRemovePeriod: (index: number) => void;
 };
 
 const Form = ({
@@ -42,8 +42,8 @@ const Form = ({
   violationTypes,
   onChange,
   onAddPeriod,
-  onRemovePeriod,
   onClearPeriod,
+  onRemovePeriod,
 }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
