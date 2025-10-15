@@ -101,6 +101,8 @@ const useCustomViolationHandlers = (
     if (establishment) {
       customViolationType.periods.forEach((period) => {
         result += calculate(establishment.size, period).total;
+        customViolationType.received &&
+          (result -= Number(customViolationType.received));
       });
     }
     return result;
@@ -121,6 +123,15 @@ const useCustomViolationHandlers = (
       );
 
       return { periods: updatedPeriods, received: prev.received };
+    });
+  };
+
+  const handleReceivedChange = (value: string) => {
+    setter((prev) => {
+      return {
+        ...prev,
+        received: value,
+      };
     });
   };
 
@@ -154,6 +165,7 @@ const useCustomViolationHandlers = (
     calculate,
     getTotal,
     handleChange,
+    handleReceivedChange,
     handleAddPeriod,
     handleClearPeriod,
     handleRemovePeriod,

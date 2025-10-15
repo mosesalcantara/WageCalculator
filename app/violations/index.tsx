@@ -297,6 +297,21 @@ const ViolationsPage = () => {
                           }
                         />
                       ))}
+
+                      <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
+                        <Text className="text-base font-bold text-[#333]">
+                          Received
+                        </Text>
+                        <TextInput
+                          className="h-11 rounded-md border border-black px-2.5"
+                          keyboardType="numeric"
+                          placeholder="Enter pay received"
+                          value={customViolationType.received}
+                          onChangeText={(value) =>
+                            customViolationHandlers.handleReceivedChange(value)
+                          }
+                        />
+                      </View>
                     </>
                   ) : (
                     <>
