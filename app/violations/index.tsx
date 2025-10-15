@@ -123,7 +123,7 @@ const ViolationsPage = () => {
           ...periodFormat,
           start_date: date.start_date,
           end_date: date.end_date,
-          rate: `${employee ? employee.rate : ""}`,
+          rate: employee ? `${employee.rate}` : "",
         };
       });
 

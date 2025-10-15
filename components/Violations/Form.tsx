@@ -52,6 +52,42 @@ const Form = ({
   const periods = violationTypes[type].periods;
   const period = violationTypes[type].periods[index];
 
+  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
+    type,
+  )
+    ? "Hours"
+    : "Days";
+
+  const minimumRate = getMinimumRate(
+    establishment.size,
+    period.start_date,
+    period.end_date,
+  );
+
+  const getLabel = () => {
+    if (["Basic Wage", "13th Month Pay"].includes(type)) {
+      return "Working Days";
+    } else if (type == "Special Day") {
+      return "Special Days";
+    } else if (type == "Rest Day") {
+      return "Rest Days";
+    } else if (type == "Holiday Pay") {
+      return "Holidays";
+    }
+  };
+
+  const setRate = () => {
+    onChange(index, "rate", `${employee.rate}`);
+  };
+
+  const setDays = () => {
+    onChange(index, "daysOrHours", estimate);
+  };
+
+  const handleViewDaysModalToggle = (isVisible: boolean) => {
+    setIsViewDaysModalVisible(isVisible);
+  };
+
   const getIncludedDays = (startDay: string, endDay: string) => {
     const included = [];
 
@@ -116,38 +152,6 @@ const Form = ({
   };
 
   const estimate = getEstimate(period.start_date, period.end_date);
-
-  const minimumRate = getMinimumRate(
-    establishment.size,
-    period.start_date,
-    period.end_date,
-  );
-
-  const setRate = () => {
-    onChange(index, "rate", `${employee.rate}`);
-  };
-
-  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
-    type,
-  )
-    ? "Hours"
-    : "Days";
-
-  const getLabel = () => {
-    if (["Basic Wage", "13th Month Pay"].includes(type)) {
-      return "Working Days";
-    } else if (type == "Special Day") {
-      return "Special Days";
-    } else if (type == "Rest Day") {
-      return "Rest Days";
-    } else if (type == "Holiday Pay") {
-      return "Holidays";
-    }
-  };
-
-  const handleViewDaysModalToggle = (isVisible: boolean) => {
-    setIsViewDaysModalVisible(isVisible);
-  };
 
   return (
     <>
@@ -223,18 +227,45 @@ const Form = ({
           </View>
 
           <View className="flex-row flex-wrap justify-between gap-1">
-            <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
-                {daysOrHours}
-              </Text>
-              <TextInput
-                className="h-11 rounded-md border border-black px-2.5"
-                keyboardType="numeric"
-                placeholder={`Enter ${daysOrHours.toLowerCase()}`}
-                value={period.daysOrHours}
-                onChangeText={(value) => onChange(index, "daysOrHours", value)}
-              />
-            </View>
+            {daysOrHours == "Days" ? (
+              <View className="w-[49%]">
+                <Text className="mb-1 text-base font-bold text-[#333]">
+                  {daysOrHours}
+                </Text>
+                <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
+                  <TextInput
+                    className="w-[85%]"
+                    keyboardType="numeric"
+                    placeholder={`Enter ${daysOrHours.toLowerCase()}`}
+                    value={period.daysOrHours}
+                    onChangeText={(value) =>
+                      onChange(index, "daysOrHours", value)
+                    }
+                  />
+                  <Icon
+                    name="autorenew"
+                    size={20}
+                    color="#555"
+                    onPress={setDays}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View className="w-[49%]">
+                <Text className="mb-1 text-base font-bold text-[#333]">
+                  {daysOrHours}
+                </Text>
+                <TextInput
+                  className="h-11 rounded-md border border-black px-2.5"
+                  keyboardType="numeric"
+                  placeholder={`Enter ${daysOrHours.toLowerCase()}`}
+                  value={period.daysOrHours}
+                  onChangeText={(value) =>
+                    onChange(index, "daysOrHours", value)
+                  }
+                />
+              </View>
+            )}
 
             {type == "Overtime Pay" && (
               <View className="w-[49%]">
