@@ -1,4 +1,4 @@
-import { employees, establishments } from "@/db/schema";
+import { customViolations, employees, establishments } from "@/db/schema";
 import {
   Db,
   Employee,

@@ -144,6 +144,10 @@ const ViolationsPage = () => {
       await db
         .delete(violations)
         .where(eq(violations.employee_id, Number(employee_id)));
+      await db
+        .delete(customViolations)
+        .where(eq(customViolations.employee_id, Number(employee_id)));
+
       await db.insert(violations).values({
         values: JSON.stringify(violationTypes),
         employee_id: Number(employee_id),
@@ -152,6 +156,7 @@ const ViolationsPage = () => {
         values: JSON.stringify(customViolationType),
         employee_id: Number(employee_id),
       });
+
       Toast.show({
         type: "success",
         text1: "Changes Saved",
@@ -192,7 +197,7 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [violationTypes]),
+    }, [violationTypes, customViolationType]),
   );
 
   return (
