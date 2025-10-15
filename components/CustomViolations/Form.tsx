@@ -1,8 +1,9 @@
 import Select from "@/components/Select";
-import { CustomPeriod, CustomViolationType } from "@/types/globals";
+import { CustomPeriod, CustomViolationType, Employee, Establishment } from "@/types/globals";
 import {
   formatDateValue,
   formatNumber,
+  getMinimumRate,
   numberToLetter,
   typesOptions,
 } from "@/utils/globals";
@@ -13,9 +14,12 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
   index: number;
+  establishment: Establishment;
+  employee: Employee;
   customViolationType: CustomViolationType;
-  calculate: (period: CustomPeriod) => {
+  calculate: (size: string, period: CustomPeriod) => {
     rate: number;
+    rateToUse: number;
     daysMultiplier: number;
     days: number;
     nightShiftMultiplier: number;
@@ -32,6 +36,8 @@ type Props = {
 
 const Form = ({
   index,
+  establishment,
+  employee,
   customViolationType,
   calculate,
   onChange,
@@ -47,6 +53,7 @@ const Form = ({
 
   const {
     rate,
+    rateToUse,
     daysMultiplier,
     days,
     nightShiftMultiplier,
@@ -54,7 +61,17 @@ const Form = ({
     overtimeMultiplier,
     overtimeHours,
     total,
-  } = calculate(period);
+  } = calculate(establishment.size, period);
+
+  const minimumRate = getMinimumRate(
+    establishment.size,
+    period.start_date,
+    period.end_date,
+  );
+
+  const setRate = () => {
+    onChange(index, "rate", `${employee.rate}`);
+  };
 
   return (
     <>
@@ -110,16 +127,34 @@ const Form = ({
         <View className="flex-row flex-wrap justify-between gap-1">
           <View className="w-[49%]">
             <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
-            <TextInput
-              className="h-11 rounded-md border border-black px-2.5"
-              keyboardType="numeric"
-              placeholder="Enter Rate"
-              value={period.rate}
-              onChangeText={(value) => onChange(index, "rate", value)}
-            />
+            <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
+              <TextInput
+                className="w-[85%]"
+                keyboardType="numeric"
+                placeholder="Enter Rate"
+                value={period.rate}
+                onChangeText={(value) => onChange(index, "rate", value)}
+              />
+              <Icon name="autorenew" size={20} color="#555" onPress={setRate} />
+            </View>
           </View>
 
           <View className="w-[49%]">
+            <Text className="mb-1 text-base font-bold text-[#333]">
+              Prevailing Rate
+            </Text>
+            <TextInput
+              className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              keyboardType="numeric"
+              placeholder=""
+              editable={false}
+              value={`${minimumRate == 0 ? "" : minimumRate}`}
+            />
+          </View>
+        </View>
+
+        <View className="flex-row flex-wrap justify-between gap-1">
+          <View className="w-[32%]">
             <Text className="mb-1 text-base font-bold text-[#333]">Days</Text>
             <TextInput
               className="h-11 rounded-md border border-black px-2.5"
@@ -129,12 +164,10 @@ const Form = ({
               onChangeText={(value) => onChange(index, "days", value)}
             />
           </View>
-        </View>
 
-        <View className="flex-row flex-wrap justify-between gap-1">
-          <View className="w-[49%]">
+          <View className="w-[32%]">
             <Text className="mb-1 text-base font-bold text-[#333]">
-              Night Shift Hours
+              Night Shift
             </Text>
             <TextInput
               className="h-11 rounded-md border border-black px-2.5"
@@ -147,9 +180,9 @@ const Form = ({
             />
           </View>
 
-          <View className="w-[49%]">
+          <View className="w-[32%]">
             <Text className="mb-1 text-base font-bold text-[#333]">
-              Overtime Hours
+              Overtime
             </Text>
             <TextInput
               className="h-11 rounded-md border border-black px-2.5"
@@ -163,10 +196,10 @@ const Form = ({
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
           <Text className="text-base font-bold text-[#27ae60]">
-            ({rate} x {daysMultiplier} x {days}) +{" "}
+            ({rateToUse} x {daysMultiplier} x {days}) +{" "}
           </Text>
           <Text className="text-base font-bold text-[#27ae60]">
-            ({rate} / 8 x {nightShiftMultiplier} x {nightShiftHours}) + ({rate}{" "}
+            ({rateToUse} / 8 x {nightShiftMultiplier} x {nightShiftHours}) + ({rateToUse}{" "}
             / 8 x {overtimeMultiplier} x {overtimeHours})
           </Text>
 

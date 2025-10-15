@@ -1,4 +1,4 @@
-import CustomViolationForm from "@/components/CustomViolation/Form";
+import CustomViolationForm from "@/components/CustomViolations/Form";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
 import Form from "@/components/Violations/Form";
@@ -13,6 +13,7 @@ import {
   ViolationTypes,
 } from "@/types/globals";
 import {
+  customPeriodFormat,
   formatNumber,
   getDb,
   getPeriods,
@@ -60,6 +61,7 @@ const ViolationsPage = () => {
     handleRemovePeriod,
   } = useViolationHandlers(type, employee, setViolationTypes);
   const customViolationHandlers = useCustomViolationHandlers(
+    establishment,
     customViolationType,
     setCustomViolationType,
   );
@@ -117,23 +119,41 @@ const ViolationsPage = () => {
   };
 
   const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
-    setViolationTypes((prev) => {
-      const periodsFormat = dates.map((date) => {
+    if (type == "Custom") {
+      setCustomViolationType((prev) => {
+        const periodsFormat = dates.map((date) => {
+          return {
+            ...customPeriodFormat,
+            start_date: date.start_date,
+            end_date: date.end_date,
+            rate: employee ? `${employee.rate}` : "",
+          };
+        });
+
         return {
-          ...periodFormat,
-          start_date: date.start_date,
-          end_date: date.end_date,
-          rate: employee ? `${employee.rate}` : "",
+          periods: [...prev.periods, ...periodsFormat],
+          received: prev.received,
         };
       });
+    } else {
+      setViolationTypes((prev) => {
+        const periodsFormat = dates.map((date) => {
+          return {
+            ...periodFormat,
+            start_date: date.start_date,
+            end_date: date.end_date,
+            rate: employee ? `${employee.rate}` : "",
+          };
+        });
 
-      return {
-        ...prev,
-        [type]: {
-          periods: [...prev[type].periods, ...periodsFormat],
-        },
-      };
-    });
+        return {
+          ...prev,
+          [type]: {
+            periods: [...prev[type].periods, ...periodsFormat],
+          },
+        };
+      });
+    }
   };
 
   const saveViolations = async (
@@ -262,6 +282,8 @@ const ViolationsPage = () => {
                       {customViolationType.periods.map((_, index) => (
                         <CustomViolationForm
                           key={index}
+                          establishment={establishment}
+                          employee={employee}
                           index={index}
                           customViolationType={customViolationType}
                           calculate={customViolationHandlers.calculate}

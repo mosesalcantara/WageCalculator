@@ -1,11 +1,16 @@
-import { CustomPeriod, CustomViolationType } from "@/types/globals";
-import { customPeriodFormat } from "@/utils/globals";
+import {
+  CustomPeriod,
+  CustomViolationType,
+  Establishment,
+} from "@/types/globals";
+import { customPeriodFormat, getMinimumRate } from "@/utils/globals";
 
 const useCustomViolationHandlers = (
+  establishment: Establishment | undefined,
   customViolationType: CustomViolationType,
   setter: (value: React.SetStateAction<CustomViolationType>) => void,
 ) => {
-  const calculate = (period: CustomPeriod) => {
+  const calculate = (size: string, period: CustomPeriod) => {
     const values = {
       ...period,
       rate: period.rate ? Number(period.rate) : 0,
@@ -15,6 +20,13 @@ const useCustomViolationHandlers = (
         : 0,
       overtimeHours: period.overtimeHours ? Number(period.overtimeHours) : 0,
     };
+
+    const minimumRate = getMinimumRate(
+      size,
+      period.start_date,
+      period.end_date,
+    );
+    const rateToUse = Math.max(values.rate, minimumRate);
 
     const type = period.type.toLowerCase();
     let nightShiftMultiplier = 0;
@@ -67,12 +79,13 @@ const useCustomViolationHandlers = (
 
     let total = 0;
     total =
-      rate * daysMultiplier * days +
-      (rate / 8) * nightShiftMultiplier * nightShiftHours +
-      (rate / 8) * overtimeMultiplier * overtimeHours;
+      rateToUse * daysMultiplier * days +
+      (rateToUse / 8) * nightShiftMultiplier * nightShiftHours +
+      (rateToUse / 8) * overtimeMultiplier * overtimeHours;
 
     return {
       rate,
+      rateToUse,
       daysMultiplier,
       days,
       nightShiftMultiplier,
@@ -85,9 +98,11 @@ const useCustomViolationHandlers = (
 
   const getTotal = () => {
     let result = 0;
-    customViolationType.periods.forEach((period) => {
-      result += calculate(period).total;
-    });
+    if (establishment) {
+      customViolationType.periods.forEach((period) => {
+        result += calculate(establishment.size, period).total;
+      });
+    }
     return result;
   };
 
