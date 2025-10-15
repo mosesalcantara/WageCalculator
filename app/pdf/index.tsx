@@ -1,6 +1,5 @@
 import exportDOCX from "@/components/Actions/exportDOCX";
 import exportPDF from "@/components/Actions/exportPDF";
-import exportTest from "@/components/Actions/exportTest";
 import exportXLSX from "@/components/Actions/exportXLSX";
 import generateHTML from "@/components/Actions/generateHTML";
 import NavBar from "@/components/NavBar";
@@ -44,16 +43,16 @@ const PDFPage = () => {
                     onPress={() => exportDOCX(establishment)}
                   >
                     <Text className="text-center font-bold text-white">
-                      Export DOCX
+                      Export Word
                     </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
-                    onPress={() => exportTest(establishment)}
+                    onPress={() => exportXLSX(establishment)}
                   >
                     <Text className="text-center font-bold text-white">
-                      Export XLSX
+                      Export Excel
                     </Text>
                   </TouchableOpacity>
                 </View>

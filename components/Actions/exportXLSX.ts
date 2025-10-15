@@ -1,13 +1,20 @@
-import { Employee, Establishment, Period } from "@/types/globals";
+import {
+  Employee,
+  Establishment,
+  Period,
+  ViolationTypes,
+} from "@/types/globals";
 import {
   calculate,
   formatDate,
   formatNumber,
   getDaysOrHours,
   getMinimumRate,
+  getTotal,
   getViolationKeyword,
+  numberToLetter,
+  toastVisibilityTime,
   validate,
-  wageOrders,
 } from "@/utils/globals";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -15,258 +22,230 @@ import { Alert, Platform } from "react-native";
 import Toast from "react-native-toast-message";
 import * as XLSX from "xlsx";
 
-const exportXLSX = async (record: Establishment): Promise<void> => {
-  const wsData: any[][] = [
-    [
-      "#",
-      "Full Name",
-      "Actual Rate",
-      "Violation Type",
-      "Period",
-      "Formula",
-      "Subtotal",
-      "Total",
-    ],
+const exportXLSX = async (establishment: Establishment) => {
+  const worksheetData = [
+    ["Name", "Rate", "Violation", "Period", "Formula", "Total"],
   ];
 
-  (record.employees || []).forEach((emp: Employee, index: number) => {
-    if (!emp.violations || emp.violations.length === 0) return;
+  const renderEmployee = (index: number, employee: Employee) => {
+    if (employee.violations && employee.violations.length > 0) {
+      const violations = JSON.parse(employee.violations[0].values as string);
 
-    const violations = JSON.parse(emp.violations[0].values as string);
-    let employeeTotal = 0;
-    let employeeHasData = false;
-
-    Object.keys(violations).forEach((type) => {
-      const violationType = violations[type];
-      if (
-        !violationType ||
-        !violationType.periods ||
-        violationType.periods.length === 0
-      )
-        return;
-
-      // filter valid periods
-      const validPeriods = (violationType.periods || []).filter((p: Period) =>
-        validate(p),
-      );
-      if (validPeriods.length === 0) return;
-
-      let violationSubtotal = 0;
-
-      // For each valid period create one row
-      validPeriods.forEach((period: Period) => {
-        // ensure numeric values
-        const empRateNum = Number(emp.rate ?? 0);
-        const daysOrHoursStr = String(period.daysOrHours ?? "1");
-        const minimumRate = Number(
-          getMinimumRate(record.size, period.start_date, period.end_date),
-        );
-        const formattedRateToUse = formatNumber(minimumRate);
-        const keyword = getDaysOrHours(type, daysOrHoursStr); // textual "12 OT hours" etc.
-
-        // The single source of truth for numeric result:
-        const numericResult = Number(calculate(type, record.size, period)); // use your existing function
-        const resultStr = `₱${formatNumber(numericResult)}`;
-
-        // Build formula text (mirror renderFormula)
-        let formulaText = "";
-        switch (type) {
-          case "Basic Wage":
-            // Prevailing - Actual x days
-            formulaText = `Php${formattedRateToUse} - Php${formatNumber(period.rate)} x ${keyword}`;
-            break;
-
-          case "Overtime Pay":
-          case "Overtime": // accept both variant strings
-            formulaText = `Php${formattedRateToUse} / 8 x ${period.type == "Normal Day" ? "25" : "30"}% x ${keyword}`;
-            break;
-
-          case "Night Shift Differential":
-          case "Night Differential":
-            formulaText = `Php${formattedRateToUse} / 8 x 10% x ${keyword}`;
-            break;
-
-          case "Special Day":
-            formulaText = `Php${formattedRateToUse} x 30% x ${keyword}`;
-            break;
-
-          case "Rest Day":
-            formulaText = `Php${formattedRateToUse} x 30% x ${keyword}`;
-            break;
-
-          case "Holiday Pay":
-            formulaText = `Php${formattedRateToUse} x ${keyword}`;
-            break;
-
-          case "13th Month Pay":
-            formulaText = `Php${formattedRateToUse} x ${keyword} / 12 months`;
-            break;
-
-          default:
-            formulaText = `Php${formattedRateToUse} x ${keyword}`;
-        }
-
-        const wageOrder = wageOrders.find((wageOrder) => {
-          const key =
-            record.size == "Employing 10 or more workers"
-              ? "tenOrMore"
-              : "lessThanTen";
-          return wageOrder.rates[key] == minimumRate;
+      let valid = 0;
+      Object.values(violations as ViolationTypes).forEach((violationType) => {
+        violationType.periods.forEach((period) => {
+          validate(period) && (valid += 1);
         });
-        const prevailingLabel = wageOrder ? ` ( ${wageOrder.name} )` : "";
-
-        // Period text (include days/hours label and the period dates)
-        const periodText = `${formatDate(period.start_date)} to ${formatDate(period.end_date)} (${keyword})`;
-
-        // Push a row for this period:
-        wsData.push([
-          index + 1,
-          `${emp.last_name.toUpperCase()}, ${emp.first_name.toUpperCase()}${
-            ["NA", "N/A"].includes(emp.middle_initial.toUpperCase())
-              ? ""
-              : ` ${emp.middle_initial.toUpperCase()}.`
-          }`,
-          `₱${formatNumber(empRateNum)}/day`,
-          `${type === "Holiday Pay" ? "Non-payment" : "Underpayment"} of ${getViolationKeyword(type)}`,
-          periodText,
-          // show formula text (you can include prevailingLabel if you want)
-          `${formulaText}${prevailingLabel}`,
-          // Computation column: numeric result
-          resultStr,
-          // Subtotal column left empty per period — subtotal row will be added later
-          "",
-          "",
-        ]);
-
-        violationSubtotal += numericResult;
       });
 
-      // After all periods of this violation type, add a subtotal row for this violation
-      if (violationSubtotal > 0) {
-        wsData.push([
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          `₱${formatNumber(violationSubtotal)}`,
-          "",
+      if (valid > 0) {
+        renderViolations(employee);
+      }
+    }
+  };
+
+  const renderViolations = (employee: Employee) => {
+    if (employee.violations && employee.violations.length > 0) {
+      const violations = JSON.parse(employee.violations[0].values as string);
+
+      let total = 0;
+      Object.keys(violations).forEach((type) => {
+        const violationType = violations[type];
+        total += getTotal(type, establishment.size, violationType);
+
+        let valid = 0;
+        violationType.periods.forEach((period: Period) => {
+          if (validate(period)) {
+            valid += 1;
+          }
+        });
+
+        if (valid > 0) {
+          renderViolationType(employee, type, violations[type]);
+        }
+      });
+    }
+  };
+
+  const renderViolationType = (
+    employee: Employee,
+    type: string,
+    violationType: { periods: Period[]; received: string },
+  ) => {
+    const nameText = `${employee.last_name?.toUpperCase()}, ${employee.first_name?.toUpperCase()}${
+      ["NA", "N/A"].includes(employee.middle_initial.toUpperCase())
+        ? ""
+        : ` ${employee.middle_initial.toUpperCase()}.`
+    }`;
+    const rateText = `Php${formatNumber(employee.rate)}/day`;
+    const typeText = `${
+      !violationType.received || Number(violationType.received) == 0
+        ? "Non-payment"
+        : "Underpayment"
+    } of ${getViolationKeyword(type)}`;
+
+    let subtotal = 0;
+
+    violationType.periods.forEach((period, index) => {
+      const result = calculate(type, establishment.size, period);
+      if (validate(period)) {
+        subtotal += result;
+        const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
+          period.start_date,
+        )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`;
+        const formulaText = renderFormula(type, period);
+        
+        worksheetData.push([
+          nameText,
+          rateText,
+          typeText,
+          periodText,
+          formulaText,
         ]);
-        employeeTotal += violationSubtotal;
-        employeeHasData = true;
       }
     });
+  };
 
-    if (employeeHasData) {
-      wsData.push([
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        `₱${formatNumber(employeeTotal)}`,
-      ]);
+  const renderFormula = (type: string, period: Period) => {
+    let text = "";
+
+    const rate = Number(period.rate);
+    const minimumRate = getMinimumRate(
+      establishment.size,
+      period.start_date,
+      period.end_date,
+    );
+
+    const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
+    const total = formatNumber(calculate(type, establishment.size, period));
+    const keyword = getDaysOrHours(type, period.daysOrHours);
+
+    switch (type) {
+      case "Basic Wage":
+        text = `(Php${formattedRateToUse} - Php${formatNumber(period.rate)}) x ${keyword}`;
+        break;
+      case "Overtime Pay":
+        text = `Php${formattedRateToUse} / 8 x ${period.type == "Normal Day" ? "25" : "30"}% x ${keyword}`;
+        break;
+      case "Night Shift Differential":
+        text = `Php${formattedRateToUse} / 8 x 10% x ${keyword}`;
+        break;
+      case "Special Day":
+        text = `Php${formattedRateToUse} x 30% x ${keyword}`;
+        break;
+      case "Rest Day":
+        text = `Php${formattedRateToUse} x 30% x ${keyword}`;
+        break;
+      case "Holiday Pay":
+        text = `Php${formattedRateToUse} x ${keyword}`;
+        break;
+      case "13th Month Pay":
+        text = `Php${formattedRateToUse} x ${keyword} / 12 months`;
+        break;
+      default:
+        text = "";
     }
-  });
 
-  if (wsData.length === 1) {
-    Toast.show({
-      type: "info",
-      text1: "No valid violations to export.",
-      visibilityTime: 2000,
-    });
-    return;
-  }
+    const formulaText = `${text} = Php${formatNumber(total)}`;
+    return formulaText;
+  };
 
-  const ws = XLSX.utils.aoa_to_sheet(wsData);
-  ws["!cols"] = [
-    { wch: 5 }, // #
-    { wch: 30 }, // Full Name
-    { wch: 18 }, // Actual Rate
-    { wch: 30 }, // Violation Type
-    { wch: 36 }, // Period (made wider)
-    { wch: 40 }, // Formula (wider to show expressions)
-    { wch: 18 }, // Subtotal
-    { wch: 18 }, // Total
-  ];
+  const generateFile = async () => {
+    if (establishment.employees) {
+      establishment.employees.forEach((employee, index) => {
+        renderEmployee(index, employee);
+      });
 
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, record.name || "Sheet1");
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
-  const wbout = XLSX.write(wb, { type: "base64", bookType: "xlsx" });
-  const filename = FileSystem.documentDirectory + "DOLECalcReport.xlsx";
+      worksheet["!cols"] = [
+        { wch: 30 },
+        { wch: 18 },
+        { wch: 30 },
+        { wch: 36 },
+        { wch: 40 },
+        { wch: 18 },
+      ];
 
-  await FileSystem.writeAsStringAsync(filename, wbout, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
+      XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 
-  // Save / Share prompt (same as before)
-  Alert.alert("Export Excel", "Would you like to Save or Share the file?", [
-    {
-      text: "Save to Device",
-      onPress: async () => {
-        if (Platform.OS === "android") {
-          try {
-            const permissions =
-              await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      const base64 = XLSX.write(workbook, { type: "base64", bookType: "xlsx" });
+      const uri = FileSystem.documentDirectory + `${establishment.name}.xlsx`;
 
-            if (permissions.granted && permissions.directoryUri) {
-              const base64File = await FileSystem.readAsStringAsync(filename, {
-                encoding: FileSystem.EncodingType.Base64,
-              });
+      await FileSystem.writeAsStringAsync(uri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
-              const newFileUri =
-                await FileSystem.StorageAccessFramework.createFileAsync(
-                  permissions.directoryUri,
-                  "DOLECalcReport.xlsx",
-                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                );
+      return uri;
+    }
+  };
 
-              await FileSystem.writeAsStringAsync(newFileUri, base64File, {
-                encoding: FileSystem.EncodingType.Base64,
-              });
-
-              Toast.show({
-                type: "success",
-                text1: "Saved successfully!",
-                visibilityTime: 2000,
-              });
-              console.log("✅ Saved to:", newFileUri);
-            }
-          } catch (err) {
-            console.error("❌ Error saving:", err);
-            Toast.show({
-              type: "error",
-              text1: "Save failed.",
-              visibilityTime: 2000,
+  const exportFile = (uri: string) => {
+    Alert.alert("Export Excel", "Would you like to Save or Share the file?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Share",
+        onPress: async () => {
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(uri, {
+              mimeType:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              dialogTitle: "Share Excel Report",
             });
           }
-        } else {
-          Toast.show({
-            type: "info",
-            text1: "Save not supported on this platform.",
-          });
-        }
+        },
       },
-    },
-    {
-      text: "Share",
-      onPress: async () => {
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(filename, {
-            mimeType:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            dialogTitle: "Share Excel Report",
-          });
-        }
+      {
+        text: "Save to Device",
+        onPress: async () => {
+          if (Platform.OS === "android") {
+            try {
+              const permissions =
+                await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+              if (permissions.granted && permissions.directoryUri) {
+                const base64 = await FileSystem.readAsStringAsync(uri, {
+                  encoding: FileSystem.EncodingType.Base64,
+                });
+
+                const newUri =
+                  await FileSystem.StorageAccessFramework.createFileAsync(
+                    permissions.directoryUri,
+                    `${establishment.name}.xlsx`,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  );
+
+                await FileSystem.writeAsStringAsync(newUri, base64, {
+                  encoding: FileSystem.EncodingType.Base64,
+                });
+
+                Toast.show({
+                  type: "success",
+                  text1: "Exported File",
+                  visibilityTime: toastVisibilityTime,
+                });
+              }
+            } catch (error) {
+              console.error(error);
+              Toast.show({
+                type: "error",
+                text1: "An Error Has Occured. Please Try Again.",
+              });
+            }
+          } else {
+            Toast.show({
+              type: "info",
+              text1: "Saving Not Supported",
+            });
+          }
+        },
       },
-    },
-    { text: "Cancel", style: "cancel" },
-  ]);
+    ]);
+  };
+
+  const uri = await generateFile();
+  uri && exportFile(uri);
 };
 
 export default exportXLSX;
