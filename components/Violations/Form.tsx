@@ -169,7 +169,7 @@ const Form = ({
                 Start Date
               </Text>
               <TouchableOpacity
-                className="h-11 flex-row items-center justify-between rounded-md border border-black px-2.5"
+                className="h-12 flex-row items-center justify-between rounded-md border border-black px-2.5"
                 onPress={() => setIsStartDateModalVisible(true)}
               >
                 <Text>{period.start_date || "Select date"}</Text>
@@ -183,7 +183,7 @@ const Form = ({
               </Text>
 
               <TouchableOpacity
-                className="h-11 flex-row items-center justify-between rounded-md border border-black  px-2.5"
+                className="h-12 flex-row items-center justify-between rounded-md border border-black  px-2.5"
                 onPress={() => setIsEndDateModalVisible(true)}
               >
                 <Text>{period.end_date || "Select date"}</Text>
@@ -195,7 +195,7 @@ const Form = ({
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
               <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
-              <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
+              <View className="h-12 flex-row items-center  rounded-md border border-black px-2.5">
                 <TextInput
                   className="w-[85%]"
                   keyboardType="numeric"
@@ -217,7 +217,7 @@ const Form = ({
                 Prevailing Rate
               </Text>
               <TextInput
-                className="h-11 rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                className="rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                 keyboardType="numeric"
                 placeholder=""
                 editable={false}
@@ -232,7 +232,7 @@ const Form = ({
                 <Text className="mb-1 text-base font-bold text-[#333]">
                   {daysOrHours}
                 </Text>
-                <View className="h-11 flex-row items-center  rounded-md border border-black px-2.5">
+                <View className="flex-row items-center  rounded-md border border-black px-2.5">
                   <TextInput
                     className="w-[85%]"
                     keyboardType="numeric"
@@ -256,7 +256,7 @@ const Form = ({
                   {daysOrHours}
                 </Text>
                 <TextInput
-                  className="h-11 rounded-md border border-black px-2.5"
+                  className="rounded-md border border-black px-2.5"
                   keyboardType="numeric"
                   placeholder={`Enter ${daysOrHours.toLowerCase()}`}
                   value={period.daysOrHours}
@@ -297,7 +297,7 @@ const Form = ({
                 <Text className="mb-1 text-base font-bold text-[#333]">
                   {getLabel()}
                 </Text>
-                <View className="h-11 flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
+                <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
                   <TextInput
                     className="w-[85%]"
                     keyboardType="numeric"

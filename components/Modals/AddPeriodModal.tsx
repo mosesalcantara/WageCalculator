@@ -95,7 +95,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                       Start Date
                     </Text>
                     <TouchableOpacity
-                      className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       onPress={() => setIsStartDateModalVisible(true)}
                     >
                       <Text>{values.start_date || "Select date"}</Text>
@@ -113,7 +113,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                       End Date
                     </Text>
                     <TouchableOpacity
-                      className="h-11 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                       onPress={() => setIsEndDateModalVisible(true)}
                     >
                       <Text>{values.end_date || "Select date"}</Text>
