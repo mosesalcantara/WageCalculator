@@ -60,12 +60,12 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
           <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
-            <Text className="w-[38%] text-base font-bold text-white">Name</Text>
-            <Text className="w-[10%] text-base font-bold text-white">Rate</Text>
-            <Text className="w-1/5 text-base font-bold text-white">
+            <Text className="w-[38%] text-base font-bold text-white text-center">Name</Text>
+            <Text className="w-[10%] text-base font-bold text-white text-center">Rate</Text>
+            <Text className="w-1/5 text-base font-bold text-white text-center">
               Schedule
             </Text>
-            <Text className="w-[27%] text-base font-bold text-white">
+            <Text className="w-[27%] text-base font-bold text-white text-center">
               Actions
             </Text>
           </View>
@@ -77,18 +77,18 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
                   key={employee.id}
                   className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
                 >
-                  <Text className="w-[38%] text-sm text-[#333]">
+                  <Text className="w-[38%] text-sm text-[#333] text-center">
                     {employee.last_name}, {employee.first_name}
                     {["NA", "N/A"].includes(employee.middle_initial.toUpperCase())
                       ? ""
                       : ` ${employee.middle_initial.toUpperCase()}.`}
                   </Text>
 
-                  <Text className="w-[10%] text-sm text-[#333]">
+                  <Text className="w-[10%] text-sm text-[#333] text-center">
                     {employee.rate}
                   </Text>
 
-                  <Text className="w-1/5 text-sm text-[#333]">
+                  <Text className="w-1/5 text-sm text-[#333] text-center">
                     {employee.start_day.slice(0, 3)} -{" "}
                     {employee.end_day.slice(0, 3)}
                   </Text>
