@@ -30,7 +30,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
     };
 
     try {
-      const exists = await db.query.establishments.findFirst({
+      const record = await db.query.establishments.findFirst({
         where: eq(
           sql`LOWER(${establishments.name})`,
           values.name.toLowerCase(),
@@ -38,7 +38,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
       });
 
       if (
-        exists &&
+        record &&
         establishment.name.toLowerCase() != values.name.toLowerCase()
       ) {
         Toast.show({

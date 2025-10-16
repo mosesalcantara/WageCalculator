@@ -32,11 +32,11 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     };
 
     try {
-      const exists = await db.query.establishments.findFirst({
+      const record = await db.query.establishments.findFirst({
         where: eq(sql`LOWER(${establishments.name})`, values.name.toLowerCase()),
       }) ?? false;
 
-      if (exists) {
+      if (record) {
         Toast.show({
           type: "error",
           text1: "Establishment Already Exists",
