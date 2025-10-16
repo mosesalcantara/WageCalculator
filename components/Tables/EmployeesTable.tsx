@@ -21,7 +21,13 @@ type Props = {
   onDelete: (id: number) => Promise<void>;
 };
 
-const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => {
+const EmployeesTable = ({
+  db,
+  router,
+  employees,
+  refetch,
+  onDelete,
+}: Props) => {
   const sortedEmployees = useMemo(() => {
     return employees?.sort((a, b) => {
       return a.last_name < b.last_name ? -1 : a.last_name > b.last_name ? 1 : 0;
@@ -30,12 +36,25 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
 
   const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredEmployees = useMemo(() => {
+  const filteredEmployees = useMemo(() => {
+    const columns = [
+      "last_name",
+      "first_name",
+      "middle_initial",
+      "rate",
+      "start_day",
+      "end_day",
+    ];
+
     if (sortedEmployees && searchQuery) {
       return sortedEmployees.filter((employee) => {
-        return Object.values(employee).some((value) => {
-          return `${value}`.toLowerCase().includes(searchQuery.toLowerCase());
+        const isValid = columns.some((column) => {
+          const value = employee[column as keyof Employee];
+          return value
+            ? `${value}`.toLowerCase().includes(searchQuery.toLowerCase())
+            : false;
         });
+        if (isValid) return employee;
       });
     } else {
       return sortedEmployees;
@@ -60,12 +79,16 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
           <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
-            <Text className="w-[38%] text-base font-bold text-white text-center">Name</Text>
-            <Text className="w-[10%] text-base font-bold text-white text-center">Rate</Text>
-            <Text className="w-1/5 text-base font-bold text-white text-center">
+            <Text className="w-[38%] text-center text-base font-bold text-white">
+              Name
+            </Text>
+            <Text className="w-[10%] text-center text-base font-bold text-white">
+              Rate
+            </Text>
+            <Text className="w-1/5 text-center text-base font-bold text-white">
               Schedule
             </Text>
-            <Text className="w-[27%] text-base font-bold text-white text-center">
+            <Text className="w-[27%] text-center text-base font-bold text-white">
               Actions
             </Text>
           </View>
@@ -77,18 +100,20 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
                   key={employee.id}
                   className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
                 >
-                  <Text className="w-[38%] text-sm text-[#333] text-center">
+                  <Text className="w-[38%] text-center text-sm text-[#333]">
                     {employee.last_name}, {employee.first_name}
-                    {["NA", "N/A"].includes(employee.middle_initial.toUpperCase())
+                    {["NA", "N/A"].includes(
+                      employee.middle_initial.toUpperCase(),
+                    )
                       ? ""
                       : ` ${employee.middle_initial.toUpperCase()}.`}
                   </Text>
 
-                  <Text className="w-[10%] text-sm text-[#333] text-center">
+                  <Text className="w-[10%] text-center text-sm text-[#333]">
                     {employee.rate}
                   </Text>
 
-                  <Text className="w-1/5 text-sm text-[#333] text-center">
+                  <Text className="w-1/5 text-center text-sm text-[#333]">
                     {employee.start_day.slice(0, 3)} -{" "}
                     {employee.end_day.slice(0, 3)}
                   </Text>
@@ -106,7 +131,7 @@ const EmployeesTable = ({ db, router, employees, refetch, onDelete }: Props) => 
 
                     <TouchableOpacity
                       onPress={() => {
-                        confirmAlert(employee.id, "Employee", onDelete, );
+                        confirmAlert(employee.id, "Employee", onDelete);
                       }}
                     >
                       <Icon name="delete" size={20} color="#E53935" />
