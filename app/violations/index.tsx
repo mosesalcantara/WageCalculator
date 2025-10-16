@@ -257,7 +257,7 @@ const ViolationsPage = () => {
             <View className="flex-row items-center justify-between px-4 py-2.5">
               <View>
                 <Text className="ml-1.5 text-xl font-bold">
-                  {`${employee.last_name}, ${employee.first_name}${["NA", "N/A"].includes(employee.middle_initial.toUpperCase()) ? "" : ` ${employee.middle_initial.toUpperCase()}.`}`}
+                  {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial.toUpperCase()}.`}`}
                 </Text>
                 <Text className="ml-1.5 text-xl font-bold underline">
                   Subtotal:{" "}

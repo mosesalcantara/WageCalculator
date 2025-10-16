@@ -102,8 +102,8 @@ const EmployeesTable = ({
                 >
                   <Text className="w-[38%] text-center text-sm text-[#333]">
                     {employee.last_name}, {employee.first_name}
-                    {["NA", "N/A"].includes(
-                      employee.middle_initial.toUpperCase(),
+                    {["na", "n/a"].includes(
+                      employee.middle_initial.toLowerCase(),
                     )
                       ? ""
                       : ` ${employee.middle_initial.toUpperCase()}.`}

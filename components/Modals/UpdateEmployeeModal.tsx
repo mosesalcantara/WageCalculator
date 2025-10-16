@@ -24,17 +24,16 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
     values: Employee,
     { resetForm }: { resetForm: () => void },
   ) => {
+    values = {
+      ...values,
+      last_name: `${values.last_name}`.trim(),
+      first_name: `${values.first_name}`.trim(),
+      middle_initial: `${values.middle_initial}`.trim(),
+      rate: Number(values.rate),
+    };
+
     try {
-      await db
-        .update(employees)
-        .set({
-          ...values,
-          last_name: `${values.last_name}`.trim(),
-          first_name: `${values.first_name}`.trim(),
-          middle_initial: `${values.middle_initial.trim()}`,
-          rate: Number(values.rate),
-        })
-        .where(eq(employees.id, values.id));
+      await db.update(employees).set(values).where(eq(employees.id, values.id));
       refetch();
       resetForm();
       setIsVisible(false);

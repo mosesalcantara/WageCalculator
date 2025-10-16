@@ -16,7 +16,7 @@ export const employee = Yup.object().shape({
       "isCorrectFormat",
       "Middle Initial must be in the correct format",
       (value) => {
-        return ["NA", "N/A"].includes(value.toUpperCase()) || value.length == 1;
+        return ["na", "n/a"].includes(value.toLowerCase()) || value.length == 1;
       },
     )
     .label("Middle Initial"),

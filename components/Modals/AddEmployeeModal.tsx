@@ -26,17 +26,23 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const handleSubmit = async (
-    values: Override<Employee, { id?: number; rate: string }>,
+    values: Override<Employee, { id?: number; rate: string | number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
+    values = {
+      ...values,
+      last_name: `${values.last_name}`.trim(),
+      first_name: `${values.first_name}`.trim(),
+      middle_initial: `${values.middle_initial}`.trim(),
+      rate: Number(values.rate),
+      establishment_id: establishment.id,
+    };
+
     try {
       await db.insert(employees).values({
         ...values,
-        last_name: `${values.last_name}`.trim(),
-        first_name: `${values.first_name}`.trim(),
-        middle_initial: `${values.middle_initial}`.trim(),
-        rate: Number(values.rate),
-        establishment_id: establishment.id,
+        rate: values.rate as number,
+        establishment_id: values.establishment_id as number,
       });
       refetch();
       resetForm();

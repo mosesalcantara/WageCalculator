@@ -42,8 +42,8 @@ const exportDOCX = async (establishment: Establishment) => {
           new Paragraph({
             children: [
               new TextRun({
-                text: `${index + 1}. ${employee.last_name?.toUpperCase()}, ${employee.first_name?.toUpperCase()}${
-                  ["NA", "N/A"].includes(employee.middle_initial.toUpperCase())
+                text: `${index + 1}. ${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}${
+                  ["na", "n/a"].includes(employee.middle_initial.toLowerCase())
                     ? ""
                     : ` ${employee.middle_initial.toUpperCase()}.`
                 }`,

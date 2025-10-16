@@ -72,8 +72,8 @@ const exportXLSX = async (establishment: Establishment) => {
     type: string,
     violationType: { periods: Period[]; received: string },
   ) => {
-    const nameText = `${employee.last_name?.toUpperCase()}, ${employee.first_name?.toUpperCase()}${
-      ["NA", "N/A"].includes(employee.middle_initial.toUpperCase())
+    const nameText = `${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}${
+      ["na", "n/a"].includes(employee.middle_initial.toLowerCase())
         ? ""
         : ` ${employee.middle_initial.toUpperCase()}.`
     }`;
