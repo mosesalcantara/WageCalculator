@@ -34,7 +34,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     try {
       const record = await db.query.establishments.findFirst({
         where: eq(sql`LOWER(${establishments.name})`, values.name.toLowerCase()),
-      }) ?? false;
+      });
 
       if (record) {
         Toast.show({
