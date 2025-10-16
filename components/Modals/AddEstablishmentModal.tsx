@@ -3,6 +3,7 @@ import { establishments } from "@/db/schema";
 import { establishment as validationSchema } from "@/schemas/globals";
 import { Db, Establishment, Override } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
+import { eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -25,18 +26,33 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     values: Override<Establishment, { id?: number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
+    values = {
+      ...values,
+      name: values.name.trim(),
+    };
+
     try {
-      await db
-        .insert(establishments)
-        .values({ ...values, name: `${values.name}`.trim() });
-      refetch();
-      resetForm();
-      setIsVisible(false);
-      Toast.show({
-        type: "success",
-        text1: "Added Establishment",
-        visibilityTime: toastVisibilityTime,
-      });
+      const exists = await db.query.establishments.findFirst({
+        where: eq(sql`LOWER(${establishments.name})`, values.name.toLowerCase()),
+      }) ?? false;
+
+      if (exists) {
+        Toast.show({
+          type: "error",
+          text1: "Establishment Already Exists",
+          visibilityTime: toastVisibilityTime,
+        });
+      } else {
+        await db.insert(establishments).values(values);
+        refetch();
+        resetForm();
+        setIsVisible(false);
+        Toast.show({
+          type: "success",
+          text1: "Added Establishment",
+          visibilityTime: toastVisibilityTime,
+        });
+      }
     } catch (error) {
       console.error(error);
       Toast.show({
