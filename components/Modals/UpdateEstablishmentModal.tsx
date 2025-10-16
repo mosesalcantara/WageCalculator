@@ -37,10 +37,10 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
         ),
       });
 
-      if (
-        record &&
-        establishment.name.toLowerCase() != values.name.toLowerCase()
-      ) {
+      const isSame =
+        establishment.name.toLowerCase() == values.name.toLowerCase();
+
+      if (record && !isSame) {
         Toast.show({
           type: "error",
           text1: "Establishment Already Exists",

@@ -3,7 +3,7 @@ import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
 import { Db, Employee } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -24,6 +24,7 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
     values: Employee,
     { resetForm }: { resetForm: () => void },
   ) => {
+    const NAs = ["na", "n/a"];
     values = {
       ...values,
       last_name: `${values.last_name}`.trim(),
@@ -33,15 +34,62 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
     };
 
     try {
-      await db.update(employees).set(values).where(eq(employees.id, values.id));
-      refetch();
-      resetForm();
-      setIsVisible(false);
-      Toast.show({
-        type: "success",
-        text1: "Updated Employee",
-        visibilityTime: toastVisibilityTime,
+      const records = await db.query.employees.findMany({
+        where: (employees, { eq }) =>
+          and(
+            eq(
+              sql`LOWER(${employees.last_name})`,
+              values.last_name.toLowerCase(),
+            ),
+            eq(
+              sql`LOWER(${employees.first_name})`,
+              values.first_name.toLowerCase(),
+            ),
+          ),
       });
+
+      const record = records.find((employee) => {
+        const employeeMiddleInitial = employee.middle_initial.toLowerCase();
+        const valuesMiddleInitial = values.middle_initial.toLowerCase();
+        if (employeeMiddleInitial.length > 1) {
+          return (
+            NAs.includes(employeeMiddleInitial) &&
+            NAs.includes(valuesMiddleInitial)
+          );
+        } else {
+          return employeeMiddleInitial == valuesMiddleInitial;
+        }
+      });
+
+      const isSame =
+        employee.last_name.toLowerCase() == values.last_name.toLowerCase() &&
+        employee.first_name.toLowerCase() == values.first_name.toLowerCase() &&
+        (employee.middle_initial.length > 1
+          ? NAs.includes(employee.middle_initial.toLowerCase()) &&
+            NAs.includes(values.middle_initial.toLowerCase())
+          : employee.middle_initial.toLowerCase() ==
+            values.middle_initial.toLowerCase());
+
+      if (record && !isSame) {
+        Toast.show({
+          type: "error",
+          text1: "Employee Already Exists",
+          visibilityTime: toastVisibilityTime,
+        });
+      } else {
+        await db
+          .update(employees)
+          .set(values)
+          .where(eq(employees.id, values.id));
+        refetch();
+        resetForm();
+        setIsVisible(false);
+        Toast.show({
+          type: "success",
+          text1: "Updated Employee",
+          visibilityTime: toastVisibilityTime,
+        });
+      }
     } catch (error) {
       console.error(error);
       Toast.show({

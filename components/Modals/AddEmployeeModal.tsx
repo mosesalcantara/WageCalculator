@@ -3,6 +3,7 @@ import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
 import { Db, Employee, Establishment, Override } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
+import { and, sql } from "drizzle-orm";
 import { Formik } from "formik";
 import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -29,6 +30,8 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
     values: Override<Employee, { id?: number; rate: string | number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
+    const NAs = ["na", "n/a"];
+
     values = {
       ...values,
       last_name: `${values.last_name}`.trim(),
@@ -39,19 +42,54 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
     };
 
     try {
-      await db.insert(employees).values({
-        ...values,
-        rate: values.rate as number,
-        establishment_id: values.establishment_id as number,
+      const records = await db.query.employees.findMany({
+        where: (employees, { eq }) =>
+          and(
+            eq(
+              sql`LOWER(${employees.last_name})`,
+              values.last_name.toLowerCase(),
+            ),
+            eq(
+              sql`LOWER(${employees.first_name})`,
+              values.first_name.toLowerCase(),
+            ),
+          ),
       });
-      refetch();
-      resetForm();
-      setIsVisible(false);
-      Toast.show({
-        type: "success",
-        text1: "Added Employee",
-        visibilityTime: toastVisibilityTime,
+
+      const record = records.find((employee) => {
+        const employeeMiddleInitial = employee.middle_initial.toLowerCase();
+        const valuesMiddleInitial = values.middle_initial.toLowerCase();
+        if (employeeMiddleInitial.length > 1) {
+          return (
+            NAs.includes(employeeMiddleInitial) &&
+            NAs.includes(valuesMiddleInitial)
+          );
+        } else {
+          return employeeMiddleInitial == valuesMiddleInitial;
+        }
       });
+
+      if (record) {
+        Toast.show({
+          type: "error",
+          text1: "Employee Already Exists",
+          visibilityTime: toastVisibilityTime,
+        });
+      } else {
+        await db.insert(employees).values({
+          ...values,
+          rate: values.rate as number,
+          establishment_id: values.establishment_id as number,
+        });
+        refetch();
+        resetForm();
+        setIsVisible(false);
+        Toast.show({
+          type: "success",
+          text1: "Added Employee",
+          visibilityTime: toastVisibilityTime,
+        });
+      }
     } catch (error) {
       console.error(error);
       Toast.show({
