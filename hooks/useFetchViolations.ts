@@ -1,4 +1,4 @@
-import { employees, establishments } from "@/db/schema";
+import { employees } from "@/db/schema";
 import {
   Db,
   Employee,
@@ -28,28 +28,21 @@ const useFetchViolations = (db: Db) => {
     try {
       const employee = await db.query.employees.findFirst({
         where: eq(employees.id, Number(employee_id)),
-        with: { violations: true },
+        with: { establishment: true, violations: true },
       });
       if (employee) {
         let violations: Violation[] = [];
+        const violation = employee.violations[0];
+
         if (employee.violations.length > 0) {
-          violations = [
-            {
-              ...employee.violations[0],
-              values: employee.violations[0].values as string,
-            },
-          ];
-          setViolationTypes(
-            JSON.parse(employee.violations[0].values as string),
-          );
+          violations = [{ ...violation, values: violation.values as string }];
+          setViolationTypes(JSON.parse(violation.values as string));
         } else {
           setViolationTypes(getInitialViolationTypes(employee.rate));
         }
+
         setEmployee({ ...employee, violations: violations });
-        const establishment = await db.query.establishments.findFirst({
-          where: eq(establishments.id, Number(employee.establishment_id)),
-        });
-        setEstablishment(establishment);
+        setEstablishment(employee.establishment);
       }
     } catch (error) {
       console.error(error);

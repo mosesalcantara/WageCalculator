@@ -22,20 +22,15 @@ const useFetchEstablishmentViolations = (db: Db) => {
       if (establishment) {
         const employees = establishment.employees.map((employee) => {
           let violations: Violation[] = [];
+          const violation = employee.violations[0];
+
           if (employee.violations.length > 0) {
-            violations = [
-              {
-                ...employee.violations[0],
-                values: employee.violations[0].values as string,
-              },
-            ];
+            violations = [{ ...violation, values: violation.values as string }];
           }
+
           return { ...employee, violations: violations };
         });
-        setEstablishment({
-          ...establishment,
-          employees: employees,
-        });
+        setEstablishment({ ...establishment, employees: employees });
       }
     } catch (error) {
       console.error(error);
