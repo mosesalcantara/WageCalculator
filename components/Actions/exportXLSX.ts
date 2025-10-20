@@ -25,7 +25,7 @@ import * as XLSX from "xlsx-js-style";
 const exportXLSX = async (establishment: Establishment) => {
   const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
 
-  const renderEmployee = (index: number, employee: Employee) => {
+  const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values as string);
 
@@ -212,8 +212,8 @@ const exportXLSX = async (establishment: Establishment) => {
 
   const generateFile = async () => {
     if (establishment.employees) {
-      establishment.employees.forEach((employee, index) => {
-        renderEmployee(index, employee);
+      establishment.employees.forEach((employee) => {
+        renderEmployee(employee);
       });
 
       const workbook = XLSX.utils.book_new();
