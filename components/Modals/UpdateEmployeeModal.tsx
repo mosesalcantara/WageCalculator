@@ -132,7 +132,7 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
                   <View className="w-[49%]">
                     <Text className="mt-1 font-bold text-white">Last Name</Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter last name"
                       value={values.last_name}
                       onChangeText={handleChange("last_name")}
@@ -150,7 +150,7 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
                       First Name
                     </Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter first name"
                       value={values.first_name}
                       onChangeText={handleChange("first_name")}
@@ -170,7 +170,7 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
                       Middle Initial
                     </Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter initial"
                       value={values.middle_initial}
                       onChangeText={handleChange("middle_initial")}
@@ -186,7 +186,7 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
                   <View className="w-[49%]">
                     <Text className="mt-1 font-bold text-white">Rate</Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       keyboardType="numeric"
                       placeholder="Enter rate"
                       value={`${values.rate}`}

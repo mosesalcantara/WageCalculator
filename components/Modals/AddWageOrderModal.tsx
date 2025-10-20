@@ -78,10 +78,10 @@ const AddWageOrderModal = ({ onSubmit }: Props) => {
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
                   <View className="w-[49%]">
-                    <Text className="mt-1 text-white font-bold">First Name</Text>
+                    <Text className="mt-1 font-bold text-white">Name</Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
-                      placeholder="Enter first name"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter name"
                       value={values.name}
                       onChangeText={handleChange("name")}
                       onBlur={() => setFieldTouched("name")}
@@ -110,6 +110,44 @@ const AddWageOrderModal = ({ onSubmit }: Props) => {
                       </Text>
                     )}
                   </View>
+                </View>
+
+                <View>
+                  <Text className="mt-1 font-bold text-white">
+                    Employing 1 to 9 workers:
+                  </Text>
+                  <TextInput
+                    className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                    keyboardType="numeric"
+                    placeholder="Enter rate"
+                    value={`${values.lessThanTen}`}
+                    onChangeText={handleChange("lessThanTen")}
+                    onBlur={() => setFieldTouched("lessThanTen")}
+                  />
+                  {touched.lessThanTen && errors.lessThanTen && (
+                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                      {errors.lessThanTen}
+                    </Text>
+                  )}
+                </View>
+
+                <View>
+                  <Text className="mt-1 font-bold text-white">
+                    Employing 10 workers and above:
+                  </Text>
+                  <TextInput
+                    className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                    keyboardType="numeric"
+                    placeholder="Enter rate"
+                    value={`${values.tenOrMore}`}
+                    onChangeText={handleChange("tenOrMore")}
+                    onBlur={() => setFieldTouched("tenOrMore")}
+                  />
+                  {touched.tenOrMore && errors.tenOrMore && (
+                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                      {errors.tenOrMore}
+                    </Text>
+                  )}
                 </View>
 
                 <View className="flex-row justify-end">

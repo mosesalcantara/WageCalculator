@@ -24,7 +24,7 @@ const Select = ({
   return (
     <View className="mt-1 rounded-md bg-white p-2">
       <Dropdown
-        style={[{ height: 20 }, isFocus && { borderColor: "blue" }]}
+        style={[{ height: 25 }, isFocus && { borderColor: "blue" }]}
         placeholderStyle={{ fontSize: 14 }}
         selectedTextStyle={{ fontSize: 14 }}
         data={options}
