@@ -119,14 +119,14 @@ const AddHolidayModal = () => {
                   <View className="w-[100%]">
                     <Text className="mt-1 text-white">Holiday Name</Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter name"
                     />
                   </View>
                   <View className="w-[100%]">
                     <Text className="mt-1 text-white">Date</Text>
                     <TextInput
-                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter date"
                     />
                   </View>
