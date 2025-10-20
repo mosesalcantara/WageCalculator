@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useImmer } from "use-immer";
 import { View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -19,7 +19,7 @@ const Select = ({
   placeholder = "Select Item",
   onChange,
 }: Props) => {
-  const [isFocus, setIsFocus] = useState(false);
+  const [isFocus, setIsFocus] = useImmer(false);
 
   return (
     <View className="h-12 rounded-md border border-black p-2">

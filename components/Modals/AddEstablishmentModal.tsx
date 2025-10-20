@@ -5,7 +5,7 @@ import { Db, Establishment, Override } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
+import { useImmer } from "use-immer";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -20,7 +20,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     size: "Employing 10 or more workers",
   };
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
     values: Override<Establishment, { id?: number }>,

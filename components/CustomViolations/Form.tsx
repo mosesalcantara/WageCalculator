@@ -8,7 +8,7 @@ import {
   typesOptions,
 } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useImmer } from "use-immer";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -45,8 +45,8 @@ const Form = ({
   onClearPeriod,
   onRemovePeriod,
 }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
+  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
+  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
 
   const periods = customViolationType.periods;
   const period = customViolationType.periods[index];

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useImmer } from "use-immer";
 import { View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -19,7 +19,7 @@ const Select = ({
   setFieldValue,
   setFieldTouched,
 }: Props) => {
-  const [isFocus, setIsFocus] = useState(false);
+  const [isFocus, setIsFocus] = useImmer(false);
 
   return (
     <View className="mt-1 rounded-md bg-white p-2">

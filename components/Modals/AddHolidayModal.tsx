@@ -1,14 +1,13 @@
 import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
-import { Db, Employee, Establishment, Override } from "@/types/globals";
-import { daysOptions, toastVisibilityTime } from "@/utils/globals";
+import { Employee, Override } from "@/types/globals";
+import { toastVisibilityTime } from "@/utils/globals";
 import { and, sql } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { useImmer } from "use-immer";
 
 const AddHolidayModal = () => {
   const initialValues = {
@@ -18,7 +17,7 @@ const AddHolidayModal = () => {
     rate: "",
     start_day: "Regular Holiday",
   };
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
     values: Override<Employee, { id?: number; rate: string | number }>,
@@ -113,12 +112,7 @@ const AddHolidayModal = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({
-            values,
-            handleSubmit,
-            setFieldValue,
-            setFieldTouched,
-          }) => (
+          {({ values, handleSubmit, setFieldValue, setFieldTouched }) => (
             <View className="flex-1 items-center justify-center bg-black/40">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
@@ -145,15 +139,15 @@ const AddHolidayModal = () => {
                       name="start_day"
                       value={values.start_day}
                       options={[
-                    {
-                      label: "Regular Holiday",
-                      value: "Regular Holiday",
-                    },
-                    {
-                      label: "Special (Non-Working) Holiday",
-                      value: "Special (Non-Working) Holiday",
-                    },
-                  ]}
+                        {
+                          label: "Regular Holiday",
+                          value: "Regular Holiday",
+                        },
+                        {
+                          label: "Special (Non-Working) Holiday",
+                          value: "Special (Non-Working) Holiday",
+                        },
+                      ]}
                       placeholder="Regular Holiday"
                       setFieldValue={setFieldValue}
                       setFieldTouched={setFieldTouched}
@@ -181,7 +175,7 @@ const AddHolidayModal = () => {
           )}
         </Formik>
       </Modal>
-            {/* {isStartDateModalVisible && (
+      {/* {isStartDateModalVisible && (
         <DateTimePicker
           value={formatDateValue(period.start_date)}
           mode="date"

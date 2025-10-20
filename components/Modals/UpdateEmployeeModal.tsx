@@ -5,7 +5,7 @@ import { Db, Employee } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { and, eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
+import { useImmer } from "use-immer";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -18,7 +18,7 @@ type Props = {
 
 const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
   const initialValues = employee;
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
     values: Employee,

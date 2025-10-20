@@ -5,10 +5,10 @@ import { Db, Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
@@ -18,7 +18,7 @@ type Props = {
 
 const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
   const initialValues = establishment;
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
     values: Establishment,

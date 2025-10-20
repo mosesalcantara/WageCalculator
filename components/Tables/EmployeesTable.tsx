@@ -2,7 +2,7 @@ import confirmAlert from "@/components/ConfirmAlert";
 import UpdateEmployeeModal from "@/components/Modals/UpdateEmployeeModal";
 import { Db, Employee } from "@/types/globals";
 import { Href, Router } from "expo-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   ScrollView,
   Text,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
@@ -34,7 +35,7 @@ const EmployeesTable = ({
     });
   }, [employees]);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useImmer("");
 
   const filteredEmployees = useMemo(() => {
     const columns = [

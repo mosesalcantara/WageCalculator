@@ -24,7 +24,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import {
   AppState,
   BackHandler,
@@ -40,13 +40,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 const ViolationsPage = () => {
   const db = getDb();
   const router = useRouter();
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
-  const [type, setType] = useState<ViolationKeys>("Basic Wage");
+  const [type, setType] = useImmer<ViolationKeys>("Basic Wage");
 
   const { establishment, employee, violationTypes, setViolationTypes } =
     useFetchViolations(db);

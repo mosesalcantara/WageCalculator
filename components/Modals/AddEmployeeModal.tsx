@@ -5,9 +5,9 @@ import { Db, Employee, Establishment, Override } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { and, sql } from "drizzle-orm";
 import { Formik } from "formik";
-import { useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
@@ -24,7 +24,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
     start_day: "Monday",
     end_day: "Friday",
   };
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
     values: Override<Employee, { id?: number; rate: string | number }>,

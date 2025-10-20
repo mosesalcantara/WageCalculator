@@ -2,9 +2,9 @@ import { period as validationSchema } from "@/schemas/globals";
 import { formatDateValue } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Formik, FormikErrors } from "formik";
-import { useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 type Props = {
   onSubmit: (
@@ -21,14 +21,14 @@ type Props = {
 };
 
 const AddPeriodModal = ({ onSubmit }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
+  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
+  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
 
   const initialValues = {
     start_date: "",
     end_date: "",
   };
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useImmer(false);
 
   const handleDateChange = (
     key: string,

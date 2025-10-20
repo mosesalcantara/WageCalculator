@@ -18,9 +18,9 @@ import {
 import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
-import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 type Props = {
   type: ViolationKeys;
@@ -45,9 +45,9 @@ const Form = ({
   onClearPeriod,
   onRemovePeriod,
 }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useState(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useState(false);
-  const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useState(false);
+  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
+  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
+  const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useImmer(false);
 
   const periods = violationTypes[type].periods;
   const period = violationTypes[type].periods[index];
