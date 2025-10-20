@@ -3,57 +3,57 @@ export const getMerges = (rows: string[][]) => {
 
   const names = getNames(rows);
 
-  const getNamesWithMultipleOccurences = (names: string[]) => {
+  const getRepeatingNames = (names: string[]) => {
     const counts: { [key: string]: number } = {};
 
     names.forEach(
       (name) => (counts[name] = counts[name] ? counts[name] + 1 : 1),
     );
 
-    const namesWithMultipleOccurences: string[] = [];
+    const repeatingNames: string[] = [];
     Object.keys(counts).forEach((name) => {
-      counts[name] > 1 && namesWithMultipleOccurences.push(name);
+      counts[name] > 1 && repeatingNames.push(name);
     });
 
-    return namesWithMultipleOccurences;
+    return repeatingNames;
   };
 
-  const namesWithMultipleOccurences = getNamesWithMultipleOccurences(names);
+  const repeatingNames = getRepeatingNames(names);
 
-  const getStartAndEndIndex = (names: string[], name: string) => {
-    const indices: number[] = [];
+  const getStartAndEnd = (names: string[], name: string) => {
+    const startToEnd: number[] = [];
     let index = names.indexOf(name);
     while (index !== -1) {
-      indices.push(index);
+      startToEnd.push(index);
       index = names.indexOf(name, index + 1);
     }
-    indices.sort((a, b) => a - b);
-    return [indices[0], indices.at(-1)!];
+    startToEnd.sort((a, b) => a - b);
+    return [startToEnd[0], startToEnd[startToEnd.length - 1]];
   };
 
-  const getIndices = (namesWithMultipleOccurences: string[]) => {
+  const getIndices = (repeatingNames: string[]) => {
     const indices: number[][] = [];
-    namesWithMultipleOccurences.forEach((name) => {
-      const startAndEndIndex = getStartAndEndIndex(names, name);
-      startAndEndIndex && indices.push(startAndEndIndex);
+    repeatingNames.forEach((name) => {
+      const [start, end] = getStartAndEnd(names, name);
+      start != end && indices.push([start, end]);
     });
     return indices;
   };
 
-  const indices = getIndices(namesWithMultipleOccurences);
+  const indices = getIndices(repeatingNames);
 
-  const getArrayOfMerges = (indices: number[][]) => {
-    const merges: {
+  const getRanges = (indices: number[][]) => {
+    const ranges: {
       s: { c: number; r: number };
       e: { c: number; r: number };
     }[] = [];
     indices.forEach((startAndEndIndex) => {
       const [start, end] = startAndEndIndex;
-      merges.push({ s: { c: 0, r: start }, e: { c: 0, r: end } });
+      ranges.push({ s: { c: 0, r: start }, e: { c: 0, r: end } });
     });
-    return merges;
+    return ranges;
   };
 
-  const merges = getArrayOfMerges(indices);
+  const merges = getRanges(indices);
   return merges;
 };

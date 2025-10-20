@@ -24,9 +24,7 @@ import Toast from "react-native-toast-message";
 import * as XLSX from "xlsx-js-style";
 
 const exportXLSX = async (establishment: Establishment) => {
-  const worksheetData = [
-    ["Name", "Rate", "Violation", "Period", "Formula", "Total"],
-  ];
+  const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
 
   const renderEmployee = (index: number, employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
@@ -96,7 +94,7 @@ const exportXLSX = async (establishment: Establishment) => {
         )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`;
         const { formulaText, totalText } = renderFormula(type, period);
 
-        worksheetData.push([
+        rows.push([
           nameText,
           rateText,
           typeText,
@@ -160,16 +158,12 @@ const exportXLSX = async (establishment: Establishment) => {
       });
 
       const workbook = XLSX.utils.book_new();
-      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const worksheet = XLSX.utils.aoa_to_sheet(rows);
 
-      for (const index in worksheet) {
-        if (typeof worksheet[index] != "object") continue;
-        worksheet[index].s = {
-          alignment: {
-            vertical: "center",
-          },
-        };
-      }
+      Object.values(worksheet).forEach((cell) => {
+        if (typeof cell != "object") return;
+        cell.s = { alignment: { vertical: "center" } };
+      });
 
       worksheet["!cols"] = [
         { wch: 30 },
@@ -180,7 +174,7 @@ const exportXLSX = async (establishment: Establishment) => {
         { wch: 18 },
       ];
 
-      worksheet["!merges"] = getMerges(worksheetData);
+      worksheet["!merges"] = getMerges(rows);
 
       XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 
