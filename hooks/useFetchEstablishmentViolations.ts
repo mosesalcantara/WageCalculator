@@ -2,14 +2,15 @@ import { establishments } from "@/db/schema";
 import { Db, Establishment, Violation } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
+import { useImmer } from "use-immer";
 
 const useFetchEstablishmentViolations = (db: Db) => {
-  const [establishment, setEstablishment] = useState<
-    Establishment | undefined
-  >();
+  const [establishment, setEstablishment] = useImmer<Establishment | undefined>(
+    undefined,
+  );
 
   const handleFetch = useCallback(async () => {
     try {

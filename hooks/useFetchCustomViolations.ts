@@ -5,15 +5,16 @@ import {
   toastVisibilityTime,
 } from "@/utils/globals";
 import { eq } from "drizzle-orm";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
+import { useImmer } from "use-immer";
 
 const useFetchViolations = (db: Db) => {
   const parent_id = SessionStorage.getItem("employee_id") as string;
 
   const [customViolationType, setCustomViolationType] =
-    useState<CustomViolationType>(getInitialCustomViolationType());
+    useImmer<CustomViolationType>(getInitialCustomViolationType());
 
   const handleFetch = useCallback(async () => {
     try {

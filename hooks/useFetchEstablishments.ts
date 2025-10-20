@@ -1,10 +1,13 @@
 import { Db, Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import Toast from "react-native-toast-message";
+import { useImmer } from "use-immer";
 
 const useFetchEstablishments = (db: Db) => {
-  const [establishments, setEstablishments] = useState<Establishment[] | undefined>();
+  const [establishments, setEstablishments] = useImmer<
+    Establishment[] | undefined
+  >(undefined);
 
   const handleFetch = useCallback(async () => {
     try {

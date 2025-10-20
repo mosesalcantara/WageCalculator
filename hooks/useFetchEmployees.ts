@@ -2,17 +2,22 @@ import { establishments } from "@/db/schema";
 import { Db, Employee, Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
+import { useImmer } from "use-immer";
 
 const useFetchEmployees = (db: Db) => {
-  const [establishment, setEstablishment] = useState<Establishment | undefined>();
-  const [employees, setEmployees] = useState<Employee[] | undefined>();
+  const [establishment, setEstablishment] = useImmer<Establishment | undefined>(
+    undefined,
+  );
+  const [employees, setEmployees] = useImmer<Employee[] | undefined>(undefined);
 
   const handleFetch = useCallback(async () => {
     try {
-      const establishment_id = SessionStorage.getItem("establishment_id") as string;
+      const establishment_id = SessionStorage.getItem(
+        "establishment_id",
+      ) as string;
       const establishment = await db.query.establishments.findFirst({
         where: eq(establishments.id, Number(establishment_id)),
         with: { employees: true },

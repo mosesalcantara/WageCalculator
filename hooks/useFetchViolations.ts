@@ -1,4 +1,4 @@
-import { customViolations, employees, establishments } from "@/db/schema";
+import { employees, establishments } from "@/db/schema";
 import {
   Db,
   Employee,
@@ -8,18 +8,19 @@ import {
 } from "@/types/globals";
 import { getInitialViolationTypes, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
+import { useImmer } from "use-immer";
 
 const useFetchViolations = (db: Db) => {
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
-  const [establishment, setEstablishment] = useState<
-    Establishment | undefined
-  >();
-  const [employee, setEmployee] = useState<Employee | undefined>();
-  const [violationTypes, setViolationTypes] = useState<ViolationTypes>(
+  const [establishment, setEstablishment] = useImmer<Establishment | undefined>(
+    undefined,
+  );
+  const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
+  const [violationTypes, setViolationTypes] = useImmer<ViolationTypes>(
     getInitialViolationTypes(),
   );
 

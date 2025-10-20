@@ -4,11 +4,12 @@ import {
   Establishment,
 } from "@/types/globals";
 import { customPeriodFormat, getMinimumRate } from "@/utils/globals";
+import { Updater } from "use-immer";
 
 const useCustomViolationHandlers = (
   establishment: Establishment | undefined,
   customViolationType: CustomViolationType,
-  setter: (value: React.SetStateAction<CustomViolationType>) => void,
+  setter: Updater<CustomViolationType>,
 ) => {
   const calculate = (size: string, period: CustomPeriod) => {
     const values = {
@@ -110,54 +111,39 @@ const useCustomViolationHandlers = (
 
   const handleChange = (
     index: number,
-    key: string,
+    key: keyof CustomPeriod | string,
     value: string | number | Date,
   ) => {
     if (key.endsWith("_date")) {
       value = (value as Date).toISOString().split("T")[0];
     }
 
-    setter((prev) => {
-      const updatedPeriods = prev.periods.map((period, periodIndex) =>
-        index == periodIndex ? { ...period, [key]: `${value}` } : period,
-      );
-
-      return { periods: updatedPeriods, received: prev.received };
+    setter((draft) => {
+      draft.periods[index][key as keyof CustomPeriod] = `${value}`;
     });
   };
 
   const handleReceivedChange = (value: string) => {
-    setter((prev) => {
-      return {
-        ...prev,
-        received: value,
-      };
+    setter((draft) => {
+      draft.received = value;
     });
   };
 
   const handleAddPeriod = () => {
-    setter((prev) => {
-      return {
-        periods: [...prev.periods, customPeriodFormat],
-        received: prev.received,
-      };
+    setter((draft) => {
+      draft.periods.push(customPeriodFormat);
     });
   };
 
   const handleRemovePeriod = (index: number) => {
-    setter((prev) => {
-      const updatedPeriods = prev.periods;
-      updatedPeriods.splice(index, 1);
-      return { periods: updatedPeriods, received: prev.received };
+    setter((draft) => {
+      draft.periods.splice(index, 1);
     });
   };
 
   const handleClearPeriod = (index: number) => {
-    setter((prev) => {
-      const updatedPeriods = prev.periods.map((period, periodIndex) =>
-        index == periodIndex ? customPeriodFormat : period,
-      );
-      return { periods: updatedPeriods, received: prev.received };
+    setter((draft) => {
+      draft.periods[index] = customPeriodFormat;
     });
   };
 

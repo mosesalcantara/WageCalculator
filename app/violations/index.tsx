@@ -8,7 +8,9 @@ import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
 import {
+  CustomPeriod,
   CustomViolationType,
+  Period,
   ViolationKeys,
   ViolationTypes,
 } from "@/types/globals";
@@ -120,39 +122,22 @@ const ViolationsPage = () => {
   };
 
   const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
-    if (type == "Custom") {
-      setCustomViolationType((prev) => {
-        const periodsFormat = dates.map((date) => {
-          return {
-            ...customPeriodFormat,
-            start_date: date.start_date,
-            end_date: date.end_date,
-            rate: employee ? `${employee.rate}` : "",
-          };
-        });
+    const periodsFormat = dates.map((date) => {
+      return {
+        ...(type == "Custom" ? customPeriodFormat : periodFormat),
+        start_date: date.start_date,
+        end_date: date.end_date,
+        rate: employee ? `${employee.rate}` : "",
+      };
+    });
 
-        return {
-          periods: [...prev.periods, ...periodsFormat],
-          received: prev.received,
-        };
+    if (type == "Custom") {
+      setCustomViolationType((draft) => {
+        draft.periods.push(...(periodsFormat as CustomPeriod[]));
       });
     } else {
-      setViolationTypes((prev) => {
-        const periodsFormat = dates.map((date) => {
-          return {
-            ...periodFormat,
-            start_date: date.start_date,
-            end_date: date.end_date,
-            rate: employee ? `${employee.rate}` : "",
-          };
-        });
-
-        return {
-          ...prev,
-          [type]: {
-            periods: [...prev[type].periods, ...periodsFormat],
-          },
-        };
+      setViolationTypes((draft) => {
+        draft[type].periods.push(...(periodsFormat as Period[]));
       });
     }
   };

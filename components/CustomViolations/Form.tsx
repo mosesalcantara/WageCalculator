@@ -28,7 +28,7 @@ type Props = {
     overtimeHours: number;
     total: number;
   };
-  onChange: (index: number, key: string, value: string | number | Date) => void;
+  onChange: (index: number, key: keyof CustomPeriod | string, value: string | number | Date) => void;
   onAddPeriod: () => void;
   onClearPeriod: (index: number) => void;
   onRemovePeriod: (index: number) => void;

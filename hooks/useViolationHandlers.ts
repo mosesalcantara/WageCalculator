@@ -1,63 +1,52 @@
-import { Employee, ViolationKeys, ViolationTypes } from "@/types/globals";
+import {
+  Employee,
+  Period,
+  ViolationKeys,
+  ViolationTypes,
+} from "@/types/globals";
 import { getPeriodFormat } from "@/utils/globals";
+import { Updater } from "use-immer";
 
 const useViolationHandlers = (
   type: ViolationKeys,
   employee: Employee | undefined,
-  setter: (value: React.SetStateAction<ViolationTypes>) => void,
+  setter: Updater<ViolationTypes>,
 ) => {
   const handleChange = (
     index: number,
-    key: string,
+    key: keyof Period | string,
     value: string | number | Date,
   ) => {
     if (key.endsWith("_date")) {
       value = (value as Date).toISOString().split("T")[0];
     }
 
-    setter((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? { ...period, [key]: `${value}` } : period,
-      );
-
-      return { ...prev, [type]: { ...prev[type], periods: updatedPeriods } };
+    setter((draft) => {
+      draft[type].periods[index][key as keyof Period] = `${value}`;
     });
   };
 
   const handleReceivedChange = (value: string) => {
-    setter((prev) => {
-      return {
-        ...prev,
-        [type]: { periods: prev[type].periods, received: value },
-      };
+    setter((draft) => {
+      draft[type].received = value;
     });
   };
 
   const handleAddPeriod = () => {
-    setter((prev) => {
-      return {
-        ...prev,
-        [type]: {
-          periods: [...prev[type].periods, getPeriodFormat(employee?.rate)],
-        },
-      };
+    setter((draft) => {
+      draft[type].periods.push(getPeriodFormat(employee?.rate));
     });
   };
 
   const handleRemovePeriod = (index: number) => {
-    setter((prev) => {
-      const updatedPeriods = prev[type].periods;
-      updatedPeriods.splice(index, 1);
-      return { ...prev, [type]: { periods: updatedPeriods } };
+    setter((draft) => {
+      draft[type].periods.splice(index, 1);
     });
   };
 
   const handleClearPeriod = (index: number) => {
-    setter((prev) => {
-      const updatedPeriods = prev[type].periods.map((period, periodIndex) =>
-        index == periodIndex ? getPeriodFormat() : period,
-      );
-      return { ...prev, [type]: { periods: updatedPeriods } };
+    setter((draft) => {
+      draft[type].periods[index] = getPeriodFormat();
     });
   };
 
