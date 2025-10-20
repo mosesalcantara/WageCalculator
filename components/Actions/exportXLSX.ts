@@ -150,49 +150,49 @@ const exportXLSX = async (establishment: Establishment) => {
     return { formulaText, totalText };
   };
 
-  const getMerges = (rows: string[][]) => {
-    const getNames = (rows: string[][]) => rows.map((row) => row[0]);
+  const getMerges = (index: number, rows: string[][]) => {
+    const getValues = (rows: string[][]) => rows.map((row) => row[index]);
 
-    const names = getNames(rows);
+    const values = getValues(rows);
 
-    const getRepeatingNames = (names: string[]) => {
+    const getRepeating = (values: string[]) => {
       const counts: { [key: string]: number } = {};
 
-      names.forEach(
-        (name) => (counts[name] = counts[name] ? counts[name] + 1 : 1),
+      values.forEach(
+        (key) => (counts[key] = counts[key] ? counts[key] + 1 : 1),
       );
 
-      const repeatingNames: string[] = [];
-      Object.keys(counts).forEach((name) => {
-        counts[name] > 1 && repeatingNames.push(name);
+      const repeating: string[] = [];
+      Object.keys(counts).forEach((key) => {
+        counts[key] > 1 && repeating.push(key);
       });
 
-      return repeatingNames;
+      return repeating;
     };
 
-    const repeatingNames = getRepeatingNames(names);
+    const repeating = getRepeating(values);
 
-    const getStartAndEnd = (names: string[], name: string) => {
+    const getStartAndEnd = (values: string[], value: string) => {
       const startToEnd: number[] = [];
-      let index = names.indexOf(name);
+      let index = values.indexOf(value);
       while (index !== -1) {
         startToEnd.push(index);
-        index = names.indexOf(name, index + 1);
+        index = values.indexOf(value, index + 1);
       }
       startToEnd.sort((a, b) => a - b);
       return [startToEnd[0], startToEnd[startToEnd.length - 1]];
     };
 
-    const getIndices = (repeatingNames: string[]) => {
+    const getIndices = (repeating: string[]) => {
       const indices: number[][] = [];
-      repeatingNames.forEach((name) => {
-        const [start, end] = getStartAndEnd(names, name);
+      repeating.forEach((value) => {
+        const [start, end] = getStartAndEnd(values, value);
         start != end && indices.push([start, end]);
       });
       return indices;
     };
 
-    const indices = getIndices(repeatingNames);
+    const indices = getIndices(repeating);
 
     const getRanges = (indices: number[][]) => {
       const ranges: {
@@ -201,7 +201,7 @@ const exportXLSX = async (establishment: Establishment) => {
       }[] = [];
       indices.forEach((startAndEndIndex) => {
         const [start, end] = startAndEndIndex;
-        ranges.push({ s: { c: 0, r: start }, e: { c: 0, r: end } });
+        ranges.push({ s: { c: index, r: start }, e: { c: index, r: end } });
       });
       return ranges;
     };
@@ -233,7 +233,7 @@ const exportXLSX = async (establishment: Establishment) => {
         { wch: 18 },
       ];
 
-      worksheet["!merges"] = getMerges(rows);
+      worksheet["!merges"] = getMerges(0, rows);
 
       XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 
