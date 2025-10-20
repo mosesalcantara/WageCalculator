@@ -4,6 +4,7 @@ import NavBar from "@/components/NavBar";
 import EstablishmentsTable from "@/components/Tables/EstablishmentsTable";
 import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
 import useFetchEstablishments from "@/hooks/useFetchEstablishments";
+import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -14,6 +15,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const EstablishmentsPage = () => {
   const db = getDb();
   const router = useRouter();
+
+  useFetchWageOrders(db);
 
   const { establishments, refetch } = useFetchEstablishments(db);
   const { handleDelete } = useDeleteEstablishment(db, refetch);

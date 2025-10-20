@@ -275,8 +275,11 @@ export const formatDateValue = (date: string) => {
   return date ? new Date(date) : new Date();
 };
 
-export const formatDate = (date: string) => {
-  return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy");
+export const formatDate = (
+  date: string,
+  dateFormat: string = "dd MMMM yyyy",
+) => {
+  return format(parse(date, "yyyy-MM-dd", new Date()), dateFormat);
 };
 
 export const validate = (

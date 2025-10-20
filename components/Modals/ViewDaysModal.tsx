@@ -1,7 +1,7 @@
 import { Holiday, ViolationKeys } from "@/types/globals";
-import { validateDateRange } from "@/utils/globals";
+import { formatDate, validateDateRange } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
-import { eachDayOfInterval, format, parse } from "date-fns";
+import { eachDayOfInterval, format } from "date-fns";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -54,10 +54,6 @@ const ViewDaysModal = ({
     return type == "Special Day" ? specialDays : regularHolidays;
   };
 
-  const formatDate = (date: string) => {
-    return format(parse(date, "yyyy-MM-dd", new Date()), "MMMM dd, yyyy");
-  };
-
   return (
     <>
       <TouchableOpacity onPress={() => onToggle(true)}>
@@ -91,7 +87,7 @@ const ViewDaysModal = ({
                   <Text className="text-base font-bold text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
-                  <Text>{formatDate(holiday.date)}</Text>
+                  <Text>{formatDate(holiday.date, "MMMM dd, yyyy")}</Text>
                 </View>
               ))}
             </ScrollView>

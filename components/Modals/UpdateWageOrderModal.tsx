@@ -12,25 +12,20 @@ import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
+  wageOrder: WageOrder;
   refetch: () => void;
 };
 
-const AddWageOrderModal = ({ db, refetch }: Props) => {
+const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
   const [isDateModalVisible, setIsDateModalVisible] = useImmer(false);
 
-  const initialValues = {
-    name: "",
-    date: "",
-    less_than_ten: "",
-    ten_or_more: "",
-  };
+  const initialValues = wageOrder;
 
   const handleSubmit = async (
     values: Override<
       WageOrder,
       {
-        id?: number;
         less_than_ten: string | number;
         ten_or_more: string | number;
       }
@@ -49,18 +44,23 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
         where: eq(sql`LOWER(${wageOrders.name})`, values.name.toLowerCase()),
       });
 
-      if (record) {
+      const isSame = wageOrder.name.toLowerCase() == values.name.toLowerCase();
+
+      if (record && !isSame) {
         Toast.show({
           type: "error",
           text1: "Wage Order Already Exists",
           visibilityTime: toastVisibilityTime,
         });
       } else {
-        await db.insert(wageOrders).values({
-          ...values,
-          less_than_ten: values.less_than_ten as number,
-          ten_or_more: values.ten_or_more as number,
-        });
+        await db
+          .update(wageOrders)
+          .set({
+            ...values,
+            less_than_ten: values.less_than_ten as number,
+            ten_or_more: values.ten_or_more as number,
+          })
+          .where(eq(wageOrders.id, values.id));
         refetch();
         resetForm();
         setIsVisible(false);
@@ -82,11 +82,8 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
 
   return (
     <>
-      <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
-        onPress={() => setIsVisible(true)}
-      >
-        <Text className="text-center font-bold text-white">Add Wage Order</Text>
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
+        <Icon name="edit" size={20} color="#2196F3" />
       </TouchableOpacity>
 
       <Modal
@@ -103,7 +100,6 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
             values: Override<
               WageOrder,
               {
-                id?: number;
                 less_than_ten: string | number;
                 ten_or_more: string | number;
               }
@@ -211,7 +207,7 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
                     className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => handleSubmit()}
                   >
-                    <Text className="font-bold">Add</Text>
+                    <Text className="font-bold">Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -237,4 +233,4 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
   );
 };
 
-export default AddWageOrderModal;
+export default UpdateWageOrderModal;

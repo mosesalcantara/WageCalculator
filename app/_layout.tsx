@@ -1,5 +1,6 @@
 import Loader from "@/components/Loader";
 import migrations from "@/drizzle/migrations";
+import "@/globals.css";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
@@ -10,7 +11,6 @@ import Toast, {
   ErrorToast,
   SuccessToast,
 } from "react-native-toast-message";
-import "@/globals.css"
 
 const name = "WageCalculator.db";
 const expoDb = openDatabaseSync(name, { useNewConnection: true });

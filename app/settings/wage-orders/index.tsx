@@ -1,37 +1,17 @@
 import AddWageOrderModal from "@/components/Modals/AddWageOrderModal";
 import NavBar from "@/components/NavBar";
-import { toastVisibilityTime } from "@/utils/globals";
-import { ScrollView, Text, View } from "react-native";
+import WageOrdersTable from "@/components/Tables/WageOrdersTable";
+import useDeleteWageOrder from "@/hooks/useDeleteWageOrder";
+import useFetchWageOrders from "@/hooks/useFetchWageOrders";
+import { getDb } from "@/utils/globals";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 
 const WageOrdersPage = () => {
-  const handleAddWageOrderSubmit = async (
-    values: {
-      name: string;
-      date: string;
-      less_than_ten: string;
-      ten_or_more: string;
-    },
-    { resetForm }: { resetForm: () => void },
-  ) => {
-    try {
-      console.log(values);
-      resetForm();
-      Toast.show({
-        type: "success",
-        text1: "Added Wage Order",
-        visibilityTime: toastVisibilityTime,
-      });
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "An Error Has Occured. Please Try Again.",
-        visibilityTime: toastVisibilityTime,
-      });
-    }
-  };
+  const db = getDb();
+
+  const { wageOrders, setWageOrders, refetch } = useFetchWageOrders(db);
+  const { handleDelete } = useDeleteWageOrder(db, refetch);
 
   return (
     <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
@@ -40,25 +20,15 @@ const WageOrdersPage = () => {
       <View className="flex-1 p-4">
         <View className="mb-2 flex-row items-center justify-between">
           <Text className="text-center text-xl font-bold">Wage Orders</Text>
-          <AddWageOrderModal onSubmit={handleAddWageOrderSubmit} />
+          <AddWageOrderModal db={db} refetch={refetch} />
         </View>
 
-        <ScrollView className="rounded-md" showsVerticalScrollIndicator={true}>
-          <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
-            <View>
-              <Text className="text-base font-bold text-[#333]">
-                RB-MIMAROPA-09
-              </Text>
-              <Text className="text-base text-[#333]">
-                June 10, 2022 - P404/430
-              </Text>
-            </View>
-
-            <View className="justify-center">
-              <Text>Actions</Text>
-            </View>
-          </View>
-        </ScrollView>
+        <WageOrdersTable
+          db={db}
+          wageOrders={wageOrders}
+          refetch={refetch}
+          onDelete={handleDelete}
+        />
       </View>
     </SafeAreaView>
   );
