@@ -10,8 +10,8 @@ const WageOrdersPage = () => {
     values: {
       name: string;
       date: string;
-      lessThanTen: string;
-      tenOrMore: string;
+      less_than_ten: string;
+      ten_or_more: string;
     },
     { resetForm }: { resetForm: () => void },
   ) => {

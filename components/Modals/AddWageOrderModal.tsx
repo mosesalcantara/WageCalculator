@@ -11,8 +11,8 @@ type Props = {
     values: {
       name: string;
       date: string;
-      lessThanTen: string;
-      tenOrMore: string;
+      less_than_ten: string;
+      ten_or_more: string;
     },
     {
       resetForm,
@@ -28,8 +28,8 @@ const AddWageOrderModal = ({ onSubmit }: Props) => {
   const initialValues = {
     name: "",
     date: "",
-    lessThanTen: "",
-    tenOrMore: "",
+    less_than_ten: "",
+    ten_or_more: "",
   };
   const [isVisible, setIsVisible] = useImmer(false);
 
@@ -56,8 +56,8 @@ const AddWageOrderModal = ({ onSubmit }: Props) => {
             values: {
               name: string;
               date: string;
-              lessThanTen: string;
-              tenOrMore: string;
+              less_than_ten: string;
+              ten_or_more: string;
             },
             { resetForm }: { resetForm: () => void },
           ) => {
@@ -120,13 +120,13 @@ const AddWageOrderModal = ({ onSubmit }: Props) => {
                     className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                     keyboardType="numeric"
                     placeholder="Enter rate"
-                    value={`${values.lessThanTen}`}
-                    onChangeText={handleChange("lessThanTen")}
-                    onBlur={() => setFieldTouched("lessThanTen")}
+                    value={`${values.less_than_ten}`}
+                    onChangeText={handleChange("less_than_ten")}
+                    onBlur={() => setFieldTouched("less_than_ten")}
                   />
-                  {touched.lessThanTen && errors.lessThanTen && (
+                  {touched.less_than_ten && errors.less_than_ten && (
                     <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                      {errors.lessThanTen}
+                      {errors.less_than_ten}
                     </Text>
                   )}
                 </View>
@@ -139,13 +139,13 @@ const AddWageOrderModal = ({ onSubmit }: Props) => {
                     className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                     keyboardType="numeric"
                     placeholder="Enter rate"
-                    value={`${values.tenOrMore}`}
-                    onChangeText={handleChange("tenOrMore")}
-                    onBlur={() => setFieldTouched("tenOrMore")}
+                    value={`${values.ten_or_more}`}
+                    onChangeText={handleChange("ten_or_more")}
+                    onBlur={() => setFieldTouched("ten_or_more")}
                   />
-                  {touched.tenOrMore && errors.tenOrMore && (
+                  {touched.ten_or_more && errors.ten_or_more && (
                     <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                      {errors.tenOrMore}
+                      {errors.ten_or_more}
                     </Text>
                   )}
                 </View>

@@ -41,3 +41,16 @@ export const period = Yup.object().shape({
     )
     .label("End Date"),
 });
+
+export const wageOrder = Yup.object().shape({
+  name: Yup.string().trim().required().label("Name"),
+  date: Yup.string().trim().required().label("Date"),
+  less_than_ten: Yup.number()
+    .typeError("Rate must be a number")
+    .required()
+    .label("Rate"),
+  ten_or_more: Yup.number()
+    .typeError("Rate must be a number")
+    .required()
+    .label("Rate"),
+});

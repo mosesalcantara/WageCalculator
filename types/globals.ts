@@ -81,3 +81,11 @@ export type CustomPeriod = {
   nightShiftHours: string;
   overtimeHours: string;
 };
+
+export type WageOrder = {
+  id: number;
+  name: string;
+  date: string;
+  less_than_ten: number;
+  ten_or_more: number;
+};
