@@ -4,6 +4,7 @@ import {
   Period,
   ViolationTypes,
 } from "@/types/globals";
+import { getMerges } from "@/utils/getMerges";
 import {
   calculate,
   formatDate,
@@ -20,7 +21,7 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
 import Toast from "react-native-toast-message";
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 
 const exportXLSX = async (establishment: Establishment) => {
   const worksheetData = [
@@ -77,7 +78,6 @@ const exportXLSX = async (establishment: Establishment) => {
         ? ""
         : ` ${employee.middle_initial.toUpperCase()}.`
     }`;
-    const rateText = `Php${formatNumber(employee.rate)}/day`;
     const typeText = `${
       !violationType.received || Number(violationType.received) == 0
         ? "Non-payment"
@@ -90,6 +90,7 @@ const exportXLSX = async (establishment: Establishment) => {
       const result = calculate(type, establishment.size, period);
       if (validate(period)) {
         subtotal += result;
+        const rateText = `Php${formatNumber(period.rate)}/day`;
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
         )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`;
@@ -161,6 +162,15 @@ const exportXLSX = async (establishment: Establishment) => {
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
+      for (const index in worksheet) {
+        if (typeof worksheet[index] != "object") continue;
+        worksheet[index].s = {
+          alignment: {
+            vertical: "center",
+          },
+        };
+      }
+
       worksheet["!cols"] = [
         { wch: 30 },
         { wch: 18 },
@@ -169,6 +179,8 @@ const exportXLSX = async (establishment: Establishment) => {
         { wch: 40 },
         { wch: 18 },
       ];
+
+      worksheet["!merges"] = getMerges(worksheetData);
 
       XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 

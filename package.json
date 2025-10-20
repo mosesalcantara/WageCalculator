@@ -63,7 +63,7 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "react-native-worklets": "^0.6.0",
-    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0",
     "xlsx-style": "^0.8.13",
     "yup": "^1.7.0"
   },
