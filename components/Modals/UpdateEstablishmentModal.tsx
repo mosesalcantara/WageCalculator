@@ -99,7 +99,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
             <View className="flex-1 items-center justify-center bg-black/40">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View>
-                  <Text className="mt-1 text-white">Name</Text>
+                  <Text className="mt-1 text-white font-bold">Name</Text>
                   <TextInput
                     className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
                     placeholder="Enter name"
@@ -115,7 +115,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
                 </View>
 
                 <View>
-                  <Text className="mt-1 text-white">Size</Text>
+                  <Text className="mt-1 text-white font-bold">Size</Text>
                   <Select
                     name="size"
                     value={values.size}

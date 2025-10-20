@@ -1,4 +1,5 @@
 import AddHoliday from "@/components/Modals/AddHolidayModal";
+import NavBar from "@/components/NavBar";
 import { Holiday } from "@/types/globals";
 import holidaysJSON from "@/utils/holidays.json";
 import { format, parse } from "date-fns";
@@ -65,6 +66,8 @@ const AllHolidaysPage = ({ isVisible, onToggle }: Props) => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+      <NavBar />
+
       <View className="items-center justify-center bg-black/40">
         <View className="max-h-[100%] w-full bg-[#acb6e2ff] px-4">
           <Text className="mb-3 text-center text-lg font-bold text-white">

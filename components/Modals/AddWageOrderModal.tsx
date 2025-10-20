@@ -1,0 +1,153 @@
+import { period as validationSchema } from "@/schemas/globals";
+import { formatDateValue } from "@/utils/globals";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Formik } from "formik";
+import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
+
+type Props = {
+  onSubmit: (
+    values: {
+      name: string;
+      date: string;
+      lessThanTen: string;
+      tenOrMore: string;
+    },
+    {
+      resetForm,
+    }: {
+      resetForm: () => void;
+    },
+  ) => Promise<void>;
+};
+
+const AddWageOrderModal = ({ onSubmit }: Props) => {
+  const [isDateModalVisible, setIsDateModalVisible] = useImmer(false);
+
+  const initialValues = {
+    name: "",
+    date: "",
+    lessThanTen: "",
+    tenOrMore: "",
+  };
+  const [isVisible, setIsVisible] = useImmer(false);
+
+  return (
+    <>
+      <TouchableOpacity
+        className="rounded-[1.875rem] bg-black p-3"
+        onPress={() => setIsVisible(true)}
+      >
+        <Text className="text-center font-bold text-white">Add Wage Order</Text>
+      </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent
+        statusBarTranslucent
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(
+            values: {
+              name: string;
+              date: string;
+              lessThanTen: string;
+              tenOrMore: string;
+            },
+            { resetForm }: { resetForm: () => void },
+          ) => {
+            onSubmit(values, { resetForm });
+            setIsVisible(false);
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleSubmit,
+            handleChange,
+            setFieldValue,
+            setFieldTouched,
+          }) => (
+            <View className="flex-1 items-center justify-center bg-black/40">
+              <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+                <View className="flex-row flex-wrap justify-between gap-1">
+                  <View className="w-[49%]">
+                    <Text className="mt-1 text-white font-bold">First Name</Text>
+                    <TextInput
+                      className="mt-0.5 h-[2.6rem] rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter first name"
+                      value={values.name}
+                      onChangeText={handleChange("name")}
+                      onBlur={() => setFieldTouched("name")}
+                    />
+                    {touched.name && errors.name && (
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                        {errors.name}
+                      </Text>
+                    )}
+                  </View>
+
+                  <View className="w-[49%]">
+                    <Text className="mb-1 text-base font-bold text-white">
+                      Date
+                    </Text>
+                    <TouchableOpacity
+                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      onPress={() => setIsDateModalVisible(true)}
+                    >
+                      <Text>{values.date || "Select date"}</Text>
+                      <Icon name="date-range" size={20} color="#555" />
+                    </TouchableOpacity>
+                    {touched.date && errors.date && (
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                        {errors.date}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+
+                <View className="flex-row justify-end">
+                  <TouchableOpacity
+                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                    onPress={() => setIsVisible(false)}
+                  >
+                    <Text className="font-bold">Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                    onPress={() => handleSubmit()}
+                  >
+                    <Text className="font-bold">Add</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {isDateModalVisible && (
+                <DateTimePicker
+                  value={formatDateValue(values.date)}
+                  mode="date"
+                  onChange={(_, value) => {
+                    setFieldValue(
+                      "date",
+                      (value as Date).toISOString().split("T")[0],
+                    );
+                    setIsDateModalVisible(false);
+                  }}
+                />
+              )}
+            </View>
+          )}
+        </Formik>
+      </Modal>
+    </>
+  );
+};
+
+export default AddWageOrderModal;
