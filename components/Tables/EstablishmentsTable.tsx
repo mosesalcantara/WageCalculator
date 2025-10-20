@@ -56,7 +56,7 @@ const EstablishmentsTable = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => setEstablishment(establishment.id, "pdf")}
+              onPress={() => setEstablishment(establishment.id, "export")}
             >
               <Icon name="file-download" size={20} color="#2196F3" />
             </TouchableOpacity>

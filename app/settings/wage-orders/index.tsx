@@ -13,7 +13,7 @@ type Props = {
 
 const [selectedWage, setSelectedWage] = useImmer<Holiday | null>(null);
 
-const WageOrderPage = ({ isVisible, onToggle }: Props) => {
+const WageOrdersPage = ({ isVisible, onToggle }: Props) => {
   const [holidays, setHolidays] = useImmer<Holiday[]>(
     Object.values(holidaysJSON)
       .flat()
@@ -131,4 +131,4 @@ const WageOrderPage = ({ isVisible, onToggle }: Props) => {
   );
 };
 
-export default WageOrderPage;
+export default WageOrdersPage;

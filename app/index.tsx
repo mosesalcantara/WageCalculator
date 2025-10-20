@@ -1,16 +1,17 @@
 import AddEstablishmentModal from "@/components/Modals/AddEstablishmentModal";
+import ViewSettingsModal from "@/components/Modals/ViewSettingsModal";
 import NavBar from "@/components/NavBar";
 import EstablishmentsTable from "@/components/Tables/EstablishmentsTable";
 import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
 import useFetchEstablishments from "@/hooks/useFetchEstablishments";
 import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
-import { Href, useRouter, Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { useCallback } from "react";
-import { BackHandler, Text, TouchableOpacity, View } from "react-native";
+import { BackHandler, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SettingsModal from "@/components/Modals/SettingsModal";
-const EstablishmentPage = () => {
+
+const EstablishmentsPage = () => {
   const db = getDb();
   const router = useRouter();
 
@@ -38,7 +39,7 @@ const EstablishmentPage = () => {
       <NavBar />
 
       <View className="flex-1 p-4">
-        <View className="flex-row justify-between items-center mb-2">
+        <View className="mb-2 flex-row items-center justify-between">
           <Text className="text-center text-xl font-bold">Establishments</Text>
           <AddEstablishmentModal db={db} refetch={refetch} />
         </View>
@@ -51,13 +52,12 @@ const EstablishmentPage = () => {
           onDelete={handleDelete}
         />
 
-        <View style={{ position: "absolute", bottom: 6, right: 20 }}>
-          <SettingsModal />
+        <View className="absolute bottom-2 right-5">
+          <ViewSettingsModal router={router} />
         </View>
-
       </View>
     </SafeAreaView>
   );
 };
 
-export default EstablishmentPage;
+export default EstablishmentsPage;

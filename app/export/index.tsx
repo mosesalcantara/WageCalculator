@@ -9,7 +9,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 
-const PDFPage = () => {
+const ExportPage = () => {
   const db = getDb();
   const { establishment } = useFetchEstablishmentViolations(db);
   const previewHTML = establishment ? generateHTML(establishment, true) : "";
@@ -65,4 +65,4 @@ const PDFPage = () => {
   );
 };
 
-export default PDFPage;
+export default ExportPage;
