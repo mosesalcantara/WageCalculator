@@ -1,5 +1,6 @@
 import AddHolidayModal from "@/components/Modals/AddHolidayModal";
 import NavBar from "@/components/NavBar";
+import HolidaysTable from "@/components/Tables/HolidaysTable";
 import useDeleteHoliday from "@/hooks/useDeleteHoliday";
 import useFetchHolidays from "@/hooks/useFetchHolidays";
 import { getDb } from "@/utils/globals";
@@ -22,12 +23,12 @@ const HolidaysPage = () => {
           <AddHolidayModal db={db} refetch={refetch} />
         </View>
 
-        {/* <HolidaysTable
+        <HolidaysTable
           db={db}
           holidays={holidays}
           refetch={refetch}
           onDelete={handleDelete}
-        /> */}
+        />
       </View>
     </SafeAreaView>
   );

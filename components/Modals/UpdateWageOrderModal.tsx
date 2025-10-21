@@ -66,7 +66,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
         setIsVisible(false);
         Toast.show({
           type: "success",
-          text1: "Added Wage Order",
+          text1: "Updated Wage Order",
           visibilityTime: toastVisibilityTime,
         });
       }

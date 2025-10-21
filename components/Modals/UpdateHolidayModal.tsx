@@ -1,9 +1,10 @@
 import Select from "@/components/FormikSelect";
 import { holidays } from "@/db/schema";
 import { holiday as validationSchema } from "@/schemas/globals";
-import { Db, Holiday, Override } from "@/types/globals";
+import { Db, Holiday } from "@/types/globals";
 import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { eq } from "drizzle-orm";
 import { Formik } from "formik";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -12,21 +13,18 @@ import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
+  holiday: Holiday;
   refetch: () => void;
 };
 
-const AddHolidayModal = ({ db, refetch }: Props) => {
+const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
   const [isDateModalVisible, setIsDateModalVisible] = useImmer(false);
 
-  const initialValues = {
-    name: "",
-    date: "",
-    type: "Regular Holiday",
-  };
+  const initialValues = holiday;
 
   const handleSubmit = async (
-    values: Override<Holiday, { id?: number }>,
+    values: Holiday,
     { resetForm }: { resetForm: () => void },
   ) => {
     values = {
@@ -35,13 +33,13 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
     };
 
     try {
-      await db.insert(holidays).values(values);
+      await db.update(holidays).set(values).where(eq(holidays.id, values.id));
       refetch();
       resetForm();
       setIsVisible(false);
       Toast.show({
         type: "success",
-        text1: "Added Holiday",
+        text1: "Updated Holiday",
         visibilityTime: toastVisibilityTime,
       });
     } catch (error) {
@@ -56,11 +54,8 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
 
   return (
     <>
-      <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
-        onPress={() => setIsVisible(true)}
-      >
-        <Text className="text-center font-bold text-white">Add Holiday</Text>
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
+        <Icon name="edit" size={20} color="#2196F3" />
       </TouchableOpacity>
 
       <Modal
@@ -158,7 +153,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                     className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => handleSubmit()}
                   >
-                    <Text className="font-bold">Add</Text>
+                    <Text className="font-bold">Update</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -184,4 +179,4 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
   );
 };
 
-export default AddHolidayModal;
+export default UpdateHolidayModal;
