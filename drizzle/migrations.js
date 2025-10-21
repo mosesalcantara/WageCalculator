@@ -13,6 +13,7 @@ import m0008 from './0008_nebulous_chat.sql';
 import m0009 from './0009_amusing_lila_cheney.sql';
 import m0010 from './0010_wide_lady_vermin.sql';
 import m0011 from './0011_sloppy_payback.sql';
+import m0012 from './0012_salty_valkyrie.sql';
 
   export default {
     journal,
@@ -28,7 +29,8 @@ m0007,
 m0008,
 m0009,
 m0010,
-m0011
+m0011,
+m0012
     }
   }
   

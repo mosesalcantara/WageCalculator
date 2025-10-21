@@ -26,7 +26,17 @@ const ViewSettingsModal = ({ router }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-1.5">
+            <View>
+              <TouchableOpacity
+                className="rounded-[0.625rem]  bg-black p-3"
+                onPress={() => router.push("/settings/wage-orders" as Href)}
+              >
+                <Text className="text-center font-bold text-white">
+                  📑 Wage Orders
+                </Text>
+              </TouchableOpacity>
+            </View>
             <View>
               <TouchableOpacity
                 className="rounded-[0.625rem] bg-black p-3"
@@ -37,21 +47,9 @@ const ViewSettingsModal = ({ router }: Props) => {
                 </Text>
               </TouchableOpacity>
             </View>
-
-            <View>
-              <TouchableOpacity
-                className="mt-4 rounded-[0.625rem]  bg-black p-3"
-                onPress={() => router.push("/settings/wage-orders" as Href)}
-              >
-                <Text className="text-center font-bold text-white">
-                  📑 Wage Orders
-                </Text>
-              </TouchableOpacity>
-            </View>
-
             <View className="flex-row justify-end">
               <TouchableOpacity
-                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="mt-2 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
                 <Text className="font-bold">Cancel</Text>

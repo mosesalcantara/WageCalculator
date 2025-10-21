@@ -4,6 +4,7 @@ import NavBar from "@/components/NavBar";
 import EstablishmentsTable from "@/components/Tables/EstablishmentsTable";
 import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
 import useFetchEstablishments from "@/hooks/useFetchEstablishments";
+import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import { getDb } from "@/utils/globals";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,6 +18,7 @@ const EstablishmentsPage = () => {
   const router = useRouter();
 
   useFetchWageOrders(db);
+  useFetchHolidays(db);
 
   const { establishments, refetch } = useFetchEstablishments(db);
   const { handleDelete } = useDeleteEstablishment(db, refetch);

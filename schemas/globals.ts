@@ -54,3 +54,9 @@ export const wageOrder = Yup.object().shape({
     .required()
     .label("Rate"),
 });
+
+export const holiday = Yup.object().shape({
+  name: Yup.string().trim().required().label("Name"),
+  date: Yup.string().trim().required().label("Date"),
+  type: Yup.string().trim().required().label("Type"),
+});

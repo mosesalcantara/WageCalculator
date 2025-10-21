@@ -44,6 +44,13 @@ export const wageOrders = sqliteTable("wageOrders", {
   ten_or_more: real("ten_or_more").notNull(),
 });
 
+export const holidays = sqliteTable("holidays", {
+  id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+  name: text("name").notNull(),
+  date: text("date").notNull(),
+  type: text("type").notNull(),
+});
+
 export const establishmentsRelation = relations(establishments, ({ many }) => ({
   employees: many(employees),
 }));

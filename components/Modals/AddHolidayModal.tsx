@@ -1,86 +1,49 @@
 import Select from "@/components/FormikSelect";
-import { employees } from "@/db/schema";
-import { employee as validationSchema } from "@/schemas/globals";
-import { Employee, Override } from "@/types/globals";
-import { toastVisibilityTime } from "@/utils/globals";
-import { and, sql } from "drizzle-orm";
+import { holidays } from "@/db/schema";
+import { holiday as validationSchema } from "@/schemas/globals";
+import { Db, Holiday, Override } from "@/types/globals";
+import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Formik } from "formik";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
-const AddHolidayModal = () => {
-  const initialValues = {
-    last_name: "",
-    first_name: "",
-    middle_initial: "",
-    rate: "",
-    start_day: "Regular Holiday",
-  };
+type Props = {
+  db: Db;
+  refetch: () => void;
+};
+
+const AddHolidayModal = ({ db, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
+  const [isDateModalVisible, setIsDateModalVisible] = useImmer(false);
+
+  const initialValues = {
+    name: "",
+    date: "",
+    type: "",
+  };
 
   const handleSubmit = async (
-    values: Override<Employee, { id?: number; rate: string | number }>,
+    values: Override<Holiday, { id?: number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
-    const NAs = ["na", "n/a"];
-
     values = {
       ...values,
-      last_name: `${values.last_name}`.trim(),
-      first_name: `${values.first_name}`.trim(),
-      middle_initial: `${values.middle_initial}`.trim(),
-      rate: Number(values.rate),
+      name: values.name.trim(),
     };
 
     try {
-      const records = await db.query.employees.findMany({
-        where: (employees, { eq }) =>
-          and(
-            eq(
-              sql`LOWER(${employees.last_name})`,
-              values.last_name.toLowerCase(),
-            ),
-            eq(
-              sql`LOWER(${employees.first_name})`,
-              values.first_name.toLowerCase(),
-            ),
-          ),
+      await db.insert(holidays).values(values);
+      refetch();
+      resetForm();
+      setIsVisible(false);
+      Toast.show({
+        type: "success",
+        text1: "Added Holiday",
+        visibilityTime: toastVisibilityTime,
       });
-
-      const record = records.find((employee) => {
-        const employeeMiddleInitial = employee.middle_initial.toLowerCase();
-        const valuesMiddleInitial = values.middle_initial.toLowerCase();
-        if (employeeMiddleInitial.length > 1) {
-          return (
-            NAs.includes(employeeMiddleInitial) &&
-            NAs.includes(valuesMiddleInitial)
-          );
-        } else {
-          return employeeMiddleInitial == valuesMiddleInitial;
-        }
-      });
-
-      if (record) {
-        Toast.show({
-          type: "error",
-          text1: "Employee Already Exists",
-          visibilityTime: toastVisibilityTime,
-        });
-      } else {
-        await db.insert(employees).values({
-          ...values,
-          rate: values.rate as number,
-          establishment_id: values.establishment_id as number,
-        });
-        resetForm();
-        setIsVisible(false);
-        Toast.show({
-          type: "success",
-          text1: "Added Employee",
-          visibilityTime: toastVisibilityTime,
-        });
-      }
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -112,47 +75,78 @@ const AddHolidayModal = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, handleSubmit, setFieldValue, setFieldTouched }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleSubmit,
+            handleChange,
+            setFieldValue,
+            setFieldTouched,
+          }) => (
             <View className="flex-1 items-center justify-center bg-black/40">
               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
                 <View className="flex-row flex-wrap justify-between gap-1">
-                  <View className="w-[100%]">
-                    <Text className="mt-1 text-white">Holiday Name</Text>
+                  <View className="w-[49%]">
+                    <Text className="mt-1 font-bold text-white">Name</Text>
                     <TextInput
                       className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter name"
+                      editable={false}
+                      value={values.name}
+                      onChangeText={handleChange("name")}
+                      onBlur={() => setFieldTouched("name")}
                     />
+                    {touched.name && errors.name && (
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                        {errors.name}
+                      </Text>
+                    )}
                   </View>
-                  <View className="w-[100%]">
-                    <Text className="mt-1 text-white">Date</Text>
-                    <TextInput
-                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
-                      placeholder="Enter date"
-                    />
+
+                  <View className="w-[49%]">
+                    <Text className="mb-1 text-base font-bold text-white">
+                      Date
+                    </Text>
+                    <TouchableOpacity
+                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      onPress={() => setIsDateModalVisible(true)}
+                    >
+                      <Text>{values.date || "Select date"}</Text>
+                      <Icon name="date-range" size={20} color="#555" />
+                    </TouchableOpacity>
+                    {touched.date && errors.date && (
+                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                        {errors.date}
+                      </Text>
+                    )}
                   </View>
                 </View>
 
-                <View className="flex-row flex-wrap justify-between gap-1">
-                  <View className="w-[100%]">
-                    <Text className="mt-1 text-white">Type</Text>
-                    <Select
-                      name="start_day"
-                      value={values.start_day}
-                      options={[
-                        {
-                          label: "Regular Holiday",
-                          value: "Regular Holiday",
-                        },
-                        {
-                          label: "Special (Non-Working) Holiday",
-                          value: "Special (Non-Working) Holiday",
-                        },
-                      ]}
-                      placeholder="Regular Holiday"
-                      setFieldValue={setFieldValue}
-                      setFieldTouched={setFieldTouched}
-                    />
-                  </View>
+                <View>
+                  <Text className="mt-1 font-bold text-white">Type</Text>
+                  <Select
+                    name="type"
+                    value={values.type}
+                    options={[
+                      {
+                        label: "Regular Holiday",
+                        value: "Regular Holiday",
+                      },
+                      {
+                        label: "Special (Non-Working) Holiday",
+                        value: "Special (Non-Working) Holiday",
+                      },
+                    ]}
+                    placeholder="Select Type"
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                  />
+                  {touched.type && errors.type && (
+                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                      {errors.type}
+                    </Text>
+                  )}
                 </View>
 
                 <View className="flex-row justify-end">
@@ -167,26 +161,28 @@ const AddHolidayModal = () => {
                     className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                     onPress={() => handleSubmit()}
                   >
-                    <Text className="font-bold">Save</Text>
+                    <Text className="font-bold">Add</Text>
                   </TouchableOpacity>
                 </View>
               </View>
+
+              {isDateModalVisible && (
+                <DateTimePicker
+                  value={formatDateValue(values.date)}
+                  mode="date"
+                  onChange={(_, value) => {
+                    setFieldValue(
+                      "date",
+                      (value as Date).toISOString().split("T")[0],
+                    );
+                    setIsDateModalVisible(false);
+                  }}
+                />
+              )}
             </View>
           )}
         </Formik>
       </Modal>
-      {/* {isStartDateModalVisible && (
-        <DateTimePicker
-          value={formatDateValue(period.start_date)}
-          mode="date"
-          onChange={(_, value) => {
-            if (value) {
-              onChange(index, "start_date", value);
-              setIsStartDateModalVisible(false);
-            }
-          }}
-        />
-      )} */}
     </>
   );
 };

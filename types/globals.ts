@@ -7,12 +7,6 @@ export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
   $client: SQLiteDatabase;
 };
 
-export type Holiday = {
-  name: string;
-  date: string;
-  type: string;
-};
-
 export type Establishment = {
   id: number;
   name: string;
@@ -89,3 +83,10 @@ export type WageOrder = {
   less_than_ten: number;
   ten_or_more: number;
 };
+
+export type Holiday = {
+  id: number;
+  name: string;
+  date: string;
+  type: string;
+}
