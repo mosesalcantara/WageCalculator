@@ -248,13 +248,15 @@ const Form = ({
                       onChange(index, "daysOrHours", value)
                     }
                   />
-                  {estimate && (
+                  {estimate ? (
                     <Icon
                       name="autorenew"
                       size={20}
                       color="#555"
                       onPress={setDays}
                     />
+                  ) : (
+                    ""
                   )}
                 </View>
               </View>

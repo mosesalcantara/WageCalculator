@@ -51,11 +51,15 @@ const ViewDaysModal = ({
     return type == "Special Day" ? specialDays : regularHolidays;
   };
 
+  const estimatedHolidays = getHolidays();
+
   return (
     <>
-      <TouchableOpacity onPress={() => onToggle(true)}>
-        <Icon name="remove-red-eye" size={20} color="#555" />
-      </TouchableOpacity>
+      {estimatedHolidays.length > 0 && (
+        <TouchableOpacity onPress={() => onToggle(true)}>
+          <Icon name="remove-red-eye" size={20} color="#555" />
+        </TouchableOpacity>
+      )}
 
       <Modal
         animationType="slide"
@@ -76,7 +80,7 @@ const ViewDaysModal = ({
               className="mb-2 rounded-md bg-white p-3"
               showsVerticalScrollIndicator={true}
             >
-              {getHolidays().map((holiday, index) => (
+              {estimatedHolidays.map((holiday, index) => (
                 <View
                   className="mb-3 border-b border-gray-300 pb-2"
                   key={index}
