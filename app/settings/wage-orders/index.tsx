@@ -13,6 +13,13 @@ const WageOrdersPage = () => {
   const { wageOrders, setWageOrders, refetch } = useFetchWageOrders(db);
   const { handleDelete } = useDeleteWageOrder(db, refetch);
 
+  let name = "";
+  if (wageOrders) {
+    const wageOrder = wageOrders[wageOrders.length - 1];
+    let number = Number(wageOrder.name.split("-")[2]);
+    name = `RB-MIMAROPA-${++number}`;
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
       <NavBar />
@@ -20,7 +27,7 @@ const WageOrdersPage = () => {
       <View className="flex-1 p-4">
         <View className="mb-2 flex-row items-center justify-between">
           <Text className="text-center text-xl font-bold">Wage Orders</Text>
-          <AddWageOrderModal db={db} refetch={refetch} />
+          <AddWageOrderModal db={db} name={name} refetch={refetch} />
         </View>
 
         <WageOrdersTable

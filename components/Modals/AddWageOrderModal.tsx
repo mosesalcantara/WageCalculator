@@ -12,15 +12,16 @@ import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
+  name: string;
   refetch: () => void;
 };
 
-const AddWageOrderModal = ({ db, refetch }: Props) => {
+const AddWageOrderModal = ({ db, name, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
   const [isDateModalVisible, setIsDateModalVisible] = useImmer(false);
 
   const initialValues = {
-    name: "",
+    name,
     date: "",
     less_than_ten: "",
     ten_or_more: "",
@@ -99,20 +100,7 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(
-            values: Override<
-              WageOrder,
-              {
-                id?: number;
-                less_than_ten: string | number;
-                ten_or_more: string | number;
-              }
-            >,
-            { resetForm }: { resetForm: () => void },
-          ) => {
-            handleSubmit(values, { resetForm });
-            setIsVisible(false);
-          }}
+          onSubmit={handleSubmit}
         >
           {({
             values,
@@ -131,6 +119,7 @@ const AddWageOrderModal = ({ db, refetch }: Props) => {
                     <TextInput
                       className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter name"
+                      editable={false}
                       value={values.name}
                       onChangeText={handleChange("name")}
                       onBlur={() => setFieldTouched("name")}

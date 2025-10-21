@@ -96,19 +96,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(
-            values: Override<
-              WageOrder,
-              {
-                less_than_ten: string | number;
-                ten_or_more: string | number;
-              }
-            >,
-            { resetForm }: { resetForm: () => void },
-          ) => {
-            handleSubmit(values, { resetForm });
-            setIsVisible(false);
-          }}
+          onSubmit={handleSubmit}
         >
           {({
             values,
@@ -127,6 +115,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                     <TextInput
                       className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter name"
+                      editable={false}
                       value={values.name}
                       onChangeText={handleChange("name")}
                       onBlur={() => setFieldTouched("name")}

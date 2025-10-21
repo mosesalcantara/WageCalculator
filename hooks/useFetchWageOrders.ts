@@ -50,7 +50,11 @@ const useFetchWageOrders = (db: Db) => {
         handleFetch();
       }
 
-      setWageOrders(wageOrders);
+      const sortedWageOrders = wageOrders.sort((a, b) => {
+        return Number(new Date(a.date)) - Number(new Date(b.date));
+      });
+      
+      setWageOrders(sortedWageOrders);
     } catch (error) {
       console.error(error);
       Toast.show({
