@@ -27,8 +27,6 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
     return options;
   };
 
-  const yearsOptions = getOptions();
-
   const [year, setYear] = useImmer("All");
   const [isFocus, setIsFocus] = useImmer(false);
 
@@ -52,7 +50,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
           style={{ height: 20 }}
           placeholderStyle={{ fontSize: 14 }}
           selectedTextStyle={{ fontSize: 14 }}
-          data={yearsOptions}
+          data={getOptions()}
           labelField="label"
           valueField="value"
           placeholder={!isFocus ? "Select Year" : ""}
