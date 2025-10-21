@@ -1,6 +1,7 @@
 import { Href, Router } from "expo-router";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
   router: Router;
@@ -15,7 +16,7 @@ const ViewSettingsModal = ({ router }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Text className="text-center font-bold text-white">⚙️ Settings</Text>
+        <Icon name="settings-suggest" size={20} color="white" />
       </TouchableOpacity>
 
       <Modal
