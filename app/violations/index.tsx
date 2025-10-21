@@ -6,6 +6,7 @@ import { customViolations, violations } from "@/db/schema";
 import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
 import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
 import useFetchViolations from "@/hooks/useFetchViolations";
+import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
 import {
   CustomPeriod,
@@ -51,6 +52,7 @@ const ViolationsPage = () => {
 
   const [type, setType] = useImmer<ViolationKeys>("Basic Wage");
 
+  const { wageOrders } = useFetchWageOrders(db);
   const { establishment, employee, violationTypes, setViolationTypes } =
     useFetchViolations(db);
   const { customViolationType, setCustomViolationType } =
@@ -64,6 +66,7 @@ const ViolationsPage = () => {
     handleRemovePeriod,
   } = useViolationHandlers(type, employee, setViolationTypes);
   const customViolationHandlers = useCustomViolationHandlers(
+    wageOrders || [],
     establishment,
     customViolationType,
     setCustomViolationType,
@@ -103,7 +106,7 @@ const ViolationsPage = () => {
   ) => {
     try {
       const { start_date, end_date } = values;
-      const periods = getPeriods(start_date, end_date);
+      const periods = getPeriods(wageOrders || [], start_date, end_date);
       addPeriods(periods);
       resetForm();
       Toast.show({
@@ -208,7 +211,7 @@ const ViolationsPage = () => {
 
   return (
     <>
-      {establishment && employee && violationTypes && (
+      {wageOrders && establishment && employee && violationTypes && (
         <>
           <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
             <NavBar />
@@ -250,7 +253,12 @@ const ViolationsPage = () => {
                   {formatNumber(
                     type == "Custom"
                       ? customViolationHandlers.getTotal()
-                      : getTotal(type, establishment.size, violationType),
+                      : getTotal(
+                          wageOrders,
+                          type,
+                          establishment.size,
+                          violationType,
+                        ),
                   )}
                 </Text>
               </View>
@@ -268,9 +276,10 @@ const ViolationsPage = () => {
                       {customViolationType.periods.map((_, index) => (
                         <CustomViolationForm
                           key={index}
+                          index={index}
+                          wageOrders={wageOrders}
                           establishment={establishment}
                           employee={employee}
-                          index={index}
                           customViolationType={customViolationType}
                           calculate={customViolationHandlers.calculate}
                           onChange={customViolationHandlers.handleChange}
@@ -306,6 +315,7 @@ const ViolationsPage = () => {
                           key={index}
                           type={type}
                           index={index}
+                          wageOrders={wageOrders}
                           establishment={establishment}
                           employee={employee}
                           violationTypes={violationTypes}

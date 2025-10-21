@@ -3,6 +3,7 @@ import {
   Establishment,
   Period,
   ViolationTypes,
+  WageOrder,
 } from "@/types/globals";
 import {
   calculate,
@@ -22,7 +23,10 @@ import { Alert, Platform } from "react-native";
 import Toast from "react-native-toast-message";
 import * as XLSX from "xlsx-js-style";
 
-const exportXLSX = async (establishment: Establishment) => {
+const exportXLSX = async (
+  wageOrders: WageOrder[],
+  establishment: Establishment,
+) => {
   const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
 
   const renderEmployee = (employee: Employee) => {
@@ -49,7 +53,7 @@ const exportXLSX = async (establishment: Establishment) => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(type, establishment.size, violationType);
+        total += getTotal(wageOrders, type, establishment.size, violationType);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -84,7 +88,7 @@ const exportXLSX = async (establishment: Establishment) => {
     let subtotal = 0;
 
     violationType.periods.forEach((period, index) => {
-      const result = calculate(type, establishment.size, period);
+      const result = calculate(wageOrders, type, establishment.size, period);
       if (validate(period)) {
         subtotal += result;
         const rateText = `Php${formatNumber(period.rate)}/day`;
@@ -110,13 +114,16 @@ const exportXLSX = async (establishment: Establishment) => {
 
     const rate = Number(period.rate);
     const minimumRate = getMinimumRate(
+      wageOrders,
       establishment.size,
       period.start_date,
       period.end_date,
     );
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(type, establishment.size, period));
+    const total = formatNumber(
+      calculate(wageOrders, type, establishment.size, period),
+    );
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {

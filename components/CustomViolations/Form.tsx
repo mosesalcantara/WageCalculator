@@ -1,5 +1,5 @@
 import Select from "@/components/Select";
-import { CustomPeriod, CustomViolationType, Employee, Establishment } from "@/types/globals";
+import { CustomPeriod, CustomViolationType, Employee, Establishment, WageOrder } from "@/types/globals";
 import {
   formatDateValue,
   formatNumber,
@@ -8,12 +8,13 @@ import {
   typesOptions,
 } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useImmer } from "use-immer";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 type Props = {
   index: number;
+  wageOrders: WageOrder[],
   establishment: Establishment;
   employee: Employee;
   customViolationType: CustomViolationType;
@@ -36,6 +37,7 @@ type Props = {
 
 const Form = ({
   index,
+  wageOrders,
   establishment,
   employee,
   customViolationType,
@@ -64,6 +66,7 @@ const Form = ({
   } = calculate(establishment.size, period);
 
   const minimumRate = getMinimumRate(
+    wageOrders,
     establishment.size,
     period.start_date,
     period.end_date,

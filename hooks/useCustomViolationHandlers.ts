@@ -1,12 +1,15 @@
+import { wageOrders } from "@/db/schema";
 import {
   CustomPeriod,
   CustomViolationType,
   Establishment,
+  WageOrder,
 } from "@/types/globals";
 import { customPeriodFormat, getMinimumRate } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useCustomViolationHandlers = (
+  wageOrders: WageOrder[],
   establishment: Establishment | undefined,
   customViolationType: CustomViolationType,
   setter: Updater<CustomViolationType>,
@@ -23,6 +26,7 @@ const useCustomViolationHandlers = (
     };
 
     const minimumRate = getMinimumRate(
+      wageOrders,
       size,
       period.start_date,
       period.end_date,

@@ -5,6 +5,7 @@ import {
   Establishment,
   ViolationKeys,
   ViolationTypes,
+  WageOrder,
 } from "@/types/globals";
 import {
   calculate,
@@ -25,6 +26,7 @@ import { useImmer } from "use-immer";
 type Props = {
   type: ViolationKeys;
   index: number;
+  wageOrders: WageOrder[],
   establishment: Establishment;
   employee: Employee;
   violationTypes: ViolationTypes;
@@ -37,6 +39,7 @@ type Props = {
 const Form = ({
   type,
   index,
+  wageOrders,
   establishment,
   employee,
   violationTypes,
@@ -59,6 +62,7 @@ const Form = ({
     : "Days";
 
   const minimumRate = getMinimumRate(
+    wageOrders,
     establishment.size,
     period.start_date,
     period.end_date,
@@ -328,7 +332,7 @@ const Form = ({
           <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱{formatNumber(calculate(type, establishment.size, period))}
+              ₱{formatNumber(calculate(wageOrders, type, establishment.size, period))}
             </Text>
           </Text>
         </View>

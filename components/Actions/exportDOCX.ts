@@ -3,6 +3,7 @@ import {
   Establishment,
   Period,
   ViolationTypes,
+  WageOrder,
 } from "@/types/globals";
 import {
   calculate,
@@ -15,7 +16,6 @@ import {
   numberToLetter,
   toastVisibilityTime,
   validate,
-  wageOrders,
 } from "@/utils/globals";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
@@ -23,7 +23,10 @@ import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
 import Toast from "react-native-toast-message";
 
-const exportDOCX = async (establishment: Establishment) => {
+const exportDOCX = async (
+  wageOrders: WageOrder[],
+  establishment: Establishment,
+) => {
   const children: Paragraph[] = [];
 
   const renderEmployee = (index: number, employee: Employee) => {
@@ -83,7 +86,7 @@ const exportDOCX = async (establishment: Establishment) => {
       let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(type, establishment.size, violationType);
+        total += getTotal(wageOrders, type, establishment.size, violationType);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -144,7 +147,7 @@ const exportDOCX = async (establishment: Establishment) => {
     const received = Number(violationType.received) || 0;
 
     violationType.periods.forEach((period, index) => {
-      const result = calculate(type, establishment.size, period);
+      const result = calculate(wageOrders, type, establishment.size, period);
       if (validate(period)) {
         subtotal += result;
 
@@ -239,6 +242,7 @@ const exportDOCX = async (establishment: Establishment) => {
 
     const rate = Number(period.rate);
     const minimumRate = getMinimumRate(
+      wageOrders,
       establishment.size,
       period.start_date,
       period.end_date,
@@ -247,9 +251,9 @@ const exportDOCX = async (establishment: Establishment) => {
     const wageOrder = wageOrders.find((wageOrder) => {
       const key =
         establishment.size == "Employing 10 or more workers"
-          ? "tenOrMore"
-          : "lessThanTen";
-      return wageOrder.rates[key] == minimumRate;
+          ? "ten_or_more"
+          : "less_than_ten";
+      return wageOrder[key] == minimumRate;
     });
 
     if (wageOrder) {
@@ -269,7 +273,7 @@ const exportDOCX = async (establishment: Establishment) => {
     }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(type, establishment.size, period));
+    const total = formatNumber(calculate(wageOrders, type, establishment.size, period));
     const keyword = getDaysOrHours(type, period.daysOrHours);
 
     switch (type) {
