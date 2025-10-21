@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const WageOrdersPage = () => {
   const db = getDb();
 
-  const { wageOrders, setWageOrders, refetch } = useFetchWageOrders(db);
+  const { wageOrders, refetch } = useFetchWageOrders(db);
   const { handleDelete } = useDeleteWageOrder(db, refetch);
 
   let name = "";
