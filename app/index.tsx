@@ -47,6 +47,7 @@ const EstablishmentsPage = () => {
         <View className="mb-2 flex-row items-center justify-between">
           <Text className="text-center text-xl font-bold">Establishments</Text>
           <AddEstablishmentModal db={db} refetch={refetch} />
+          <ViewSettingsModal router={router} />
         </View>
 
         <EstablishmentsTable
@@ -56,10 +57,6 @@ const EstablishmentsPage = () => {
           refetch={refetch}
           onDelete={handleDelete}
         />
-
-        <View className="absolute bottom-2 right-5">
-          <ViewSettingsModal router={router} />
-        </View>
       </View>
     </SafeAreaView>
   );
