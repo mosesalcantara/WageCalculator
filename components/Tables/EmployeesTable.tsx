@@ -57,9 +57,9 @@ const EmployeesTable = ({
         });
         if (isValid) return employee;
       });
-    } else {
-      return sortedEmployees;
     }
+
+    return sortedEmployees;
   }, [sortedEmployees, searchQuery]);
 
   const setEmployee = (id: number) => {
