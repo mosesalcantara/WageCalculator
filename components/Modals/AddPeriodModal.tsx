@@ -30,27 +30,6 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
   };
   const [isVisible, setIsVisible] = useImmer(false);
 
-  const handleDateChange = (
-    key: string,
-    value: Date | undefined,
-    setFieldValue: (
-      field: string,
-      value: any,
-      shouldValidate?: boolean | undefined,
-    ) => Promise<void | FormikErrors<{
-      start_date: string;
-      end_date: string;
-    }>>,
-  ) => {
-    setFieldValue(key, (value as Date).toISOString().split("T")[0]);
-
-    if (key == "start_date") {
-      setIsStartDateModalVisible(false);
-    } else if (key == "end_date") {
-      setIsEndDateModalVisible(false);
-    }
-  };
-
   return (
     <>
       <TouchableOpacity
@@ -149,7 +128,11 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                   value={formatDateValue(values.start_date)}
                   mode="date"
                   onChange={(_, value) => {
-                    handleDateChange("start_date", value, setFieldValue);
+                    setFieldValue(
+                      "start_date",
+                      (value as Date).toISOString().split("T")[0],
+                    );
+                    setIsStartDateModalVisible(false);
                   }}
                 />
               )}
@@ -159,7 +142,11 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                   value={formatDateValue(values.end_date)}
                   mode="date"
                   onChange={(_, value) => {
-                    handleDateChange("end_date", value, setFieldValue);
+                    setFieldValue(
+                      "end_date",
+                      (value as Date).toISOString().split("T")[0],
+                    );
+                    setIsEndDateModalVisible(false);
                   }}
                 />
               )}
