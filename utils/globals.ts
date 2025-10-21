@@ -1,5 +1,10 @@
 import * as schema from "@/db/schema";
-import { Period, ViolationKeys, ViolationTypes, WageOrder } from "@/types/globals";
+import {
+  Period,
+  ViolationKeys,
+  ViolationTypes,
+  WageOrder,
+} from "@/types/globals";
 import { differenceInDays, format, parse, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -296,7 +301,12 @@ export const getMinimumRate = (
   return rate;
 };
 
-export const calculate = (wageOrders: WageOrder[], type: string, size: string, period: Period) => {
+export const calculate = (
+  wageOrders: WageOrder[],
+  type: string,
+  size: string,
+  period: Period,
+) => {
   let result = 0;
 
   if (validate(period)) {
@@ -404,21 +414,19 @@ export const getDaysOrHours = (type: string, daysOrHours: string) => {
   return keyword;
 };
 
-export const getPeriods = (wageOrders: WageOrder[], start_date: string, end_date: string) => {
+export const getPeriods = (
+  wageOrders: WageOrder[],
+  start_date: string,
+  end_date: string,
+) => {
   const periods = [];
 
   const isPast =
     differenceInDays(start_date, wageOrders[0].date) <= 0 &&
     differenceInDays(end_date, wageOrders[0].date) <= 0;
   const isFuture =
-    differenceInDays(
-      start_date,
-      wageOrders[wageOrders.length - 1].date,
-    ) >= 0 &&
-    differenceInDays(
-      end_date,
-      wageOrders[wageOrders.length - 1].date,
-    ) >= 0;
+    differenceInDays(start_date, wageOrders[wageOrders.length - 1].date) >= 0 &&
+    differenceInDays(end_date, wageOrders[wageOrders.length - 1].date) >= 0;
 
   if (isPast || isFuture) {
     periods.push({
@@ -434,8 +442,8 @@ export const getPeriods = (wageOrders: WageOrder[], start_date: string, end_date
       (wageOrder) => differenceInDays(end_date, wageOrder.date) >= 0,
     );
 
-    const filteredWageOrders = [];
-    for (const wageOrder of wageOrders) {
+    const filteredWageOrders: WageOrder[] = [];
+    wageOrders.forEach((wageOrder) => {
       if (
         differenceInDays(start ? start.date : start_date, wageOrder.date) <=
           0 &&
@@ -443,10 +451,9 @@ export const getPeriods = (wageOrders: WageOrder[], start_date: string, end_date
       ) {
         filteredWageOrders.push(wageOrder);
       }
-    }
+    });
 
-    let index = 0;
-    for (const wageOrder of filteredWageOrders) {
+    filteredWageOrders.forEach((wageOrder, index) => {
       periods.push({
         start_date: index == 0 ? start_date : wageOrder.date,
         end_date:
@@ -456,9 +463,7 @@ export const getPeriods = (wageOrders: WageOrder[], start_date: string, end_date
                 .toISOString()
                 .split("T")[0],
       });
-
-      ++index;
-    }
+    });
   }
 
   return periods;
