@@ -16,17 +16,18 @@ type Props = {
 };
 
 const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
-  const yearsOptions = [
-    { label: "All", value: "All" },
-    { label: "2018", value: "2018" },
-    { label: "2019", value: "2019" },
-    { label: "2020", value: "2020" },
-    { label: "2021", value: "2021" },
-    { label: "2022", value: "2022" },
-    { label: "2023", value: "2023" },
-    { label: "2024", value: "2024" },
-    { label: "2025", value: "2025" },
-  ];
+  const allYears = holidays?.map((holiday) => holiday.date.split("-")[0]);
+  const years = [...new Set(allYears)];
+
+  const getOptions = () => {
+    const options = [{ label: "All", value: "All" }];
+    years.forEach((year) => {
+      options.push({ label: year, value: year });
+    });
+    return options;
+  };
+
+  const yearsOptions = getOptions();
 
   const [year, setYear] = useImmer("All");
   const [isFocus, setIsFocus] = useImmer(false);
@@ -78,15 +79,15 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                 key={index}
                 className="flex-row justify-between border-b border-gray-300 py-3"
               >
-                <View>
-                  <Text className="text-base font-bold text-[#333]">
+                <View className="w-[69%]">
+                  <Text className="text-nowrap text-base font-bold text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
                   <Text>{formatDate(holiday.date, "MMMM dd, yyyy")}</Text>
                   <Text className="text-sm text-gray-600">{holiday.type}</Text>
                 </View>
 
-                <View className="flex-row items-center">
+                <View className="w-[29%] flex-row items-center justify-end gap-4">
                   <UpdateHolidayModal
                     db={db}
                     holiday={holiday}
