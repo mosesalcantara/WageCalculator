@@ -3,6 +3,7 @@ import Select from "@/components/Select";
 import {
   Employee,
   Establishment,
+  Holiday,
   ViolationKeys,
   ViolationTypes,
   WageOrder,
@@ -16,7 +17,6 @@ import {
   numberToLetter,
   validateDateRange,
 } from "@/utils/globals";
-import holidaysJSON from "@/utils/holidays.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -26,7 +26,8 @@ import { useImmer } from "use-immer";
 type Props = {
   type: ViolationKeys;
   index: number;
-  wageOrders: WageOrder[],
+  wageOrders: WageOrder[];
+  holidays: Holiday[];
   establishment: Establishment;
   employee: Employee;
   violationTypes: ViolationTypes;
@@ -40,6 +41,7 @@ const Form = ({
   type,
   index,
   wageOrders,
+  holidays,
   establishment,
   employee,
   violationTypes,
@@ -109,7 +111,11 @@ const Form = ({
 
   const includedDays = getIncludedDays(employee.start_day, employee.end_day);
 
-  const getEstimate = (startDate: string, endDate: string) => {
+  const getEstimate = (
+    holidays: Holiday[],
+    startDate: string,
+    endDate: string,
+  ) => {
     if (!validateDateRange(startDate, endDate)) {
       return "";
     }
@@ -128,16 +134,12 @@ const Form = ({
       includedDays.includes(format(date, "EEEE")) && ++workingDays;
       if (type == "Special Day" || type == "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
-        const year = formattedDate.split("-")[0];
-        const yearHolidays = holidaysJSON[year as keyof typeof holidaysJSON];
-        if (yearHolidays) {
-          const holiday = yearHolidays.find(
-            (holiday) => formattedDate == holiday.date,
-          );
-          if (holiday) {
-            holiday.type == "Special (Non-Working) Holiday" && ++specialDays;
-            holiday.type == "Regular Holiday" && ++regularHolidays;
-          }
+        const holiday = holidays.find(
+          (holiday) => formattedDate == holiday.date,
+        );
+        if (holiday) {
+          holiday.type == "Special (Non-Working) Holiday" && ++specialDays;
+          holiday.type == "Regular Holiday" && ++regularHolidays;
         }
       }
     });
@@ -155,7 +157,7 @@ const Form = ({
     return "";
   };
 
-  const estimate = getEstimate(period.start_date, period.end_date);
+  const estimate = getEstimate(holidays, period.start_date, period.end_date);
 
   return (
     <>
@@ -315,6 +317,7 @@ const Form = ({
                   {["Special Day", "Holiday Pay"].includes(type) &&
                     validateDateRange(period.start_date, period.end_date) && (
                       <ViewDaysModal
+                        holidays={holidays}
                         type={type}
                         startDate={period.start_date}
                         endDate={period.end_date}
@@ -332,7 +335,10 @@ const Form = ({
           <Text className="text-base font-bold text-[#27ae60]">
             Total:{" "}
             <Text className="mt-1 text-base font-bold text-[#27ae60]">
-              ₱{formatNumber(calculate(wageOrders, type, establishment.size, period))}
+              ₱
+              {formatNumber(
+                calculate(wageOrders, type, establishment.size, period),
+              )}
             </Text>
           </Text>
         </View>

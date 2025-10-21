@@ -5,6 +5,7 @@ import Form from "@/components/Violations/Form";
 import { customViolations, violations } from "@/db/schema";
 import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
 import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
+import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
@@ -53,6 +54,7 @@ const ViolationsPage = () => {
   const [type, setType] = useImmer<ViolationKeys>("Basic Wage");
 
   const { wageOrders } = useFetchWageOrders(db);
+  const { holidays } = useFetchHolidays(db);
   const { establishment, employee, violationTypes, setViolationTypes } =
     useFetchViolations(db);
   const { customViolationType, setCustomViolationType } =
@@ -211,141 +213,152 @@ const ViolationsPage = () => {
 
   return (
     <>
-      {wageOrders && establishment && employee && violationTypes && (
-        <>
-          <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
-            <NavBar />
+      {wageOrders &&
+        holidays &&
+        establishment &&
+        employee &&
+        violationTypes && (
+          <>
+            <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+              <NavBar />
 
-            <View className="bg-[#acb6e2ff]">
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="border-b border-b-[#333] py-2.5 "
-              >
-                {getTabs(establishment.size).map((tab) => (
-                  <TouchableOpacity
-                    key={tab.name}
-                    className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                    onPress={() => setType(tab.name as ViolationKeys)}
-                  >
-                    <Icon
-                      name={tab.icon}
-                      size={18}
-                      color={type === tab.name ? "#fff" : "#555"}
-                    />
-                    <Text
-                      className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
+              <View className="bg-[#acb6e2ff]">
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  className="border-b border-b-[#333] py-2.5 "
+                >
+                  {getTabs(establishment.size).map((tab) => (
+                    <TouchableOpacity
+                      key={tab.name}
+                      className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
+                      onPress={() => setType(tab.name as ViolationKeys)}
                     >
-                      {tab.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-
-            <View className="flex-row items-center justify-between px-4 py-2.5">
-              <View>
-                <Text className="ml-1.5 text-xl font-bold">
-                  {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial.toUpperCase()}.`}`}
-                </Text>
-                <Text className="ml-1.5 text-xl font-bold underline">
-                  Subtotal:{" "}
-                  {formatNumber(
-                    type == "Custom"
-                      ? customViolationHandlers.getTotal()
-                      : getTotal(
-                          wageOrders,
-                          type,
-                          establishment.size,
-                          violationType,
-                        ),
-                  )}
-                </Text>
+                      <Icon
+                        name={tab.icon}
+                        size={18}
+                        color={type === tab.name ? "#fff" : "#555"}
+                      />
+                      <Text
+                        className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
+                      >
+                        {tab.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
               </View>
-              <AddPeriodModal onSubmit={handleAddPeriodSubmit} />
-            </View>
 
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              className="h-[73%] px-4"
-            >
-              <ScrollView>
-                <View className="gap-7">
-                  {type == "Custom" ? (
-                    <>
-                      {customViolationType.periods.map((_, index) => (
-                        <CustomViolationForm
-                          key={index}
-                          index={index}
-                          wageOrders={wageOrders}
-                          establishment={establishment}
-                          employee={employee}
-                          customViolationType={customViolationType}
-                          calculate={customViolationHandlers.calculate}
-                          onChange={customViolationHandlers.handleChange}
-                          onAddPeriod={customViolationHandlers.handleAddPeriod}
-                          onRemovePeriod={
-                            customViolationHandlers.handleRemovePeriod
-                          }
-                          onClearPeriod={
-                            customViolationHandlers.handleClearPeriod
-                          }
-                        />
-                      ))}
-
-                      <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                        <Text className="text-base font-bold text-[#333]">
-                          Received
-                        </Text>
-                        <TextInput
-                          className="rounded-md border border-black px-2.5"
-                          keyboardType="numeric"
-                          placeholder="Enter pay received"
-                          value={customViolationType.received}
-                          onChangeText={(value) =>
-                            customViolationHandlers.handleReceivedChange(value)
-                          }
-                        />
-                      </View>
-                    </>
-                  ) : (
-                    <>
-                      {violationType.periods.map((_, index) => (
-                        <Form
-                          key={index}
-                          type={type}
-                          index={index}
-                          wageOrders={wageOrders}
-                          establishment={establishment}
-                          employee={employee}
-                          violationTypes={violationTypes}
-                          onChange={handleChange}
-                          onAddPeriod={handleAddPeriod}
-                          onRemovePeriod={handleRemovePeriod}
-                          onClearPeriod={handleClearPeriod}
-                        />
-                      ))}
-
-                      <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                        <Text className="text-base font-bold text-[#333]">
-                          Received
-                        </Text>
-                        <TextInput
-                          className="rounded-md border border-black px-2.5"
-                          keyboardType="numeric"
-                          placeholder="Enter pay received"
-                          value={violationType.received}
-                          onChangeText={(value) => handleReceivedChange(value)}
-                        />
-                      </View>
-                    </>
-                  )}
+              <View className="flex-row items-center justify-between px-4 py-2.5">
+                <View>
+                  <Text className="ml-1.5 text-xl font-bold">
+                    {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial.toUpperCase()}.`}`}
+                  </Text>
+                  <Text className="ml-1.5 text-xl font-bold underline">
+                    Subtotal:{" "}
+                    {formatNumber(
+                      type == "Custom"
+                        ? customViolationHandlers.getTotal()
+                        : getTotal(
+                            wageOrders,
+                            type,
+                            establishment.size,
+                            violationType,
+                          ),
+                    )}
+                  </Text>
                 </View>
-              </ScrollView>
-            </KeyboardAvoidingView>
-          </SafeAreaView>
-        </>
-      )}
+                <AddPeriodModal onSubmit={handleAddPeriodSubmit} />
+              </View>
+
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                className="h-[73%] px-4"
+              >
+                <ScrollView>
+                  <View className="gap-7">
+                    {type == "Custom" ? (
+                      <>
+                        {customViolationType.periods.map((_, index) => (
+                          <CustomViolationForm
+                            key={index}
+                            index={index}
+                            wageOrders={wageOrders}
+                            establishment={establishment}
+                            employee={employee}
+                            customViolationType={customViolationType}
+                            calculate={customViolationHandlers.calculate}
+                            onChange={customViolationHandlers.handleChange}
+                            onAddPeriod={
+                              customViolationHandlers.handleAddPeriod
+                            }
+                            onRemovePeriod={
+                              customViolationHandlers.handleRemovePeriod
+                            }
+                            onClearPeriod={
+                              customViolationHandlers.handleClearPeriod
+                            }
+                          />
+                        ))}
+
+                        <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
+                          <Text className="text-base font-bold text-[#333]">
+                            Received
+                          </Text>
+                          <TextInput
+                            className="rounded-md border border-black px-2.5"
+                            keyboardType="numeric"
+                            placeholder="Enter pay received"
+                            value={customViolationType.received}
+                            onChangeText={(value) =>
+                              customViolationHandlers.handleReceivedChange(
+                                value,
+                              )
+                            }
+                          />
+                        </View>
+                      </>
+                    ) : (
+                      <>
+                        {violationType.periods.map((_, index) => (
+                          <Form
+                            key={index}
+                            type={type}
+                            index={index}
+                            wageOrders={wageOrders}
+                            holidays={holidays}
+                            establishment={establishment}
+                            employee={employee}
+                            violationTypes={violationTypes}
+                            onChange={handleChange}
+                            onAddPeriod={handleAddPeriod}
+                            onRemovePeriod={handleRemovePeriod}
+                            onClearPeriod={handleClearPeriod}
+                          />
+                        ))}
+
+                        <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
+                          <Text className="text-base font-bold text-[#333]">
+                            Received
+                          </Text>
+                          <TextInput
+                            className="rounded-md border border-black px-2.5"
+                            keyboardType="numeric"
+                            placeholder="Enter pay received"
+                            value={violationType.received}
+                            onChangeText={(value) =>
+                              handleReceivedChange(value)
+                            }
+                          />
+                        </View>
+                      </>
+                    )}
+                  </View>
+                </ScrollView>
+              </KeyboardAvoidingView>
+            </SafeAreaView>
+          </>
+        )}
     </>
   );
 };

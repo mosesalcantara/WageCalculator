@@ -1,11 +1,11 @@
 import { Holiday, ViolationKeys } from "@/types/globals";
 import { formatDate, validateDateRange } from "@/utils/globals";
-import holidaysJSON from "@/utils/holidays.json";
 import { eachDayOfInterval, format } from "date-fns";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
+  holidays: Holiday[];
   type: ViolationKeys;
   startDate: string;
   endDate: string;
@@ -14,6 +14,7 @@ type Props = {
 };
 
 const ViewDaysModal = ({
+  holidays,
   type,
   startDate,
   endDate,
@@ -36,17 +37,13 @@ const ViewDaysModal = ({
     dates.forEach((date) => {
       if (type == "Special Day" || type == "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
-        const year = formattedDate.split("-")[0];
-        const yearHolidays = holidaysJSON[year as keyof typeof holidaysJSON];
-        if (yearHolidays) {
-          const holiday = yearHolidays.find(
-            (holiday) => formattedDate == holiday.date,
-          );
-          if (holiday) {
-            holiday.type == "Special (Non-Working) Holiday" &&
-              specialDays.push(holiday);
-            holiday.type == "Regular Holiday" && regularHolidays.push(holiday);
-          }
+        const holiday = holidays.find(
+          (holiday) => formattedDate == holiday.date,
+        );
+        if (holiday) {
+          holiday.type == "Special (Non-Working) Holiday" &&
+            specialDays.push(holiday);
+          holiday.type == "Regular Holiday" && regularHolidays.push(holiday);
         }
       }
     });
