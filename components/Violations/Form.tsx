@@ -255,9 +255,7 @@ const Form = ({
                       color="#555"
                       onPress={setDays}
                     />
-                  ) : (
-                    ""
-                  )}
+                  ) : null}
                 </View>
               </View>
             ) : (
