@@ -112,13 +112,10 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
         </View>
       </View>
 
-      <View className="h-[35rem]">
-        <ScrollView
-          className="rounded-md bg-white p-3"
-          showsVerticalScrollIndicator={true}
-        >
-          {filteredHolidays && filteredHolidays.length > 0 ? (
-            filteredHolidays.map((holiday, index) => (
+      <View className="h-[84%] rounded-md bg-white p-3">
+        {filteredHolidays && filteredHolidays.length > 0 ? (
+          <ScrollView showsVerticalScrollIndicator={true}>
+            {filteredHolidays.map((holiday, index) => (
               <View
                 key={index}
                 className="flex-row justify-between border-b border-gray-300 py-3"
@@ -147,13 +144,13 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            ))
-          ) : (
-            <View className="h-[34rem] items-center justify-center">
-              <Text className="font-bold">No Holidays Found</Text>
-            </View>
-          )}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        ) : (
+          <View className="h-full items-center justify-center">
+            <Text className="font-bold">No Holidays Found</Text>
+          </View>
+        )}
       </View>
     </>
   );
