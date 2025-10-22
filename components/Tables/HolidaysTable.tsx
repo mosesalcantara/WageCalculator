@@ -124,7 +124,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                 className="flex-row justify-between border-b border-gray-300 py-3"
               >
                 <View className="w-[69%]">
-                  <Text className="text-nowrap text-base font-bold text-[#333]">
+                  <Text className="text-base font-bold text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
                   <Text>{formatDate(holiday.date, "MMMM dd, yyyy")}</Text>
