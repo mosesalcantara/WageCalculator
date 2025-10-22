@@ -112,7 +112,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
         </View>
       </View>
 
-      <View className="h-[37rem]">
+      <View className="h-[38rem]">
         <ScrollView
           className="rounded-md bg-white p-3"
           showsVerticalScrollIndicator={true}
