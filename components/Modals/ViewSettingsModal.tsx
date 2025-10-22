@@ -1,7 +1,7 @@
 import { Href, Router } from "expo-router";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
-import { useImmer } from "use-immer";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useImmer } from "use-immer";
 
 type Props = {
   router: Router;
@@ -16,7 +16,7 @@ const ViewSettingsModal = ({ router }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Icon name="settings-suggest" size={20} color="white" />
+        <Icon name="settings" size={20} color="white" />
       </TouchableOpacity>
 
       <Modal
@@ -27,10 +27,10 @@ const ViewSettingsModal = ({ router }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-1.5">
+          <View className="w-4/5 gap-1.5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
               <TouchableOpacity
-                className="rounded-[0.625rem]  bg-black p-3"
+                className="rounded-[0.625rem] bg-black p-3"
                 onPress={() => router.push("/settings/wage-orders" as Href)}
               >
                 <Text className="text-center font-bold text-white">
