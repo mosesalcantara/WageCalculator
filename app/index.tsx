@@ -43,7 +43,7 @@ const EstablishmentsPage = () => {
     <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
       <NavBar />
 
-      <View className="flex-1 p-4">
+      <View className="p-4">
         <View className="mb-2 flex-row items-center justify-between">
           <Text className="text-center text-xl font-bold">Establishments</Text>
           <View className="flex-row justify-end gap-2">
