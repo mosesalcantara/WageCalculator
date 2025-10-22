@@ -19,27 +19,27 @@ const Select = ({
   setFieldValue,
   setFieldTouched,
 }: Props) => {
-  const [isFocus, setIsFocus] = useImmer(false);
+  const [isFocused, setIsFocused] = useImmer(false);
 
   return (
     <View className="mt-1 rounded-md bg-white p-2">
       <Dropdown
-        style={[{ height: 25 }, isFocus && { borderColor: "blue" }]}
+        style={[{ height: 25 }, isFocused && { borderColor: "blue" }]}
         placeholderStyle={{ fontSize: 14 }}
         selectedTextStyle={{ fontSize: 14 }}
         data={options}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? placeholder : ""}
+        placeholder={!isFocused ? placeholder : ""}
         value={value}
         onChange={(option) => {
           setFieldValue(name, option.value);
-          setIsFocus(false);
+          setIsFocused(false);
         }}
-        onFocus={() => setIsFocus(true)}
+        onFocus={() => setIsFocused(true)}
         onBlur={() => {
           setFieldTouched(name);
-          setIsFocus(false);
+          setIsFocused(false);
         }}
       />
     </View>

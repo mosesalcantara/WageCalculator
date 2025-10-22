@@ -16,6 +16,21 @@ type Props = {
 };
 
 const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
+  const typeOptions = [
+    {
+      label: "All",
+      value: "All",
+    },
+    {
+      label: "Regular Holiday",
+      value: "Regular Holiday",
+    },
+    {
+      label: "Special (Non-Working) Holiday",
+      value: "Special (Non-Working) Holiday",
+    },
+  ];
+
   const allYears = holidays?.map((holiday) => holiday.date.split("-")[0]);
   const years = [...new Set(allYears)];
 
@@ -27,43 +42,74 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
     return options;
   };
 
+  const [type, setType] = useImmer("All");
+  const [isTypeFocused, setIsTypeFocused] = useImmer(false);
+
   const [year, setYear] = useImmer("All");
-  const [isFocus, setIsFocus] = useImmer(false);
+  const [isYearFocused, setIsYearFocused] = useImmer(false);
 
   const filteredHolidays = useMemo(() => {
-    if (holidays && year) {
-      if (year == "All") {
+    if (holidays) {
+      if (type == "All" && year == "All") {
         return holidays;
       }
 
       return holidays.filter((holiday) => {
-        const holidayYear = holiday.date.split("-")[0];
-        return year == holidayYear;
+        let isTypeMatched = true;
+        let isYearMatched = true;
+
+        if (type != "All") isTypeMatched = type == holiday.type;
+        if (year != "All") isYearMatched = year == holiday.date.split("-")[0];
+
+        return isTypeMatched && isYearMatched;
       });
     }
-  }, [holidays, year]);
+  }, [holidays, type, year]);
 
   return (
     <>
-      <View className="mb-3 h-12 rounded-md border border-[#333] bg-white p-2">
-        <Dropdown
-          style={{ height: 20 }}
-          placeholderStyle={{ fontSize: 14 }}
-          selectedTextStyle={{ fontSize: 14 }}
-          data={getOptions()}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus ? "Select Year" : ""}
-          value={year}
-          onChange={(option) => {
-            setYear(option.value);
-            setIsFocus(false);
-          }}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => {
-            setIsFocus(false);
-          }}
-        />
+      <View className="flex-row justify-between">
+        <View className="mb-3 h-12 w-[74%] rounded-md border border-[#333] bg-white p-2">
+          <Dropdown
+            style={{ height: 20 }}
+            placeholderStyle={{ fontSize: 14 }}
+            selectedTextStyle={{ fontSize: 14 }}
+            data={typeOptions}
+            labelField="label"
+            valueField="value"
+            placeholder={!isTypeFocused ? "Select Type" : ""}
+            value={type}
+            onChange={(option) => {
+              setType(option.value);
+              setIsTypeFocused(false);
+            }}
+            onFocus={() => setIsTypeFocused(true)}
+            onBlur={() => {
+              setIsTypeFocused(false);
+            }}
+          />
+        </View>
+
+        <View className="mb-3 h-12 w-[25%] rounded-md border border-[#333] bg-white p-2">
+          <Dropdown
+            style={{ height: 20 }}
+            placeholderStyle={{ fontSize: 14 }}
+            selectedTextStyle={{ fontSize: 14 }}
+            data={getOptions()}
+            labelField="label"
+            valueField="value"
+            placeholder={!isYearFocused ? "Select Year" : ""}
+            value={year}
+            onChange={(option) => {
+              setYear(option.value);
+              setIsYearFocused(false);
+            }}
+            onFocus={() => setIsYearFocused(true)}
+            onBlur={() => {
+              setIsYearFocused(false);
+            }}
+          />
+        </View>
       </View>
 
       <View className="h-[40rem]">

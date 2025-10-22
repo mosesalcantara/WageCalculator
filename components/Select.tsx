@@ -19,7 +19,7 @@ const Select = ({
   placeholder = "Select Item",
   onChange,
 }: Props) => {
-  const [isFocus, setIsFocus] = useImmer(false);
+  const [isFocused, setIsFocused] = useImmer(false);
 
   return (
     <View className="h-12 rounded-md border border-black p-2">
@@ -30,15 +30,15 @@ const Select = ({
         data={options}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? placeholder : ""}
+        placeholder={!isFocused ? placeholder : ""}
         value={value}
         onChange={(option) => {
           onChange(index, name, option.value);
-          setIsFocus(false);
+          setIsFocused(false);
         }}
-        onFocus={() => setIsFocus(true)}
+        onFocus={() => setIsFocused(true)}
         onBlur={() => {
-          setIsFocus(false);
+          setIsFocused(false);
         }}
       />
     </View>
