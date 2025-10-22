@@ -2,7 +2,8 @@ import {
   Employee,
   Establishment,
   Period,
-  ViolationTypes,
+  ViolationKeys,
+  ViolationType,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -34,11 +35,13 @@ const exportXLSX = async (
       const violations = JSON.parse(employee.violations[0].values as string);
 
       let valid = 0;
-      Object.values(violations as ViolationTypes).forEach((violationType) => {
-        violationType.periods.forEach((period) => {
-          validate(period) && (valid += 1);
-        });
-      });
+      Object.values(violations as Record<ViolationKeys, ViolationType>).forEach(
+        (violationType) => {
+          violationType.periods.forEach((period) => {
+            validate(period) && (valid += 1);
+          });
+        },
+      );
 
       if (valid > 0) {
         renderViolations(employee);

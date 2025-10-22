@@ -1,10 +1,5 @@
 import * as schema from "@/db/schema";
-import {
-  Period,
-  ViolationKeys,
-  ViolationTypes,
-  WageOrder,
-} from "@/types/globals";
+import { Period, ViolationKeys, ViolationType, WageOrder } from "@/types/globals";
 import { differenceInDays, format, parse, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -366,7 +361,7 @@ export const getCustomPeriodFormat = (rate?: number) => {
 };
 
 export const getInitialViolationTypes = (rate?: number) => {
-  const values = {} as ViolationTypes;
+  const values = {} as Record<ViolationKeys, ViolationType>;
   violationKeysArray.forEach((type) => {
     values[type as ViolationKeys] = {
       periods: [getPeriodFormat(rate)],

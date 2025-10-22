@@ -29,7 +29,7 @@ export type Employee = {
 
 export type Violation = {
   id: number;
-  values: ViolationTypes | string;
+  values: Record<ViolationKeys, ViolationType> | string;
   employee_id?: number;
 };
 
@@ -43,8 +43,9 @@ export type ViolationKeys =
   | "13th Month Pay"
   | "Custom";
 
-export type ViolationTypes = {
-  [key in ViolationKeys]: { periods: Period[]; received: string };
+export type ViolationType = {
+  periods: Period[];
+  received: string;
 };
 
 export type Period = {
@@ -89,4 +90,4 @@ export type Holiday = {
   name: string;
   date: string;
   type: string;
-}
+};

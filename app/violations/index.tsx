@@ -14,7 +14,7 @@ import {
   CustomViolationType,
   Period,
   ViolationKeys,
-  ViolationTypes,
+  ViolationType,
 } from "@/types/globals";
 import {
   customPeriodFormat,
@@ -148,7 +148,7 @@ const ViolationsPage = () => {
   };
 
   const saveViolations = async (
-    violationTypes: ViolationTypes,
+    violationTypes: Record<ViolationKeys, ViolationType>,
     customViolationType: CustomViolationType,
   ) => {
     try {

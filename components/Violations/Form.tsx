@@ -5,7 +5,7 @@ import {
   Establishment,
   Holiday,
   ViolationKeys,
-  ViolationTypes,
+  ViolationType,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -30,7 +30,7 @@ type Props = {
   holidays: Holiday[];
   establishment: Establishment;
   employee: Employee;
-  violationTypes: ViolationTypes;
+  violationTypes: Record<ViolationKeys, ViolationType>;
   onChange: (index: number, key: string, value: string | number | Date) => void;
   onAddPeriod: () => void;
   onClearPeriod: (index: number) => void;

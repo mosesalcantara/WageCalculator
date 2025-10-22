@@ -2,7 +2,7 @@ import {
   Employee,
   Period,
   ViolationKeys,
-  ViolationTypes,
+  ViolationType,
 } from "@/types/globals";
 import { getPeriodFormat } from "@/utils/globals";
 import { Updater } from "use-immer";
@@ -10,7 +10,7 @@ import { Updater } from "use-immer";
 const useViolationHandlers = (
   type: ViolationKeys,
   employee: Employee | undefined,
-  setter: Updater<ViolationTypes>,
+  setter: Updater<Record<ViolationKeys, ViolationType>>,
 ) => {
   const handleChange = (
     index: number,

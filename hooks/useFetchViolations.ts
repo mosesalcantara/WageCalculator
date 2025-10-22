@@ -4,7 +4,8 @@ import {
   Employee,
   Establishment,
   Violation,
-  ViolationTypes,
+  ViolationKeys,
+  ViolationType,
 } from "@/types/globals";
 import { getInitialViolationTypes, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
@@ -20,9 +21,9 @@ const useFetchViolations = (db: Db) => {
     undefined,
   );
   const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
-  const [violationTypes, setViolationTypes] = useImmer<ViolationTypes>(
-    getInitialViolationTypes(),
-  );
+  const [violationTypes, setViolationTypes] = useImmer<
+    Record<ViolationKeys, ViolationType>
+  >(getInitialViolationTypes());
 
   const handleFetch = useCallback(async () => {
     try {
