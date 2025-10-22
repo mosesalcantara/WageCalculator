@@ -149,7 +149,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
               </View>
             ))
           ) : (
-            <View className="h-[39rem] items-center justify-center">
+            <View className="h-[37rem] items-center justify-center">
               <Text className="font-bold">No Holidays Found</Text>
             </View>
           )}
