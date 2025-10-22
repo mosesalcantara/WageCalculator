@@ -112,7 +112,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
         </View>
       </View>
 
-      <View className="h-[84%] rounded-md bg-white p-3">
+      <View className="h-[83%] rounded-md bg-white p-3">
         {filteredHolidays && filteredHolidays.length > 0 ? (
           <ScrollView showsVerticalScrollIndicator={true}>
             {filteredHolidays.map((holiday, index) => (
