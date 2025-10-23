@@ -31,7 +31,7 @@ const UpdateEmployeeModal = ({
     { resetForm }: { resetForm: () => void },
   ) => {
     const NAs = ["na", "n/a"];
-    values = {
+    const formattedValues = {
       ...values,
       last_name: `${values.last_name}`.trim(),
       first_name: `${values.first_name}`.trim(),
@@ -86,7 +86,7 @@ const UpdateEmployeeModal = ({
       } else {
         await db
           .update(employees)
-          .set(values)
+          .set(formattedValues)
           .where(eq(employees.id, values.id));
         refetch();
         resetForm();

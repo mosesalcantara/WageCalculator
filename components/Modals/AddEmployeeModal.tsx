@@ -32,7 +32,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   ) => {
     const NAs = ["na", "n/a"];
 
-    values = {
+    const formattedValues = {
       ...values,
       last_name: `${values.last_name}`.trim(),
       first_name: `${values.first_name}`.trim(),
@@ -78,7 +78,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         });
       } else {
         await db.insert(employees).values({
-          ...values,
+          ...formattedValues,
           rate: values.rate as number,
           establishment_id: values.establishment_id as number,
         });
