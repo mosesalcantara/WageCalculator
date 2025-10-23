@@ -109,7 +109,7 @@ const EmployeesTable = ({
                       employee.middle_initial.toLowerCase(),
                     )
                       ? ""
-                      : ` ${employee.middle_initial.toUpperCase()}.`}
+                      : ` ${employee.middle_initial}.`}
                   </Text>
 
                   <Text className="w-[10%] text-center text-sm text-[#333]">
