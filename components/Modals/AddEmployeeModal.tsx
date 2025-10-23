@@ -53,6 +53,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
               sql`LOWER(${employees.first_name})`,
               values.first_name.toLowerCase(),
             ),
+            eq(employees.establishment_id, establishment.id),
           ),
       });
 

@@ -45,12 +45,17 @@ const EmployeesPage = () => {
                 <Text className="text-center text-xl font-bold">
                   {establishment.name}
                 </Text>
-              <AddEmployeeModal db={db} establishment={establishment} refetch={refetch} />
+                <AddEmployeeModal
+                  db={db}
+                  establishment={establishment}
+                  refetch={refetch}
+                />
               </View>
 
               <EmployeesTable
                 db={db}
                 router={router}
+                establishment={establishment}
                 employees={employees}
                 refetch={refetch}
                 onDelete={handleDelete}

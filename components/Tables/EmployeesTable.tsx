@@ -1,6 +1,6 @@
 import confirmAlert from "@/components/ConfirmAlert";
 import UpdateEmployeeModal from "@/components/Modals/UpdateEmployeeModal";
-import { Db, Employee } from "@/types/globals";
+import { Db, Employee, Establishment } from "@/types/globals";
 import { Href, Router } from "expo-router";
 import { useMemo } from "react";
 import {
@@ -17,6 +17,7 @@ import { useImmer } from "use-immer";
 type Props = {
   db: Db;
   router: Router;
+  establishment: Establishment;
   employees: Employee[] | undefined;
   refetch: () => void;
   onDelete: (id: number) => Promise<void>;
@@ -25,6 +26,7 @@ type Props = {
 const EmployeesTable = ({
   db,
   router,
+  establishment,
   employees,
   refetch,
   onDelete,
@@ -126,6 +128,7 @@ const EmployeesTable = ({
 
                     <UpdateEmployeeModal
                       db={db}
+                      establishment={establishment}
                       employee={employee}
                       refetch={refetch}
                     />

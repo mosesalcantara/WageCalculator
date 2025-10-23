@@ -1,7 +1,7 @@
 import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
 import { employee as validationSchema } from "@/schemas/globals";
-import { Db, Employee } from "@/types/globals";
+import { Db, Employee, Establishment } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { and, eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
@@ -12,11 +12,17 @@ import { useImmer } from "use-immer";
 
 type Props = {
   db: Db;
+  establishment: Establishment;
   employee: Employee;
   refetch: () => void;
 };
 
-const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
+const UpdateEmployeeModal = ({
+  db,
+  establishment,
+  employee,
+  refetch,
+}: Props) => {
   const initialValues = employee;
   const [isVisible, setIsVisible] = useImmer(false);
 
@@ -45,6 +51,7 @@ const UpdateEmployeeModal = ({ db, employee, refetch }: Props) => {
               sql`LOWER(${employees.first_name})`,
               values.first_name.toLowerCase(),
             ),
+            eq(employees.establishment_id, establishment.id),
           ),
       });
 
