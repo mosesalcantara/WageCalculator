@@ -27,43 +27,45 @@ const EstablishmentsTable = ({
   };
 
   return (
-    <FlatList
-      data={establishments}
-      keyExtractor={(establishment) => `${establishment.id}`}
-      renderItem={({ item: establishment }) => (
-        <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
-          <Text className="font-bold">{establishment.name}</Text>
+    <View className="h-[89%]">
+      <FlatList
+        data={establishments}
+        keyExtractor={(establishment) => `${establishment.id}`}
+        renderItem={({ item: establishment }) => (
+          <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
+            <Text className="font-bold">{establishment.name}</Text>
 
-          <View className="flex-row gap-1">
-            <TouchableOpacity
-              onPress={() => setEstablishment(establishment.id, "employees")}
-            >
-              <Icon name="remove-red-eye" size={20} color="#2196F3" />
-            </TouchableOpacity>
+            <View className="flex-row gap-1">
+              <TouchableOpacity
+                onPress={() => setEstablishment(establishment.id, "employees")}
+              >
+                <Icon name="remove-red-eye" size={20} color="#2196F3" />
+              </TouchableOpacity>
 
-            <UpdateEstablishmentModal
-              db={db}
-              establishment={establishment}
-              refetch={refetch}
-            />
+              <UpdateEstablishmentModal
+                db={db}
+                establishment={establishment}
+                refetch={refetch}
+              />
 
-            <TouchableOpacity
-              onPress={() =>
-                confirmAlert(establishment.id, "Establishment", onDelete)
-              }
-            >
-              <Icon name="delete" size={20} color="#E53935" />
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  confirmAlert(establishment.id, "Establishment", onDelete)
+                }
+              >
+                <Icon name="delete" size={20} color="#E53935" />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => setEstablishment(establishment.id, "export")}
-            >
-              <Icon name="file-download" size={20} color="#2196F3" />
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setEstablishment(establishment.id, "export")}
+              >
+                <Icon name="file-download" size={20} color="#2196F3" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )}
-    />
+        )}
+      />
+    </View>
   );
 };
 
