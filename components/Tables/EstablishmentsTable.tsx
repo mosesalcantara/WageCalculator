@@ -27,7 +27,7 @@ const EstablishmentsTable = ({
   };
 
   return (
-    <View className="h-[89%]">
+    <View className="h-[88%]">
       <FlatList
         data={establishments}
         keyExtractor={(establishment) => `${establishment.id}`}
