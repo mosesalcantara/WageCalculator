@@ -77,11 +77,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
           visibilityTime: toastVisibilityTime,
         });
       } else {
-        await db.insert(employees).values({
-          ...formattedValues,
-          rate: values.rate as number,
-          establishment_id: values.establishment_id as number,
-        });
+        await db.insert(employees).values(formattedValues);
         refetch();
         resetForm();
         setIsVisible(false);
