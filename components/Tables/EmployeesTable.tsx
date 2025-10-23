@@ -145,7 +145,7 @@ const EmployeesTable = ({
                 </View>
               ))
             ) : (
-              <Text className="my-2.5 text-center">No employees found.</Text>
+              <Text className="my-2.5 text-center">No Employees Found</Text>
             )}
           </View>
         </View>
