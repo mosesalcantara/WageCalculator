@@ -1,6 +1,7 @@
 import confirmAlert from "@/components/ConfirmAlert";
 import UpdateEmployeeModal from "@/components/Modals/UpdateEmployeeModal";
 import { Db, Employee, Establishment } from "@/types/globals";
+import { formatNumber } from "@/utils/globals";
 import { Href, Router } from "expo-router";
 import { useMemo } from "react";
 import {
@@ -82,13 +83,13 @@ const EmployeesTable = ({
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
           <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
-            <Text className="w-[38%] text-center text-base font-bold text-white">
+            <Text className="w-[35%] text-center text-base font-bold text-white">
               Name
             </Text>
-            <Text className="w-[10%] text-center text-base font-bold text-white">
+            <Text className="w-[13%] text-center text-base font-bold text-white">
               Rate
             </Text>
-            <Text className="w-1/5 text-center text-base font-bold text-white">
+            <Text className="w-[20%] text-center text-base font-bold text-white">
               Schedule
             </Text>
             <Text className="w-[27%] text-center text-base font-bold text-white">
@@ -103,7 +104,7 @@ const EmployeesTable = ({
                   key={employee.id}
                   className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
                 >
-                  <Text className="w-[38%] text-center text-sm text-[#333]">
+                  <Text className="w-[35%] text-center text-sm text-[#333]">
                     {employee.last_name}, {employee.first_name}
                     {["na", "n/a"].includes(
                       employee.middle_initial.toLowerCase(),
@@ -112,11 +113,11 @@ const EmployeesTable = ({
                       : ` ${employee.middle_initial}.`}
                   </Text>
 
-                  <Text className="w-[10%] text-center text-sm text-[#333]">
-                    {employee.rate}
+                  <Text className="w-[13%] text-center text-sm text-[#333]">
+                    {formatNumber(employee.rate)}
                   </Text>
 
-                  <Text className="w-1/5 text-center text-sm text-[#333]">
+                  <Text className="w-[20%] text-center text-sm text-[#333]">
                     {employee.start_day.slice(0, 3)} -{" "}
                     {employee.end_day.slice(0, 3)}
                   </Text>
