@@ -45,11 +45,11 @@ const UpdateEmployeeModal = ({
           and(
             eq(
               sql`LOWER(${employees.last_name})`,
-              values.last_name.toLowerCase(),
+              formattedValues.last_name.toLowerCase(),
             ),
             eq(
               sql`LOWER(${employees.first_name})`,
-              values.first_name.toLowerCase(),
+              formattedValues.first_name.toLowerCase(),
             ),
             eq(employees.establishment_id, establishment.id),
           ),
@@ -57,7 +57,7 @@ const UpdateEmployeeModal = ({
 
       const record = records.find((employee) => {
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
-        const valuesMiddleInitial = values.middle_initial.toLowerCase();
+        const valuesMiddleInitial = formattedValues.middle_initial.toLowerCase();
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
@@ -69,13 +69,13 @@ const UpdateEmployeeModal = ({
       });
 
       const isSame =
-        employee.last_name.toLowerCase() == values.last_name.toLowerCase() &&
-        employee.first_name.toLowerCase() == values.first_name.toLowerCase() &&
+        employee.last_name.toLowerCase() == formattedValues.last_name.toLowerCase() &&
+        employee.first_name.toLowerCase() == formattedValues.first_name.toLowerCase() &&
         (employee.middle_initial.length > 1
           ? NAs.includes(employee.middle_initial.toLowerCase()) &&
-            NAs.includes(values.middle_initial.toLowerCase())
+            NAs.includes(formattedValues.middle_initial.toLowerCase())
           : employee.middle_initial.toLowerCase() ==
-            values.middle_initial.toLowerCase());
+            formattedValues.middle_initial.toLowerCase());
 
       if (record && !isSame) {
         Toast.show({
@@ -87,7 +87,7 @@ const UpdateEmployeeModal = ({
         await db
           .update(employees)
           .set(formattedValues)
-          .where(eq(employees.id, values.id));
+          .where(eq(employees.id, formattedValues.id));
         refetch();
         resetForm();
         setIsVisible(false);

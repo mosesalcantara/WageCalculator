@@ -26,7 +26,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     values: Override<Establishment, { id?: number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
-    values = {
+    const formattedValues = {
       ...values,
       name: values.name.trim(),
     };
@@ -35,7 +35,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
       const record = await db.query.establishments.findFirst({
         where: eq(
           sql`LOWER(${establishments.name})`,
-          values.name.toLowerCase(),
+          formattedValues.name.toLowerCase(),
         ),
       });
 
@@ -46,7 +46,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
           visibilityTime: toastVisibilityTime,
         });
       } else {
-        await db.insert(establishments).values(values);
+        await db.insert(establishments).values(formattedValues);
         refetch();
         resetForm();
         setIsVisible(false);

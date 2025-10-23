@@ -29,13 +29,13 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
     values: Override<Holiday, { id?: number }>,
     { resetForm }: { resetForm: () => void },
   ) => {
-    values = {
+    const formattedValues = {
       ...values,
       name: values.name.trim(),
     };
 
     try {
-      await db.insert(holidays).values(values);
+      await db.insert(holidays).values(formattedValues);
       refetch();
       resetForm();
       setIsVisible(false);

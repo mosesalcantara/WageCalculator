@@ -47,11 +47,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
           and(
             eq(
               sql`LOWER(${employees.last_name})`,
-              values.last_name.toLowerCase(),
+              formattedValues.last_name.toLowerCase(),
             ),
             eq(
               sql`LOWER(${employees.first_name})`,
-              values.first_name.toLowerCase(),
+              formattedValues.first_name.toLowerCase(),
             ),
             eq(employees.establishment_id, establishment.id),
           ),
@@ -59,7 +59,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
 
       const record = records.find((employee) => {
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
-        const valuesMiddleInitial = values.middle_initial.toLowerCase();
+        const valuesMiddleInitial = formattedValues.middle_initial.toLowerCase();
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&

@@ -38,7 +38,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
     >,
     { resetForm }: { resetForm: () => void },
   ) => {
-    values = {
+    const formattedValues = {
       ...values,
       name: values.name.trim(),
       less_than_ten: Number(values.less_than_ten),
@@ -47,7 +47,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
 
     try {
       const record = await db.query.wageOrders.findFirst({
-        where: eq(sql`LOWER(${wageOrders.name})`, values.name.toLowerCase()),
+        where: eq(sql`LOWER(${wageOrders.name})`, formattedValues.name.toLowerCase()),
       });
 
       if (record) {
@@ -57,11 +57,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
           visibilityTime: toastVisibilityTime,
         });
       } else {
-        await db.insert(wageOrders).values({
-          ...values,
-          less_than_ten: values.less_than_ten as number,
-          ten_or_more: values.ten_or_more as number,
-        });
+        await db.insert(wageOrders).values(formattedValues);
         refetch();
         resetForm();
         setIsVisible(false);

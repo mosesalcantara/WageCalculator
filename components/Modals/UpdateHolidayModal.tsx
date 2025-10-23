@@ -27,13 +27,16 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
     values: Holiday,
     { resetForm }: { resetForm: () => void },
   ) => {
-    values = {
+    const formattedValues = {
       ...values,
       name: values.name.trim(),
     };
 
     try {
-      await db.update(holidays).set(values).where(eq(holidays.id, values.id));
+      await db
+        .update(holidays)
+        .set(formattedValues)
+        .where(eq(holidays.id, formattedValues.id));
       refetch();
       resetForm();
       setIsVisible(false);

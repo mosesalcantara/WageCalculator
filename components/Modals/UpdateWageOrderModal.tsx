@@ -32,7 +32,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
     >,
     { resetForm }: { resetForm: () => void },
   ) => {
-    values = {
+    const formattedValues = {
       ...values,
       name: values.name.trim(),
       less_than_ten: Number(values.less_than_ten),
@@ -41,10 +41,10 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
 
     try {
       const record = await db.query.wageOrders.findFirst({
-        where: eq(sql`LOWER(${wageOrders.name})`, values.name.toLowerCase()),
+        where: eq(sql`LOWER(${wageOrders.name})`, formattedValues.name.toLowerCase()),
       });
 
-      const isSame = wageOrder.name.toLowerCase() == values.name.toLowerCase();
+      const isSame = wageOrder.name.toLowerCase() == formattedValues.name.toLowerCase();
 
       if (record && !isSame) {
         Toast.show({
@@ -55,12 +55,8 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
       } else {
         await db
           .update(wageOrders)
-          .set({
-            ...values,
-            less_than_ten: values.less_than_ten as number,
-            ten_or_more: values.ten_or_more as number,
-          })
-          .where(eq(wageOrders.id, values.id));
+          .set(formattedValues)
+          .where(eq(wageOrders.id, formattedValues.id));
         refetch();
         resetForm();
         setIsVisible(false);
