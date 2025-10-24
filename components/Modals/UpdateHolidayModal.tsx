@@ -33,6 +33,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
+      date: `${values.date}`,
     };
 
     try {

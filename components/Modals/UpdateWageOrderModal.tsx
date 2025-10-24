@@ -32,6 +32,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
+      date: `${values.date}`,
       less_than_ten: Number(values.less_than_ten),
       ten_or_more: Number(values.ten_or_more),
     };

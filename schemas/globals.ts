@@ -37,9 +37,12 @@ export type Employee = Override<
 >;
 
 export const period = Yup.object().shape({
-  start_date: Yup.string().trim().required().label("Start Date"),
-  end_date: Yup.string()
-    .trim()
+  start_date: Yup.date()
+    .typeError("Start Date must be a valid date")
+    .required()
+    .label("Start Date"),
+  end_date: Yup.date()
+    .typeError("End Date must be a valid date")
     .required()
     .test(
       "isBefore",
@@ -50,11 +53,20 @@ export const period = Yup.object().shape({
     .label("End Date"),
 });
 
-export type Period = Yup.InferType<typeof period>;
+export type Period = Override<
+  Yup.InferType<typeof period>,
+  {
+    start_date: Date | string;
+    end_date: Date | string;
+  }
+>;
 
 export const wageOrder = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
-  date: Yup.string().trim().required().label("Date"),
+  date: Yup.date()
+    .typeError("Date must be a valid date")
+    .required()
+    .label("Date"),
   less_than_ten: Yup.number()
     .typeError("Rate must be a number")
     .required()
@@ -67,13 +79,23 @@ export const wageOrder = Yup.object().shape({
 
 export type WageOrder = Override<
   Yup.InferType<typeof wageOrder>,
-  { less_than_ten: number | string; ten_or_more: number | string }
+  {
+    date: Date | string;
+    less_than_ten: number | string;
+    ten_or_more: number | string;
+  }
 >;
 
 export const holiday = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
-  date: Yup.string().trim().required().label("Date"),
+  date: Yup.date()
+    .typeError("Date must be a valid date")
+    .required()
+    .label("Date"),
   type: Yup.string().trim().required().label("Type"),
 });
 
-export type Holiday = Yup.InferType<typeof holiday>;
+export type Holiday = Override<
+  Yup.InferType<typeof holiday>,
+  { date: Date | string }
+>;

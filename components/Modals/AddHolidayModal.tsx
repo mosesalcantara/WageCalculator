@@ -1,6 +1,9 @@
 import Select from "@/components/FormikSelect";
 import { holidays } from "@/db/schema";
-import { holiday as validationSchema, Holiday as Values } from "@/schemas/globals";
+import {
+  holiday as validationSchema,
+  Holiday as Values,
+} from "@/schemas/globals";
 import { Db } from "@/types/globals";
 import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -32,6 +35,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
+      date: `${values.date}`,
     };
 
     try {
