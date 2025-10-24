@@ -125,6 +125,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
               <Controller
                 control={control}
                 name="size"
+                defaultValue="Employing 10 or more workers"
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <Select
