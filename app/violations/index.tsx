@@ -109,7 +109,11 @@ const ViolationsPage = () => {
   ) => {
     try {
       const { start_date, end_date } = values;
-      const periods = getPeriods(wageOrders || [], start_date, end_date);
+      const periods = getPeriods(
+        wageOrders || [],
+        start_date as string,
+        end_date as string,
+      );
       addPeriods(periods);
       resetForm();
       Toast.show({
@@ -251,7 +255,7 @@ const ViolationsPage = () => {
               </View>
 
               <View className="flex-row items-center justify-between px-4 py-2.5">
-                <View>
+                <View className="w-[64%]">
                   <Text className="ml-1.5 text-xl font-bold">
                     {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial}.`}`}
                   </Text>
@@ -269,7 +273,9 @@ const ViolationsPage = () => {
                     )}
                   </Text>
                 </View>
-                <AddPeriodModal onSubmit={handleAddPeriodSubmit} />
+                <View className="w-[34%]">
+                  <AddPeriodModal onSubmit={handleAddPeriodSubmit} />
+                </View>
               </View>
 
               <KeyboardAvoidingView
