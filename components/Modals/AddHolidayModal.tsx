@@ -1,7 +1,7 @@
 import Select from "@/components/FormikSelect";
 import { holidays } from "@/db/schema";
-import { holiday as validationSchema } from "@/schemas/globals";
-import { Db, Holiday, Override } from "@/types/globals";
+import { holiday as validationSchema, Holiday as Values } from "@/schemas/globals";
+import { Db } from "@/types/globals";
 import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Formik } from "formik";
@@ -26,7 +26,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
   };
 
   const handleSubmit = async (
-    values: Override<Holiday, { id?: number }>,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const formattedValues = {

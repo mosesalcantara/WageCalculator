@@ -1,6 +1,9 @@
 import Select from "@/components/FormikSelect";
 import { establishments } from "@/db/schema";
-import { establishment as validationSchema } from "@/schemas/globals";
+import {
+  establishment as validationSchema,
+  Establishment as Values,
+} from "@/schemas/globals";
 import { Db, Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq, sql } from "drizzle-orm";
@@ -21,7 +24,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
-    values: Establishment,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const formattedValues = {
@@ -50,7 +53,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
         await db
           .update(establishments)
           .set(formattedValues)
-          .where(eq(establishments.id, formattedValues.id));
+          .where(eq(establishments.id, establishment.id));
         refetch();
         resetForm();
         setIsVisible(false);

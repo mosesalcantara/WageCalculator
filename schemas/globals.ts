@@ -1,3 +1,4 @@
+import { Override } from "@/types/globals";
 import { differenceInDays } from "date-fns";
 import * as Yup from "yup";
 
@@ -5,6 +6,8 @@ export const establishment = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
   size: Yup.string().trim().required().label("Size"),
 });
+
+export type Establishment = Yup.InferType<typeof establishment>;
 
 export const employee = Yup.object().shape({
   last_name: Yup.string().trim().required().label("Last Name"),
@@ -28,6 +31,11 @@ export const employee = Yup.object().shape({
   end_day: Yup.string().required().label("End Day"),
 });
 
+export type Employee = Override<
+  Yup.InferType<typeof employee>,
+  { rate: number | string }
+>;
+
 export const period = Yup.object().shape({
   start_date: Yup.string().trim().required().label("Start Date"),
   end_date: Yup.string()
@@ -42,6 +50,8 @@ export const period = Yup.object().shape({
     .label("End Date"),
 });
 
+export type Period = Yup.InferType<typeof period>;
+
 export const wageOrder = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
   date: Yup.string().trim().required().label("Date"),
@@ -55,8 +65,15 @@ export const wageOrder = Yup.object().shape({
     .label("Rate"),
 });
 
+export type WageOrder = Override<
+  Yup.InferType<typeof wageOrder>,
+  { less_than_ten: number | string; ten_or_more: number | string }
+>;
+
 export const holiday = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
   date: Yup.string().trim().required().label("Date"),
   type: Yup.string().trim().required().label("Type"),
 });
+
+export type Holiday = Yup.InferType<typeof holiday>;

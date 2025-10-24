@@ -1,6 +1,9 @@
 import { wageOrders } from "@/db/schema";
-import { wageOrder as validationSchema } from "@/schemas/globals";
-import { Db, Override, WageOrder } from "@/types/globals";
+import {
+  wageOrder as validationSchema,
+  WageOrder as Values,
+} from "@/schemas/globals";
+import { Db } from "@/types/globals";
 import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eq, sql } from "drizzle-orm";
@@ -28,14 +31,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
   };
 
   const handleSubmit = async (
-    values: Override<
-      WageOrder,
-      {
-        id?: number;
-        less_than_ten: string | number;
-        ten_or_more: string | number;
-      }
-    >,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const formattedValues = {
@@ -47,7 +43,10 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
 
     try {
       const record = await db.query.wageOrders.findFirst({
-        where: eq(sql`LOWER(${wageOrders.name})`, formattedValues.name.toLowerCase()),
+        where: eq(
+          sql`LOWER(${wageOrders.name})`,
+          formattedValues.name.toLowerCase(),
+        ),
       });
 
       if (record) {

@@ -1,6 +1,9 @@
 import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
-import { employee as validationSchema } from "@/schemas/globals";
+import {
+  employee as validationSchema,
+  Employee as Values,
+} from "@/schemas/globals";
 import { Db, Employee, Establishment } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { and, eq, sql } from "drizzle-orm";
@@ -27,7 +30,7 @@ const UpdateEmployeeModal = ({
   const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
-    values: Employee,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const NAs = ["na", "n/a"];
@@ -57,7 +60,8 @@ const UpdateEmployeeModal = ({
 
       const record = records.find((employee) => {
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
-        const valuesMiddleInitial = formattedValues.middle_initial.toLowerCase();
+        const valuesMiddleInitial =
+          formattedValues.middle_initial.toLowerCase();
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
@@ -69,8 +73,10 @@ const UpdateEmployeeModal = ({
       });
 
       const isSame =
-        employee.last_name.toLowerCase() == formattedValues.last_name.toLowerCase() &&
-        employee.first_name.toLowerCase() == formattedValues.first_name.toLowerCase() &&
+        employee.last_name.toLowerCase() ==
+          formattedValues.last_name.toLowerCase() &&
+        employee.first_name.toLowerCase() ==
+          formattedValues.first_name.toLowerCase() &&
         (employee.middle_initial.length > 1
           ? NAs.includes(employee.middle_initial.toLowerCase()) &&
             NAs.includes(formattedValues.middle_initial.toLowerCase())
@@ -87,7 +93,7 @@ const UpdateEmployeeModal = ({
         await db
           .update(employees)
           .set(formattedValues)
-          .where(eq(employees.id, formattedValues.id));
+          .where(eq(employees.id, employee.id));
         refetch();
         resetForm();
         setIsVisible(false);

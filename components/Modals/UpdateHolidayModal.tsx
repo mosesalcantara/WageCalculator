@@ -1,6 +1,9 @@
 import Select from "@/components/FormikSelect";
 import { holidays } from "@/db/schema";
-import { holiday as validationSchema } from "@/schemas/globals";
+import {
+  holiday as validationSchema,
+  Holiday as Values,
+} from "@/schemas/globals";
 import { Db, Holiday } from "@/types/globals";
 import { formatDateValue, toastVisibilityTime } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -24,7 +27,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
   const initialValues = holiday;
 
   const handleSubmit = async (
-    values: Holiday,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const formattedValues = {
@@ -36,7 +39,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
       await db
         .update(holidays)
         .set(formattedValues)
-        .where(eq(holidays.id, formattedValues.id));
+        .where(eq(holidays.id, holiday.id));
       refetch();
       resetForm();
       setIsVisible(false);

@@ -1,7 +1,10 @@
 import Select from "@/components/FormikSelect";
 import { establishments } from "@/db/schema";
-import { establishment as validationSchema } from "@/schemas/globals";
-import { Db, Establishment, Override } from "@/types/globals";
+import {
+  establishment as validationSchema,
+  Establishment as Values,
+} from "@/schemas/globals";
+import { Db } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
 import { eq, sql } from "drizzle-orm";
 import { Formik } from "formik";
@@ -23,7 +26,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
-    values: Override<Establishment, { id?: number }>,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const formattedValues = {

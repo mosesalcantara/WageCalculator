@@ -9,6 +9,7 @@ import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
+import { Period as Values } from "@/schemas/globals";
 import {
   CustomPeriod,
   CustomViolationType,
@@ -103,7 +104,7 @@ const ViolationsPage = () => {
   };
 
   const handleAddPeriodSubmit = async (
-    values: { start_date: string; end_date: string },
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     try {

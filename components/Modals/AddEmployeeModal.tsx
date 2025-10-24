@@ -1,7 +1,10 @@
 import Select from "@/components/FormikSelect";
 import { employees } from "@/db/schema";
-import { employee as validationSchema } from "@/schemas/globals";
-import { Db, Employee, Establishment, Override } from "@/types/globals";
+import {
+  employee as validationSchema,
+  Employee as Values,
+} from "@/schemas/globals";
+import { Db, Establishment } from "@/types/globals";
 import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { and, sql } from "drizzle-orm";
 import { Formik } from "formik";
@@ -16,7 +19,7 @@ type Props = {
 };
 
 const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
-  const initialValues = {
+  const initialValues: Values = {
     last_name: "",
     first_name: "",
     middle_initial: "",
@@ -27,7 +30,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
 
   const handleSubmit = async (
-    values: Override<Employee, { id?: number; rate: string | number }>,
+    values: Values,
     { resetForm }: { resetForm: () => void },
   ) => {
     const NAs = ["na", "n/a"];
@@ -59,7 +62,8 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
 
       const record = records.find((employee) => {
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
-        const valuesMiddleInitial = formattedValues.middle_initial.toLowerCase();
+        const valuesMiddleInitial =
+          formattedValues.middle_initial.toLowerCase();
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
@@ -190,7 +194,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                       className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       keyboardType="numeric"
                       placeholder="Enter rate"
-                      value={values.rate}
+                      value={`${values.rate}`}
                       onChangeText={handleChange("rate")}
                       onBlur={() => setFieldTouched("rate")}
                     />

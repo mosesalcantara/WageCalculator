@@ -1,17 +1,17 @@
-import { period as validationSchema } from "@/schemas/globals";
+import {
+  period as validationSchema,
+  Period as Values,
+} from "@/schemas/globals";
 import { formatDateValue } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Formik, FormikErrors } from "formik";
+import { Formik } from "formik";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
   onSubmit: (
-    values: {
-      start_date: string;
-      end_date: string;
-    },
+    values: Values,
     {
       resetForm,
     }: {
