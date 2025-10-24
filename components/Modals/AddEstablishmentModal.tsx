@@ -1,13 +1,12 @@
-import {
-  establishment as schema,
-  Establishment as Schema,
-} from "@/schemas/globals";
+import FormikSelect from "@/components/FormikSelect";
+import { establishment as schema } from "@/schemas/_globals";
 import { Db } from "@/types/globals";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
+import * as Yup from "yup";
 
 type Props = {
   db: Db;
@@ -23,10 +22,10 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (values: Schema) => {
+  const onSubmit = async (values: Yup.InferType<typeof schema>) => {
     console.log(values);
   };
 
@@ -61,10 +60,8 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                     <TextInput
                       className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter name"
-                      value={`${value}`}
-                      onChangeText={(value) =>
-                        onChange(value ? parseInt(value) : "")
-                      }
+                      value={value ? `${value}` : ""}
+                      onChangeText={onChange}
                       onBlur={onBlur}
                     />
                   </>
@@ -86,11 +83,21 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                 name="size"
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
-                    <TextInput
+                    {/* <TextInput
                       className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter size"
                       value={value}
                       onChangeText={onChange}
+                      onBlur={onBlur}
+                    /> */}
+                    <FormikSelect
+                      name="size"
+                      options={[
+                        { label: "1", value: "1" },
+                        { label: "2", value: "2" },
+                      ]}
+                      value={value}
+                      onChange={onChange}
                       onBlur={onBlur}
                     />
                   </>

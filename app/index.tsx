@@ -1,105 +1,67 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { z } from "zod";
+import AddEstablishmentModal from "@/components/Modals/AddEstablishmentModal";
+import ViewSettingsModal from "@/components/Modals/ViewSettingsModal";
+import NavBar from "@/components/NavBar";
+import EstablishmentsTable from "@/components/Tables/EstablishmentsTable";
+import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
+import useFetchEstablishments from "@/hooks/useFetchEstablishments";
+import useFetchHolidays from "@/hooks/useFetchHolidays";
+import useFetchWageOrders from "@/hooks/useFetchWageOrders";
+import { getDb } from "@/utils/globals";
+import { useFocusEffect } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useCallback } from "react";
+import { BackHandler, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-// Define Zod schema for form validation
-const schema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Name must be at least 2 characters long" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  age: z
-    .number("Must be a number")
-    .min(18, { message: "You must be at least 18 years old" }),
-});
+const EstablishmentsPage = () => {
+  const db = getDb();
+  const router = useRouter();
 
-const FormComponent = () => {
-  // Initialize the form with React Hook Form and Zod schema resolver
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
+  useFetchWageOrders(db);
+  useFetchHolidays(db);
 
-  // Function to handle form submission
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
+  const { establishments, refetch } = useFetchEstablishments(db);
+  const { handleDelete } = useDeleteEstablishment(db, refetch);
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        BackHandler.exitApp();
+        return true;
+      };
+
+      const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress,
+      );
+
+      return () => backhandler.remove();
+    }, []),
+  );
 
   return (
-    <View style={styles.container}>
-      <Text>Name</Text>
-      <Controller
-        control={control}
-        name="name"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            placeholder="Enter your name"
-          />
-        )}
-      />
-      {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
+    <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+      <NavBar />
 
-      <Text>Email</Text>
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            placeholder="Enter your email"
-          />
-        )}
-      />
-      {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
-
-      <Text>Age</Text>
-      <Controller
-        control={control}
-        name="age"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value ? `${value}` : ""}
-            placeholder="Enter your age"
-            keyboardType="numeric"
-          />
-        )}
-      />
-      {errors.age && <Text style={styles.error}>{errors.age.message}</Text>}
-
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
-    </View>
+      <View className="p-4">
+        <View className="mb-2 flex-row items-center justify-between">
+          <Text className="text-center text-xl font-bold">Establishments</Text>
+          <View className="flex-row justify-end gap-2">
+            <AddEstablishmentModal db={db} refetch={refetch} />
+            {/* <ViewSettingsModal router={router} /> */}
+          </View>
+        </View>
+      
+        <EstablishmentsTable
+          db={db}
+          router={router}
+          establishments={establishments}
+          refetch={refetch}
+          onDelete={handleDelete}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 8,
-  },
-  error: {
-    color: "red",
-  },
-});
-
-export default FormComponent;
+export default EstablishmentsPage;

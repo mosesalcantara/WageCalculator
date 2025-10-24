@@ -12,10 +12,7 @@ const getError = (type: keyof typeof errors, label: string) => {
 };
 
 export const establishment = z.object({
-  // name: z
-  //   .string(getError("required", "Name"))
-  //   .min(1, getError("required", "Name")),
-    name: z.number(getError("number", "Rate")),
+  name: z.number(getError("number", "Rate")),
   size: z
     .string(getError("required", "Size"))
     .min(1, getError("required", "Size")),

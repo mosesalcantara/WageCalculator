@@ -1,14 +1,14 @@
-import { useImmer } from "use-immer";
 import { View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { useImmer } from "use-immer";
 
 type Props = {
   name: string;
   value: string;
   options: { label: string; value: string }[];
   placeholder?: string;
-  setFieldValue: (name: string, value: string) => void;
-  setFieldTouched: (name: string) => void;
+  onChange: (value: string) => void;
+  onBlur: () => void;
 };
 
 const Select = ({
@@ -16,8 +16,8 @@ const Select = ({
   value,
   options,
   placeholder = "Select Item",
-  setFieldValue,
-  setFieldTouched,
+  onChange,
+  onBlur,
 }: Props) => {
   const [isFocused, setIsFocused] = useImmer(false);
 
@@ -33,12 +33,12 @@ const Select = ({
         placeholder={!isFocused ? placeholder : ""}
         value={value}
         onChange={(option) => {
-          setFieldValue(name, option.value);
+          onChange(option.value);
           setIsFocused(false);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
-          setFieldTouched(name);
+          onBlur();
           setIsFocused(false);
         }}
       />
