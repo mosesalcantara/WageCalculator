@@ -33,9 +33,11 @@ const EstablishmentsTable = ({
         keyExtractor={(establishment) => `${establishment.id}`}
         renderItem={({ item: establishment }) => (
           <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
-            <Text className="font-bold">{establishment.name}</Text>
+            <View className="w-[70%]">
+              <Text className="font-bold">{establishment.name}</Text>
+            </View>
 
-            <View className="flex-row gap-1">
+            <View className="w-[30%] flex-row items-center gap-2">
               <TouchableOpacity
                 onPress={() => setEstablishment(establishment.id, "employees")}
               >
