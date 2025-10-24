@@ -47,6 +47,7 @@
     "nativewind": "^4.2.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.65.0",
     "react-native": "0.79.5",
     "react-native-blob-util": "^0.22.2",
     "react-native-element-dropdown": "^2.12.4",
@@ -67,7 +68,7 @@
     "use-immer": "^0.11.0",
     "xlsx-js-style": "^1.2.0",
     "xlsx-style": "^0.8.13",
-    "yup": "^1.7.0"
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
