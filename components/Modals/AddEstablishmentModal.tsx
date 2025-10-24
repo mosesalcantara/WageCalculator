@@ -91,7 +91,6 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                       onBlur={onBlur}
                     /> */}
                     <FormikSelect
-                      name="size"
                       options={[
                         { label: "1", value: "1" },
                         { label: "2", value: "2" },

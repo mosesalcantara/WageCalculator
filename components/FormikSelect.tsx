@@ -3,7 +3,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useImmer } from "use-immer";
 
 type Props = {
-  name: string;
   value: string;
   options: { label: string; value: string }[];
   placeholder?: string;
@@ -12,7 +11,6 @@ type Props = {
 };
 
 const Select = ({
-  name,
   value,
   options,
   placeholder = "Select Item",
