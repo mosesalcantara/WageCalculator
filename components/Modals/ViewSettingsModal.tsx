@@ -1,66 +1,76 @@
-import { Href, Router } from "expo-router";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { useImmer } from "use-immer";
+// import { Href, Router } from "expo-router";
+// import { Modal, Text, TouchableOpacity, View } from "react-native";
+// import Icon from "react-native-vector-icons/MaterialIcons";
+// import { useImmer } from "use-immer";
 
-type Props = {
-  router: Router;
-};
+// type Props = {
+//   router: Router;
+// };
 
-const ViewSettingsModal = ({ router }: Props) => {
-  const [isVisible, setIsVisible] = useImmer(false);
+// const ViewSettingsModal = ({ router }: Props) => {
+//   const [isVisible, setIsVisible] = useImmer(false);
 
+//   return (
+//     <>
+//       <TouchableOpacity
+//         className="rounded-[1.875rem] bg-black p-3"
+//         onPress={() => setIsVisible(true)}
+//       >
+//         <Icon name="settings" size={20} color="white" />
+//       </TouchableOpacity>
+
+//       <Modal
+//         animationType="slide"
+//         transparent
+//         statusBarTranslucent
+//         visible={isVisible}
+//         onRequestClose={() => setIsVisible(false)}
+//       >
+//         <View className="flex-1 items-center justify-center bg-black/40">
+//           <View className="w-4/5 gap-1.5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+//             <View>
+//               <TouchableOpacity
+//                 className="rounded-[0.625rem] bg-black p-3"
+//                 onPress={() => router.push("/settings/wage-orders" as Href)}
+//               >
+//                 <Text className="text-center font-bold text-white">
+//                   📑 Wage Orders
+//                 </Text>
+//               </TouchableOpacity>
+//             </View>
+//             <View>
+//               <TouchableOpacity
+//                 className="rounded-[0.625rem] bg-black p-3"
+//                 onPress={() => router.push("/settings/holidays" as Href)}
+//               >
+//                 <Text className="text-center font-bold text-white">
+//                   📅 Holidays
+//                 </Text>
+//               </TouchableOpacity>
+//             </View>
+//             <View className="flex-row justify-end">
+//               <TouchableOpacity
+//                 className="mt-2 rounded bg-white px-2.5 py-[0.3125rem]"
+//                 onPress={() => setIsVisible(false)}
+//               >
+//                 <Text className="font-bold">Cancel</Text>
+//               </TouchableOpacity>
+//             </View>
+//           </View>
+//         </View>
+//       </Modal>
+//     </>
+//   );
+// };
+
+// export default ViewSettingsModal;
+
+import React from 'react'
+
+const ViewSettingsModal = () => {
   return (
-    <>
-      <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
-        onPress={() => setIsVisible(true)}
-      >
-        <Icon name="settings" size={20} color="white" />
-      </TouchableOpacity>
+    <></>
+  )
+}
 
-      <Modal
-        animationType="slide"
-        transparent
-        statusBarTranslucent
-        visible={isVisible}
-        onRequestClose={() => setIsVisible(false)}
-      >
-        <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-1.5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-            <View>
-              <TouchableOpacity
-                className="rounded-[0.625rem] bg-black p-3"
-                onPress={() => router.push("/settings/wage-orders" as Href)}
-              >
-                <Text className="text-center font-bold text-white">
-                  📑 Wage Orders
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                className="rounded-[0.625rem] bg-black p-3"
-                onPress={() => router.push("/settings/holidays" as Href)}
-              >
-                <Text className="text-center font-bold text-white">
-                  📅 Holidays
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View className="flex-row justify-end">
-              <TouchableOpacity
-                className="mt-2 rounded bg-white px-2.5 py-[0.3125rem]"
-                onPress={() => setIsVisible(false)}
-              >
-                <Text className="font-bold">Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </>
-  );
-};
-
-export default ViewSettingsModal;
+export default ViewSettingsModal

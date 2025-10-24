@@ -1,161 +1,171 @@
-import { period as validationSchema } from "@/schemas/globals";
-import { formatDateValue } from "@/utils/globals";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Formik, FormikErrors } from "formik";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { useImmer } from "use-immer";
+// import { period as validationSchema } from "@/schemas/_globals";
+// import { formatDateValue } from "@/utils/globals";
+// import DateTimePicker from "@react-native-community/datetimepicker";
+// import { Formik } from "formik";
+// import { Modal, Text, TouchableOpacity, View } from "react-native";
+// import Icon from "react-native-vector-icons/MaterialIcons";
+// import { useImmer } from "use-immer";
 
-type Props = {
-  onSubmit: (
-    values: {
-      start_date: string;
-      end_date: string;
-    },
-    {
-      resetForm,
-    }: {
-      resetForm: () => void;
-    },
-  ) => Promise<void>;
-};
+// type Props = {
+//   onSubmit: (
+//     values: {
+//       start_date: string;
+//       end_date: string;
+//     },
+//     {
+//       resetForm,
+//     }: {
+//       resetForm: () => void;
+//     },
+//   ) => Promise<void>;
+// };
 
-const AddPeriodModal = ({ onSubmit }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
+// const AddPeriodModal = ({ onSubmit }: Props) => {
+//   const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
+//   const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
 
-  const initialValues = {
-    start_date: "",
-    end_date: "",
-  };
-  const [isVisible, setIsVisible] = useImmer(false);
+//   const initialValues = {
+//     start_date: "",
+//     end_date: "",
+//   };
+//   const [isVisible, setIsVisible] = useImmer(false);
 
+//   return (
+//     <>
+//       <TouchableOpacity
+//         className="rounded-[1.875rem] bg-black p-3"
+//         onPress={() => setIsVisible(true)}
+//       >
+//         <Text className="text-center font-bold text-white">Add Period</Text>
+//       </TouchableOpacity>
+
+//       <Modal
+//         animationType="slide"
+//         transparent
+//         statusBarTranslucent
+//         visible={isVisible}
+//         onRequestClose={() => setIsVisible(false)}
+//       >
+//         <Formik
+//           initialValues={initialValues}
+//           validationSchema={validationSchema}
+//           onSubmit={(
+//             values: { start_date: string; end_date: string },
+//             { resetForm }: { resetForm: () => void },
+//           ) => {
+//             onSubmit(values, { resetForm });
+//             setIsVisible(false);
+//           }}
+//         >
+//           {({
+//             values,
+//             errors,
+//             touched,
+//             handleSubmit,
+//             handleChange,
+//             setFieldValue,
+//             setFieldTouched,
+//           }) => (
+//             <View className="flex-1 items-center justify-center bg-black/40">
+//               <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+//                 <View className="flex-row flex-wrap justify-between gap-1">
+//                   <View className="w-[49%]">
+//                     <Text className="mb-1 text-base font-bold text-white">
+//                       Start Date
+//                     </Text>
+//                     <TouchableOpacity
+//                       className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+//                       onPress={() => setIsStartDateModalVisible(true)}
+//                     >
+//                       <Text>{values.start_date || "Select date"}</Text>
+//                       <Icon name="date-range" size={20} color="#555" />
+//                     </TouchableOpacity>
+//                     {touched.start_date && errors.start_date && (
+//                       <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+//                         {errors.start_date}
+//                       </Text>
+//                     )}
+//                   </View>
+
+//                   <View className="w-[49%]">
+//                     <Text className="mb-1 text-base font-bold text-white">
+//                       End Date
+//                     </Text>
+//                     <TouchableOpacity
+//                       className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+//                       onPress={() => setIsEndDateModalVisible(true)}
+//                     >
+//                       <Text>{values.end_date || "Select date"}</Text>
+//                       <Icon name="date-range" size={20} color="#555" />
+//                     </TouchableOpacity>
+//                     {touched.end_date && errors.end_date && (
+//                       <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+//                         {errors.end_date}
+//                       </Text>
+//                     )}
+//                   </View>
+//                 </View>
+
+//                 <View className="flex-row justify-end">
+//                   <TouchableOpacity
+//                     className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+//                     onPress={() => setIsVisible(false)}
+//                   >
+//                     <Text className="font-bold">Cancel</Text>
+//                   </TouchableOpacity>
+
+//                   <TouchableOpacity
+//                     className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+//                     onPress={() => handleSubmit()}
+//                   >
+//                     <Text className="font-bold">Add</Text>
+//                   </TouchableOpacity>
+//                 </View>
+//               </View>
+
+//               {isStartDateModalVisible && (
+//                 <DateTimePicker
+//                   value={formatDateValue(values.start_date)}
+//                   mode="date"
+//                   onChange={(_, value) => {
+//                     setFieldValue(
+//                       "start_date",
+//                       (value as Date).toISOString().split("T")[0],
+//                     );
+//                     setIsStartDateModalVisible(false);
+//                   }}
+//                 />
+//               )}
+
+//               {isEndDateModalVisible && (
+//                 <DateTimePicker
+//                   value={formatDateValue(values.end_date)}
+//                   mode="date"
+//                   onChange={(_, value) => {
+//                     setFieldValue(
+//                       "end_date",
+//                       (value as Date).toISOString().split("T")[0],
+//                     );
+//                     setIsEndDateModalVisible(false);
+//                   }}
+//                 />
+//               )}
+//             </View>
+//           )}
+//         </Formik>
+//       </Modal>
+//     </>
+//   );
+// };
+
+// export default AddPeriodModal;
+ 
+import React from 'react'
+
+const AddPeriodModal = () => {
   return (
-    <>
-      <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
-        onPress={() => setIsVisible(true)}
-      >
-        <Text className="text-center font-bold text-white">Add Period</Text>
-      </TouchableOpacity>
+    <></>
+  )
+}
 
-      <Modal
-        animationType="slide"
-        transparent
-        statusBarTranslucent
-        visible={isVisible}
-        onRequestClose={() => setIsVisible(false)}
-      >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={(
-            values: { start_date: string; end_date: string },
-            { resetForm }: { resetForm: () => void },
-          ) => {
-            onSubmit(values, { resetForm });
-            setIsVisible(false);
-          }}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleSubmit,
-            handleChange,
-            setFieldValue,
-            setFieldTouched,
-          }) => (
-            <View className="flex-1 items-center justify-center bg-black/40">
-              <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-                <View className="flex-row flex-wrap justify-between gap-1">
-                  <View className="w-[49%]">
-                    <Text className="mb-1 text-base font-bold text-white">
-                      Start Date
-                    </Text>
-                    <TouchableOpacity
-                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                      onPress={() => setIsStartDateModalVisible(true)}
-                    >
-                      <Text>{values.start_date || "Select date"}</Text>
-                      <Icon name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                    {touched.start_date && errors.start_date && (
-                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                        {errors.start_date}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View className="w-[49%]">
-                    <Text className="mb-1 text-base font-bold text-white">
-                      End Date
-                    </Text>
-                    <TouchableOpacity
-                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                      onPress={() => setIsEndDateModalVisible(true)}
-                    >
-                      <Text>{values.end_date || "Select date"}</Text>
-                      <Icon name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                    {touched.end_date && errors.end_date && (
-                      <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                        {errors.end_date}
-                      </Text>
-                    )}
-                  </View>
-                </View>
-
-                <View className="flex-row justify-end">
-                  <TouchableOpacity
-                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
-                    onPress={() => setIsVisible(false)}
-                  >
-                    <Text className="font-bold">Cancel</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
-                    onPress={() => handleSubmit()}
-                  >
-                    <Text className="font-bold">Add</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {isStartDateModalVisible && (
-                <DateTimePicker
-                  value={formatDateValue(values.start_date)}
-                  mode="date"
-                  onChange={(_, value) => {
-                    setFieldValue(
-                      "start_date",
-                      (value as Date).toISOString().split("T")[0],
-                    );
-                    setIsStartDateModalVisible(false);
-                  }}
-                />
-              )}
-
-              {isEndDateModalVisible && (
-                <DateTimePicker
-                  value={formatDateValue(values.end_date)}
-                  mode="date"
-                  onChange={(_, value) => {
-                    setFieldValue(
-                      "end_date",
-                      (value as Date).toISOString().split("T")[0],
-                    );
-                    setIsEndDateModalVisible(false);
-                  }}
-                />
-              )}
-            </View>
-          )}
-        </Formik>
-      </Modal>
-    </>
-  );
-};
-
-export default AddPeriodModal;
+export default AddPeriodModal

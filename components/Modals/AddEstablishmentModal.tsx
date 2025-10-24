@@ -1,12 +1,12 @@
-import Select from "@/components/FormikSelect";
-import { establishments } from "@/db/schema";
-import { establishment as validationSchema } from "@/schemas/globals";
-import { Db, Establishment, Override } from "@/types/globals";
-import { toastVisibilityTime } from "@/utils/globals";
-import { eq, sql } from "drizzle-orm";
-import { Formik } from "formik";
+import {
+  establishment as schema,
+  Establishment as Schema,
+} from "@/schemas/globals";
+import { Db } from "@/types/globals";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -15,55 +15,19 @@ type Props = {
 };
 
 const AddEstablishmentModal = ({ db, refetch }: Props) => {
-  const initialValues = {
-    name: "",
-    size: "Employing 10 or more workers",
-  };
-
   const [isVisible, setIsVisible] = useImmer(false);
 
-  const handleSubmit = async (
-    values: Override<Establishment, { id?: number }>,
-    { resetForm }: { resetForm: () => void },
-  ) => {
-    const formattedValues = {
-      ...values,
-      name: values.name.trim(),
-    };
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
 
-    try {
-      const record = await db.query.establishments.findFirst({
-        where: eq(
-          sql`LOWER(${establishments.name})`,
-          formattedValues.name.toLowerCase(),
-        ),
-      });
-
-      if (record) {
-        Toast.show({
-          type: "error",
-          text1: "Establishment Already Exists",
-          visibilityTime: toastVisibilityTime,
-        });
-      } else {
-        await db.insert(establishments).values(formattedValues);
-        refetch();
-        resetForm();
-        setIsVisible(false);
-        Toast.show({
-          type: "success",
-          text1: "Added Establishment",
-          visibilityTime: toastVisibilityTime,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "An Error Has Occured. Please Try Again.",
-        visibilityTime: toastVisibilityTime,
-      });
-    }
+  const onSubmit = async (values: Schema) => {
+    console.log(values);
   };
 
   return (
@@ -84,87 +48,79 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleSubmit,
-            handleChange,
-            setFieldTouched,
-            setFieldValue,
-          }) => (
-            <View className="flex-1 items-center justify-center bg-black/40">
-              <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-                <View>
-                  <Text className="mt-1 font-bold text-white">Name</Text>
-                  <TextInput
-                    className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
-                    placeholder="Enter name"
-                    value={values.name}
-                    onChangeText={handleChange("name")}
-                    onBlur={() => setFieldTouched("name")}
-                  />
-                  {touched.name && errors.name && (
-                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                      {errors.name}
-                    </Text>
-                  )}
-                </View>
+        <View className="flex-1 items-center justify-center bg-black/40">
+          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+            <View>
+              <Text className="mt-1 font-bold text-white">Name</Text>
 
-                <View>
-                  <Text className="mt-1 font-bold text-white">Size</Text>
-                  <Select
-                    name="size"
-                    value={values.size}
-                    options={[
-                      {
-                        label: "Employing 1 to 5 workers",
-                        value: "Employing 1 to 5 workers",
-                      },
-                      {
-                        label: "Employing 1 to 9 workers",
-                        value: "Employing 1 to 9 workers",
-                      },
-                      {
-                        label: "Employing 10 or more workers",
-                        value: "Employing 10 or more workers",
-                      },
-                    ]}
-                    placeholder="Select Size"
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                  />
-                  {touched.size && errors.size && (
-                    <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                      {errors.size}
-                    </Text>
-                  )}
-                </View>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <>
+                    <TextInput
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter name"
+                      value={`${value}`}
+                      onChangeText={(value) =>
+                        onChange(value ? parseInt(value) : "")
+                      }
+                      onBlur={onBlur}
+                    />
+                  </>
+                )}
+              />
 
-                <View className="flex-row justify-end">
-                  <TouchableOpacity
-                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
-                    onPress={() => setIsVisible(false)}
-                  >
-                    <Text className="font-bold">Cancel</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
-                    onPress={() => handleSubmit()}
-                  >
-                    <Text className="font-bold">Save</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              {errors.name && (
+                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  {`${errors.name.message}`}
+                </Text>
+              )}
             </View>
-          )}
-        </Formik>
+
+            <View>
+              <Text className="mt-1 font-bold text-white">Size</Text>
+
+              <Controller
+                control={control}
+                name="size"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <>
+                    <TextInput
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter size"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  </>
+                )}
+              />
+
+              {errors.size && (
+                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  {`${errors.size.message}`}
+                </Text>
+              )}
+            </View>
+
+            <View className="flex-row justify-end">
+              <TouchableOpacity
+                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                onPress={() => setIsVisible(false)}
+              >
+                <Text className="font-bold">Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                onPress={handleSubmit(onSubmit)}
+              >
+                <Text className="font-bold">Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
     </>
   );

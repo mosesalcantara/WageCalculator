@@ -1,5 +1,4 @@
 import confirmAlert from "@/components/ConfirmAlert";
-import UpdateEstablishmentModal from "@/components/Modals/UpdateEstablishmentModal";
 import { Db, Establishment } from "@/types/globals";
 import { Href, Router } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -42,11 +41,11 @@ const EstablishmentsTable = ({
                 <Icon name="remove-red-eye" size={20} color="#2196F3" />
               </TouchableOpacity>
 
-              <UpdateEstablishmentModal
+              {/* <UpdateEstablishmentModal
                 db={db}
                 establishment={establishment}
                 refetch={refetch}
-              />
+              /> */}
 
               <TouchableOpacity
                 onPress={() =>
