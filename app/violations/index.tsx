@@ -67,21 +67,19 @@ const ViolationsPage = () => {
   const { customViolationType, setCustomViolationType } =
     useFetchCustomViolations(db);
 
-  const {
-    handleChange,
-    handleReceivedChange,
-    handleAddPeriod,
-    handleClearPeriod,
-    handleRemovePeriod,
-  } = useViolationHandlers(type, employee, setViolationTypes);
+  const violationType = violationTypes[type];
+
+  const violationHandlers = useViolationHandlers(
+    type,
+    employee,
+    setViolationTypes,
+  );
   const customViolationHandlers = useCustomViolationHandlers(
     wageOrders || [],
     establishment,
     customViolationType,
     setCustomViolationType,
   );
-
-  const violationType = violationTypes[type];
 
   const getTabs = (size: string) => {
     const tabs = [
@@ -349,10 +347,12 @@ const ViolationsPage = () => {
                             establishment={establishment}
                             employee={employee}
                             violationTypes={violationTypes}
-                            onChange={handleChange}
-                            onAddPeriod={handleAddPeriod}
-                            onRemovePeriod={handleRemovePeriod}
-                            onClearPeriod={handleClearPeriod}
+                            onChange={violationHandlers.handleChange}
+                            onAddPeriod={violationHandlers.handleAddPeriod}
+                            onRemovePeriod={
+                              violationHandlers.handleRemovePeriod
+                            }
+                            onClearPeriod={violationHandlers.handleClearPeriod}
                           />
                         ))}
 
@@ -366,7 +366,7 @@ const ViolationsPage = () => {
                             placeholder="Enter pay received"
                             value={violationType.received}
                             onChangeText={(value) =>
-                              handleReceivedChange(value)
+                              violationHandlers.handleReceivedChange(value)
                             }
                           />
                         </View>
