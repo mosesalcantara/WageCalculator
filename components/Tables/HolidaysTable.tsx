@@ -34,14 +34,6 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
   const allYears = holidays?.map((holiday) => holiday.date.split("-")[0]);
   const years = [...new Set(allYears)];
 
-  const getOptions = () => {
-    const options = [{ label: "All", value: "All" }];
-    years.forEach((year) => {
-      options.push({ label: year, value: year });
-    });
-    return options;
-  };
-
   const [type, setType] = useImmer("All");
   const [isTypeFocused, setIsTypeFocused] = useImmer(false);
 
@@ -65,6 +57,14 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
       });
     }
   }, [holidays, type, year]);
+
+  const getOptions = () => {
+    const options = [{ label: "All", value: "All" }];
+    years.forEach((year) => {
+      options.push({ label: year, value: year });
+    });
+    return options;
+  };
 
   return (
     <>
