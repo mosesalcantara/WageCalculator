@@ -1,5 +1,11 @@
-import Select from "@/components/Select";
-import { CustomPeriod, CustomViolationType, Employee, Establishment, WageOrder } from "@/types/globals";
+import Select from "@/components/PeriodSelect";
+import {
+  CustomPeriod,
+  CustomViolationType,
+  Employee,
+  Establishment,
+  WageOrder,
+} from "@/types/globals";
 import {
   formatDateValue,
   formatNumber,
@@ -14,11 +20,14 @@ import { useImmer } from "use-immer";
 
 type Props = {
   index: number;
-  wageOrders: WageOrder[],
+  wageOrders: WageOrder[];
   establishment: Establishment;
   employee: Employee;
   customViolationType: CustomViolationType;
-  calculate: (size: string, period: CustomPeriod) => {
+  calculate: (
+    size: string,
+    period: CustomPeriod,
+  ) => {
     rate: number;
     rateToUse: number;
     daysMultiplier: number;
@@ -29,7 +38,11 @@ type Props = {
     overtimeHours: number;
     total: number;
   };
-  onChange: (index: number, key: keyof CustomPeriod | string, value: string | number | Date) => void;
+  onChange: (
+    index: number,
+    key: keyof CustomPeriod | string,
+    value: string | number | Date,
+  ) => void;
   onAddPeriod: () => void;
   onClearPeriod: (index: number) => void;
   onRemovePeriod: (index: number) => void;
@@ -202,8 +215,8 @@ const Form = ({
             ({rateToUse} x {daysMultiplier} x {days}) +{" "}
           </Text>
           <Text className="text-base font-bold text-[#27ae60]">
-            ({rateToUse} / 8 x {nightShiftMultiplier} x {nightShiftHours}) + ({rateToUse}{" "}
-            / 8 x {overtimeMultiplier} x {overtimeHours})
+            ({rateToUse} / 8 x {nightShiftMultiplier} x {nightShiftHours}) + (
+            {rateToUse} / 8 x {overtimeMultiplier} x {overtimeHours})
           </Text>
 
           <Text className="text-base font-bold text-[#27ae60]">

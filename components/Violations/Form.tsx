@@ -1,5 +1,5 @@
 import ViewDaysModal from "@/components/Modals/ViewDaysModal";
-import Select from "@/components/Select";
+import Select from "@/components/PeriodSelect";
 import {
   Employee,
   Establishment,

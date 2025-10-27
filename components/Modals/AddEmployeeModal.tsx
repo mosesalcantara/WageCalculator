@@ -1,4 +1,4 @@
-import Select from "@/components/RHFSelect";
+import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
 import { Db, Establishment } from "@/types/globals";

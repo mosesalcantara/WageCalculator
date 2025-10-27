@@ -1,10 +1,10 @@
 import confirmAlert from "@/components/ConfirmAlert";
 import UpdateHolidayModal from "@/components/Modals/UpdateHolidayModal";
+import Select from "@/components/Select";
 import { Db, Holiday } from "@/types/globals";
 import { formatDate } from "@/utils/globals";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
@@ -35,10 +35,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
   const years = [...new Set(allYears)];
 
   const [type, setType] = useImmer("All");
-  const [isTypeFocused, setIsTypeFocused] = useImmer(false);
-
   const [year, setYear] = useImmer("All");
-  const [isYearFocused, setIsYearFocused] = useImmer(false);
 
   const filteredHolidays = useMemo(() => {
     if (holidays) {
@@ -66,48 +63,34 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
     return options;
   };
 
+  const handleTypeChange = (value: string) => {
+    setType(value);
+  };
+
+  const handleYearChange = (value: string) => {
+    setYear(value);
+  };
+
   return (
     <>
       <View className="flex-row justify-between">
         <View className="mb-3 h-12 w-[69%] rounded-md border border-[#333] bg-white p-2">
-          <Dropdown
-            style={{ height: 20 }}
-            placeholderStyle={{ fontSize: 14 }}
-            selectedTextStyle={{ fontSize: 14 }}
-            data={typeOptions}
-            labelField="label"
-            valueField="value"
-            placeholder={!isTypeFocused ? "Select Type" : ""}
+          <Select
             value={type}
-            onChange={(option) => {
-              setType(option.value);
-              setIsTypeFocused(false);
-            }}
-            onFocus={() => setIsTypeFocused(true)}
-            onBlur={() => {
-              setIsTypeFocused(false);
-            }}
+            options={typeOptions}
+            height={20}
+            placeholder="Select Type"
+            onChange={handleTypeChange}
           />
         </View>
 
         <View className="mb-3 h-12 w-[30%] rounded-md border border-[#333] bg-white p-2">
-          <Dropdown
-            style={{ height: 20 }}
-            placeholderStyle={{ fontSize: 14 }}
-            selectedTextStyle={{ fontSize: 14 }}
-            data={getOptions()}
-            labelField="label"
-            valueField="value"
-            placeholder={!isYearFocused ? "Select Year" : ""}
+          <Select
             value={year}
-            onChange={(option) => {
-              setYear(option.value);
-              setIsYearFocused(false);
-            }}
-            onFocus={() => setIsYearFocused(true)}
-            onBlur={() => {
-              setIsYearFocused(false);
-            }}
+            options={getOptions()}
+            height={20}
+            placeholder="Select Year"
+            onChange={handleYearChange}
           />
         </View>
       </View>

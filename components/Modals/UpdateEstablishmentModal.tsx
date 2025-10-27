@@ -1,4 +1,4 @@
-import Select from "@/components/RHFSelect";
+import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import {
   establishment as schema,

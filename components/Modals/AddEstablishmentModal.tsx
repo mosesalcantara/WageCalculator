@@ -1,4 +1,4 @@
-import Select from "@/components/RHFSelect";
+import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import {
   establishment as schema,
@@ -30,9 +30,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (
-    values: Values,
-  ) => {
+  const onSubmit = async (values: Values) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),

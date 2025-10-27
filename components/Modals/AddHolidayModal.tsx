@@ -1,4 +1,4 @@
-import Select from "@/components/RHFSelect";
+import Select from "@/components/Select";
 import { holidays } from "@/db/schema";
 import { holiday as schema, Holiday as Values } from "@/schemas/globals";
 import { Db } from "@/types/globals";
@@ -189,7 +189,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
               onChange={async (_, value) => {
                 if (value) {
                   setValue("date", value);
-                  await trigger("date")
+                  await trigger("date");
                   setIsDateModalVisible(false);
                 }
               }}
