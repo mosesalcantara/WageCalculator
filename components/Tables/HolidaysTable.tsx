@@ -69,7 +69,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
   return (
     <>
       <View className="flex-row justify-between">
-        <View className="mb-3 h-12 w-[74%] rounded-md border border-[#333] bg-white p-2">
+        <View className="mb-3 h-12 w-[69%] rounded-md border border-[#333] bg-white p-2">
           <Dropdown
             style={{ height: 20 }}
             placeholderStyle={{ fontSize: 14 }}
@@ -90,7 +90,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
           />
         </View>
 
-        <View className="mb-3 h-12 w-[25%] rounded-md border border-[#333] bg-white p-2">
+        <View className="mb-3 h-12 w-[30%] rounded-md border border-[#333] bg-white p-2">
           <Dropdown
             style={{ height: 20 }}
             placeholderStyle={{ fontSize: 14 }}
