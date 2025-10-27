@@ -1,18 +1,19 @@
-import { period as schema, Period as Values } from "@/schemas/globals";
+import { Period as Values } from "@/schemas/globals";
 import { getDate } from "@/utils/globals";
-import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
+  form: UseFormReturn<Values, unknown, Values>;
+  isVisible: boolean;
+  onToggle: (isVisible: boolean) => void;
   onSubmit: (values: Values) => Promise<void>;
 };
 
-const AddPeriodModal = ({ onSubmit }: Props) => {
-  const [isVisible, setIsVisible] = useImmer(false);
+const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
 
@@ -22,17 +23,14 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
     setValue,
     trigger,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = form;
 
   return (
     <>
       <TouchableOpacity
         className="rounded-[1.875rem] bg-black p-3"
-        onPress={() => setIsVisible(true)}
+        onPress={() => onToggle(true)}
       >
         <Text className="text-center font-bold text-white">Add Period</Text>
       </TouchableOpacity>
@@ -42,7 +40,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
         transparent
         statusBarTranslucent
         visible={isVisible}
-        onRequestClose={() => setIsVisible(false)}
+        onRequestClose={() => onToggle(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
@@ -107,7 +105,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
             <View className="flex-row justify-end">
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
-                onPress={() => setIsVisible(false)}
+                onPress={() => onToggle(false)}
               >
                 <Text className="font-bold">Cancel</Text>
               </TouchableOpacity>

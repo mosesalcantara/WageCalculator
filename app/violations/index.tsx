@@ -9,7 +9,7 @@ import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
-import { Period as Values } from "@/schemas/globals";
+import { period as schema, Period as Values } from "@/schemas/globals";
 import {
   CustomPeriod,
   CustomViolationType,
@@ -27,10 +27,12 @@ import {
   periodFormat,
   toastVisibilityTime,
 } from "@/utils/globals";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
 import { useCallback } from "react";
+import { useForm } from "react-hook-form";
 import {
   AppState,
   BackHandler,
@@ -51,12 +53,15 @@ import { useImmer } from "use-immer";
 const ViolationsPage = () => {
   const db = getDb();
   const router = useRouter();
+  const form = useForm({ resolver: yupResolver(schema) });
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
   const [type, setType] = useImmer<ViolationKeys>("Basic Wage");
+  const [isAddPeriodModalVisible, setIsAddPeriodModalVisible] = useImmer(false);
 
   const { wageOrders } = useFetchWageOrders(db);
   const { holidays } = useFetchHolidays(db);
+
   const { establishment, employee, violationTypes, setViolationTypes } =
     useFetchViolations(db);
   const { customViolationType, setCustomViolationType } =
@@ -104,7 +109,11 @@ const ViolationsPage = () => {
     return filteredTabs;
   };
 
-  const handleAddPeriodSubmit = async (values: Values) => {
+  const handleAddPeriodModalToggle = (isVisible: boolean) => {
+    setIsAddPeriodModalVisible(isVisible);
+  };
+
+  const handleAddPeriodModalSubmit = async (values: Values) => {
     try {
       const periods = getPeriods(
         wageOrders || [],
@@ -112,6 +121,8 @@ const ViolationsPage = () => {
         getDate(values.end_date),
       );
       addPeriods(periods);
+      form.reset();
+      handleAddPeriodModalToggle(false);
       Toast.show({
         type: "success",
         text1: "Added Period",
@@ -270,7 +281,12 @@ const ViolationsPage = () => {
                   </Text>
                 </View>
                 <View className="w-[34%]">
-                  <AddPeriodModal onSubmit={handleAddPeriodSubmit} />
+                  <AddPeriodModal
+                    form={form}
+                    isVisible={isAddPeriodModalVisible}
+                    onToggle={handleAddPeriodModalToggle}
+                    onSubmit={handleAddPeriodModalSubmit}
+                  />
                 </View>
               </View>
 

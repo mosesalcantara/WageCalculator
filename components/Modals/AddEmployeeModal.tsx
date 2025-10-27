@@ -182,7 +182,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                     <>
                       <TextInput
                         className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
-                        placeholder="Enter middle initial"
+                        placeholder="Ex. A or N/A"
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
