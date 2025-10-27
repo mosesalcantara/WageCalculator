@@ -32,20 +32,15 @@ const EmployeesTable = ({
   refetch,
   onDelete,
 }: Props) => {
+  const [searchQuery, setSearchQuery] = useImmer("");
   const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useImmer(false);
-
-  const handleUpdateModalToggle = (isVisible: boolean) => {
-    setIsUpdateModalVisible(isVisible);
-  };
 
   const sortedEmployees = useMemo(() => {
     return employees?.sort((a, b) => {
       return a.last_name < b.last_name ? -1 : a.last_name > b.last_name ? 1 : 0;
     });
   }, [employees]);
-
-  const [searchQuery, setSearchQuery] = useImmer("");
 
   const filteredEmployees = useMemo(() => {
     const columns = [
@@ -57,7 +52,7 @@ const EmployeesTable = ({
       "end_day",
     ];
 
-    if (sortedEmployees && searchQuery) {
+    if (searchQuery && sortedEmployees) {
       return sortedEmployees.filter((employee) => {
         const isValid = columns.some((column) => {
           const value = employee[column as keyof Employee];
@@ -71,6 +66,10 @@ const EmployeesTable = ({
 
     return sortedEmployees;
   }, [sortedEmployees, searchQuery]);
+
+  const handleUpdateModalToggle = (isVisible: boolean) => {
+    setIsUpdateModalVisible(isVisible);
+  };
 
   const setId = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
