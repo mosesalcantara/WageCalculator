@@ -37,7 +37,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
-      date: `${values.date}`,
+      date: getDate(values.date),
     };
 
     try {
@@ -78,60 +78,58 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
       >
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-            <View className="flex-row flex-wrap justify-between gap-1">
-              <View>
-                <Text className="mt-1 font-bold text-white">Name</Text>
+            <View>
+              <Text className="mt-1 font-bold text-white">Name</Text>
 
-                <Controller
-                  control={control}
-                  name="name"
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <>
-                      <TextInput
-                        className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
-                        placeholder="Enter name"
-                        value={value}
-                        onChangeText={onChange}
-                        onBlur={onBlur}
-                      />
-                    </>
-                  )}
-                />
-
-                {errors.name && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                    {errors.name.message}
-                  </Text>
+              <Controller
+                control={control}
+                name="name"
+                defaultValue={holiday.name}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <>
+                    <TextInput
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      placeholder="Enter name"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  </>
                 )}
-              </View>
+              />
 
-              <View>
-                <Text className="mb-1 text-base font-bold text-white">
-                  Date
+              {errors.name && (
+                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  {errors.name.message}
                 </Text>
+              )}
+            </View>
 
-                <Controller
-                  control={control}
-                  name="date"
-                  render={({ field: { value, onChange, onBlur } }) => (
-                    <>
-                      <TouchableOpacity
-                        className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                        onPress={() => setIsDateModalVisible(true)}
-                      >
-                        <Text>{value ? getDate(value) : "Select date"}</Text>
-                        <Icon name="date-range" size={20} color="#555" />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                />
+            <View>
+              <Text className="mb-1 text-base font-bold text-white">Date</Text>
 
-                {errors.date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
-                    {errors.date.message}
-                  </Text>
+              <Controller
+                control={control}
+                name="date"
+                defaultValue={new Date(holiday.date)}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <>
+                    <TouchableOpacity
+                      className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                      onPress={() => setIsDateModalVisible(true)}
+                    >
+                      <Text>{value ? getDate(value) : "Select date"}</Text>
+                      <Icon name="date-range" size={20} color="#555" />
+                    </TouchableOpacity>
+                  </>
                 )}
-              </View>
+              />
+
+              {errors.date && (
+                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  {errors.date.message}
+                </Text>
+              )}
             </View>
 
             <View>
@@ -140,6 +138,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
               <Controller
                 control={control}
                 name="type"
+                defaultValue={holiday.type}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <Select

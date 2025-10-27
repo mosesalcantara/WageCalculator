@@ -101,11 +101,13 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
                 <Controller
                   control={control}
                   name="name"
+                  defaultValue={name}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TextInput
                         className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
                         placeholder="Enter name"
+                        editable={false}
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
