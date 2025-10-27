@@ -33,8 +33,6 @@ const EmployeesTable = ({
   onDelete,
 }: Props) => {
   const [searchQuery, setSearchQuery] = useImmer("");
-  const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
-  const [isUpdateModalVisible, setIsUpdateModalVisible] = useImmer(false);
 
   const sortedEmployees = useMemo(() => {
     return employees?.sort((a, b) => {
@@ -67,11 +65,7 @@ const EmployeesTable = ({
     return sortedEmployees;
   }, [sortedEmployees, searchQuery]);
 
-  const handleUpdateModalToggle = (isVisible: boolean) => {
-    setIsUpdateModalVisible(isVisible);
-  };
-
-  const setId = (id: number) => {
+  const setEmployee = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
     router.push("/violations" as Href);
   };
@@ -129,18 +123,16 @@ const EmployeesTable = ({
                   </Text>
 
                   <View className="w-[27%] flex-row justify-around">
-                    <TouchableOpacity onPress={() => setId(employee.id)}>
+                    <TouchableOpacity onPress={() => setEmployee(employee.id)}>
                       <Icon name="remove-red-eye" size={20} color="#2196F3" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                      onPress={() => {
-                        setEmployee(employee);
-                        handleUpdateModalToggle(true);
-                      }}
-                    >
-                      <Icon name="edit" size={20} color="#2196F3" />
-                    </TouchableOpacity>
+                    <UpdateEmployeeModal
+                      db={db}
+                      establishment={establishment}
+                      employee={employee}
+                      refetch={refetch}
+                    />
 
                     <TouchableOpacity
                       onPress={() => {
@@ -158,17 +150,6 @@ const EmployeesTable = ({
           </View>
         </View>
       </ScrollView>
-
-      {employee && (
-        <UpdateEmployeeModal
-          db={db}
-          establishment={establishment}
-          employee={employee}
-          isVisible={isUpdateModalVisible}
-          onToggle={handleUpdateModalToggle}
-          refetch={refetch}
-        />
-      )}
     </>
   );
 };
