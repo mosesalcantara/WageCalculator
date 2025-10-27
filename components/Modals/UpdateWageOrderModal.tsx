@@ -229,7 +229,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-bold">Add</Text>
+                <Text className="font-bold">Update</Text>
               </TouchableOpacity>
             </View>
           </View>
