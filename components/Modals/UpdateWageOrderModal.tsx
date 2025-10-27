@@ -25,6 +25,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
     control,
     getValues,
     setValue,
+    trigger,
     handleSubmit,
     reset,
     formState: { errors },
@@ -32,9 +33,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (
-    values: Values,
-  ) => {
+  const onSubmit = async (values: Values) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
@@ -238,9 +237,10 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
             <DateTimePicker
               value={getValues("date") || new Date()}
               mode="date"
-              onChange={(_, value) => {
+              onChange={async (_, value) => {
                 if (value) {
                   setValue("date", value);
+                  await trigger("date");
                   setIsDateModalVisible(false);
                 }
               }}

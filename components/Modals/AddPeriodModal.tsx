@@ -20,6 +20,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
     control,
     getValues,
     setValue,
+    trigger,
     handleSubmit,
     reset,
     formState: { errors },
@@ -60,11 +61,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                         className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsStartDateModalVisible(true)}
                       >
-                        <Text>
-                          {value
-                            ? getDate(value)
-                            : "Select date"}
-                        </Text>
+                        <Text>{value ? getDate(value) : "Select date"}</Text>
                         <Icon name="date-range" size={20} color="#555" />
                       </TouchableOpacity>
                     </>
@@ -92,11 +89,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
                         className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsEndDateModalVisible(true)}
                       >
-                        <Text>
-                          {value
-                            ? getDate(value)
-                            : "Select date"}
-                        </Text>
+                        <Text>{value ? getDate(value) : "Select date"}</Text>
                         <Icon name="date-range" size={20} color="#555" />
                       </TouchableOpacity>
                     </>
@@ -135,6 +128,7 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
               onChange={(_, value) => {
                 if (value) {
                   setValue("start_date", value);
+                  trigger("start_date");
                   setIsStartDateModalVisible(false);
                 }
               }}
@@ -145,9 +139,10 @@ const AddPeriodModal = ({ onSubmit }: Props) => {
             <DateTimePicker
               value={getValues("end_date") || new Date()}
               mode="date"
-              onChange={(_, value) => {
+              onChange={async (_, value) => {
                 if (value) {
                   setValue("end_date", value);
+                  await trigger("end_date");
                   setIsEndDateModalVisible(false);
                 }
               }}

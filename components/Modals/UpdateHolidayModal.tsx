@@ -26,6 +26,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
     control,
     getValues,
     setValue,
+    trigger,
     handleSubmit,
     reset,
     formState: { errors },
@@ -189,9 +190,10 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
             <DateTimePicker
               value={getValues("date") || new Date()}
               mode="date"
-              onChange={(_, value) => {
+              onChange={async (_, value) => {
                 if (value) {
                   setValue("date", value);
+                  await trigger("date");
                   setIsDateModalVisible(false);
                 }
               }}

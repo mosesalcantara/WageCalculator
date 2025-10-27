@@ -24,6 +24,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
     control,
     getValues,
     setValue,
+    trigger,
     handleSubmit,
     reset,
     formState: { errors },
@@ -64,7 +65,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Text className="text-center font-bold text-white">Add Wage Order</Text>
+        <Text className="text-center font-bold text-white">Add Holiday</Text>
       </TouchableOpacity>
 
       <Modal
@@ -134,6 +135,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
               <Controller
                 control={control}
                 name="type"
+                defaultValue="Regular Holiday"
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <Select
@@ -184,9 +186,10 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
             <DateTimePicker
               value={getValues("date") || new Date()}
               mode="date"
-              onChange={(_, value) => {
+              onChange={async (_, value) => {
                 if (value) {
                   setValue("date", value);
+                  await trigger("date")
                   setIsDateModalVisible(false);
                 }
               }}
