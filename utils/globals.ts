@@ -1,5 +1,10 @@
 import * as schema from "@/db/schema";
-import { Period, ViolationKeys, ViolationType, WageOrder } from "@/types/globals";
+import {
+  Period,
+  ViolationKeys,
+  ViolationType,
+  WageOrder,
+} from "@/types/globals";
 import { differenceInDays, format, parse, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
@@ -247,6 +252,10 @@ export const formatDate = (
   return format(parse(date, "yyyy-MM-dd", new Date()), dateFormat);
 };
 
+export const getDate = (dateTime: Date) => {
+  return dateTime.toISOString().split("T")[0];
+};
+
 export const validate = (
   object: { [key: string]: string | number },
   excluded: string[] = [],
@@ -460,6 +469,8 @@ export const getPeriods = (
       });
     });
   }
+
+  console.log(periods);
 
   return periods;
 };

@@ -20,6 +20,7 @@ import {
 import {
   customPeriodFormat,
   formatNumber,
+  getDate,
   getDb,
   getPeriods,
   getTotal,
@@ -103,19 +104,14 @@ const ViolationsPage = () => {
     return filteredTabs;
   };
 
-  const handleAddPeriodSubmit = async (
-    values: Values,
-    { resetForm }: { resetForm: () => void },
-  ) => {
+  const handleAddPeriodSubmit = async (values: Values) => {
     try {
-      const { start_date, end_date } = values;
       const periods = getPeriods(
         wageOrders || [],
-        start_date as string,
-        end_date as string,
+        getDate(values.start_date as Date),
+        getDate(values.end_date as Date),
       );
       addPeriods(periods);
-      resetForm();
       Toast.show({
         type: "success",
         text1: "Added Period",
