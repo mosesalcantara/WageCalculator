@@ -4,7 +4,7 @@ import {
   ViolationKeys,
   ViolationType,
 } from "@/types/globals";
-import { getPeriodFormat } from "@/utils/globals";
+import { getDate, getPeriodFormat } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useViolationHandlers = (
@@ -18,7 +18,7 @@ const useViolationHandlers = (
     value: string | number | Date,
   ) => {
     if (key.endsWith("_date")) {
-      value = (value as Date).toISOString().split("T")[0];
+      value = getDate(value as Date);
     }
 
     setter((draft) => {

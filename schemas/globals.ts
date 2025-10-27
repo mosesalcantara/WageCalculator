@@ -53,13 +53,7 @@ export const period = Yup.object().shape({
     .label("End Date"),
 });
 
-export type Period = Override<
-  Yup.InferType<typeof period>,
-  {
-    start_date: Date | string;
-    end_date: Date | string;
-  }
->;
+export type Period = Yup.InferType<typeof period>;
 
 export const wageOrder = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
@@ -80,7 +74,6 @@ export const wageOrder = Yup.object().shape({
 export type WageOrder = Override<
   Yup.InferType<typeof wageOrder>,
   {
-    date: Date | string;
     less_than_ten: number | string;
     ten_or_more: number | string;
   }
@@ -95,7 +88,4 @@ export const holiday = Yup.object().shape({
   type: Yup.string().trim().required().label("Type"),
 });
 
-export type Holiday = Override<
-  Yup.InferType<typeof holiday>,
-  { date: Date | string }
->;
+export type Holiday = Yup.InferType<typeof holiday>;

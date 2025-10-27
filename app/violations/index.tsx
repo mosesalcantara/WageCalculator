@@ -108,8 +108,8 @@ const ViolationsPage = () => {
     try {
       const periods = getPeriods(
         wageOrders || [],
-        getDate(values.start_date as Date),
-        getDate(values.end_date as Date),
+        getDate(values.start_date),
+        getDate(values.end_date),
       );
       addPeriods(periods);
       Toast.show({

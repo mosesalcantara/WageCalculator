@@ -5,7 +5,7 @@ import {
   Establishment,
   WageOrder,
 } from "@/types/globals";
-import { customPeriodFormat, getMinimumRate } from "@/utils/globals";
+import { customPeriodFormat, getDate, getMinimumRate } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useCustomViolationHandlers = (
@@ -119,7 +119,7 @@ const useCustomViolationHandlers = (
     value: string | number | Date,
   ) => {
     if (key.endsWith("_date")) {
-      value = (value as Date).toISOString().split("T")[0];
+      value = getDate(value as Date);
     }
 
     setter((draft) => {

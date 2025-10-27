@@ -470,7 +470,5 @@ export const getPeriods = (
     });
   }
 
-  console.log(periods);
-
   return periods;
 };
