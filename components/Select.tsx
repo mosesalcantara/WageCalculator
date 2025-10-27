@@ -5,7 +5,7 @@ import { useImmer } from "use-immer";
 type Props = {
   value: string;
   options: { label: string; value: string }[];
-  height?: number;
+  className?: string;
   placeholder?: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
@@ -14,7 +14,7 @@ type Props = {
 const Select = ({
   value,
   options,
-  height = 25,
+  className = "",
   placeholder = "Select Item",
   onChange,
   onBlur,
@@ -22,9 +22,9 @@ const Select = ({
   const [isFocused, setIsFocused] = useImmer(false);
 
   return (
-    <View className="mt-1 rounded-md bg-white p-2">
+    <View className={`rounded-md bg-white p-2 ${className}`}>
       <Dropdown
-        style={[{ height }, isFocused && { borderColor: "blue" }]}
+        style={[{ height: 25 }, isFocused && { borderColor: "blue" }]}
         placeholderStyle={{ fontSize: 14 }}
         selectedTextStyle={{ fontSize: 14 }}
         data={options}

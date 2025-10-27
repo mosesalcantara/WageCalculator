@@ -63,36 +63,24 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
     return options;
   };
 
-  const handleTypeChange = (value: string) => {
-    setType(value);
-  };
-
-  const handleYearChange = (value: string) => {
-    setYear(value);
-  };
-
   return (
     <>
-      <View className="flex-row justify-between">
-        <View className="mb-3 h-12 w-[69%] rounded-md border border-[#333] bg-white p-2">
-          <Select
-            value={type}
-            options={typeOptions}
-            height={20}
-            placeholder="Select Type"
-            onChange={handleTypeChange}
-          />
-        </View>
+      <View className="flex-row justify-between mb-3">
+        <Select
+          value={type}
+          options={typeOptions}
+          className="w-[69%] border border-[#333]"
+          placeholder="Select Type"
+          onChange={(value) => setType(value)}
+        />
 
-        <View className="mb-3 h-12 w-[30%] rounded-md border border-[#333] bg-white p-2">
-          <Select
-            value={year}
-            options={getOptions()}
-            height={20}
-            placeholder="Select Year"
-            onChange={handleYearChange}
-          />
-        </View>
+        <Select
+          value={year}
+          options={getOptions()}
+          className="w-[30%] border border-[#333]"
+          placeholder="Select Year"
+          onChange={(value) => setYear(value)}
+        />
       </View>
 
       <View className="h-[83%] rounded-md bg-white p-3">
