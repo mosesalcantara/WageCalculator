@@ -19,14 +19,16 @@ const Select = ({
   placeholder = "Select Item",
   onChange,
 }: Props) => {
+  const textStyles = { fontFamily: "Geist_400Regular", fontSize: 14 };
   const [isFocused, setIsFocused] = useImmer(false);
 
   return (
     <View className="h-12 rounded-md border border-black p-2">
       <Dropdown
         style={{ height: 20 }}
-        placeholderStyle={{ fontFamily: "Geist_400Regular", fontSize: 14 }}
-        selectedTextStyle={{ fontFamily: "Geist_400Regular", fontSize: 14 }}
+        placeholderStyle={textStyles}
+        selectedTextStyle={textStyles}
+        itemTextStyle={textStyles}
         data={options}
         labelField="label"
         valueField="value"
