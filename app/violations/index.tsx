@@ -323,7 +323,7 @@ const ViolationsPage = () => {
                             Received
                           </Text>
                           <TextInput
-                            className="rounded-md border border-black px-2.5"
+                            className="font-r rounded-md border border-black px-2.5"
                             keyboardType="numeric"
                             placeholder="Enter pay received"
                             value={customViolationType.received}
@@ -361,7 +361,7 @@ const ViolationsPage = () => {
                             Received
                           </Text>
                           <TextInput
-                            className="rounded-md border border-black px-2.5"
+                            className="font-r rounded-md border border-black px-2.5"
                             keyboardType="numeric"
                             placeholder="Enter pay received"
                             value={violationType.received}

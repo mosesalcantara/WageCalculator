@@ -73,11 +73,11 @@ const EmployeesTable = ({
   return (
     <>
       <TextInput
+        className="font-r mb-2.5 rounded-lg border border-[#333] bg-white p-2.5 text-base"
         placeholder="Search employee"
         placeholderTextColor="#888"
         value={searchQuery}
         onChangeText={setSearchQuery}
-        className="mb-2.5 rounded-lg border border-[#333] bg-white p-2.5 text-base"
       />
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>

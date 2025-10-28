@@ -142,7 +142,7 @@ const UpdateEmployeeModal = ({
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TextInput
-                        className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                        className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
                         placeholder="Enter last name"
                         value={value}
                         onChangeText={onChange}
@@ -169,7 +169,7 @@ const UpdateEmployeeModal = ({
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TextInput
-                        className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                        className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
                         placeholder="Enter first name"
                         value={value}
                         onChangeText={onChange}
@@ -198,7 +198,7 @@ const UpdateEmployeeModal = ({
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TextInput
-                        className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                        className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
                         placeholder="Ex. A or N/A"
                         value={value}
                         onChangeText={onChange}
@@ -225,7 +225,7 @@ const UpdateEmployeeModal = ({
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TextInput
-                        className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                        className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
                         keyboardType="numeric"
                         placeholder="Enter rate"
                         value={value ? `${value}` : ""}

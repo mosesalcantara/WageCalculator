@@ -89,7 +89,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
-                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
                       placeholder="Enter name"
                       value={value}
                       onChangeText={onChange}

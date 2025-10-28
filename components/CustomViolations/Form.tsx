@@ -149,7 +149,7 @@ const Form = ({
             <Text className="font-b mb-1 text-base text-[#333]">Rate</Text>
             <View className="flex-row items-center  rounded-md border border-black px-2.5">
               <TextInput
-                className="w-[85%]"
+                className="font-r w-[85%]"
                 keyboardType="numeric"
                 placeholder="Enter Rate"
                 value={period.rate}
@@ -164,7 +164,7 @@ const Form = ({
               Prevailing Rate
             </Text>
             <TextInput
-              className="rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+              className="font-r rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
               keyboardType="numeric"
               placeholder=""
               editable={false}
@@ -177,7 +177,7 @@ const Form = ({
           <View className="w-[32%]">
             <Text className="font-b mb-1 text-base text-[#333]">Days</Text>
             <TextInput
-              className="rounded-md border border-black px-2.5"
+              className="font-r rounded-md border border-black px-2.5"
               keyboardType="numeric"
               placeholder="Enter Days"
               value={period.days}
@@ -190,7 +190,7 @@ const Form = ({
               Night Shift
             </Text>
             <TextInput
-              className="rounded-md border border-black px-2.5"
+              className="font-r rounded-md border border-black px-2.5"
               keyboardType="numeric"
               placeholder="Enter Hours"
               value={period.nightShiftHours}
@@ -203,7 +203,7 @@ const Form = ({
           <View className="w-[32%]">
             <Text className="font-b mb-1 text-base text-[#333]">Overtime</Text>
             <TextInput
-              className="rounded-md border border-black px-2.5"
+              className="font-r rounded-md border border-black px-2.5"
               keyboardType="numeric"
               placeholder="Enter Hours"
               value={period.overtimeHours}
