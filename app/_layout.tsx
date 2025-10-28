@@ -1,11 +1,13 @@
 import Loader from "@/components/Loader";
 import migrations from "@/drizzle/migrations";
 import "@/globals.css";
+import { Montserrat_400Regular, useFonts } from "@expo-google-fonts/montserrat";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import Toast, {
   BaseToastProps,
   ErrorToast,
@@ -39,6 +41,20 @@ const toastConfig = {
 
 const RootLayout = () => {
   useMigrations(db, migrations);
+
+  const [loaded, error] = useFonts({
+    Montserrat_400Regular,
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
     <>
