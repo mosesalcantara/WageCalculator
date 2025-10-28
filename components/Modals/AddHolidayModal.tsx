@@ -78,7 +78,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
               <Label name="Name" />
 
@@ -102,7 +102,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
             </View>
 
             <View>
-              <Text className="mb-1 font-b text-base text-white">Date</Text>
+              <Label name="Date" />
 
               <Controller
                 control={control}

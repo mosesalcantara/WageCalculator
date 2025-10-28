@@ -1,4 +1,5 @@
 import ErrorMessage from "@/components/ErrorMessage";
+import Label from "@/components/Label";
 import { Period as Values } from "@/schemas/globals";
 import { getDate } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -44,12 +45,10 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
         onRequestClose={() => onToggle(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mb-1 font-b text-base text-white">
-                  Start Date
-                </Text>
+                <Label name="Start Date" />
 
                 <Controller
                   control={control}
@@ -73,9 +72,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Text className="mb-1 font-b text-base text-white">
-                  End Date
-                </Text>
+                <Label name="End Date" />
 
                 <Controller
                   control={control}

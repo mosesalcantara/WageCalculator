@@ -116,7 +116,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-2">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Label name="Last Name" />
