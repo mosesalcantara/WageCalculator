@@ -250,7 +250,7 @@ const ViolationsPage = () => {
                         color={type === tab.name ? "#fff" : "#555"}
                       />
                       <Text
-                        className={`ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
+                        className={`font-r ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
                       >
                         {tab.name}
                       </Text>

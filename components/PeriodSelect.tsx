@@ -25,8 +25,8 @@ const Select = ({
     <View className="h-12 rounded-md border border-black p-2">
       <Dropdown
         style={{ height: 20 }}
-        placeholderStyle={{ fontSize: 14 }}
-        selectedTextStyle={{ fontSize: 14 }}
+        placeholderStyle={{ fontFamily: "Geist_400Regular", fontSize: 14 }}
+        selectedTextStyle={{ fontFamily: "Geist_400Regular", fontSize: 14 }}
         data={options}
         labelField="label"
         valueField="value"
