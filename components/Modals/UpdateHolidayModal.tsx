@@ -80,7 +80,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
-              <Text className="font-b mt-1 text-white">Name</Text>
+              <Text className="mt-1 font-b text-white">Name</Text>
 
               <Controller
                 control={control}
@@ -89,7 +89,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
-                      className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
                       placeholder="Enter name"
                       value={value}
                       onChangeText={onChange}
@@ -100,14 +100,14 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
               />
 
               {errors.name && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.name.message}
                 </Text>
               )}
             </View>
 
             <View>
-              <Text className="font-b mb-1 text-base text-white">Date</Text>
+              <Text className="mb-1 font-b text-base text-white">Date</Text>
 
               <Controller
                 control={control}
@@ -129,14 +129,14 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
               />
 
               {errors.date && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.date.message}
                 </Text>
               )}
             </View>
 
             <View>
-              <Text className="font-b mt-1 text-white">Type</Text>
+              <Text className="mt-1 font-b text-white">Type</Text>
 
               <Controller
                 control={control}
@@ -165,7 +165,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
               />
 
               {errors.type && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.type.message}
                 </Text>
               )}

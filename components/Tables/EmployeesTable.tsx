@@ -73,7 +73,7 @@ const EmployeesTable = ({
   return (
     <>
       <TextInput
-        className="font-r mb-2.5 rounded-lg border border-[#333] bg-white p-2.5 text-base"
+        className="mb-2.5 rounded-lg border border-[#333] bg-white p-2.5 font-r text-base"
         placeholder="Search employee"
         placeholderTextColor="#888"
         value={searchQuery}
@@ -83,16 +83,16 @@ const EmployeesTable = ({
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
           <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
-            <Text className="font-b w-[35%] text-center text-base text-white">
+            <Text className="w-[35%] text-center font-b text-base text-white">
               Name
             </Text>
-            <Text className="font-b w-[13%] text-center text-base text-white">
+            <Text className="w-[13%] text-center font-b text-base text-white">
               Rate
             </Text>
-            <Text className="font-b w-[20%] text-center text-base text-white">
+            <Text className="w-[20%] text-center font-b text-base text-white">
               Schedule
             </Text>
-            <Text className="font-b w-[27%] text-center text-base text-white">
+            <Text className="w-[27%] text-center font-b text-base text-white">
               Actions
             </Text>
           </View>
@@ -104,7 +104,7 @@ const EmployeesTable = ({
                   key={employee.id}
                   className="flex-row justify-around gap-2 px-2 py-2.5 text-center"
                 >
-                  <Text className="w-[35%] text-center text-sm text-[#333]">
+                  <Text className="w-[35%] text-center font-r text-sm text-[#333]">
                     {employee.last_name}, {employee.first_name}
                     {["na", "n/a"].includes(
                       employee.middle_initial.toLowerCase(),
@@ -113,11 +113,11 @@ const EmployeesTable = ({
                       : ` ${employee.middle_initial}.`}
                   </Text>
 
-                  <Text className="w-[13%] text-center text-sm text-[#333]">
+                  <Text className="w-[13%] text-center font-r text-sm text-[#333]">
                     {formatNumber(employee.rate)}
                   </Text>
 
-                  <Text className="w-[20%] text-center text-sm text-[#333]">
+                  <Text className="w-[20%] text-center font-r text-sm text-[#333]">
                     {employee.start_day.slice(0, 3)} -{" "}
                     {employee.end_day.slice(0, 3)}
                   </Text>
@@ -145,7 +145,9 @@ const EmployeesTable = ({
                 </View>
               ))
             ) : (
-              <Text className="my-2.5 text-center">No Employees Found</Text>
+              <Text className="my-2.5 text-center font-r">
+                No Employees Found
+              </Text>
             )}
           </View>
         </View>

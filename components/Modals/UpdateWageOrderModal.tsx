@@ -100,7 +100,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="font-b mt-1 text-white">Name</Text>
+                <Text className="mt-1 font-b text-white">Name</Text>
 
                 <Controller
                   control={control}
@@ -109,7 +109,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TextInput
-                        className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                        className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
                         placeholder="Enter name"
                         value={value}
                         onChangeText={onChange}
@@ -120,14 +120,14 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 />
 
                 {errors.name && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                     {errors.name.message}
                   </Text>
                 )}
               </View>
 
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-white">Date</Text>
+                <Text className="mb-1 font-b text-base text-white">Date</Text>
 
                 <Controller
                   control={control}
@@ -149,7 +149,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 />
 
                 {errors.date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                     {errors.date.message}
                   </Text>
                 )}
@@ -157,7 +157,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
             </View>
 
             <View>
-              <Text className="font-b mt-1 text-white">
+              <Text className="mt-1 font-b text-white">
                 Employing 1 to 9 workers:
               </Text>
 
@@ -168,7 +168,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
-                      className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
                       keyboardType="numeric"
                       placeholder="Enter rate"
                       value={value ? `${value}` : ""}
@@ -180,14 +180,14 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
               />
 
               {errors.less_than_ten && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.less_than_ten.message}
                 </Text>
               )}
             </View>
 
             <View>
-              <Text className="font-b mt-1 text-white">
+              <Text className="mt-1 font-b text-white">
                 Employing 10 workers and above:
               </Text>
 
@@ -198,7 +198,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
-                      className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
                       keyboardType="numeric"
                       placeholder="Enter rate"
                       value={value ? `${value}` : ""}
@@ -210,7 +210,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
               />
 
               {errors.ten_or_more && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.ten_or_more.message}
                 </Text>
               )}

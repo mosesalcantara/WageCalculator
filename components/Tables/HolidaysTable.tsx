@@ -98,7 +98,9 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                   <Text className="font-r">
                     {formatDate(holiday.date, "MMMM dd, yyyy")}
                   </Text>
-                  <Text className="text-sm text-gray-600">{holiday.type}</Text>
+                  <Text className="font-r text-sm text-gray-600">
+                    {holiday.type}
+                  </Text>
                 </View>
 
                 <View className="w-[29%] flex-row items-center justify-end gap-4">

@@ -77,7 +77,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Text className="font-b text-center text-white">Add Establishment</Text>
+        <Text className="text-center font-b text-white">Add Establishment</Text>
       </TouchableOpacity>
 
       <Modal
@@ -90,7 +90,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
-              <Text className="font-b mt-1 text-white">Name</Text>
+              <Text className="mt-1 font-b text-white">Name</Text>
 
               <Controller
                 control={control}
@@ -98,7 +98,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
-                      className="font-r mt-0.5 rounded-[0.3125rem] bg-white px-2"
+                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
                       placeholder="Enter name"
                       value={value}
                       onChangeText={onChange}
@@ -109,14 +109,14 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
               />
 
               {errors.name && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.name.message}
                 </Text>
               )}
             </View>
 
             <View>
-              <Text className="font-b mt-1 text-white">Size</Text>
+              <Text className="mt-1 font-b text-white">Size</Text>
 
               <Controller
                 control={control}
@@ -149,7 +149,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
               />
 
               {errors.size && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                   {errors.size.message}
                 </Text>
               )}

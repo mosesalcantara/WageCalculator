@@ -24,7 +24,7 @@ const WageOrdersTable = ({ db, wageOrders, refetch, onDelete }: Props) => {
             <Text className="font-b text-base text-[#333]">
               {wageOrder.name}
             </Text>
-            <Text className="text-base text-[#333]">
+            <Text className="font-r text-base text-[#333]">
               {formatDate(wageOrder.date, "MMMM dd, yyyy")} - P
               {wageOrder.less_than_ten}/{wageOrder.ten_or_more}
             </Text>

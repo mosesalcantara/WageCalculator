@@ -164,14 +164,14 @@ const Form = ({
       <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
-            <Text className="font-b text-center">
+            <Text className="text-center font-b">
               Period {numberToLetter(index)}
             </Text>
           )}
 
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
-              <Text className="font-b mb-1 text-base text-[#333]">
+              <Text className="mb-1 font-b text-base text-[#333]">
                 Start Date
               </Text>
               <TouchableOpacity
@@ -186,7 +186,7 @@ const Form = ({
             </View>
 
             <View className="w-[49%]">
-              <Text className="font-b mb-1 text-base text-[#333]">
+              <Text className="mb-1 font-b text-base text-[#333]">
                 End Date
               </Text>
 
@@ -204,10 +204,10 @@ const Form = ({
 
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
-              <Text className="font-b mb-1 text-base text-[#333]">Rate</Text>
+              <Text className="mb-1 font-b text-base text-[#333]">Rate</Text>
               <View className="h-12 flex-row items-center  rounded-md border border-black px-2.5">
                 <TextInput
-                  className="font-r w-[85%]"
+                  className="w-[85%] font-r"
                   keyboardType="numeric"
                   placeholder="Enter Rate"
                   value={period.rate}
@@ -223,11 +223,11 @@ const Form = ({
             </View>
 
             <View className="w-[49%]">
-              <Text className="font-b mb-1 text-base text-[#333]">
+              <Text className="mb-1 font-b text-base text-[#333]">
                 Prevailing Rate
               </Text>
               <TextInput
-                className="font-r rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                className="rounded-md border border-[#ccc] bg-[#fafafa] px-2.5 font-r"
                 keyboardType="numeric"
                 placeholder=""
                 editable={false}
@@ -239,12 +239,12 @@ const Form = ({
           <View className="flex-row flex-wrap justify-between gap-1">
             {daysOrHours == "Days" ? (
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-[#333]">
+                <Text className="mb-1 font-b text-base text-[#333]">
                   {daysOrHours}
                 </Text>
                 <View className="flex-row items-center  rounded-md border border-black px-2.5">
                   <TextInput
-                    className="font-r w-[85%]"
+                    className="w-[85%] font-r"
                     keyboardType="numeric"
                     placeholder={`Enter ${daysOrHours.toLowerCase()}`}
                     value={period.daysOrHours}
@@ -264,11 +264,11 @@ const Form = ({
               </View>
             ) : (
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-[#333]">
+                <Text className="mb-1 font-b text-base text-[#333]">
                   {daysOrHours}
                 </Text>
                 <TextInput
-                  className="font-r rounded-md border border-black px-2.5"
+                  className="rounded-md border border-black px-2.5 font-r"
                   keyboardType="numeric"
                   placeholder={`Enter ${daysOrHours.toLowerCase()}`}
                   value={period.daysOrHours}
@@ -281,7 +281,7 @@ const Form = ({
 
             {type == "Overtime Pay" && (
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-[#333]">Type</Text>
+                <Text className="mb-1 font-b text-base text-[#333]">Type</Text>
                 <Select
                   index={index}
                   name="type"
@@ -304,12 +304,12 @@ const Form = ({
 
             {daysOrHours == "Days" && (
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-[#333]">
+                <Text className="mb-1 font-b text-base text-[#333]">
                   {getLabel()}
                 </Text>
                 <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
                   <TextInput
-                    className="font-r w-[85%]"
+                    className="w-[85%] font-r"
                     keyboardType="numeric"
                     placeholder=""
                     editable={false}
@@ -336,7 +336,7 @@ const Form = ({
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
           <Text className="font-b text-base text-[#27ae60]">
             Total:{" "}
-            <Text className="font-b mt-1 text-base text-[#27ae60]">
+            <Text className="mt-1 font-b text-base text-[#27ae60]">
               ₱
               {formatNumber(
                 calculate(wageOrders, type, establishment.size, period),
@@ -348,20 +348,20 @@ const Form = ({
         <View className="mt-2.5 flex-row gap-2.5">
           {periods.length - 1 == index && (
             <TouchableOpacity onPress={onAddPeriod}>
-              <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 text-white">
+              <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 font-r text-white">
                 Add
               </Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={() => onClearPeriod(index)}>
-            <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 text-white">
+            <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 font-r text-white">
               Clear
             </Text>
           </TouchableOpacity>
 
           {periods.length > 1 && (
             <TouchableOpacity onPress={() => onRemovePeriod(index)}>
-              <Text className="rounded-md border border-[#e71414ff] bg-[#e71414ff] px-2.5 py-1.5 text-white">
+              <Text className="rounded-md border border-[#e71414ff] bg-[#e71414ff] px-2.5 py-1.5 font-r text-white">
                 Remove
               </Text>
             </TouchableOpacity>

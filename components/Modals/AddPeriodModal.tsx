@@ -32,7 +32,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => onToggle(true)}
       >
-        <Text className="font-b text-center text-white">Add Period</Text>
+        <Text className="text-center font-b text-white">Add Period</Text>
       </TouchableOpacity>
 
       <Modal
@@ -46,7 +46,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-white">
+                <Text className="mb-1 font-b text-base text-white">
                   Start Date
                 </Text>
 
@@ -69,14 +69,14 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                 />
 
                 {errors.start_date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                     {errors.start_date.message}
                   </Text>
                 )}
               </View>
 
               <View className="w-[49%]">
-                <Text className="font-b mb-1 text-base text-white">
+                <Text className="mb-1 font-b text-base text-white">
                   End Date
                 </Text>
 
@@ -99,7 +99,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                 />
 
                 {errors.end_date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 text-[0.75rem] text-white">
+                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
                     {errors.end_date.message}
                   </Text>
                 )}
