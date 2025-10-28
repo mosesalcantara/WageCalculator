@@ -1,7 +1,7 @@
-import CustomViolationForm from "@/components/CustomViolations/Form";
+import CustomViolationForm from "@/components/Forms/CustomViolationsForm";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
-import Form from "@/components/Violations/Form";
+import Form from "@/components/Forms/ViolationsForm";
 import { customViolations, violations } from "@/db/schema";
 import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
 import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";

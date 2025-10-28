@@ -37,7 +37,7 @@ type Props = {
   onRemovePeriod: (index: number) => void;
 };
 
-const Form = ({
+const ViolationsForm = ({
   type,
   index,
   wageOrders,
@@ -398,4 +398,4 @@ const Form = ({
   );
 };
 
-export default Form;
+export default ViolationsForm;
