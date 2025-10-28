@@ -30,6 +30,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-sqlite",
       [
         "expo-splash-screen",
         {
@@ -39,7 +40,12 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-sqlite"
+      [
+        "expo-font",
+        {
+          "fonts": ["node_modules/@expo-google-fonts/geist/400Regular/Geist_400Regular.ttf"]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

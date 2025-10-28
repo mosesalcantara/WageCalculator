@@ -11,6 +11,7 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@expo-google-fonts/geist": "^0.4.1",
     "@expo/vector-icons": "^14.1.0",
     "@hookform/resolvers": "^5.2.2",
     "@react-native-community/datetimepicker": "^8.4.5",
