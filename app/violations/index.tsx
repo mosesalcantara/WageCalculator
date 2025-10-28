@@ -229,10 +229,10 @@ const ViolationsPage = () => {
         employee &&
         violationTypes && (
           <>
-            <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+            <SafeAreaView className="flex-1 bg-primary">
               <NavBar />
 
-              <View className="bg-[#acb6e2ff]">
+              <View className="bg-primary">
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}

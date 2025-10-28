@@ -8,7 +8,7 @@ type Props = {
 const NavBar = ({ title = "DOLECalc", className = "" }: Props) => {
   return (
     <View
-      className={`h-[3.75rem] flex-row items-center justify-between border-b bg-[#acb6e2ff] px-2.5 ${className}`}
+      className={`h-[3.75rem] flex-row items-center justify-between border-b bg-primary px-2.5 ${className}`}
     >
       <Image
         source={require("@/assets/images/dole.png")}

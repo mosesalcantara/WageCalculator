@@ -40,7 +40,7 @@ const EstablishmentsPage = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#acb6e2ff]">
+    <SafeAreaView className="flex-1 bg-primary">
       <NavBar />
 
       <View className="p-4">
