@@ -39,12 +39,6 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      [
-        "expo-font",
-        {
-          "fonts": ["node_modules/@expo-google-fonts/geist/400Regular/Geist_400Regular.ttf"]
-        }
       ]
     ],
     "experiments": {

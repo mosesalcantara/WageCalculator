@@ -51,7 +51,7 @@ const EstablishmentsPage = () => {
             <ViewSettingsModal router={router} />
           </View>
         </View>
-      
+
         <EstablishmentsTable
           db={db}
           router={router}
