@@ -1,7 +1,12 @@
 import Loader from "@/components/Loader";
 import migrations from "@/drizzle/migrations";
 import "@/globals.css";
-import { Montserrat_400Regular, useFonts } from "@expo-google-fonts/montserrat";
+import {
+  Geist_400Regular,
+  Geist_600SemiBold,
+  Geist_700Bold,
+  useFonts,
+} from "@expo-google-fonts/geist";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
@@ -43,7 +48,9 @@ const RootLayout = () => {
   useMigrations(db, migrations);
 
   const [loaded, error] = useFonts({
-    Montserrat_400Regular,
+    Geist_400Regular,
+    Geist_600SemiBold,
+    Geist_700Bold,
   });
 
   useEffect(() => {
@@ -52,9 +59,7 @@ const RootLayout = () => {
     }
   }, [loaded, error]);
 
-  if (!loaded && !error) {
-    return null;
-  }
+  if (!loaded && !error) return null;
 
   return (
     <>
