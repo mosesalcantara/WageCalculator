@@ -4,11 +4,11 @@ type Props = {
   title?: string;
 };
 
-const Loader = ({ title = "Loading..." }: Props) => {
+const Loader = ({ title = "Loading" }: Props) => {
   return (
     <View className="flex-1 justify-center gap-1">
       <ActivityIndicator size="large" />
-      <Text className="font-b text-center">{title}</Text>
+      <Text className="font-b text-center text-xl">{title}</Text>
     </View>
   );
 };
