@@ -1,3 +1,5 @@
+import ErrorMessage from "@/components/ErrorMessage";
+import Label from "@/components/Label";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db, WageOrder } from "@/types/globals";
@@ -100,7 +102,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">Name</Text>
+                <Label name="Name" />
 
                 <Controller
                   control={control}
@@ -119,11 +121,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                   )}
                 />
 
-                {errors.name && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.name.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.name} />
               </View>
 
               <View className="w-[49%]">
@@ -148,18 +146,12 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                   )}
                 />
 
-                {errors.date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.date.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.date} />
               </View>
             </View>
 
             <View>
-              <Text className="mt-1 font-b text-white">
-                Employing 1 to 9 workers:
-              </Text>
+              <Label name="Employing 1 to 9 workers" />
 
               <Controller
                 control={control}
@@ -179,17 +171,11 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 )}
               />
 
-              {errors.less_than_ten && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.less_than_ten.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.less_than_ten} />
             </View>
 
             <View>
-              <Text className="mt-1 font-b text-white">
-                Employing 10 workers and above:
-              </Text>
+              <Label name="Employing 10 workers and above" />
 
               <Controller
                 control={control}
@@ -209,11 +195,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 )}
               />
 
-              {errors.ten_or_more && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.ten_or_more.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.ten_or_more} />
             </View>
 
             <View className="flex-row justify-end">

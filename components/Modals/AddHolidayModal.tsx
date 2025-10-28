@@ -1,3 +1,5 @@
+import ErrorMessage from "@/components/ErrorMessage";
+import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { holidays } from "@/db/schema";
 import { holiday as schema, Holiday as Values } from "@/schemas/globals";
@@ -78,7 +80,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
-              <Text className="mt-1 font-b text-white">Name</Text>
+              <Label name="Name" />
 
               <Controller
                 control={control}
@@ -96,11 +98,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                 )}
               />
 
-              {errors.name && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.name.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.name} />
             </View>
 
             <View>
@@ -124,15 +122,11 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                 )}
               />
 
-              {errors.date && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.date.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.date} />
             </View>
 
             <View>
-              <Text className="mt-1 font-b text-white">Type</Text>
+              <Label name="Type" />
 
               <Controller
                 control={control}
@@ -160,11 +154,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                 )}
               />
 
-              {errors.type && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.type.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.type} />
             </View>
 
             <View className="flex-row justify-end">

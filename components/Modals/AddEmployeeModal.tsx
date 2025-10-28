@@ -1,3 +1,5 @@
+import ErrorMessage from "@/components/ErrorMessage";
+import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
@@ -117,7 +119,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">Last Name</Text>
+                <Label name="Last Name" />
 
                 <Controller
                   control={control}
@@ -135,15 +137,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                   )}
                 />
 
-                {errors.last_name && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.last_name.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.last_name} />
               </View>
 
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">First Name</Text>
+                <Label name="First Name" />
 
                 <Controller
                   control={control}
@@ -161,17 +159,13 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                   )}
                 />
 
-                {errors.first_name && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.first_name.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.first_name} />
               </View>
             </View>
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">Middle Initial</Text>
+                <Label name="Middle Initial" />
 
                 <Controller
                   control={control}
@@ -189,15 +183,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                   )}
                 />
 
-                {errors.middle_initial && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.middle_initial.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.middle_initial} />
               </View>
 
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">Rate</Text>
+                <Label name="Rate" />
 
                 <Controller
                   control={control}
@@ -216,17 +206,13 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                   )}
                 />
 
-                {errors.rate && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.rate.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.rate} />
               </View>
             </View>
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">Work Week Start</Text>
+                <Label name="Work Week Start" />
 
                 <Controller
                   control={control}
@@ -245,15 +231,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                   )}
                 />
 
-                {errors.start_day && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.start_day.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.start_day} />
               </View>
 
               <View className="w-[49%]">
-                <Text className="mt-1 font-b text-white">Work Week End</Text>
+                <Label name="Work Week End" />
 
                 <Controller
                   control={control}
@@ -272,11 +254,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
                   )}
                 />
 
-                {errors.end_day && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.end_day.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.end_day} />
               </View>
             </View>
 

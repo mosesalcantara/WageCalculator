@@ -1,3 +1,5 @@
+import ErrorMessage from "@/components/ErrorMessage";
+import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import {
@@ -90,7 +92,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
-              <Text className="mt-1 font-b text-white">Name</Text>
+              <Label name="Name" />
 
               <Controller
                 control={control}
@@ -108,15 +110,11 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                 )}
               />
 
-              {errors.name && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.name.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.name} />
             </View>
 
             <View>
-              <Text className="mt-1 font-b text-white">Size</Text>
+              <Label name="Size" />
 
               <Controller
                 control={control}
@@ -148,11 +146,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                 )}
               />
 
-              {errors.size && (
-                <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                  {errors.size.message}
-                </Text>
-              )}
+              <ErrorMessage error={errors.size} />
             </View>
 
             <View className="flex-row justify-end">

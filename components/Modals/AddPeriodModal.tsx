@@ -1,3 +1,4 @@
+import ErrorMessage from "@/components/ErrorMessage";
 import { Period as Values } from "@/schemas/globals";
 import { getDate } from "@/utils/globals";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -68,11 +69,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                   )}
                 />
 
-                {errors.start_date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.start_date.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.start_date} />
               </View>
 
               <View className="w-[49%]">
@@ -98,11 +95,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                   )}
                 />
 
-                {errors.end_date && (
-                  <Text className="mt-1 rounded-md bg-red-500 p-1 font-r text-[0.75rem] text-white">
-                    {errors.end_date.message}
-                  </Text>
-                )}
+                <ErrorMessage error={errors.end_date} />
               </View>
             </View>
 
