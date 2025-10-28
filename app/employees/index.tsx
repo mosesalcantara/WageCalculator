@@ -42,11 +42,11 @@ const EmployeesPage = () => {
 
             <View className="flex-1 p-4">
               <View className="mb-2 flex-row items-center justify-between">
-                <View className="w-[64%]">
+                <View className="w-[62%]">
                   <Text className="font-b text-xl">{establishment.name}</Text>
                 </View>
 
-                <View className="w-[34%]">
+                <View className="w-[36%]">
                   <AddEmployeeModal
                     db={db}
                     establishment={establishment}
