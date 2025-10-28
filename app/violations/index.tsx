@@ -264,7 +264,7 @@ const ViolationsPage = () => {
                   <Text className="font-b ml-1.5 text-xl">
                     {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial}.`}`}
                   </Text>
-                  <Text className="font-b ml-1.5 text-xl underline">
+                  <Text className="font-b ml-1.5 text-xl">
                     Subtotal:{" "}
                     {formatNumber(
                       type == "Custom"
