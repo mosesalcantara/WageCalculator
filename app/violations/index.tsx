@@ -1,7 +1,8 @@
 import CustomViolationForm from "@/components/Forms/CustomViolationsForm";
+import Form from "@/components/Forms/ViolationsForm";
+import Label from "@/components/Label";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
-import Form from "@/components/Forms/ViolationsForm";
 import { customViolations, violations } from "@/db/schema";
 import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
 import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
@@ -250,7 +251,7 @@ const ViolationsPage = () => {
                         color={type === tab.name ? "#fff" : "#555"}
                       />
                       <Text
-                        className={`font-r ml-1.5 text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
+                        className={`ml-1.5 font-r text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
                       >
                         {tab.name}
                       </Text>
@@ -261,10 +262,10 @@ const ViolationsPage = () => {
 
               <View className="flex-row items-center justify-between px-4 py-2.5">
                 <View className="w-[64%]">
-                  <Text className="font-b ml-1.5 text-xl">
+                  <Text className="ml-1.5 font-b text-xl">
                     {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial}.`}`}
                   </Text>
-                  <Text className="font-b ml-1.5 text-xl">
+                  <Text className="ml-1.5 font-b text-xl">
                     Subtotal:{" "}
                     {formatNumber(
                       type == "Custom"
@@ -318,12 +319,11 @@ const ViolationsPage = () => {
                           />
                         ))}
 
-                        <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                          <Text className="font-b text-base text-[#333]">
-                            Received
-                          </Text>
+                        <View className="mx-10 rounded-[0.625rem] bg-white p-2.5">
+                          <Label name="Received" color="#333" />
+
                           <TextInput
-                            className="font-r rounded-md border border-black px-2.5"
+                            className="rounded-md border border-black px-2.5 font-r"
                             keyboardType="numeric"
                             placeholder="Enter pay received"
                             value={customViolationType.received}
@@ -356,12 +356,11 @@ const ViolationsPage = () => {
                           />
                         ))}
 
-                        <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                          <Text className="font-b text-base text-[#333]">
-                            Received
-                          </Text>
+                        <View className="mx-10 rounded-[0.625rem] bg-white p-2.5">
+                          <Label name="Received" color="#333" />
+
                           <TextInput
-                            className="font-r rounded-md border border-black px-2.5"
+                            className="rounded-md border border-black px-2.5 font-r"
                             keyboardType="numeric"
                             placeholder="Enter pay received"
                             value={violationType.received}
