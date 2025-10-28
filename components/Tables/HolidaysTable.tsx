@@ -65,7 +65,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
 
   return (
     <>
-      <View className="flex-row justify-between mb-3">
+      <View className="mb-3 flex-row justify-between">
         <Select
           value={type}
           options={typeOptions}
@@ -92,10 +92,12 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                 className="flex-row justify-between border-b border-gray-300 py-3"
               >
                 <View className="w-[69%]">
-                  <Text className="text-base font-bold text-[#333]">
+                  <Text className="font-b text-base text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
-                  <Text>{formatDate(holiday.date, "MMMM dd, yyyy")}</Text>
+                  <Text className="font-r">
+                    {formatDate(holiday.date, "MMMM dd, yyyy")}
+                  </Text>
                   <Text className="text-sm text-gray-600">{holiday.type}</Text>
                 </View>
 
@@ -119,7 +121,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
           </ScrollView>
         ) : (
           <View className="h-full items-center justify-center">
-            <Text className="font-bold">No Holidays Found</Text>
+            <Text className="font-b">No Holidays Found</Text>
           </View>
         )}
       </View>

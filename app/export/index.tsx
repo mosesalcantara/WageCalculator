@@ -41,7 +41,7 @@ const ExportPage = () => {
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
                     onPress={() => exportPDF(exportHTML)}
                   >
-                    <Text className="text-center font-bold text-white">
+                    <Text className="font-b text-center text-white">
                       Export PDF
                     </Text>
                   </TouchableOpacity>
@@ -50,7 +50,7 @@ const ExportPage = () => {
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
                     onPress={() => exportDOCX(wageOrders, establishment)}
                   >
-                    <Text className="text-center font-bold text-white">
+                    <Text className="font-b text-center text-white">
                       Export Word
                     </Text>
                   </TouchableOpacity>
@@ -59,7 +59,7 @@ const ExportPage = () => {
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
                     onPress={() => exportXLSX(wageOrders, establishment)}
                   >
-                    <Text className="text-center font-bold text-white">
+                    <Text className="font-b text-center text-white">
                       Export Excel
                     </Text>
                   </TouchableOpacity>

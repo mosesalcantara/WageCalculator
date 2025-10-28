@@ -83,16 +83,16 @@ const EmployeesTable = ({
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
           <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
-            <Text className="w-[35%] text-center text-base font-bold text-white">
+            <Text className="font-b w-[35%] text-center text-base text-white">
               Name
             </Text>
-            <Text className="w-[13%] text-center text-base font-bold text-white">
+            <Text className="font-b w-[13%] text-center text-base text-white">
               Rate
             </Text>
-            <Text className="w-[20%] text-center text-base font-bold text-white">
+            <Text className="font-b w-[20%] text-center text-base text-white">
               Schedule
             </Text>
-            <Text className="w-[27%] text-center text-base font-bold text-white">
+            <Text className="font-b w-[27%] text-center text-base text-white">
               Actions
             </Text>
           </View>

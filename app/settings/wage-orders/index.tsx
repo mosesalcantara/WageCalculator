@@ -26,7 +26,7 @@ const WageOrdersPage = () => {
 
       <View className="flex-1 p-4">
         <View className="mb-2 flex-row items-center justify-between">
-          <Text className="text-center text-xl font-bold">Wage Orders</Text>
+          <Text className="font-b text-center text-xl">Wage Orders</Text>
           <AddWageOrderModal db={db} name={name} refetch={refetch} />
         </View>
 

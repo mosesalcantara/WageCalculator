@@ -261,10 +261,10 @@ const ViolationsPage = () => {
 
               <View className="flex-row items-center justify-between px-4 py-2.5">
                 <View className="w-[64%]">
-                  <Text className="ml-1.5 text-xl font-bold">
+                  <Text className="font-b ml-1.5 text-xl">
                     {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial}.`}`}
                   </Text>
-                  <Text className="ml-1.5 text-xl font-bold underline">
+                  <Text className="font-b ml-1.5 text-xl underline">
                     Subtotal:{" "}
                     {formatNumber(
                       type == "Custom"
@@ -319,7 +319,7 @@ const ViolationsPage = () => {
                         ))}
 
                         <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                          <Text className="text-base font-bold text-[#333]">
+                          <Text className="font-b text-base text-[#333]">
                             Received
                           </Text>
                           <TextInput
@@ -357,7 +357,7 @@ const ViolationsPage = () => {
                         ))}
 
                         <View className="mx-10 mt-4 rounded-[0.625rem] bg-white p-2.5">
-                          <Text className="text-base font-bold text-[#333]">
+                          <Text className="font-b text-base text-[#333]">
                             Received
                           </Text>
                           <TextInput

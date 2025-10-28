@@ -33,7 +33,7 @@ const ViewSettingsModal = ({ router }: Props) => {
                 className="rounded-[0.625rem] bg-black p-3"
                 onPress={() => router.push("/settings/wage-orders" as Href)}
               >
-                <Text className="text-center font-bold text-white">
+                <Text className="font-b text-center text-white">
                   📑 Wage Orders
                 </Text>
               </TouchableOpacity>
@@ -43,7 +43,7 @@ const ViewSettingsModal = ({ router }: Props) => {
                 className="rounded-[0.625rem] bg-black p-3"
                 onPress={() => router.push("/settings/holidays" as Href)}
               >
-                <Text className="text-center font-bold text-white">
+                <Text className="font-b text-center text-white">
                   📅 Holidays
                 </Text>
               </TouchableOpacity>
@@ -53,7 +53,7 @@ const ViewSettingsModal = ({ router }: Props) => {
                 className="mt-2 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-bold">Cancel</Text>
+                <Text className="font-b">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -32,7 +32,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => onToggle(true)}
       >
-        <Text className="text-center font-bold text-white">Add Period</Text>
+        <Text className="font-b text-center text-white">Add Period</Text>
       </TouchableOpacity>
 
       <Modal
@@ -46,7 +46,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-white">
+                <Text className="font-b mb-1 text-base text-white">
                   Start Date
                 </Text>
 
@@ -59,7 +59,9 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                         className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsStartDateModalVisible(true)}
                       >
-                        <Text>{value ? getDate(value) : "Select date"}</Text>
+                        <Text className="font-r">
+                          {value ? getDate(value) : "Select date"}
+                        </Text>
                         <Icon name="date-range" size={20} color="#555" />
                       </TouchableOpacity>
                     </>
@@ -74,7 +76,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-white">
+                <Text className="font-b mb-1 text-base text-white">
                   End Date
                 </Text>
 
@@ -87,7 +89,9 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                         className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsEndDateModalVisible(true)}
                       >
-                        <Text>{value ? getDate(value) : "Select date"}</Text>
+                        <Text className="font-r">
+                          {value ? getDate(value) : "Select date"}
+                        </Text>
                         <Icon name="date-range" size={20} color="#555" />
                       </TouchableOpacity>
                     </>
@@ -107,14 +111,14 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => onToggle(false)}
               >
-                <Text className="font-bold">Cancel</Text>
+                <Text className="font-b">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-bold">Add</Text>
+                <Text className="font-b">Add</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -21,7 +21,7 @@ const WageOrdersTable = ({ db, wageOrders, refetch, onDelete }: Props) => {
       renderItem={({ item: wageOrder }) => (
         <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
           <View>
-            <Text className="text-base font-bold text-[#333]">
+            <Text className="font-b text-base text-[#333]">
               {wageOrder.name}
             </Text>
             <Text className="text-base text-[#333]">

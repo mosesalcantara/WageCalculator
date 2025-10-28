@@ -164,27 +164,29 @@ const Form = ({
       <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View className="gap-1">
           {periods.length > 1 && (
-            <Text className="text-center font-bold">
+            <Text className="font-b text-center">
               Period {numberToLetter(index)}
             </Text>
           )}
 
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
+              <Text className="font-b mb-1 text-base text-[#333]">
                 Start Date
               </Text>
               <TouchableOpacity
                 className="h-12 flex-row items-center justify-between rounded-md border border-black px-2.5"
                 onPress={() => setIsStartDateModalVisible(true)}
               >
-                <Text>{period.start_date || "Select date"}</Text>
+                <Text className="font-r">
+                  {period.start_date || "Select date"}
+                </Text>
                 <Icon name="date-range" size={20} color="#555" />
               </TouchableOpacity>
             </View>
 
             <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
+              <Text className="font-b mb-1 text-base text-[#333]">
                 End Date
               </Text>
 
@@ -192,7 +194,9 @@ const Form = ({
                 className="h-12 flex-row items-center justify-between rounded-md border border-black  px-2.5"
                 onPress={() => setIsEndDateModalVisible(true)}
               >
-                <Text>{period.end_date || "Select date"}</Text>
+                <Text className="font-r">
+                  {period.end_date || "Select date"}
+                </Text>
                 <Icon name="date-range" size={20} color="#555" />
               </TouchableOpacity>
             </View>
@@ -200,7 +204,7 @@ const Form = ({
 
           <View className="flex-row flex-wrap justify-between gap-1">
             <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">Rate</Text>
+              <Text className="font-b mb-1 text-base text-[#333]">Rate</Text>
               <View className="h-12 flex-row items-center  rounded-md border border-black px-2.5">
                 <TextInput
                   className="w-[85%]"
@@ -219,7 +223,7 @@ const Form = ({
             </View>
 
             <View className="w-[49%]">
-              <Text className="mb-1 text-base font-bold text-[#333]">
+              <Text className="font-b mb-1 text-base text-[#333]">
                 Prevailing Rate
               </Text>
               <TextInput
@@ -235,7 +239,7 @@ const Form = ({
           <View className="flex-row flex-wrap justify-between gap-1">
             {daysOrHours == "Days" ? (
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-[#333]">
+                <Text className="font-b mb-1 text-base text-[#333]">
                   {daysOrHours}
                 </Text>
                 <View className="flex-row items-center  rounded-md border border-black px-2.5">
@@ -260,7 +264,7 @@ const Form = ({
               </View>
             ) : (
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-[#333]">
+                <Text className="font-b mb-1 text-base text-[#333]">
                   {daysOrHours}
                 </Text>
                 <TextInput
@@ -277,9 +281,7 @@ const Form = ({
 
             {type == "Overtime Pay" && (
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-[#333]">
-                  Type
-                </Text>
+                <Text className="font-b mb-1 text-base text-[#333]">Type</Text>
                 <Select
                   index={index}
                   name="type"
@@ -302,7 +304,7 @@ const Form = ({
 
             {daysOrHours == "Days" && (
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-[#333]">
+                <Text className="font-b mb-1 text-base text-[#333]">
                   {getLabel()}
                 </Text>
                 <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
@@ -332,9 +334,9 @@ const Form = ({
         </View>
 
         <View className="mt-2 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
-          <Text className="text-base font-bold text-[#27ae60]">
+          <Text className="font-b text-base text-[#27ae60]">
             Total:{" "}
-            <Text className="mt-1 text-base font-bold text-[#27ae60]">
+            <Text className="font-b mt-1 text-base text-[#27ae60]">
               ₱
               {formatNumber(
                 calculate(wageOrders, type, establishment.size, period),

@@ -19,7 +19,7 @@ const HolidaysPage = () => {
 
       <View className="flex-1 p-4">
         <View className="mb-2 flex-row items-center justify-between">
-          <Text className="text-center text-xl font-bold">Holidays</Text>
+          <Text className="font-b text-center text-xl">Holidays</Text>
           <AddHolidayModal db={db} refetch={refetch} />
         </View>
 

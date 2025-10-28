@@ -95,7 +95,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
-              <Text className="mt-1 font-bold text-white">Name</Text>
+              <Text className="font-b mt-1 text-white">Name</Text>
 
               <Controller
                 control={control}
@@ -122,7 +122,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
             </View>
 
             <View>
-              <Text className="mt-1 font-bold text-white">Size</Text>
+              <Text className="font-b mt-1 text-white">Size</Text>
 
               <Controller
                 control={control}
@@ -166,14 +166,14 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-bold">Cancel</Text>
+                <Text className="font-b">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-bold">Update</Text>
+                <Text className="font-b">Update</Text>
               </TouchableOpacity>
             </View>
           </View>

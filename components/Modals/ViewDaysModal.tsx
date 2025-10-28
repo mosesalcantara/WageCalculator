@@ -70,7 +70,7 @@ const ViewDaysModal = ({
       >
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="max-h-[70%] w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-            <Text className="mb-3 text-center text-lg font-bold text-white">
+            <Text className="font-b mb-3 text-center text-lg text-white">
               {type == "Special Day"
                 ? "Special (Non-Working) Holidays"
                 : "Regular Holidays"}
@@ -85,10 +85,12 @@ const ViewDaysModal = ({
                   className="mb-3 border-b border-gray-300 pb-2"
                   key={index}
                 >
-                  <Text className="text-base font-bold text-[#333]">
+                  <Text className="font-b text-base text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
-                  <Text>{formatDate(holiday.date, "MMMM dd, yyyy")}</Text>
+                  <Text className="font-r">
+                    {formatDate(holiday.date, "MMMM dd, yyyy")}
+                  </Text>
                 </View>
               ))}
             </ScrollView>
@@ -98,7 +100,7 @@ const ViewDaysModal = ({
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => onToggle(false)}
               >
-                <Text className="font-bold">Close</Text>
+                <Text className="font-b">Close</Text>
               </TouchableOpacity>
             </View>
           </View>

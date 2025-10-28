@@ -34,7 +34,7 @@ const EstablishmentsTable = ({
         renderItem={({ item: establishment }) => (
           <View className="my-1.5 flex-row justify-between rounded-md border bg-white p-2.5">
             <View className="w-[70%]">
-              <Text className="font-bold">{establishment.name}</Text>
+              <Text className="font-b">{establishment.name}</Text>
             </View>
 
             <View className="w-[30%] flex-row items-center gap-2">

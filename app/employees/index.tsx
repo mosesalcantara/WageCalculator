@@ -43,9 +43,7 @@ const EmployeesPage = () => {
             <View className="flex-1 p-4">
               <View className="mb-2 flex-row items-center justify-between">
                 <View className="w-[64%]">
-                  <Text className="text-xl font-bold">
-                    {establishment.name}
-                  </Text>
+                  <Text className="font-b text-xl">{establishment.name}</Text>
                 </View>
 
                 <View className="w-[34%]">

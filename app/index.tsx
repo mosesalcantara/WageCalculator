@@ -45,7 +45,7 @@ const EstablishmentsPage = () => {
 
       <View className="p-4">
         <View className="mb-2 flex-row items-center justify-between">
-          <Text className="text-center text-xl font-bold">Establishments</Text>
+          <Text className="font-b text-center text-xl">Establishments</Text>
           <View className="flex-row justify-end gap-2">
             <AddEstablishmentModal db={db} refetch={refetch} />
             <ViewSettingsModal router={router} />

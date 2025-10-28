@@ -83,7 +83,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Text className="text-center font-bold text-white">Add Wage Order</Text>
+        <Text className="font-b text-center text-white">Add Wage Order</Text>
       </TouchableOpacity>
 
       <Modal
@@ -97,7 +97,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">Name</Text>
+                <Text className="font-b mt-1 text-white">Name</Text>
 
                 <Controller
                   control={control}
@@ -125,9 +125,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Text className="mb-1 text-base font-bold text-white">
-                  Date
-                </Text>
+                <Text className="font-b mb-1 text-base text-white">Date</Text>
 
                 <Controller
                   control={control}
@@ -138,7 +136,9 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
                         className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsDateModalVisible(true)}
                       >
-                        <Text>{value ? getDate(value) : "Select date"}</Text>
+                        <Text className="font-r">
+                          {value ? getDate(value) : "Select date"}
+                        </Text>
                         <Icon name="date-range" size={20} color="#555" />
                       </TouchableOpacity>
                     </>
@@ -154,7 +154,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
             </View>
 
             <View>
-              <Text className="mt-1 font-bold text-white">
+              <Text className="font-b mt-1 text-white">
                 Employing 1 to 9 workers:
               </Text>
 
@@ -183,7 +183,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
             </View>
 
             <View>
-              <Text className="mt-1 font-bold text-white">
+              <Text className="font-b mt-1 text-white">
                 Employing 10 workers and above:
               </Text>
 
@@ -216,14 +216,14 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-bold">Cancel</Text>
+                <Text className="font-b">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-bold">Add</Text>
+                <Text className="font-b">Add</Text>
               </TouchableOpacity>
             </View>
           </View>

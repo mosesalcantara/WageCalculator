@@ -133,7 +133,7 @@ const UpdateEmployeeModal = ({
           <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">Last Name</Text>
+                <Text className="font-b mt-1 text-white">Last Name</Text>
 
                 <Controller
                   control={control}
@@ -160,7 +160,7 @@ const UpdateEmployeeModal = ({
               </View>
 
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">First Name</Text>
+                <Text className="font-b mt-1 text-white">First Name</Text>
 
                 <Controller
                   control={control}
@@ -189,9 +189,7 @@ const UpdateEmployeeModal = ({
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">
-                  Middle Initial
-                </Text>
+                <Text className="font-b mt-1 text-white">Middle Initial</Text>
 
                 <Controller
                   control={control}
@@ -218,7 +216,7 @@ const UpdateEmployeeModal = ({
               </View>
 
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">Rate</Text>
+                <Text className="font-b mt-1 text-white">Rate</Text>
 
                 <Controller
                   control={control}
@@ -248,9 +246,7 @@ const UpdateEmployeeModal = ({
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">
-                  Work Week Start
-                </Text>
+                <Text className="font-b mt-1 text-white">Work Week Start</Text>
 
                 <Controller
                   control={control}
@@ -277,7 +273,7 @@ const UpdateEmployeeModal = ({
               </View>
 
               <View className="w-[49%]">
-                <Text className="mt-1 font-bold text-white">Work Week End</Text>
+                <Text className="font-b mt-1 text-white">Work Week End</Text>
 
                 <Controller
                   control={control}
@@ -309,14 +305,14 @@ const UpdateEmployeeModal = ({
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-bold">Cancel</Text>
+                <Text className="font-b">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-bold">Update</Text>
+                <Text className="font-b">Update</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -8,7 +8,7 @@ const Loader = ({ title = "Loading..." }: Props) => {
   return (
     <View className="flex-1 justify-center gap-1">
       <ActivityIndicator size="large" />
-      <Text className="text-center font-bold">{title}</Text>
+      <Text className="font-b text-center">{title}</Text>
     </View>
   );
 };
