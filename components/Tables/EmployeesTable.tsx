@@ -82,7 +82,7 @@ const EmployeesTable = ({
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
         <View className="rounded-[0.625rem] bg-white">
-          <View className="flex-row justify-around gap-2 rounded-t-[0.625rem] bg-[#2196F3] px-2 py-3">
+          <View className="flex-row justify-around rounded-t-[0.625rem] bg-[#2196F3] py-3">
             <Text className="w-[35%] text-center font-b text-base text-white">
               Name
             </Text>
@@ -102,7 +102,7 @@ const EmployeesTable = ({
               filteredEmployees.map((employee) => (
                 <View
                   key={employee.id}
-                  className="flex-row items-center justify-around gap-2 px-1 py-2.5"
+                  className="flex-row items-center justify-around py-2"
                 >
                   <Text className="w-[35%] text-center font-r text-[0.85rem] text-[#333]">
                     {employee.last_name}, {employee.first_name}
