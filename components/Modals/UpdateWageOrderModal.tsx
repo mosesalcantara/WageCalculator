@@ -99,7 +99,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-2">
+          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Label name="Name" />
@@ -134,7 +134,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TouchableOpacity
-                        className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                        className="h-[2.83rem] flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsDateModalVisible(true)}
                       >
                         <Text className="font-r">

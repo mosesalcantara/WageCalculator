@@ -131,7 +131,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TouchableOpacity
-                        className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                        className="h-[2.83rem] flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                         onPress={() => setIsDateModalVisible(true)}
                       >
                         <Text className="font-r">
