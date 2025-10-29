@@ -102,7 +102,7 @@ const EmployeesTable = ({
               filteredEmployees.map((employee) => (
                 <View
                   key={employee.id}
-                  className="flex-row items-center justify-around gap-2 px-2 py-2.5"
+                  className="flex-row items-center justify-around gap-2 px-1 py-2.5"
                 >
                   <Text className="w-[35%] text-center font-r text-[0.85rem] text-[#333]">
                     {employee.last_name}, {employee.first_name}
