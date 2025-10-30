@@ -45,7 +45,7 @@ const useFetchWageOrders = (db: Db) => {
     try {
       const wageOrders = await db.query.wageOrders.findMany();
 
-      if (wageOrders.length == 0) {
+      if (wageOrders.length === 0) {
         await seed();
         handleFetch();
       }

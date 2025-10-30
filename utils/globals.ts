@@ -7,7 +7,7 @@ import {
 } from "@/types/globals";
 import { differenceInDays, format, parse, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { useSQLiteContext } from "expo-sqlite";
+import { useSQLiteContext as SQLiteContext } from "expo-sqlite";
 
 export const toastVisibilityTime = 1000;
 
@@ -227,7 +227,7 @@ export const periodsFormat = {
 };
 
 export const getDb = () => {
-  return drizzle(useSQLiteContext(), { schema });
+  return drizzle(SQLiteContext(), { schema });
 };
 
 export const formatNumber = (number: string | number) => {
@@ -280,7 +280,7 @@ export const getMinimumRate = (
   if (validateDateRange(startDate, endDate) && size) {
     if (differenceInDays(wageOrders[0].date, startDate) > 0) {
       rate =
-        size == "Employing 10 or more workers"
+        size === "Employing 10 or more workers"
           ? wageOrders[0].ten_or_more
           : wageOrders[0].less_than_ten;
     } else {
@@ -288,11 +288,11 @@ export const getMinimumRate = (
       for (const wageOrder of wageOrders) {
         if (differenceInDays(wageOrder.date, startDate) <= 0) {
           if (
-            index == wageOrders.length - 1 ||
+            index === wageOrders.length - 1 ||
             differenceInDays(wageOrders[index + 1].date, endDate) > 0
           ) {
             rate =
-              size == "Employing 10 or more workers"
+              size === "Employing 10 or more workers"
                 ? wageOrder.ten_or_more
                 : wageOrder.less_than_ten;
             break;
@@ -324,22 +324,22 @@ export const calculate = (
     );
     const rateToUse = Math.max(rate, minimumRate);
 
-    if (type == "Basic Wage") {
+    if (type === "Basic Wage") {
       result = (rateToUse - rate) * daysOrHours;
-    } else if (type == "Overtime Pay") {
+    } else if (type === "Overtime Pay") {
       result =
         (rateToUse / 8) *
-        (period.type == "Normal Day" ? 0.25 : 0.3) *
+        (period.type === "Normal Day" ? 0.25 : 0.3) *
         daysOrHours;
-    } else if (type == "Night Shift Differential") {
+    } else if (type === "Night Shift Differential") {
       result = (rateToUse / 8) * 0.1 * daysOrHours;
-    } else if (type == "Special Day") {
+    } else if (type === "Special Day") {
       result = rateToUse * 0.3 * daysOrHours;
-    } else if (type == "Rest Day") {
+    } else if (type === "Rest Day") {
       result = rateToUse * 0.3 * daysOrHours;
-    } else if (type == "Holiday Pay") {
+    } else if (type === "Holiday Pay") {
       result = rateToUse * daysOrHours;
-    } else if (type == "13th Month Pay") {
+    } else if (type === "13th Month Pay") {
       result = (rateToUse * daysOrHours) / 12;
     }
   }
@@ -389,11 +389,11 @@ export const getInitialCustomViolationType = (rate?: number) => {
 
 export const getViolationKeyword = (type: string) => {
   let keyword = type;
-  if (type == "Basic Wage") {
+  if (type === "Basic Wage") {
     keyword = "Wages";
-  } else if (type == "Special Day") {
+  } else if (type === "Special Day") {
     keyword = "Premium Pay on Special Day";
-  } else if (type == "Rest Day") {
+  } else if (type === "Rest Day") {
     keyword = "Premium Pay on Rest Day";
   }
   return keyword;
@@ -401,17 +401,17 @@ export const getViolationKeyword = (type: string) => {
 
 export const getDaysOrHours = (type: string, daysOrHours: string) => {
   let keyword = `${daysOrHours} `;
-  if (type == "Basic Wage" || type == "Holiday Pay") {
+  if (type === "Basic Wage" || type === "Holiday Pay") {
     keyword += "day";
-  } else if (type == "Overtime Pay") {
+  } else if (type === "Overtime Pay") {
     keyword += "OT hour";
-  } else if (type == "Night Shift Differential") {
+  } else if (type === "Night Shift Differential") {
     keyword += "night-shift hour";
-  } else if (type == "Special Day") {
+  } else if (type === "Special Day") {
     keyword += "special day";
-  } else if (type == "Rest Day") {
+  } else if (type === "Rest Day") {
     keyword += "rest day";
-  } else if (type == "13th Month Pay") {
+  } else if (type === "13th Month Pay") {
     keyword += "day";
   }
   Number(daysOrHours) > 1 && (keyword += "s");
@@ -459,9 +459,9 @@ export const getPeriods = (
 
     filteredWageOrders.forEach((wageOrder, index) => {
       periods.push({
-        start_date: index == 0 ? start_date : wageOrder.date,
+        start_date: index === 0 ? start_date : wageOrder.date,
         end_date:
-          index == filteredWageOrders.length - 1
+          index === filteredWageOrders.length - 1
             ? end_date
             : subDays(filteredWageOrders[index + 1].date, 1)
                 .toISOString()
