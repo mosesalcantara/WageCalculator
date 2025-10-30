@@ -40,11 +40,11 @@ const useFetchEstablishmentViolations = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, []);
+  }, [setEstablishment]);
 
   useEffect(() => {
     handleFetch();
-  }, []);
+  }, [handleFetch]);
 
   return { establishment, refetch: handleFetch };
 };

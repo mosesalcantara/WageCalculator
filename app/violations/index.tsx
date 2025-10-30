@@ -158,44 +158,50 @@ const ViolationsPage = () => {
     }
   };
 
-  const saveViolations = async (
-    violationTypes: Record<ViolationKeys, ViolationType>,
-    customViolationType: CustomViolationType,
-  ) => {
-    try {
-      await db
-        .delete(violations)
-        .where(eq(violations.employee_id, Number(employee_id)));
-      await db
-        .delete(customViolations)
-        .where(eq(customViolations.employee_id, Number(employee_id)));
-
-      await db.insert(violations).values({
-        values: JSON.stringify(violationTypes),
-        employee_id: Number(employee_id),
-      });
-      await db.insert(customViolations).values({
-        values: JSON.stringify(customViolationType),
-        employee_id: Number(employee_id),
-      });
-
-      Toast.show({
-        type: "success",
-        text1: "Changes Saved",
-        visibilityTime: toastVisibilityTime,
-      });
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "An Error Has Occured. Please Try Again.",
-        visibilityTime: toastVisibilityTime,
-      });
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
+      const saveViolations = async (
+        violationTypes: Record<ViolationKeys, ViolationType>,
+        customViolationType: CustomViolationType,
+      ) => {
+        try {
+          await db
+            .delete(violations)
+            .where(eq(violations.employee_id, Number(employee_id)));
+          await db
+            .delete(customViolations)
+            .where(eq(customViolations.employee_id, Number(employee_id)));
+
+          await db.insert(violations).values({
+            values: JSON.stringify(violationTypes),
+            employee_id: Number(employee_id),
+          });
+          await db.insert(customViolations).values({
+            values: JSON.stringify(customViolationType),
+            employee_id: Number(employee_id),
+          });
+
+          Toast.show({
+            type: "success",
+            text1: "Changes Saved",
+            visibilityTime: toastVisibilityTime,
+          });
+        } catch (error) {
+          console.error(error);
+          Toast.show({
+            type: "error",
+            text1: "An Error Has Occured. Please Try Again.",
+            visibilityTime: toastVisibilityTime,
+          });
+        }
+      };
+
+      const handleBackPress = () => {
+        router.push("/employees" as Href);
+        saveViolations(violationTypes, customViolationType);
+        return true;
+      };
+
       const appStateHandler = AppState.addEventListener(
         "change",
         (nextAppState) => {
@@ -203,12 +209,6 @@ const ViolationsPage = () => {
             saveViolations(violationTypes, customViolationType);
         },
       );
-
-      const handleBackPress = () => {
-        router.push("/employees" as Href);
-        saveViolations(violationTypes, customViolationType);
-        return true;
-      };
 
       const backhandler = BackHandler.addEventListener(
         "hardwareBackPress",
@@ -219,7 +219,7 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [violationTypes, customViolationType]),
+    }, [db, router, employee_id, violationTypes, customViolationType]),
   );
 
   return (

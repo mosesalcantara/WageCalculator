@@ -53,11 +53,11 @@ const useFetchViolations = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, []);
+  }, [employee_id, setEstablishment, setEmployee, setViolationTypes]);
 
   useEffect(() => {
     handleFetch();
-  }, []);
+  }, [handleFetch]);
 
   return { establishment, employee, violationTypes, setViolationTypes };
 };

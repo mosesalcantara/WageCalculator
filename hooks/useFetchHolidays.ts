@@ -9,18 +9,18 @@ import { useImmer } from "use-immer";
 const useFetchHolidays = (db: Db) => {
   const [holidays, setHolidays] = useImmer<Holiday[] | undefined>(undefined);
 
-  const seed = async () => {
-    const initialHolidays: Override<Holiday, { id?: number }>[] = [];
-
-    Object.values(holidaysJSON).forEach((yearHolidays) => {
-      initialHolidays.push(...yearHolidays);
-    });
-
-    await db.insert(models.holidays).values(initialHolidays);
-  };
-
   const handleFetch = useCallback(async () => {
     try {
+      const seed = async () => {
+        const initialHolidays: Override<Holiday, { id?: number }>[] = [];
+
+        Object.values(holidaysJSON).forEach((yearHolidays) => {
+          initialHolidays.push(...yearHolidays);
+        });
+
+        await db.insert(models.holidays).values(initialHolidays);
+      };
+
       const holidays = await db.query.holidays.findMany();
 
       if (holidays.length === 0) {
@@ -41,11 +41,11 @@ const useFetchHolidays = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, []);
+  }, [setHolidays]);
 
   useEffect(() => {
     handleFetch();
-  }, []);
+  }, [handleFetch]);
 
   return { holidays, setHolidays, refetch: handleFetch };
 };

@@ -23,11 +23,11 @@ const useFetchEstablishments = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, []);
+  }, [setEstablishments]);
 
   useEffect(() => {
     handleFetch();
-  }, []);
+  }, [handleFetch]);
 
   return { establishments, refetch: handleFetch };
 };
