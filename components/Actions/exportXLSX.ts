@@ -12,7 +12,6 @@ import {
   formatNumber,
   getDaysOrHours,
   getMinimumRate,
-  getTotal,
   getViolationKeyword,
   numberToLetter,
   toastVisibilityTime,
@@ -53,10 +52,8 @@ const exportXLSX = async (
     if (employee.violations && employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values as string);
 
-      let total = 0;
       Object.keys(violations).forEach((type) => {
         const violationType = violations[type];
-        total += getTotal(wageOrders, type, establishment.size, violationType);
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
@@ -83,17 +80,13 @@ const exportXLSX = async (
         : ` ${employee.middle_initial.toUpperCase()}.`
     }`;
     const typeText = `${
-      !violationType.received || Number(violationType.received) == 0
+      !violationType.received || Number(violationType.received) === 0
         ? "Non-payment"
         : "Underpayment"
     } of ${getViolationKeyword(type)}`;
 
-    let subtotal = 0;
-
     violationType.periods.forEach((period, index) => {
-      const result = calculate(wageOrders, type, establishment.size, period);
       if (validate(period)) {
-        subtotal += result;
         const rateText = `Php${formatNumber(period.rate)}/day`;
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
@@ -134,7 +127,7 @@ const exportXLSX = async (
         text = `(Php${formattedRateToUse} - Php${formatNumber(period.rate)}) x ${keyword}`;
         break;
       case "Overtime Pay":
-        text = `Php${formattedRateToUse} / 8 x ${period.type == "Normal Day" ? "25" : "30"}% x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${keyword}`;
         break;
       case "Night Shift Differential":
         text = `Php${formattedRateToUse} / 8 x 10% x ${keyword}`;
@@ -197,7 +190,7 @@ const exportXLSX = async (
       const indices: number[][] = [];
       repeating.forEach((value) => {
         const [start, end] = getStartAndEnd(values, value);
-        start != end && indices.push([start, end]);
+        start !== end && indices.push([start, end]);
       });
       return indices;
     };

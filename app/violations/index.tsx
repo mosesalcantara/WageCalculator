@@ -95,9 +95,9 @@ const ViolationsPage = () => {
     ];
 
     let excluded: string[] = [];
-    if (size == "Employing 1 to 5 workers") {
+    if (size === "Employing 1 to 5 workers") {
       excluded = ["Holiday Pay", "Night Shift Differential"];
-    } else if (size == "Employing 1 to 9 workers") {
+    } else if (size === "Employing 1 to 9 workers") {
       excluded = ["Holiday Pay"];
     }
 
@@ -140,14 +140,14 @@ const ViolationsPage = () => {
   const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
     const periodsFormat = dates.map((date) => {
       return {
-        ...(type == "Custom" ? customPeriodFormat : periodFormat),
+        ...(type === "Custom" ? customPeriodFormat : periodFormat),
         start_date: date.start_date,
         end_date: date.end_date,
         rate: employee ? `${employee.rate}` : "",
       };
     });
 
-    if (type == "Custom") {
+    if (type === "Custom") {
       setCustomViolationType((draft) => {
         draft.periods.push(...(periodsFormat as CustomPeriod[]));
       });
@@ -199,7 +199,7 @@ const ViolationsPage = () => {
       const appStateHandler = AppState.addEventListener(
         "change",
         (nextAppState) => {
-          nextAppState == "background" &&
+          nextAppState === "background" &&
             saveViolations(violationTypes, customViolationType);
         },
       );
@@ -268,7 +268,7 @@ const ViolationsPage = () => {
                   <Text className="ml-1.5 font-b text-xl">
                     Subtotal:{" "}
                     {formatNumber(
-                      type == "Custom"
+                      type === "Custom"
                         ? customViolationHandlers.getTotal()
                         : getTotal(
                             wageOrders,
@@ -295,7 +295,7 @@ const ViolationsPage = () => {
               >
                 <ScrollView>
                   <View className="gap-7">
-                    {type == "Custom" ? (
+                    {type === "Custom" ? (
                       <>
                         {customViolationType.periods.map((_, index) => (
                           <CustomViolationForm

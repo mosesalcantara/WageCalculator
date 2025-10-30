@@ -68,7 +68,6 @@ const CustomViolationsForm = ({
   const period = customViolationType.periods[index];
 
   const {
-    rate,
     rateToUse,
     daysMultiplier,
     days,
@@ -173,7 +172,7 @@ const CustomViolationsForm = ({
                   keyboardType="numeric"
                   placeholder=""
                   editable={false}
-                  value={`${minimumRate == 0 ? "" : minimumRate}`}
+                  value={`${minimumRate === 0 ? "" : minimumRate}`}
                 />
               </View>
             </View>
@@ -240,7 +239,7 @@ const CustomViolationsForm = ({
             </View>
 
             <View className="mt-2 flex-row gap-2.5">
-              {periods.length - 1 == index && (
+              {periods.length - 1 === index && (
                 <TouchableOpacity onPress={onAddPeriod}>
                   <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 font-r text-white">
                     Add

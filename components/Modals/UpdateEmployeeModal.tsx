@@ -73,19 +73,19 @@ const UpdateEmployeeModal = ({
             NAs.includes(valuesMiddleInitial)
           );
         } else {
-          return employeeMiddleInitial == valuesMiddleInitial;
+          return employeeMiddleInitial === valuesMiddleInitial;
         }
       });
 
       const isSame =
-        employee.last_name.toLowerCase() ==
+        employee.last_name.toLowerCase() ===
           formattedValues.last_name.toLowerCase() &&
-        employee.first_name.toLowerCase() ==
+        employee.first_name.toLowerCase() ===
           formattedValues.first_name.toLowerCase() &&
         (employee.middle_initial.length > 1
           ? NAs.includes(employee.middle_initial.toLowerCase()) &&
             NAs.includes(formattedValues.middle_initial.toLowerCase())
-          : employee.middle_initial.toLowerCase() ==
+          : employee.middle_initial.toLowerCase() ===
             formattedValues.middle_initial.toLowerCase());
 
       if (record && !isSame) {

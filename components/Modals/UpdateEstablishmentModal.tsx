@@ -49,7 +49,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
       });
 
       const isSame =
-        establishment.name.toLowerCase() == formattedValues.name.toLowerCase();
+        establishment.name.toLowerCase() === formattedValues.name.toLowerCase();
 
       if (record && !isSame) {
         Toast.show({

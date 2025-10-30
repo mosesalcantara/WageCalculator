@@ -74,11 +74,11 @@ const ViolationsForm = ({
   const getLabel = () => {
     if (["Basic Wage", "13th Month Pay"].includes(type)) {
       return "Working Days";
-    } else if (type == "Special Day") {
+    } else if (type === "Special Day") {
       return "Special Days";
-    } else if (type == "Rest Day") {
+    } else if (type === "Rest Day") {
       return "Rest Days";
-    } else if (type == "Holiday Pay") {
+    } else if (type === "Holiday Pay") {
       return "Holidays";
     } else {
       return "";
@@ -103,7 +103,7 @@ const ViolationsForm = ({
     let i = daysArray.indexOf(startDay);
     let index = 0;
 
-    while (daysArray[index] != endDay) {
+    while (daysArray[index] !== endDay) {
       index = i % daysArray.length;
       included.push(daysArray[index]);
       ++i;
@@ -135,26 +135,26 @@ const ViolationsForm = ({
 
     dates.forEach((date) => {
       includedDays.includes(format(date, "EEEE")) && ++workingDays;
-      if (type == "Special Day" || type == "Holiday Pay") {
+      if (type === "Special Day" || type === "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
         const holiday = holidays.find(
-          (holiday) => formattedDate == holiday.date,
+          (holiday) => formattedDate === holiday.date,
         );
         if (holiday) {
-          holiday.type == "Special (Non-Working) Holiday" && ++specialDays;
-          holiday.type == "Regular Holiday" && ++regularHolidays;
+          holiday.type === "Special (Non-Working) Holiday" && ++specialDays;
+          holiday.type === "Regular Holiday" && ++regularHolidays;
         }
       }
     });
 
     restDays = dates.length - workingDays;
-    if (type == "Basic Wage" || type == "13th Month Pay") {
+    if (type === "Basic Wage" || type === "13th Month Pay") {
       return workingDays;
-    } else if (type == "Rest Day") {
+    } else if (type === "Rest Day") {
       return restDays;
-    } else if (type == "Special Day") {
+    } else if (type === "Special Day") {
       return specialDays;
-    } else if (type == "Holiday Pay") {
+    } else if (type === "Holiday Pay") {
       return regularHolidays;
     }
     return "";
@@ -232,13 +232,13 @@ const ViolationsForm = ({
                   keyboardType="numeric"
                   placeholder=""
                   editable={false}
-                  value={`${minimumRate == 0 ? "" : minimumRate}`}
+                  value={`${minimumRate === 0 ? "" : minimumRate}`}
                 />
               </View>
             </View>
 
             <View className="flex-row flex-wrap justify-between gap-1">
-              {daysOrHours == "Days" ? (
+              {daysOrHours === "Days" ? (
                 <View className="w-[49%]">
                   <Label name={daysOrHours} color="#333" />
 
@@ -278,7 +278,7 @@ const ViolationsForm = ({
                 </View>
               )}
 
-              {type == "Overtime Pay" && (
+              {type === "Overtime Pay" && (
                 <View className="w-[49%]">
                   <Label name="Type" color="#333" />
 
@@ -302,7 +302,7 @@ const ViolationsForm = ({
                 </View>
               )}
 
-              {daysOrHours == "Days" && (
+              {daysOrHours === "Days" && (
                 <View className="w-[49%]">
                   <Label name={getLabel()} color="#333" />
 
@@ -346,7 +346,7 @@ const ViolationsForm = ({
             </View>
 
             <View className="mt-2 flex-row gap-2.5">
-              {periods.length - 1 == index && (
+              {periods.length - 1 === index && (
                 <TouchableOpacity onPress={onAddPeriod}>
                   <Text className="rounded-md border border-[#008000] bg-[#008000] px-2.5 py-1.5 font-r text-white">
                     Add

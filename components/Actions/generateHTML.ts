@@ -129,7 +129,7 @@ const generateHTML = (
           html += `
           <p class="bold underline top-space">
             ${
-              !violationType.received || violationType.received == 0
+              !violationType.received || violationType.received === 0
                 ? "Non-payment"
                 : "Underpayment"
             } of ${getViolationKeyword(type)}
@@ -169,8 +169,8 @@ const generateHTML = (
         ${renderFormula(type, period)}
 
         ${
-          index + 1 != violationType.periods.length ||
-          (index + 1 == violationType.periods.length && received > 0)
+          index + 1 !== violationType.periods.length ||
+          (index + 1 === violationType.periods.length && received > 0)
             ? `<p class="space">&nbsp</p>`
             : ""
         }`;
@@ -215,10 +215,10 @@ const generateHTML = (
 
     const wageOrder = wageOrders.find((wageOrder) => {
       const key =
-        establishment.size == "Employing 10 or more workers"
+        establishment.size === "Employing 10 or more workers"
           ? "ten_or_more"
           : "less_than_ten";
-      return wageOrder[key] == minimumRate;
+      return wageOrder[key] === minimumRate;
     });
 
     if (wageOrder) {
@@ -243,7 +243,7 @@ const generateHTML = (
         break;
       case "Overtime Pay":
         html += `<p>
-                  Php${formattedRateToUse} / 8 x ${period.type == "Normal Day" ? "25" : "30"}% x ${keyword} 
+                  Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;

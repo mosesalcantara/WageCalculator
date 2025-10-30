@@ -23,7 +23,7 @@ const useFetchHolidays = (db: Db) => {
     try {
       const holidays = await db.query.holidays.findMany();
 
-      if (holidays.length == 0) {
+      if (holidays.length === 0) {
         await seed();
         handleFetch();
       }

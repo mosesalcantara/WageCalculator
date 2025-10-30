@@ -68,7 +68,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
             NAs.includes(valuesMiddleInitial)
           );
         } else {
-          return employeeMiddleInitial == valuesMiddleInitial;
+          return employeeMiddleInitial === valuesMiddleInitial;
         }
       });
 

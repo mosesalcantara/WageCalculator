@@ -39,7 +39,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
 
   const filteredHolidays = useMemo(() => {
     if (holidays) {
-      if (type == "All" && year == "All") {
+      if (type === "All" && year === "All") {
         return holidays;
       }
 
@@ -47,8 +47,8 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
         let isTypeMatched = true;
         let isYearMatched = true;
 
-        if (type != "All") isTypeMatched = type == holiday.type;
-        if (year != "All") isYearMatched = year == holiday.date.split("-")[0];
+        if (type !== "All") isTypeMatched = type === holiday.type;
+        if (year !== "All") isYearMatched = year === holiday.date.split("-")[0];
 
         return isTypeMatched && isYearMatched;
       });

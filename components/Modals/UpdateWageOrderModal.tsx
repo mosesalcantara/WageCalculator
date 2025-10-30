@@ -53,7 +53,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
       });
 
       const isSame =
-        wageOrder.name.toLowerCase() == formattedValues.name.toLowerCase();
+        wageOrder.name.toLowerCase() === formattedValues.name.toLowerCase();
 
       if (record && !isSame) {
         Toast.show({

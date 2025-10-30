@@ -35,20 +35,20 @@ const ViewDaysModal = ({
     });
 
     dates.forEach((date) => {
-      if (type == "Special Day" || type == "Holiday Pay") {
+      if (type === "Special Day" || type === "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
         const holiday = holidays.find(
-          (holiday) => formattedDate == holiday.date,
+          (holiday) => formattedDate === holiday.date,
         );
         if (holiday) {
-          holiday.type == "Special (Non-Working) Holiday" &&
+          holiday.type === "Special (Non-Working) Holiday" &&
             specialDays.push(holiday);
-          holiday.type == "Regular Holiday" && regularHolidays.push(holiday);
+          holiday.type === "Regular Holiday" && regularHolidays.push(holiday);
         }
       }
     });
 
-    return type == "Special Day" ? specialDays : regularHolidays;
+    return type === "Special Day" ? specialDays : regularHolidays;
   };
 
   const estimatedHolidays = getHolidays();
@@ -71,7 +71,7 @@ const ViewDaysModal = ({
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="max-h-[70%] w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <Text className="font-b mb-3 text-center text-lg text-white">
-              {type == "Special Day"
+              {type === "Special Day"
                 ? "Special (Non-Working) Holidays"
                 : "Regular Holidays"}
             </Text>
