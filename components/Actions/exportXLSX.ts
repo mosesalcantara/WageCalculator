@@ -124,7 +124,7 @@ const exportXLSX = async (
 
     switch (type) {
       case "Basic Wage":
-        text = `(Php${formattedRateToUse} - Php${formatNumber(period.rate)}) x ${keyword}`;
+        text = `Php${formattedRateToUse} x ${keyword}`;
         break;
       case "Overtime Pay":
         text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${keyword}`;

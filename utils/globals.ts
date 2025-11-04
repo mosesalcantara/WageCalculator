@@ -325,7 +325,7 @@ export const calculate = (
     const rateToUse = Math.max(rate, minimumRate);
 
     if (type === "Basic Wage") {
-      result = (rateToUse - rate) * daysOrHours;
+      result = rateToUse * daysOrHours;
     } else if (type === "Overtime Pay") {
       result =
         (rateToUse / 8) *

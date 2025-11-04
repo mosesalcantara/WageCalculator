@@ -237,7 +237,7 @@ const generateHTML = (
     switch (type) {
       case "Basic Wage":
         html += `<p>
-                  Php${formatNumber(minimumRate)} - ${formatNumber(rate)} x ${keyword} 
+                  Php${formatNumber(minimumRate)} x ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
