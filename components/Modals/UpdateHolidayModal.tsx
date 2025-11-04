@@ -182,12 +182,12 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
             <DateTimePicker
               value={getValues("date") || new Date()}
               mode="date"
-              onChange={async (_, value) => {
-                if (value) {
+              onChange={async (event, value) => {
+                if (event.type === "set" && value) {
                   setValue("date", value);
                   await trigger("date");
-                  setIsDateModalVisible(false);
                 }
+                setIsDateModalVisible(false);
               }}
             />
           )}

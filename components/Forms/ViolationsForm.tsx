@@ -375,11 +375,11 @@ const ViolationsForm = ({
         <DateTimePicker
           value={formatDateValue(period.start_date)}
           mode="date"
-          onChange={(_, value) => {
-            if (value) {
+          onChange={(event, value) => {
+            if (event.type === "set" && value) {
               onChange(index, "start_date", value);
-              setIsStartDateModalVisible(false);
             }
+            setIsStartDateModalVisible(false);
           }}
         />
       )}
@@ -388,11 +388,11 @@ const ViolationsForm = ({
         <DateTimePicker
           value={formatDateValue(period.end_date)}
           mode="date"
-          onChange={(_, value) => {
-            if (value) {
+          onChange={(event, value) => {
+            if (event.type === "set" && value) {
               onChange(index, "end_date", value);
-              setIsEndDateModalVisible(false);
             }
+            setIsEndDateModalVisible(false);
           }}
         />
       )}

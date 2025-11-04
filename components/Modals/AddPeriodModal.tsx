@@ -117,12 +117,12 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
             <DateTimePicker
               value={getValues("start_date") || new Date()}
               mode="date"
-              onChange={(_, value) => {
-                if (value) {
+              onChange={async (event, value) => {
+                if (event.type === "set" && value) {
                   setValue("start_date", value);
-                  trigger("start_date");
-                  setIsStartDateModalVisible(false);
+                  await trigger("start_date");
                 }
+                setIsStartDateModalVisible(false);
               }}
             />
           )}
@@ -131,12 +131,12 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
             <DateTimePicker
               value={getValues("end_date") || new Date()}
               mode="date"
-              onChange={async (_, value) => {
-                if (value) {
+              onChange={async (event, value) => {
+                if (event.type === "set" && value) {
                   setValue("end_date", value);
                   await trigger("end_date");
-                  setIsEndDateModalVisible(false);
                 }
+                setIsEndDateModalVisible(false);
               }}
             />
           )}
