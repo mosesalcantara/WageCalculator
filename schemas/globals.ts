@@ -1,4 +1,3 @@
-import { Override } from "@/types/globals";
 import { differenceInDays } from "date-fns";
 import * as Yup from "yup";
 
@@ -19,7 +18,9 @@ export const employee = Yup.object().shape({
       "isCorrectFormat",
       "Middle Initial must be in the correct format",
       (value) => {
-        return ["na", "n/a"].includes(value.toLowerCase()) || value.length === 1;
+        return (
+          ["na", "n/a"].includes(value.toLowerCase()) || value.length === 1
+        );
       },
     )
     .label("Middle Initial"),
@@ -31,10 +32,7 @@ export const employee = Yup.object().shape({
   end_day: Yup.string().required().label("End Day"),
 });
 
-export type Employee = Override<
-  Yup.InferType<typeof employee>,
-  { rate: number | string }
->;
+export type Employee = Yup.InferType<typeof employee>;
 
 export const period = Yup.object().shape({
   start_date: Yup.date()
@@ -71,13 +69,7 @@ export const wageOrder = Yup.object().shape({
     .label("Rate"),
 });
 
-export type WageOrder = Override<
-  Yup.InferType<typeof wageOrder>,
-  {
-    less_than_ten: number | string;
-    ten_or_more: number | string;
-  }
->;
+export type WageOrder = Yup.InferType<typeof wageOrder>;
 
 export const holiday = Yup.object().shape({
   name: Yup.string().trim().required().label("Name"),
