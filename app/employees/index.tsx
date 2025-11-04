@@ -30,7 +30,7 @@ const EmployeesPage = () => {
       );
 
       return () => backhandler.remove();
-    }, []),
+    }, [router]),
   );
 
   return (
