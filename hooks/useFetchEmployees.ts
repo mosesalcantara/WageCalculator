@@ -34,11 +34,11 @@ const useFetchEmployees = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, []);
+  }, [setEstablishment, setEmployees]);
 
   useEffect(() => {
     handleFetch();
-  }, []);
+  }, [handleFetch]);
 
   return { establishment, employees, refetch: handleFetch };
 };

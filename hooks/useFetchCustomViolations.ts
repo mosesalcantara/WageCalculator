@@ -39,11 +39,11 @@ const useFetchViolations = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, []);
+  }, [parent_id, setCustomViolationType]);
 
   useEffect(() => {
     handleFetch();
-  }, []);
+  }, [handleFetch]);
 
   return { customViolationType, setCustomViolationType };
 };
