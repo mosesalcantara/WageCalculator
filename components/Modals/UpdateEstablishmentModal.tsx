@@ -8,12 +8,12 @@ import {
 } from "@/schemas/globals";
 import { Db, Establishment } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -84,7 +84,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
   return (
     <>
       <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Icon name="edit" size={20} color="#2196F3" />
+        <MaterialIcons name="edit" size={20} color="#2196F3" />
       </TouchableOpacity>
 
       <Modal
@@ -95,7 +95,7 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-2">
+          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View>
               <Label name="Name" />
 

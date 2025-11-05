@@ -1,8 +1,8 @@
 import { Holiday, ViolationKeys } from "@/types/globals";
 import { formatDate, validateDateRange } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { eachDayOfInterval, format } from "date-fns";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
   holidays: Holiday[];
@@ -57,7 +57,7 @@ const ViewDaysModal = ({
     <>
       {estimatedHolidays.length > 0 && (
         <TouchableOpacity onPress={() => onToggle(true)}>
-          <Icon name="remove-red-eye" size={20} color="#555" />
+          <MaterialIcons name="remove-red-eye" size={20} color="#555" />
         </TouchableOpacity>
       )}
 
@@ -70,7 +70,7 @@ const ViewDaysModal = ({
       >
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="max-h-[70%] w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
-            <Text className="font-b mb-3 text-center text-lg text-white">
+            <Text className="mb-3 text-center font-b text-lg text-white">
               {type === "Special Day"
                 ? "Special (Non-Working) Holidays"
                 : "Regular Holidays"}

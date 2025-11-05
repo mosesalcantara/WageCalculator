@@ -18,10 +18,10 @@ import {
   numberToLetter,
   validateDateRange,
 } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eachDayOfInterval, format } from "date-fns";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -184,7 +184,8 @@ const ViolationsForm = ({
                   <Text className="font-r">
                     {period.start_date || "Select date"}
                   </Text>
-                  <Icon name="date-range" size={20} color="#555" />
+
+                  <MaterialIcons name="date-range" size={20} color="#555" />
                 </TouchableOpacity>
               </View>
 
@@ -198,7 +199,8 @@ const ViolationsForm = ({
                   <Text className="font-r">
                     {period.end_date || "Select date"}
                   </Text>
-                  <Icon name="date-range" size={20} color="#555" />
+
+                  <MaterialIcons name="date-range" size={20} color="#555" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -215,7 +217,8 @@ const ViolationsForm = ({
                     value={period.rate}
                     onChangeText={(value) => onChange(index, "rate", value)}
                   />
-                  <Icon
+
+                  <MaterialIcons
                     name="autorenew"
                     size={20}
                     color="#555"
@@ -253,7 +256,7 @@ const ViolationsForm = ({
                       }
                     />
                     {estimate ? (
-                      <Icon
+                      <MaterialIcons
                         name="autorenew"
                         size={20}
                         color="#555"

@@ -2,9 +2,9 @@ import confirmAlert from "@/components/ConfirmAlert";
 import UpdateWageOrderModal from "@/components/Modals/UpdateWageOrderModal";
 import { Db, WageOrder } from "@/types/globals";
 import { formatDate } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 type Props = {
   db: Db;
@@ -40,7 +40,7 @@ const WageOrdersTable = ({ db, wageOrders, refetch, onDelete }: Props) => {
             <TouchableOpacity
               onPress={() => confirmAlert(wageOrder.id, "Wage Order", onDelete)}
             >
-              <Icon name="delete" size={20} color="#E53935" />
+              <MaterialIcons name="delete" size={20} color="#E53935" />
             </TouchableOpacity>
           </View>
         </View>

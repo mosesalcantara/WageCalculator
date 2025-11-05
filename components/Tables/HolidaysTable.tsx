@@ -3,9 +3,9 @@ import UpdateHolidayModal from "@/components/Modals/UpdateHolidayModal";
 import Select from "@/components/Select";
 import { Db, Holiday } from "@/types/globals";
 import { formatDate } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -115,7 +115,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                       confirmAlert(holiday.id, "Holiday", onDelete)
                     }
                   >
-                    <Icon name="delete" size={20} color="#E53935" />
+                    <MaterialIcons name="delete" size={20} color="#E53935" />
                   </TouchableOpacity>
                 </View>
               </View>

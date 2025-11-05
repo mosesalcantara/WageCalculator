@@ -1,6 +1,6 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { Href, Router } from "expo-router";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -16,7 +16,7 @@ const ViewSettingsModal = ({ router }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Icon name="settings" size={20} color="white" />
+        <MaterialIcons name="settings" size={20} color="white" />
       </TouchableOpacity>
 
       <Modal
@@ -33,7 +33,7 @@ const ViewSettingsModal = ({ router }: Props) => {
                 className="rounded-[0.625rem] bg-black p-3"
                 onPress={() => router.push("/settings/wage-orders" as Href)}
               >
-                <Text className="font-b text-center text-white">
+                <Text className="text-center font-b text-white">
                   📑 Wage Orders
                 </Text>
               </TouchableOpacity>
@@ -43,7 +43,7 @@ const ViewSettingsModal = ({ router }: Props) => {
                 className="rounded-[0.625rem] bg-black p-3"
                 onPress={() => router.push("/settings/holidays" as Href)}
               >
-                <Text className="font-b text-center text-white">
+                <Text className="text-center font-b text-white">
                   📅 Holidays
                 </Text>
               </TouchableOpacity>

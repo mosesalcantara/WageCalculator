@@ -5,12 +5,12 @@ import { holidays } from "@/db/schema";
 import { holiday as schema, Holiday as Values } from "@/schemas/globals";
 import { Db } from "@/types/globals";
 import { getDate, toastVisibilityTime } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Controller, useForm } from "react-hook-form";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -116,7 +116,8 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                       <Text className="font-r">
                         {value ? getDate(value) : "Select date"}
                       </Text>
-                      <Icon name="date-range" size={20} color="#555" />
+
+                      <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
                   </>
                 )}

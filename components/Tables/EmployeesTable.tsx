@@ -2,6 +2,7 @@ import confirmAlert from "@/components/ConfirmAlert";
 import UpdateEmployeeModal from "@/components/Modals/UpdateEmployeeModal";
 import { Db, Employee, Establishment } from "@/types/globals";
 import { formatNumber } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Href, Router } from "expo-router";
 import { useMemo } from "react";
 import {
@@ -12,7 +13,6 @@ import {
   View,
 } from "react-native";
 import SessionStorage from "react-native-session-storage";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -124,7 +124,11 @@ const EmployeesTable = ({
 
                   <View className="w-[27%] flex-row justify-around">
                     <TouchableOpacity onPress={() => setEmployee(employee.id)}>
-                      <Icon name="remove-red-eye" size={20} color="#2196F3" />
+                      <MaterialIcons
+                        name="remove-red-eye"
+                        size={20}
+                        color="#2196F3"
+                      />
                     </TouchableOpacity>
 
                     <UpdateEmployeeModal
@@ -139,7 +143,7 @@ const EmployeesTable = ({
                         confirmAlert(employee.id, "Employee", onDelete);
                       }}
                     >
-                      <Icon name="delete" size={20} color="#E53935" />
+                      <MaterialIcons name="delete" size={20} color="#E53935" />
                     </TouchableOpacity>
                   </View>
                 </View>

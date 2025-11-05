@@ -2,10 +2,10 @@ import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
 import { Period as Values } from "@/schemas/globals";
 import { getDate } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -62,7 +62,12 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                         <Text className="font-r">
                           {value ? getDate(value) : "Select date"}
                         </Text>
-                        <Icon name="date-range" size={20} color="#555" />
+
+                        <MaterialIcons
+                          name="date-range"
+                          size={20}
+                          color="#555"
+                        />
                       </TouchableOpacity>
                     </>
                   )}
@@ -86,7 +91,12 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                         <Text className="font-r">
                           {value ? getDate(value) : "Select date"}
                         </Text>
-                        <Icon name="date-range" size={20} color="#555" />
+
+                        <MaterialIcons
+                          name="date-range"
+                          size={20}
+                          color="#555"
+                        />
                       </TouchableOpacity>
                     </>
                   )}

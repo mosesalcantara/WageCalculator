@@ -28,6 +28,7 @@ import {
   periodFormat,
   toastVisibilityTime,
 } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
@@ -48,7 +49,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 const ViolationsPage = () => {
@@ -82,18 +82,28 @@ const ViolationsPage = () => {
     setCustomViolationType,
   );
 
-  const getTabs = (size: string) => {
-    const tabs = [
-      { name: "Basic Wage", icon: "payments" },
-      { name: "Overtime Pay", icon: "access-time" },
-      { name: "Night Shift Differential", icon: "nights-stay" },
-      { name: "Special Day", icon: "star" },
-      { name: "Rest Day", icon: "coffee" },
-      { name: "Holiday Pay", icon: "event-available" },
-      { name: "13th Month Pay", icon: "card-giftcard" },
-      { name: "Custom", icon: "build" },
-    ];
+  const tabs = [
+    { name: "Basic Wage", icon: "payments" },
+    { name: "Overtime Pay", icon: "access-time" },
+    { name: "Night Shift Differential", icon: "nights-stay" },
+    { name: "Special Day", icon: "star" },
+    { name: "Rest Day", icon: "coffee" },
+    { name: "Holiday Pay", icon: "event-available" },
+    { name: "13th Month Pay", icon: "card-giftcard" },
+    { name: "Custom", icon: "build" },
+  ];
 
+  type IconNames =
+    | "payments"
+    | "access-time"
+    | "nights-stay"
+    | "star"
+    | "coffee"
+    | "event-available"
+    | "card-giftcard"
+    | "build";
+
+  const getTabs = (size: string) => {
     let excluded: string[] = [];
     if (size === "Employing 1 to 5 workers") {
       excluded = ["Holiday Pay", "Night Shift Differential"];
@@ -245,11 +255,12 @@ const ViolationsPage = () => {
                       className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
                       onPress={() => setType(tab.name as ViolationKeys)}
                     >
-                      <Icon
-                        name={tab.icon}
+                      <MaterialIcons
+                        name={tab.icon as IconNames}
                         size={18}
                         color={type === tab.name ? "#fff" : "#555"}
                       />
+
                       <Text
                         className={`ml-1.5 font-r text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
                       >

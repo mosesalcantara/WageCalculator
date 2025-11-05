@@ -8,12 +8,12 @@ import {
 } from "@/schemas/globals";
 import { Db } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -80,7 +80,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         className="rounded-[1.875rem] bg-black p-3"
         onPress={() => setIsVisible(true)}
       >
-        <Icon name="add" size={20} color="white" />
+        <MaterialIcons name="add" size={20} color="white" />
       </TouchableOpacity>
 
       <Modal
