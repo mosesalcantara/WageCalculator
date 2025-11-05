@@ -5,7 +5,7 @@ import {
   ViolationType,
   WageOrder,
 } from "@/types/globals";
-import { differenceInDays, format, parse, subDays } from "date-fns";
+import { differenceInDays, format, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext as SQLiteContext } from "expo-sqlite";
 
@@ -249,7 +249,7 @@ export const formatDate = (
   date: string,
   dateFormat: string = "dd MMMM yyyy",
 ) => {
-  return format(parse(date, "yyyy-MM-dd", new Date()), dateFormat);
+  return format(new Date(date), dateFormat);
 };
 
 export const getDate = (dateTime: Date) => {
