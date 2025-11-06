@@ -9,6 +9,7 @@ import {
 } from "@expo-google-fonts/geist";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
@@ -46,6 +47,7 @@ const toastConfig = {
 
 const RootLayout = () => {
   useMigrations(db, migrations);
+  useDrizzleStudio(expoDb);
 
   const [loaded, error] = useFonts({
     Geist_400Regular,
@@ -66,7 +68,7 @@ const RootLayout = () => {
       <Suspense fallback={<Loader />}>
         <SQLiteProvider
           databaseName={name}
-          options={{ useNewConnection: false }}
+          options={{ useNewConnection: true }}
           useSuspense
         >
           <Stack screenOptions={{ headerShown: false }} />
