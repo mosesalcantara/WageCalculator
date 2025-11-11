@@ -15,6 +15,7 @@ import {
   formatDateValue,
   formatNumber,
   getMinimumRate,
+  isHours,
   numberToLetter,
   validateDateRange,
 } from "@/utils/globals";
@@ -57,12 +58,6 @@ const ViolationsForm = ({
 
   const periods = violationTypes[type].periods;
   const period = violationTypes[type].periods[index];
-
-  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
-    type,
-  )
-    ? "Hours"
-    : "Days";
 
   const minimumRate = getMinimumRate(
     wageOrders,
@@ -241,29 +236,7 @@ const ViolationsForm = ({
             </View>
 
             <View className="flex-row flex-wrap justify-between gap-1">
-              {daysOrHours === "Days" ? (
-                <View className="w-[49%]">
-                  <Label name={daysOrHours} color="#333" />
-
-                  <View className="flex-row items-center  rounded-md border border-black px-2.5">
-                    <TextInput
-                      className="w-[85%] font-r"
-                      keyboardType="numeric"
-                      placeholder={`Enter ${daysOrHours.toLowerCase()}`}
-                      value={period.days}
-                      onChangeText={(value) => onChange(index, "days", value)}
-                    />
-                    {estimate ? (
-                      <MaterialIcons
-                        name="autorenew"
-                        size={20}
-                        color="#555"
-                        onPress={setDays}
-                      />
-                    ) : null}
-                  </View>
-                </View>
-              ) : (
+              {isHours(type) ? (
                 <>
                   <View className="w-[49%]">
                     <Label name="Days" color="#333" />
@@ -289,9 +262,31 @@ const ViolationsForm = ({
                     />
                   </View>
                 </>
+              ) : (
+                <View className="w-[49%]">
+                  <Label name="Days" color="#333" />
+
+                  <View className="flex-row items-center  rounded-md border border-black px-2.5">
+                    <TextInput
+                      className="w-[85%] font-r"
+                      keyboardType="numeric"
+                      placeholder="Enter days"
+                      value={period.days}
+                      onChangeText={(value) => onChange(index, "days", value)}
+                    />
+                    {estimate ? (
+                      <MaterialIcons
+                        name="autorenew"
+                        size={20}
+                        color="#555"
+                        onPress={setDays}
+                      />
+                    ) : null}
+                  </View>
+                </View>
               )}
 
-              {daysOrHours === "Days" && (
+              {!isHours(type) && (
                 <View className="w-[49%]">
                   <Label name={getLabel()} color="#333" />
 

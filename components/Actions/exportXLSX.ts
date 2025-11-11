@@ -13,6 +13,7 @@ import {
   getKeyword,
   getMinimumRate,
   getViolationKeyword,
+  isHours,
   numberToLetter,
   toastVisibilityTime,
   validate,
@@ -38,10 +39,7 @@ const exportXLSX = async (
       let valid = 0;
       Object.keys(violations).forEach((type) => {
         violations[type as ViolationKeys].periods.forEach((period) => {
-          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
-            type,
-          );
-          validate(period, isHours ? [] : ["hours"]) && (valid += 1);
+          validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
         });
       });
 
@@ -60,10 +58,7 @@ const exportXLSX = async (
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
-          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
-            type,
-          );
-          if (validate(period, isHours ? [] : ["hours"])) {
+          if (validate(period, isHours(type) ? [] : ["hours"])) {
             valid += 1;
           }
         });
@@ -92,12 +87,8 @@ const exportXLSX = async (
     } of ${getViolationKeyword(type)}`;
 
     violationType.periods.forEach((period, index) => {
-      const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
-        type,
-      );
-
-      if (validate(period, isHours ? [] : ["hours"])) {
-        const value = isHours
+      if (validate(period, isHours(type) ? [] : ["hours"])) {
+        const value = isHours(type)
           ? `${Number(period.days) * Number(period.hours)}`
           : `${period.days}`;
 

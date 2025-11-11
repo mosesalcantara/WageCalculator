@@ -14,6 +14,7 @@ import {
   getMinimumRate,
   getTotal,
   getViolationKeyword,
+  isHours,
   numberToLetter,
   validate,
 } from "@/utils/globals";
@@ -82,10 +83,7 @@ const generateHTML = (
 
       Object.keys(violations).forEach((type) => {
         violations[type as ViolationKeys].periods.forEach((period) => {
-          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
-            type,
-          );
-          validate(period, isHours ? [] : ["hours"]) && (valid += 1);
+          validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
         });
       });
 
@@ -124,10 +122,7 @@ const generateHTML = (
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
-          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
-            type,
-          );
-          if (validate(period, isHours ? [] : ["hours"])) {
+          if (validate(period, isHours(type) ? [] : ["hours"])) {
             valid += 1;
           }
         });
@@ -163,13 +158,10 @@ const generateHTML = (
 
     violationType.periods.forEach((period, index) => {
       const result = calculate(wageOrders, type, establishment.size, period);
-      const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
-        type,
-      );
 
-      if (validate(period, isHours ? [] : ["hours"])) {
+      if (validate(period, isHours(type) ? [] : ["hours"])) {
         subtotal += result;
-        const value = isHours
+        const value = isHours(type)
           ? `${Number(period.days) * Number(period.hours)}`
           : `${period.days}`;
 

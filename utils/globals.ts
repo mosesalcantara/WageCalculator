@@ -276,6 +276,10 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
+export const isHours = (type: string) => {
+  return ["Overtime Pay", "Night Shift Differential"].includes(type);
+};
+
 export const getMinimumRate = (
   wageOrders: WageOrder[],
   size: string,
@@ -414,9 +418,7 @@ export const getViolationKeyword = (type: string) => {
 };
 
 export const getKeyword = (type: string, days: string, hours: string) => {
-  const value = ["Overtime Pay", "Night Shift Differential"].includes(type)
-    ? hours
-    : days;
+  const value = isHours(type) ? hours : days;
 
   let keyword = "";
   if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(type)) {
