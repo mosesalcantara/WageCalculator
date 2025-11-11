@@ -131,7 +131,7 @@ const generateHTML = (
           html += `
           <p class="bold underline top-space">
             ${
-              !violationType.received || violationType.received === 0
+              !violationType.received || violationType.received === "0"
                 ? "Non-payment"
                 : "Underpayment"
             } of ${getViolationKeyword(type)}

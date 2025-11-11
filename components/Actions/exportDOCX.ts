@@ -105,7 +105,7 @@ const exportDOCX = async (
               children: [
                 new TextRun({
                   text: `${
-                    !violationType.received || violationType.received === 0
+                    !violationType.received || violationType.received === "0"
                       ? "Non-payment"
                       : "Underpayment"
                   } of ${getViolationKeyword(type)}`,
