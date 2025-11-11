@@ -10,7 +10,7 @@ import {
   calculate,
   formatDate,
   formatNumber,
-  getDaysOrHours,
+  getKeyword,
   getMinimumRate,
   getTotal,
   getViolationKeyword,
@@ -32,16 +32,19 @@ const exportDOCX = async (
 
   const renderEmployee = (index: number, employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations = JSON.parse(employee.violations[0].values as string);
+      const violations: Record<ViolationKeys, ViolationType> = JSON.parse(
+        employee.violations[0].values as string,
+      );
 
       let valid = 0;
-      Object.values(violations as Record<ViolationKeys, ViolationType>).forEach(
-        (violationType) => {
-          violationType.periods.forEach((period) => {
-            validate(period) && (valid += 1);
-          });
-        },
-      );
+      Object.keys(violations).forEach((type) => {
+        violations[type as ViolationKeys].periods.forEach((period) => {
+          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
+            type,
+          );
+          validate(period, isHours ? [] : ["hours"]) && (valid += 1);
+        });
+      });
 
       if (valid > 0) {
         children.push(
@@ -93,7 +96,10 @@ const exportDOCX = async (
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
-          if (validate(period)) {
+          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
+            type,
+          );
+          if (validate(period, isHours ? [] : ["hours"])) {
             valid += 1;
           }
         });
@@ -151,8 +157,15 @@ const exportDOCX = async (
 
     violationType.periods.forEach((period, index) => {
       const result = calculate(wageOrders, type, establishment.size, period);
-      if (validate(period)) {
+      const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
+        type,
+      );
+
+      if (validate(period, isHours ? [] : ["hours"])) {
         subtotal += result;
+        const value = isHours
+          ? `${Number(period.days) * Number(period.hours)}`
+          : `${period.days}`;
 
         children.push(
           new Paragraph({
@@ -160,7 +173,7 @@ const exportDOCX = async (
               new TextRun({
                 text: `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
-                )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.days, period.hours)})`,
+                )} to ${formatDate(period.end_date)} (${value} ${getKeyword(type, period.days, period.hours)})`,
                 font: {
                   name: "Arial",
                 },
@@ -279,29 +292,29 @@ const exportDOCX = async (
     const total = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
-    const keyword = getDaysOrHours(type, period.days, period.hours);
+    const keyword = getKeyword(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":
-        text = `Php${formattedRateToUse} x ${keyword}`;
+        text = `Php${formattedRateToUse} x ${period.days} ${keyword}`;
         break;
       case "Overtime Pay":
-        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${period.hours} ${keyword}`;
         break;
       case "Night Shift Differential":
-        text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword}`;
         break;
       case "Special Day":
-        text = `Php${formattedRateToUse} x 30% x ${keyword}`;
+        text = `Php${formattedRateToUse} x 30% x ${period.days} ${keyword}`;
         break;
       case "Rest Day":
-        text = `Php${formattedRateToUse} x 30% x ${keyword}`;
+        text = `Php${formattedRateToUse} x 30% x ${period.days} ${keyword}`;
         break;
       case "Holiday Pay":
-        text = `Php${formattedRateToUse} x ${keyword}`;
+        text = `Php${formattedRateToUse} x ${period.days} ${keyword}`;
         break;
       case "13th Month Pay":
-        text = `Php${formattedRateToUse} x ${keyword} / 12 months`;
+        text = `Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months`;
         break;
       default:
         text = "";

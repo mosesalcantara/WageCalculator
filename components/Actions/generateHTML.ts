@@ -10,7 +10,7 @@ import {
   calculate,
   formatDate,
   formatNumber,
-  getDaysOrHours,
+  getKeyword,
   getMinimumRate,
   getTotal,
   getViolationKeyword,
@@ -74,16 +74,20 @@ const generateHTML = (
     let html = "";
 
     if (employee.violations && employee.violations.length > 0) {
-      const violations = JSON.parse(employee.violations[0].values as string);
+      const violations: Record<ViolationKeys, ViolationType> = JSON.parse(
+        employee.violations[0].values as string,
+      );
 
       let valid = 0;
-      Object.values(violations as Record<ViolationKeys, ViolationType>).forEach(
-        (violationType) => {
-          violationType.periods.forEach((period) => {
-            validate(period) && (valid += 1);
-          });
-        },
-      );
+
+      Object.keys(violations).forEach((type) => {
+        violations[type as ViolationKeys].periods.forEach((period) => {
+          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
+            type,
+          );
+          validate(period, isHours ? [] : ["hours"]) && (valid += 1);
+        });
+      });
 
       if (valid > 0) {
         html += `        
@@ -120,7 +124,10 @@ const generateHTML = (
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
-          if (validate(period)) {
+          const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
+            type,
+          );
+          if (validate(period, isHours ? [] : ["hours"])) {
             valid += 1;
           }
         });
@@ -156,14 +163,22 @@ const generateHTML = (
 
     violationType.periods.forEach((period, index) => {
       const result = calculate(wageOrders, type, establishment.size, period);
-      if (validate(period)) {
+      const isHours = ["Overtime Pay", "Night Shift Differential"].includes(
+        type,
+      );
+
+      if (validate(period, isHours ? [] : ["hours"])) {
         subtotal += result;
+        const value = isHours
+          ? `${Number(period.days) * Number(period.hours)}`
+          : `${period.days}`;
+
         html += `
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
         }: ${formatDate(period.start_date)} to ${formatDate(
           period.end_date,
-        )} (${getDaysOrHours(type, period.days, period.hours)})
+        )} (${value} ${getKeyword(type, period.days, period.hours)})
         </p>
 
         ${renderFormula(type, period)}
@@ -232,37 +247,37 @@ const generateHTML = (
     const total = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
-    const keyword = getDaysOrHours(type, period.days, period.hours);
+    const keyword = getKeyword(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":
         html += `<p>
-                  Php${formatNumber(minimumRate)} x ${keyword} 
+                  Php${formatNumber(minimumRate)} x ${period.days} ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Overtime Pay":
         html += `<p>
-                  Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${keyword} 
+                  Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${period.hours} ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Night Shift Differential":
-        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${keyword} <span class="value">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "Special Day":
         html += `<p>
-                    Php${formattedRateToUse} x 30% x ${keyword} <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} x 30% x ${period.days} ${keyword} <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Rest Day":
-        html += `<p>Php${formattedRateToUse} x 30% x ${keyword} <span class="value">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} x 30% x ${period.days} ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "Holiday Pay":
-        html += `<p>Php${formattedRateToUse} x ${keyword} <span class="value">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} x ${period.days} ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "13th Month Pay":
-        html += `<p>Php${formattedRateToUse} x ${keyword} / 12 months = Php${total}</p>`;
+        html += `<p>Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months = Php${total}</p>`;
         break;
       default:
         html += "";

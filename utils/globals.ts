@@ -413,29 +413,25 @@ export const getViolationKeyword = (type: string) => {
   return keyword;
 };
 
-export const getDaysOrHours = (type: string, days: string, hours: string) => {
-  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
-    type,
-  )
+export const getKeyword = (type: string, days: string, hours: string) => {
+  const value = ["Overtime Pay", "Night Shift Differential"].includes(type)
     ? hours
     : days;
 
-  let keyword = `${daysOrHours} `;
-  if (type === "Basic Wage" || type === "Holiday Pay") {
-    keyword += "day";
+  let keyword = "";
+  if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(type)) {
+    keyword = "day";
   } else if (type === "Overtime Pay") {
-    keyword += "OT hour";
+    keyword = "OT hour";
   } else if (type === "Night Shift Differential") {
-    keyword += "night-shift hour";
+    keyword = "night-shift hour";
   } else if (type === "Special Day") {
-    keyword += "special day";
+    keyword = "special day";
   } else if (type === "Rest Day") {
-    keyword += "rest day";
-  } else if (type === "13th Month Pay") {
-    keyword += "day";
+    keyword = "rest day";
   }
 
-  Number(daysOrHours) > 1 && (keyword += "s");
+  Number(value) > 1 && (keyword += "s");
   return keyword;
 };
 
