@@ -232,7 +232,13 @@ export const getDb = () => {
 };
 
 export const formatNumber = (number: string | number) => {
-  return Number(number).toLocaleString("en-US", {
+  number = Number(number);
+
+  if (isNaN(number)) {
+    number = 0;
+  }
+
+  return number.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
