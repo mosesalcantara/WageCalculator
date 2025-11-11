@@ -35,11 +35,13 @@ const exportDOCX = async (
       const violations = JSON.parse(employee.violations[0].values as string);
 
       let valid = 0;
-      Object.values(violations as Record<ViolationKeys, ViolationType>).forEach((violationType) => {
-        violationType.periods.forEach((period) => {
-          validate(period) && (valid += 1);
-        });
-      });
+      Object.values(violations as Record<ViolationKeys, ViolationType>).forEach(
+        (violationType) => {
+          violationType.periods.forEach((period) => {
+            validate(period) && (valid += 1);
+          });
+        },
+      );
 
       if (valid > 0) {
         children.push(
@@ -158,7 +160,7 @@ const exportDOCX = async (
               new TextRun({
                 text: `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
-                )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`,
+                )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.days, period.hours)})`,
                 font: {
                   name: "Arial",
                 },
@@ -274,18 +276,20 @@ const exportDOCX = async (
     }
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(calculate(wageOrders, type, establishment.size, period));
-    const keyword = getDaysOrHours(type, period.daysOrHours);
+    const total = formatNumber(
+      calculate(wageOrders, type, establishment.size, period),
+    );
+    const keyword = getDaysOrHours(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":
         text = `Php${formattedRateToUse} x ${keyword}`;
         break;
       case "Overtime Pay":
-        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${keyword}`;
         break;
       case "Night Shift Differential":
-        text = `Php${formattedRateToUse} / 8 x 10% x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${keyword}`;
         break;
       case "Special Day":
         text = `Php${formattedRateToUse} x 30% x ${keyword}`;

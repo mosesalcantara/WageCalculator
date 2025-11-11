@@ -163,7 +163,7 @@ const generateHTML = (
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
         }: ${formatDate(period.start_date)} to ${formatDate(
           period.end_date,
-        )} (${getDaysOrHours(type, period.daysOrHours)})
+        )} (${getDaysOrHours(type, period.days, period.hours)})
         </p>
 
         ${renderFormula(type, period)}
@@ -232,7 +232,7 @@ const generateHTML = (
     const total = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
-    const keyword = getDaysOrHours(type, period.daysOrHours);
+    const keyword = getDaysOrHours(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":
@@ -243,12 +243,12 @@ const generateHTML = (
         break;
       case "Overtime Pay":
         html += `<p>
-                  Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${keyword} 
+                  Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${keyword} 
                   <span class="value">= Php${total}</span>
                  </p>`;
         break;
       case "Night Shift Differential":
-        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${keyword} <span class="value">= Php${total}</span></p>`;
+        html += `<p>Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${keyword} <span class="value">= Php${total}</span></p>`;
         break;
       case "Special Day":
         html += `<p>

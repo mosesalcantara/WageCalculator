@@ -90,7 +90,7 @@ const exportXLSX = async (
         const rateText = `Php${formatNumber(period.rate)}/day`;
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
-        )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.daysOrHours)})`;
+        )} to ${formatDate(period.end_date)} (${getDaysOrHours(type, period.days, period.hours)})`;
         const { formulaText, totalText } = renderFormula(type, period);
 
         rows.push([
@@ -120,17 +120,17 @@ const exportXLSX = async (
     const total = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
-    const keyword = getDaysOrHours(type, period.daysOrHours);
+    const keyword = getDaysOrHours(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":
         text = `Php${formattedRateToUse} x ${keyword}`;
         break;
       case "Overtime Pay":
-        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${keyword}`;
         break;
       case "Night Shift Differential":
-        text = `Php${formattedRateToUse} / 8 x 10% x ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${keyword}`;
         break;
       case "Special Day":
         text = `Php${formattedRateToUse} x 30% x ${keyword}`;

@@ -90,7 +90,7 @@ const ViolationsForm = ({
   };
 
   const setDays = () => {
-    onChange(index, "daysOrHours", estimate);
+    onChange(index, "days", estimate);
   };
 
   const handleViewDaysModalToggle = (isVisible: boolean) => {
@@ -250,10 +250,8 @@ const ViolationsForm = ({
                       className="w-[85%] font-r"
                       keyboardType="numeric"
                       placeholder={`Enter ${daysOrHours.toLowerCase()}`}
-                      value={period.daysOrHours}
-                      onChangeText={(value) =>
-                        onChange(index, "daysOrHours", value)
-                      }
+                      value={period.days}
+                      onChangeText={(value) => onChange(index, "days", value)}
                     />
                     {estimate ? (
                       <MaterialIcons
@@ -266,43 +264,31 @@ const ViolationsForm = ({
                   </View>
                 </View>
               ) : (
-                <View className="w-[49%]">
-                  <Label name={daysOrHours} color="#333" />
+                <>
+                  <View className="w-[49%]">
+                    <Label name="Days" color="#333" />
 
-                  <TextInput
-                    className="rounded-md border border-black px-2.5 font-r"
-                    keyboardType="numeric"
-                    placeholder={`Enter ${daysOrHours.toLowerCase()}`}
-                    value={period.daysOrHours}
-                    onChangeText={(value) =>
-                      onChange(index, "daysOrHours", value)
-                    }
-                  />
-                </View>
-              )}
+                    <TextInput
+                      className="rounded-md border border-black px-2.5 font-r"
+                      keyboardType="numeric"
+                      placeholder="Enter days"
+                      value={period.days}
+                      onChangeText={(value) => onChange(index, "days", value)}
+                    />
+                  </View>
 
-              {type === "Overtime Pay" && (
-                <View className="w-[49%]">
-                  <Label name="Type" color="#333" />
+                  <View className="w-[49%]">
+                    <Label name="Hours" color="#333" />
 
-                  <Select
-                    index={index}
-                    name="type"
-                    value={period.type}
-                    options={[
-                      {
-                        label: "Normal Day",
-                        value: "Normal Day",
-                      },
-                      {
-                        label: "Rest Day",
-                        value: "Rest Day",
-                      },
-                    ]}
-                    placeholder="Select Type"
-                    onChange={onChange}
-                  />
-                </View>
+                    <TextInput
+                      className="rounded-md border border-black px-2.5 font-r"
+                      keyboardType="numeric"
+                      placeholder="Enter hours"
+                      value={period.hours}
+                      onChangeText={(value) => onChange(index, "hours", value)}
+                    />
+                  </View>
+                </>
               )}
 
               {daysOrHours === "Days" && (
@@ -333,18 +319,39 @@ const ViolationsForm = ({
                 </View>
               )}
             </View>
+
+            {type === "Overtime Pay" && (
+              <View>
+                <Label name="Type" color="#333" />
+
+                <Select
+                  index={index}
+                  name="type"
+                  value={period.type}
+                  options={[
+                    {
+                      label: "Normal Day",
+                      value: "Normal Day",
+                    },
+                    {
+                      label: "Holiday, Special Day, or Rest Day",
+                      value: "Holiday, Special Day, or Rest Day",
+                    },
+                  ]}
+                  placeholder="Select Type"
+                  onChange={onChange}
+                />
+              </View>
+            )}
           </View>
 
           <View>
             <View className="mt-4 rounded-md border border-[#27ae60] bg-[#eafaf1] p-3">
               <Text className="font-b text-base text-[#27ae60]">
-                Total:{" "}
-                <Text className="mt-1 font-b text-base text-[#27ae60]">
-                  ₱
-                  {formatNumber(
-                    calculate(wageOrders, type, establishment.size, period),
-                  )}
-                </Text>
+                Total: ₱
+                {formatNumber(
+                  calculate(wageOrders, type, establishment.size, period),
+                )}
               </Text>
             </View>
 

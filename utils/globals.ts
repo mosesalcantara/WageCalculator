@@ -208,7 +208,8 @@ export const periodFormat = {
   start_date: "",
   end_date: "",
   rate: "",
-  daysOrHours: "",
+  days: "",
+  hours: "",
   type: "Normal Day",
 };
 
@@ -313,8 +314,15 @@ export const calculate = (
 ) => {
   let result = 0;
 
-  if (validate(period)) {
-    const daysOrHours = Number(period.daysOrHours);
+  const excluded =
+    type === "Overtime Pay" || type === "Night Shift Differential"
+      ? []
+      : ["hours"];
+
+  if (validate(period, excluded)) {
+    const days = Number(period.days);
+    const hours = Number(period.hours);
+
     const rate = Number(period.rate);
     const minimumRate = getMinimumRate(
       wageOrders,
@@ -325,22 +333,22 @@ export const calculate = (
     const rateToUse = Math.max(rate, minimumRate);
 
     if (type === "Basic Wage") {
-      result = rateToUse * daysOrHours;
+      result = rateToUse * days;
     } else if (type === "Overtime Pay") {
       result =
         (rateToUse / 8) *
         (period.type === "Normal Day" ? 0.25 : 0.3) *
-        daysOrHours;
+        (days * hours);
     } else if (type === "Night Shift Differential") {
-      result = (rateToUse / 8) * 0.1 * daysOrHours;
+      result = (rateToUse / 8) * 0.1 * (days * hours);
     } else if (type === "Special Day") {
-      result = rateToUse * 0.3 * daysOrHours;
+      result = rateToUse * 0.3 * days;
     } else if (type === "Rest Day") {
-      result = rateToUse * 0.3 * daysOrHours;
+      result = rateToUse * 0.3 * days;
     } else if (type === "Holiday Pay") {
-      result = rateToUse * daysOrHours;
+      result = rateToUse * days;
     } else if (type === "13th Month Pay") {
-      result = (rateToUse * daysOrHours) / 12;
+      result = (rateToUse * days) / 12;
     }
   }
 
@@ -399,7 +407,13 @@ export const getViolationKeyword = (type: string) => {
   return keyword;
 };
 
-export const getDaysOrHours = (type: string, daysOrHours: string) => {
+export const getDaysOrHours = (type: string, days: string, hours: string) => {
+  const daysOrHours = ["Overtime Pay", "Night Shift Differential"].includes(
+    type,
+  )
+    ? hours
+    : days;
+
   let keyword = `${daysOrHours} `;
   if (type === "Basic Wage" || type === "Holiday Pay") {
     keyword += "day";
@@ -414,6 +428,7 @@ export const getDaysOrHours = (type: string, daysOrHours: string) => {
   } else if (type === "13th Month Pay") {
     keyword += "day";
   }
+
   Number(daysOrHours) > 1 && (keyword += "s");
   return keyword;
 };
