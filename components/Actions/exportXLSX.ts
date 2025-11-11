@@ -37,8 +37,9 @@ const exportXLSX = async (
       );
 
       let valid = 0;
-      Object.keys(violations).forEach((type) => {
-        violations[type as ViolationKeys].periods.forEach((period) => {
+      Object.keys(violations).forEach((key) => {
+        const type = key as ViolationKeys;
+        violations[type].periods.forEach((period) => {
           validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
         });
       });
@@ -53,7 +54,8 @@ const exportXLSX = async (
     if (employee.violations && employee.violations.length > 0) {
       const violations = JSON.parse(employee.violations[0].values as string);
 
-      Object.keys(violations).forEach((type) => {
+      Object.keys(violations).forEach((key) => {
+        const type = key as ViolationKeys;
         const violationType = violations[type];
 
         let valid = 0;
@@ -72,7 +74,7 @@ const exportXLSX = async (
 
   const renderViolationType = (
     employee: Employee,
-    type: string,
+    type: ViolationKeys,
     violationType: { periods: Period[]; received: string },
   ) => {
     const nameText = `${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}${
@@ -110,7 +112,7 @@ const exportXLSX = async (
     });
   };
 
-  const renderFormula = (type: string, period: Period) => {
+  const renderFormula = (type: ViolationKeys, period: Period) => {
     let text = "";
 
     const rate = Number(period.rate);

@@ -81,8 +81,9 @@ const generateHTML = (
 
       let valid = 0;
 
-      Object.keys(violations).forEach((type) => {
-        violations[type as ViolationKeys].periods.forEach((period) => {
+      Object.keys(violations).forEach((key) => {
+        const type = key as ViolationKeys;
+        violations[type].periods.forEach((period) => {
           validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
         });
       });
@@ -116,7 +117,8 @@ const generateHTML = (
       const violations = JSON.parse(employee.violations[0].values as string);
 
       let total = 0;
-      Object.keys(violations).forEach((type) => {
+      Object.keys(violations).forEach((key) => {
+        const type = key as ViolationKeys;
         const violationType = violations[type];
         total += getTotal(wageOrders, type, establishment.size, violationType);
 
@@ -149,7 +151,7 @@ const generateHTML = (
   };
 
   const renderViolationType = (
-    type: string,
+    type: ViolationKeys,
     violationType: { periods: Period[]; received: string },
   ) => {
     let html = "";
@@ -209,7 +211,7 @@ const generateHTML = (
     return html;
   };
 
-  const renderFormula = (type: string, period: Period) => {
+  const renderFormula = (type: ViolationKeys, period: Period) => {
     let html = "";
 
     const rate = Number(period.rate);

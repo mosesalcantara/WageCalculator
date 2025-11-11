@@ -276,7 +276,7 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
-export const isHours = (type: string) => {
+export const isHours = (type: ViolationKeys) => {
   return ["Overtime Pay", "Night Shift Differential"].includes(type);
 };
 
@@ -318,7 +318,7 @@ export const getMinimumRate = (
 
 export const calculate = (
   wageOrders: WageOrder[],
-  type: string,
+  type: ViolationKeys,
   size: string,
   period: Period,
 ) => {
@@ -367,7 +367,7 @@ export const calculate = (
 
 export const getTotal = (
   wageOrders: WageOrder[],
-  type: string,
+  type: ViolationKeys,
   size: string,
   violationType: { periods: Period[]; received: string },
 ) => {
@@ -405,8 +405,8 @@ export const getInitialCustomViolationType = (rate?: number) => {
   };
 };
 
-export const getViolationKeyword = (type: string) => {
-  let keyword = type;
+export const getViolationKeyword = (type: ViolationKeys) => {
+  let keyword: string = type;
   if (type === "Basic Wage") {
     keyword = "Wages";
   } else if (type === "Special Day") {
@@ -417,7 +417,11 @@ export const getViolationKeyword = (type: string) => {
   return keyword;
 };
 
-export const getValueKeyword = (type: string, days: string, hours: string) => {
+export const getValueKeyword = (
+  type: ViolationKeys,
+  days: string,
+  hours: string,
+) => {
   const value = isHours(type) ? hours : days;
 
   let keyword = "";
