@@ -10,8 +10,8 @@ import {
   calculate,
   formatDate,
   formatNumber,
-  getKeyword,
   getMinimumRate,
+  getValueKeyword,
   getViolationKeyword,
   isHours,
   numberToLetter,
@@ -95,7 +95,7 @@ const exportXLSX = async (
         const rateText = `Php${formatNumber(period.rate)}/day`;
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
-        )} to ${formatDate(period.end_date)} (${value} ${getKeyword(type, period.days, period.hours)})`;
+        )} to ${formatDate(period.end_date)} (${value} ${getValueKeyword(type, period.days, period.hours)})`;
         const { formulaText, totalText } = renderFormula(type, period);
 
         rows.push([
@@ -125,7 +125,7 @@ const exportXLSX = async (
     const total = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
-    const keyword = getKeyword(type, period.days, period.hours);
+    const keyword = getValueKeyword(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":

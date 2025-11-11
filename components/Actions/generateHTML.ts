@@ -10,9 +10,9 @@ import {
   calculate,
   formatDate,
   formatNumber,
-  getKeyword,
   getMinimumRate,
   getTotal,
+  getValueKeyword,
   getViolationKeyword,
   isHours,
   numberToLetter,
@@ -170,7 +170,7 @@ const generateHTML = (
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
         }: ${formatDate(period.start_date)} to ${formatDate(
           period.end_date,
-        )} (${value} ${getKeyword(type, period.days, period.hours)})
+        )} (${value} ${getValueKeyword(type, period.days, period.hours)})
         </p>
 
         ${renderFormula(type, period)}
@@ -239,7 +239,7 @@ const generateHTML = (
     const total = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
-    const keyword = getKeyword(type, period.days, period.hours);
+    const keyword = getValueKeyword(type, period.days, period.hours);
 
     switch (type) {
       case "Basic Wage":

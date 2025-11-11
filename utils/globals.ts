@@ -417,7 +417,7 @@ export const getViolationKeyword = (type: string) => {
   return keyword;
 };
 
-export const getKeyword = (type: string, days: string, hours: string) => {
+export const getValueKeyword = (type: string, days: string, hours: string) => {
   const value = isHours(type) ? hours : days;
 
   let keyword = "";
