@@ -269,7 +269,7 @@ const exportXLSX = async (
               const permissions =
                 await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-              if (permissions.granted) {
+              if (permissions.granted && permissions.directoryUri) {
                 await FileSystem.StorageAccessFramework.createFileAsync(
                   permissions.directoryUri,
                   filename,

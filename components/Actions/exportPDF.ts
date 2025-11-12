@@ -30,7 +30,7 @@ const exportPDF = async (establishment: Establishment, html: string) => {
               const permissions =
                 await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-              if (permissions.granted) {
+              if (permissions.granted && permissions.directoryUri) {
                 await FileSystem.StorageAccessFramework.createFileAsync(
                   permissions.directoryUri,
                   filename,
