@@ -90,7 +90,8 @@ const generateHTML = (
 
       if (valid > 0) {
         html += `        
-          ${index === 0 && `<tr></tr>`}
+          ${index > 0 && `<tr></tr>`}
+
           <tr>
               <td>
                 <p>
@@ -103,7 +104,10 @@ const generateHTML = (
                 <p>Actual Rate: Php${formatNumber(employee.rate)}/day</p>
               </td>
           </tr>
-          <tr><td>${renderViolations(employee)}</td></tr>
+
+          <tr>
+            <td>${renderViolations(employee)}</td>
+          </tr>
         `;
       }
     }
