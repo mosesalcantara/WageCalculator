@@ -90,7 +90,7 @@ const generateHTML = (
 
       if (valid > 0) {
         html += `        
-          ${index > 0 && `<tr></tr>`}
+          ${index > 0 && `<tr><p class="space">&nbsp</p></tr>`}
 
           <tr>
               <td>

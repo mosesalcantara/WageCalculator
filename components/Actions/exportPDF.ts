@@ -6,9 +6,16 @@ import Toast from "react-native-toast-message";
 
 const exportPDF = async (establishment: Establishment, html: string) => {
   try {
-    const { uri } = await Print.printToFileAsync({ html });
-    (await Sharing.isAvailableAsync()) &&
-      (await Sharing.shareAsync(uri + `${establishment.name}.pdf`));
+    const { uri, base64 } = await Print.printToFileAsync({
+      html,
+      base64: true,
+    });
+
+    console.log(uri);
+
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(uri + `${establishment.name}.pdf`);
+    }
   } catch (error) {
     console.error(error);
     Toast.show({

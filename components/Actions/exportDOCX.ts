@@ -395,6 +395,7 @@ const exportDOCX = async (
         onPress: async () => {
           if (await Sharing.isAvailableAsync()) {
             const uri = FileSystem.documentDirectory + filename;
+            console.log(uri);
 
             await FileSystem.writeAsStringAsync(uri, base64, {
               encoding: FileSystem.EncodingType.Base64,
