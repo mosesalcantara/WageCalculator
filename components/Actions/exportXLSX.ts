@@ -254,15 +254,10 @@ const exportXLSX = async (
     return base64;
   };
 
-  const exportFile = async () => {
-    const uri = FileSystem.documentDirectory + filename;
+  const exportFile = () => {
     const base64 = getBase64();
     const mimeType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-    await FileSystem.writeAsStringAsync(uri, base64, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
 
     Alert.alert("Export as XLSX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
@@ -312,6 +307,12 @@ const exportXLSX = async (
         text: "Share",
         onPress: async () => {
           if (await Sharing.isAvailableAsync()) {
+            const uri = FileSystem.documentDirectory + filename;
+
+            await FileSystem.writeAsStringAsync(uri, base64, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+
             await Sharing.shareAsync(uri, {
               mimeType: mimeType,
               dialogTitle: "Share Excel Report",
@@ -323,7 +324,7 @@ const exportXLSX = async (
   };
 
   generateXLSX();
-  await exportFile();
+  exportFile();
 };
 
 export default exportXLSX;
