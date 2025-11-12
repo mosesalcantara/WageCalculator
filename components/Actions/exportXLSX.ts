@@ -28,6 +28,7 @@ const exportXLSX = async (
   wageOrders: WageOrder[],
   establishment: Establishment,
 ) => {
+  const filename = `${establishment.name}.xlsx`;
   const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
 
   const renderEmployee = (employee: Employee) => {
@@ -221,6 +222,8 @@ const exportXLSX = async (
   };
 
   const generateFile = async () => {
+    const uri = FileSystem.documentDirectory + filename;
+
     if (establishment.employees) {
       establishment.employees.forEach((employee) => {
         renderEmployee(employee);
@@ -242,64 +245,42 @@ const exportXLSX = async (
         { wch: 40 },
         { wch: 18 },
       ];
-
       worksheet["!merges"] = getMerges(0, rows);
 
       XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 
       const base64 = XLSX.write(workbook, { type: "base64", bookType: "xlsx" });
-      const uri = FileSystem.documentDirectory + `${establishment.name}.xlsx`;
-
-      await FileSystem.writeAsStringAsync(uri, base64, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      return uri;
+      return { uri, base64 };
     }
   };
 
-  const exportFile = (uri: string) => {
-    Alert.alert("Export Excel", "Would you like to Save or Share the file?", [
+  const exportFile = (uri: string, base64: string) => {
+    Alert.alert("Export as XLSX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
       {
-        text: "Share",
-        onPress: async () => {
-          if (await Sharing.isAvailableAsync()) {
-            await Sharing.shareAsync(uri, {
-              mimeType:
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-              dialogTitle: "Share Excel Report",
-            });
-          }
-        },
-      },
-      {
-        text: "Save to Device",
+        text: "Save",
         onPress: async () => {
           if (Platform.OS === "android") {
             try {
               const permissions =
                 await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-              if (permissions.granted && permissions.directoryUri) {
-                const base64 = await FileSystem.readAsStringAsync(uri, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
-
-                const newUri =
-                  await FileSystem.StorageAccessFramework.createFileAsync(
-                    permissions.directoryUri,
-                    `${establishment.name}.xlsx`,
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                  );
-
-                await FileSystem.writeAsStringAsync(newUri, base64, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
+              if (permissions.granted) {
+                await FileSystem.StorageAccessFramework.createFileAsync(
+                  permissions.directoryUri,
+                  filename,
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                )
+                  .then(async (uri) => {
+                    await FileSystem.writeAsStringAsync(uri, base64, {
+                      encoding: FileSystem.EncodingType.Base64,
+                    });
+                  })
+                  .catch((error) => console.error(error));
 
                 Toast.show({
                   type: "success",
-                  text1: "Exported File",
+                  text1: "File Saved",
                   visibilityTime: toastVisibilityTime,
                 });
               }
@@ -318,11 +299,23 @@ const exportXLSX = async (
           }
         },
       },
+      {
+        text: "Share",
+        onPress: async () => {
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(uri, {
+              mimeType:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              dialogTitle: "Share Excel Report",
+            });
+          }
+        },
+      },
     ]);
   };
 
-  const uri = await generateFile();
-  uri && exportFile(uri);
+  const result = await generateFile();
+  result && exportFile(result.uri, result.base64);
 };
 
 export default exportXLSX;

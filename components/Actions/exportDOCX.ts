@@ -19,7 +19,7 @@ import {
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
@@ -29,6 +29,7 @@ const exportDOCX = async (
   wageOrders: WageOrder[],
   establishment: Establishment,
 ) => {
+  const filename = `${establishment.name}.docx`;
   const children: Paragraph[] = [];
 
   const renderEmployee = (index: number, employee: Employee) => {
@@ -357,54 +358,37 @@ const exportDOCX = async (
   };
 
   const exportFile = async () => {
-    const doc = new Document({ sections: [{ children: children }] });
-    const base64 = await Packer.toBase64String(doc);
-    const uri = FileSystem.documentDirectory + `${establishment.name}.docx`;
-
-    await FileSystem.writeAsStringAsync(uri, base64, {
+    const uri = FileSystem.documentDirectory + filename;
+    const base64 = await FileSystem.readAsStringAsync(uri, {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    Alert.alert("Export DOCX", "Would you like to Save or Share the file?", [
+    Alert.alert("Export as DOCX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
       {
-        text: "Share",
-        onPress: async () => {
-          if (await Sharing.isAvailableAsync()) {
-            await Sharing.shareAsync(uri, {
-              mimeType:
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              dialogTitle: "Share Report",
-            });
-          }
-        },
-      },
-      {
-        text: "Save to Device",
+        text: "Save",
         onPress: async () => {
           if (Platform.OS === "android") {
             try {
               const permissions =
                 await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-              if (permissions.granted && permissions.directoryUri) {
-                const base64 = await FileSystem.readAsStringAsync(uri, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
 
-                const newUri =
-                  await FileSystem.StorageAccessFramework.createFileAsync(
-                    permissions.directoryUri,
-                    uri,
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                  );
-
-                await FileSystem.writeAsStringAsync(newUri, base64, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
+              if (permissions.granted) {
+                await FileSystem.StorageAccessFramework.createFileAsync(
+                  permissions.directoryUri,
+                  filename,
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                )
+                  .then(async (uri) => {
+                    await FileSystem.writeAsStringAsync(uri, base64, {
+                      encoding: FileSystem.EncodingType.Base64,
+                    });
+                  })
+                  .catch((error) => console.error(error));
 
                 Toast.show({
                   type: "success",
-                  text1: "Exported File",
+                  text1: "File Saved",
                   visibilityTime: toastVisibilityTime,
                 });
               }
@@ -419,6 +403,18 @@ const exportDOCX = async (
             Toast.show({
               type: "info",
               text1: "Saving Not Supported",
+            });
+          }
+        },
+      },
+      {
+        text: "Share",
+        onPress: async () => {
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(uri, {
+              mimeType:
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              dialogTitle: "Share Report",
             });
           }
         },
