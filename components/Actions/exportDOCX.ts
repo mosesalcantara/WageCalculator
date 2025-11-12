@@ -424,7 +424,7 @@ const exportDOCX = async (
   };
 
   generateDOCX();
-  exportFile();
+  await exportFile();
 };
 
 export default exportDOCX;

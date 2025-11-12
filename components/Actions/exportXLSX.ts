@@ -221,39 +221,39 @@ const exportXLSX = async (
     return merges;
   };
 
-  const generateXLSX = async () => {
+  const generateXLSX = () => {
     if (establishment.employees) {
       establishment.employees.forEach((employee) => {
         renderEmployee(employee);
       });
-
-      const workbook = XLSX.utils.book_new();
-      const worksheet = XLSX.utils.aoa_to_sheet(rows);
-
-      Object.values(worksheet).forEach((cell) => {
-        if (typeof cell != "object") return;
-        cell.s = { alignment: { vertical: "center" } };
-      });
-
-      worksheet["!cols"] = [
-        { wch: 30 },
-        { wch: 18 },
-        { wch: 40 },
-        { wch: 60 },
-        { wch: 40 },
-        { wch: 18 },
-      ];
-      worksheet["!merges"] = getMerges(0, rows);
-
-      XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
-
-      const base64 = XLSX.write(workbook, { type: "base64", bookType: "xlsx" });
-      return base64;
     }
   };
 
-  const exportFile = (base64: string) => {
+  const exportFile = () => {
     const uri = FileSystem.documentDirectory + filename;
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+    Object.values(worksheet).forEach((cell) => {
+      if (typeof cell != "object") return;
+      cell.s = { alignment: { vertical: "center" } };
+    });
+
+    worksheet["!cols"] = [
+      { wch: 30 },
+      { wch: 18 },
+      { wch: 40 },
+      { wch: 60 },
+      { wch: 40 },
+      { wch: 18 },
+    ];
+    worksheet["!merges"] = getMerges(0, rows);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
+
+    const base64 = XLSX.write(workbook, { type: "base64", bookType: "xlsx" });
+
     const mimeType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -315,8 +315,8 @@ const exportXLSX = async (
     ]);
   };
 
-  const base64 = await generateXLSX();
-  base64 && exportFile(base64);
+  generateXLSX();
+  await exportFile();
 };
 
 export default exportXLSX;
