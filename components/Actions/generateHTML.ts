@@ -57,7 +57,7 @@ const getStyles = (isPreview: boolean) => {
           text-align: right;
         }
         .space {
-          font-size: 0.7rem;
+          font-size: 0.5rem;
         }
         .top-space {
             margin-top: 1rem;
