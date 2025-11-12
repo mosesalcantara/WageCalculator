@@ -7,11 +7,11 @@ import { Alert, Platform } from "react-native";
 import Toast from "react-native-toast-message";
 
 const getFile = async (filename: string, html: string) => {
-  const response = await Print.printToFileAsync({ html, base64: true });
-  const uri = `${response.uri.slice(0, response.uri.lastIndexOf("/"))}/${filename}`;
+  const { uri, base64 } = await Print.printToFileAsync({ html, base64: true });
+  const newUri = `${uri.slice(0, uri.lastIndexOf("/"))}/${filename}`;
 
-  await FileSystem.moveAsync({ from: response.uri, to: uri });
-  return { uri, base64: response.base64 };
+  await FileSystem.moveAsync({ from: uri, to: newUri });
+  return { uri: newUri, base64 };
 };
 
 const exportPDF = async (establishment: Establishment, html: string) => {
