@@ -19,7 +19,7 @@ import {
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
-import { Paragraph, TextRun } from "docx";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
@@ -359,11 +359,16 @@ const exportDOCX = async (
 
   const exportFile = async () => {
     const uri = FileSystem.documentDirectory + filename;
-    const base64 = await FileSystem.readAsStringAsync(uri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
+
+    const doc = new Document({ sections: [{ children: children }] });
+    const base64 = await Packer.toBase64String(doc);
+
     const mimeType =
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+    await FileSystem.writeAsStringAsync(uri, base64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
 
     Alert.alert("Export as DOCX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
