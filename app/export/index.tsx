@@ -39,9 +39,9 @@ const ExportPage = () => {
                 <View className="flex-row justify-center gap-2">
                   <TouchableOpacity
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
-                    onPress={() => exportPDF(exportHTML)}
+                    onPress={() => exportPDF(establishment, exportHTML)}
                   >
-                    <Text className="font-b text-center text-white">
+                    <Text className="text-center font-b text-white">
                       Export PDF
                     </Text>
                   </TouchableOpacity>
@@ -50,7 +50,7 @@ const ExportPage = () => {
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
                     onPress={() => exportDOCX(wageOrders, establishment)}
                   >
-                    <Text className="font-b text-center text-white">
+                    <Text className="text-center font-b text-white">
                       Export Word
                     </Text>
                   </TouchableOpacity>
@@ -59,7 +59,7 @@ const ExportPage = () => {
                     className="rounded-[1.875rem] bg-[#2397f3] p-3"
                     onPress={() => exportXLSX(wageOrders, establishment)}
                   >
-                    <Text className="font-b text-center text-white">
+                    <Text className="text-center font-b text-white">
                       Export Excel
                     </Text>
                   </TouchableOpacity>
