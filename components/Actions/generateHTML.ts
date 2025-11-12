@@ -90,6 +90,7 @@ const generateHTML = (
 
       if (valid > 0) {
         html += `        
+          ${index === 0 && `<tr></tr>`}
           <tr>
               <td>
                 <p>
