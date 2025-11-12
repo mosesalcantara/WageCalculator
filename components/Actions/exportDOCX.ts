@@ -180,7 +180,11 @@ const exportDOCX = async (
           }),
         );
 
-        renderFormula(type, period);
+        const addSpace =
+          index + 1 !== violationType.periods.length ||
+          (index + 1 === violationType.periods.length && received > 0);
+
+        renderFormula(type, period, addSpace);
       }
     });
 
@@ -224,7 +228,6 @@ const exportDOCX = async (
                 name: "Arial",
               },
               size: 28,
-              break: 1,
             }),
           ],
           alignment: "right",
@@ -233,7 +236,11 @@ const exportDOCX = async (
     }
   };
 
-  const renderFormula = (type: ViolationKeys, period: Period) => {
+  const renderFormula = (
+    type: ViolationKeys,
+    period: Period,
+    addSpace: boolean,
+  ) => {
     let text = "";
 
     const rate = Number(period.rate);
@@ -311,7 +318,7 @@ const exportDOCX = async (
             size: 28,
           }),
         ],
-        spacing: { after: 300 },
+        spacing: { after: addSpace ? 300 : 0 },
       }),
     );
   };

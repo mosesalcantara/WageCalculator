@@ -57,7 +57,7 @@ const getStyles = (isPreview: boolean) => {
           text-align: right;
         }
         .space {
-          font-size: 0.5rem;
+          font-size: 1rem;
         }
         .top-space {
             margin-top: 1rem;
@@ -89,9 +89,7 @@ const generateHTML = (
       });
 
       if (valid > 0) {
-        html += `        
-          ${index > 0 && `<tr><p class="space">&nbsp</p></tr>`}
-
+        html += `      
           <tr>
               <td>
                 <p>
@@ -149,7 +147,10 @@ const generateHTML = (
         }
       });
 
-      html += `<p class="bold right">Total: Php${formatNumber(total)}</p>`;
+      html += `
+                <p class="bold right">Total: Php${formatNumber(total)}</p>
+                <p class="space">&nbsp</p>
+              `;
     }
 
     return html;
