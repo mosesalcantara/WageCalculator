@@ -221,9 +221,7 @@ const exportXLSX = async (
     return merges;
   };
 
-  const generateFile = async () => {
-    const uri = FileSystem.documentDirectory + filename;
-
+  const getContent = async () => {
     if (establishment.employees) {
       establishment.employees.forEach((employee) => {
         renderEmployee(employee);
@@ -250,11 +248,15 @@ const exportXLSX = async (
       XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 
       const base64 = XLSX.write(workbook, { type: "base64", bookType: "xlsx" });
-      return { uri, base64 };
+      return base64;
     }
   };
 
-  const exportFile = (uri: string, base64: string) => {
+  const exportFile = (base64: string) => {
+    const uri = FileSystem.documentDirectory + filename;
+    const mimeType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
     Alert.alert("Export as XLSX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -269,7 +271,7 @@ const exportXLSX = async (
                 await FileSystem.StorageAccessFramework.createFileAsync(
                   permissions.directoryUri,
                   filename,
-                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  mimeType,
                 )
                   .then(async (uri) => {
                     await FileSystem.writeAsStringAsync(uri, base64, {
@@ -304,8 +306,7 @@ const exportXLSX = async (
         onPress: async () => {
           if (await Sharing.isAvailableAsync()) {
             await Sharing.shareAsync(uri, {
-              mimeType:
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              mimeType: mimeType,
               dialogTitle: "Share Excel Report",
             });
           }
@@ -314,8 +315,8 @@ const exportXLSX = async (
     ]);
   };
 
-  const result = await generateFile();
-  result && exportFile(result.uri, result.base64);
+  const base64 = await getContent();
+  base64 && exportFile(base64);
 };
 
 export default exportXLSX;

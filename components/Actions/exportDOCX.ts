@@ -362,6 +362,8 @@ const exportDOCX = async (
     const base64 = await FileSystem.readAsStringAsync(uri, {
       encoding: FileSystem.EncodingType.Base64,
     });
+    const mimeType =
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
     Alert.alert("Export as DOCX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
@@ -377,7 +379,7 @@ const exportDOCX = async (
                 await FileSystem.StorageAccessFramework.createFileAsync(
                   permissions.directoryUri,
                   filename,
-                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                  mimeType,
                 )
                   .then(async (uri) => {
                     await FileSystem.writeAsStringAsync(uri, base64, {
@@ -412,9 +414,8 @@ const exportDOCX = async (
         onPress: async () => {
           if (await Sharing.isAvailableAsync()) {
             await Sharing.shareAsync(uri, {
-              mimeType:
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              dialogTitle: "Share Report",
+              mimeType: mimeType,
+              dialogTitle: "Share Word Report",
             });
           }
         },
