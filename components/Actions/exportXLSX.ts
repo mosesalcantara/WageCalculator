@@ -221,7 +221,7 @@ const exportXLSX = async (
     return merges;
   };
 
-  const generateBase64 = async () => {
+  const generateXLSX = async () => {
     if (establishment.employees) {
       establishment.employees.forEach((employee) => {
         renderEmployee(employee);
@@ -315,7 +315,7 @@ const exportXLSX = async (
     ]);
   };
 
-  const base64 = await generateBase64();
+  const base64 = await generateXLSX();
   base64 && exportFile(base64);
 };
 
