@@ -229,9 +229,7 @@ const exportXLSX = async (
     }
   };
 
-  const exportFile = () => {
-    const uri = FileSystem.documentDirectory + filename;
-
+  const getBase64 = () => {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet(rows);
 
@@ -253,9 +251,18 @@ const exportXLSX = async (
     XLSX.utils.book_append_sheet(workbook, worksheet, establishment.name);
 
     const base64 = XLSX.write(workbook, { type: "base64", bookType: "xlsx" });
+    return base64;
+  };
 
+  const exportFile = async () => {
+    const uri = FileSystem.documentDirectory + filename;
+    const base64 = getBase64();
     const mimeType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+    await FileSystem.writeAsStringAsync(uri, base64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
 
     Alert.alert("Export as XLSX", "Would you like to Save or Share the file?", [
       { text: "Cancel", style: "cancel" },
@@ -316,7 +323,7 @@ const exportXLSX = async (
   };
 
   generateXLSX();
-  exportFile();
+  await exportFile();
 };
 
 export default exportXLSX;
