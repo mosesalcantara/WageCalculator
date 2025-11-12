@@ -316,7 +316,7 @@ const exportXLSX = async (
   };
 
   generateXLSX();
-  await exportFile();
+  exportFile();
 };
 
 export default exportXLSX;
