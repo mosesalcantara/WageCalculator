@@ -181,23 +181,6 @@ const exportDOCX = async (
         );
 
         renderFormula(type, period);
-
-        if (
-          index + 1 !== violationType.periods.length &&
-          index + 1 === violationType.periods.length &&
-          received > 0
-        ) {
-          children.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: ``,
-                  break: 1,
-                }),
-              ],
-            }),
-          );
-        }
       }
     });
 
