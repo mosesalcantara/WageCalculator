@@ -7,8 +7,7 @@ import useFetchEstablishments from "@/hooks/useFetchEstablishments";
 import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import { getDb } from "@/utils/globals";
-import { useFocusEffect } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -45,7 +44,7 @@ const EstablishmentsPage = () => {
 
       <View className="p-4">
         <View className="mb-2 flex-row items-center justify-between">
-          <Text className="font-b text-center text-xl">Establishments</Text>
+          <Text className="text-center font-b text-xl">Establishments</Text>
           <View className="flex-row justify-end gap-2">
             <AddEstablishmentModal db={db} refetch={refetch} />
             <ViewSettingsModal router={router} />

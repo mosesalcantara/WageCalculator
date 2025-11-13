@@ -30,9 +30,8 @@ import {
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useFocusEffect } from "@react-navigation/native";
 import { eq } from "drizzle-orm";
-import { Href, useRouter } from "expo-router";
+import { Href, useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import {
