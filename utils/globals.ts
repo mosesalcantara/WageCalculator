@@ -7,7 +7,7 @@ import {
 } from "@/types/globals";
 import { differenceInDays, format, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { useSQLiteContext as SQLiteContext } from "expo-sqlite";
+import { SQLiteDatabase } from "expo-sqlite";
 
 export const toastVisibilityTime = 1000;
 
@@ -227,8 +227,8 @@ export const periodsFormat = {
   periods: [periodFormat],
 };
 
-export const getDb = () => {
-  return drizzle(SQLiteContext(), { schema });
+export const getDb = (sqlDb: SQLiteDatabase) => {
+  return drizzle(sqlDb, { schema });
 };
 
 export const formatNumber = (number: string | number) => {

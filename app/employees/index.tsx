@@ -5,12 +5,13 @@ import useDeleteEmployee from "@/hooks/useDeleteEmployee";
 import useFetchEmployees from "@/hooks/useFetchEmployees";
 import { getDb } from "@/utils/globals";
 import { Href, useFocusEffect, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const EmployeesPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const { establishment, employees, refetch } = useFetchEmployees(db);

@@ -4,11 +4,12 @@ import HolidaysTable from "@/components/Tables/HolidaysTable";
 import useDeleteHoliday from "@/hooks/useDeleteHoliday";
 import useFetchHolidays from "@/hooks/useFetchHolidays";
 import { getDb } from "@/utils/globals";
+import { useSQLiteContext } from "expo-sqlite";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HolidaysPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
 
   const { holidays, refetch } = useFetchHolidays(db);
   const { handleDelete } = useDeleteHoliday(db, refetch);
@@ -19,7 +20,7 @@ const HolidaysPage = () => {
 
       <View className="flex-1 p-4">
         <View className="mb-2 flex-row items-center justify-between">
-          <Text className="font-b text-center text-xl">Holidays</Text>
+          <Text className="text-center font-b text-xl">Holidays</Text>
           <AddHolidayModal db={db} refetch={refetch} />
         </View>
 

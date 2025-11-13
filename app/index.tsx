@@ -8,12 +8,13 @@ import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import { getDb } from "@/utils/globals";
 import { useFocusEffect, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const EstablishmentsPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   useFetchWageOrders(db);

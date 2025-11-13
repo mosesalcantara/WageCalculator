@@ -32,6 +32,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { Href, useFocusEffect, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -51,7 +52,7 @@ import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const ViolationsPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
   const form = useForm({ resolver: yupResolver(schema) });
   const employee_id = SessionStorage.getItem("employee_id") as string;

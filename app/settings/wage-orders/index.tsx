@@ -4,11 +4,12 @@ import WageOrdersTable from "@/components/Tables/WageOrdersTable";
 import useDeleteWageOrder from "@/hooks/useDeleteWageOrder";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import { getDb } from "@/utils/globals";
+import { useSQLiteContext } from "expo-sqlite";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const WageOrdersPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
 
   const { wageOrders, refetch } = useFetchWageOrders(db);
   const { handleDelete } = useDeleteWageOrder(db, refetch);
@@ -26,7 +27,7 @@ const WageOrdersPage = () => {
 
       <View className="flex-1 p-4">
         <View className="mb-2 flex-row items-center justify-between">
-          <Text className="font-b text-center text-xl">Wage Orders</Text>
+          <Text className="text-center font-b text-xl">Wage Orders</Text>
           <AddWageOrderModal db={db} name={name} refetch={refetch} />
         </View>
 
