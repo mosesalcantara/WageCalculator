@@ -1,4 +1,4 @@
-import { Holiday, ViolationKeys } from "@/types/globals";
+import { Holiday, ViolationKey } from "@/types/globals";
 import { formatDate, validateDateRange } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { eachDayOfInterval, format } from "date-fns";
@@ -6,7 +6,7 @@ import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   holidays: Holiday[];
-  type: ViolationKeys;
+  type: ViolationKey;
   startDate: string;
   endDate: string;
   isVisible: boolean;

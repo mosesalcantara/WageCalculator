@@ -15,7 +15,7 @@ import {
   CustomPeriod,
   CustomViolationType,
   Period,
-  ViolationKeys,
+  ViolationKey,
   ViolationType,
 } from "@/types/globals";
 import {
@@ -57,7 +57,7 @@ const ViolationsPage = () => {
   const form = useForm({ resolver: yupResolver(schema) });
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
-  const [type, setType] = useImmer<ViolationKeys>("Basic Wage");
+  const [type, setType] = useImmer<ViolationKey>("Basic Wage");
   const [isAddPeriodModalVisible, setIsAddPeriodModalVisible] = useImmer(false);
 
   const { wageOrders } = useFetchWageOrders(db);
@@ -171,7 +171,7 @@ const ViolationsPage = () => {
   useFocusEffect(
     useCallback(() => {
       const saveViolations = async (
-        violationTypes: Record<ViolationKeys, ViolationType>,
+        violationTypes: Record<ViolationKey, ViolationType>,
         customViolationType: CustomViolationType,
       ) => {
         try {
@@ -253,7 +253,7 @@ const ViolationsPage = () => {
                     <TouchableOpacity
                       key={tab.name}
                       className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                      onPress={() => setType(tab.name as ViolationKeys)}
+                      onPress={() => setType(tab.name as ViolationKey)}
                     >
                       <MaterialIcons
                         name={tab.icon as IconNames}

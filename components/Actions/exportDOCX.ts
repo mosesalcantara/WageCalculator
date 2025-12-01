@@ -2,7 +2,7 @@ import {
   Employee,
   Establishment,
   Period,
-  ViolationKeys,
+  ViolationKey,
   ViolationType,
   WageOrder,
 } from "@/types/globals";
@@ -34,13 +34,13 @@ const exportDOCX = async (
 
   const renderEmployee = (index: number, employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations: Record<ViolationKeys, ViolationType> = JSON.parse(
+      const violations: Record<ViolationKey, ViolationType> = JSON.parse(
         employee.violations[0].values as string,
       );
 
       let valid = 0;
       Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKeys;
+        const type = key as ViolationKey;
         violations[type].periods.forEach((period) => {
           validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
         });
@@ -88,13 +88,13 @@ const exportDOCX = async (
 
   const renderViolations = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations: Record<ViolationKeys, ViolationType> = JSON.parse(
+      const violations: Record<ViolationKey, ViolationType> = JSON.parse(
         employee.violations[0].values as string,
       );
 
       let total = 0;
       Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKeys;
+        const type = key as ViolationKey;
         const violationType = violations[type];
         total += getTotal(wageOrders, type, establishment.size, violationType);
 
@@ -149,7 +149,7 @@ const exportDOCX = async (
   };
 
   const renderViolationType = (
-    type: ViolationKeys,
+    type: ViolationKey,
     violationType: { periods: Period[]; received: string },
   ) => {
     let subtotal = 0;
@@ -237,7 +237,7 @@ const exportDOCX = async (
   };
 
   const renderFormula = (
-    type: ViolationKeys,
+    type: ViolationKey,
     period: Period,
     addSpace: boolean,
   ) => {

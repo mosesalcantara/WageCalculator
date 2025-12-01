@@ -4,7 +4,7 @@ import {
   Employee,
   Establishment,
   Violation,
-  ViolationKeys,
+  ViolationKey,
   ViolationType,
 } from "@/types/globals";
 import { getInitialViolationTypes, toastVisibilityTime } from "@/utils/globals";
@@ -22,7 +22,7 @@ const useFetchViolations = (db: Db) => {
   );
   const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
   const [violationTypes, setViolationTypes] = useImmer<
-    Record<ViolationKeys, ViolationType>
+    Record<ViolationKey, ViolationType>
   >(getInitialViolationTypes());
 
   const handleFetch = useCallback(async () => {

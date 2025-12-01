@@ -1,16 +1,11 @@
-import {
-  Employee,
-  Period,
-  ViolationKeys,
-  ViolationType,
-} from "@/types/globals";
+import { Employee, Period, ViolationKey, ViolationType } from "@/types/globals";
 import { getDate, getPeriodFormat } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useViolationHandlers = (
-  type: ViolationKeys,
+  type: ViolationKey,
   employee: Employee | undefined,
-  setter: Updater<Record<ViolationKeys, ViolationType>>,
+  setter: Updater<Record<ViolationKey, ViolationType>>,
 ) => {
   const handleChange = (
     index: number,

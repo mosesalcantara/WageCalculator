@@ -2,7 +2,7 @@ import {
   Employee,
   Establishment,
   Period,
-  ViolationKeys,
+  ViolationKey,
   ViolationType,
   WageOrder,
 } from "@/types/globals";
@@ -33,13 +33,13 @@ const exportXLSX = async (
 
   const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations: Record<ViolationKeys, ViolationType> = JSON.parse(
+      const violations: Record<ViolationKey, ViolationType> = JSON.parse(
         employee.violations[0].values as string,
       );
 
       let valid = 0;
       Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKeys;
+        const type = key as ViolationKey;
         violations[type].periods.forEach((period) => {
           validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
         });
@@ -56,7 +56,7 @@ const exportXLSX = async (
       const violations = JSON.parse(employee.violations[0].values as string);
 
       Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKeys;
+        const type = key as ViolationKey;
         const violationType = violations[type];
 
         let valid = 0;
@@ -75,7 +75,7 @@ const exportXLSX = async (
 
   const renderViolationType = (
     employee: Employee,
-    type: ViolationKeys,
+    type: ViolationKey,
     violationType: { periods: Period[]; received: string },
   ) => {
     const nameText = `${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}${
@@ -113,7 +113,7 @@ const exportXLSX = async (
     });
   };
 
-  const renderFormula = (type: ViolationKeys, period: Period) => {
+  const renderFormula = (type: ViolationKey, period: Period) => {
     let text = "";
 
     const rate = Number(period.rate);

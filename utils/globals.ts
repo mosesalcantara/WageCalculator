@@ -1,7 +1,7 @@
 import * as schema from "@/db/schema";
 import {
   Period,
-  ViolationKeys,
+  ViolationKey,
   ViolationType,
   WageOrder,
 } from "@/types/globals";
@@ -276,7 +276,7 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
-export const isHours = (type: ViolationKeys) => {
+export const isHours = (type: ViolationKey) => {
   return ["Overtime Pay", "Night Shift Differential"].includes(type);
 };
 
@@ -318,7 +318,7 @@ export const getMinimumRate = (
 
 export const calculate = (
   wageOrders: WageOrder[],
-  type: ViolationKeys,
+  type: ViolationKey,
   size: string,
   period: Period,
 ) => {
@@ -367,7 +367,7 @@ export const calculate = (
 
 export const getTotal = (
   wageOrders: WageOrder[],
-  type: ViolationKeys,
+  type: ViolationKey,
   size: string,
   violationType: { periods: Period[]; received: string },
 ) => {
@@ -388,9 +388,9 @@ export const getCustomPeriodFormat = (rate?: number) => {
 };
 
 export const getInitialViolationTypes = (rate?: number) => {
-  const values = {} as Record<ViolationKeys, ViolationType>;
+  const values = {} as Record<ViolationKey, ViolationType>;
   violationKeysArray.forEach((type) => {
-    values[type as ViolationKeys] = {
+    values[type as ViolationKey] = {
       periods: [getPeriodFormat(rate)],
       received: "",
     };
@@ -405,7 +405,7 @@ export const getInitialCustomViolationType = (rate?: number) => {
   };
 };
 
-export const getViolationKeyword = (type: ViolationKeys) => {
+export const getViolationKeyword = (type: ViolationKey) => {
   let keyword: string = type;
   if (type === "Basic Wage") {
     keyword = "Wages";
@@ -418,7 +418,7 @@ export const getViolationKeyword = (type: ViolationKeys) => {
 };
 
 export const getValueKeyword = (
-  type: ViolationKeys,
+  type: ViolationKey,
   days: string,
   hours: string,
 ) => {

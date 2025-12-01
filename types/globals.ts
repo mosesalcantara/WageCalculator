@@ -29,11 +29,11 @@ export type Employee = {
 
 export type Violation = {
   id: number;
-  values: Record<ViolationKeys, ViolationType> | string;
+  values: Record<ViolationKey, ViolationType> | string;
   employee_id?: number;
 };
 
-export type ViolationKeys =
+export type ViolationKey =
   | "Basic Wage"
   | "Overtime Pay"
   | "Night Shift Differential"

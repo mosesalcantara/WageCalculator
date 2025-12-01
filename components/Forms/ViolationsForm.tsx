@@ -5,7 +5,7 @@ import {
   Employee,
   Establishment,
   Holiday,
-  ViolationKeys,
+  ViolationKey,
   ViolationType,
   WageOrder,
 } from "@/types/globals";
@@ -26,13 +26,13 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
 
 type Props = {
-  type: ViolationKeys;
+  type: ViolationKey;
   index: number;
   wageOrders: WageOrder[];
   holidays: Holiday[];
   establishment: Establishment;
   employee: Employee;
-  violationTypes: Record<ViolationKeys, ViolationType>;
+  violationTypes: Record<ViolationKey, ViolationType>;
   onChange: (index: number, key: string, value: string | number | Date) => void;
   onAddPeriod: () => void;
   onClearPeriod: (index: number) => void;
