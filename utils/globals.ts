@@ -233,10 +233,7 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
 
 export const formatNumber = (number: string | number) => {
   number = Number(number);
-
-  if (isNaN(number)) {
-    number = 0;
-  }
+  if (isNaN(number)) number = 0;
 
   return number.toLocaleString("en-US", {
     minimumFractionDigits: 2,
