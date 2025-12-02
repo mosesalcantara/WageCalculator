@@ -170,7 +170,8 @@ const exportDOCX = async (
               new TextRun({
                 text: `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
-                )} to ${formatDate(period.end_date)} (${value} ${getValueKeyword(type, period.days, period.hours)})`,
+                  "dd MMMM yyyy",
+                )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`,
                 font: {
                   name: "Arial",
                 },

@@ -6,6 +6,7 @@ import {
   WageOrder,
 } from "@/types/globals";
 import { differenceInDays, format, parseISO, subDays } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
 
@@ -240,27 +241,25 @@ export const parseDate = (date: Date | string) => {
 };
 
 export const formatNumber = (number: string | number) => {
-  number = Number(number);
-  if (isNaN(number)) number = 0;
   return number.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 };
 
-export const formatDateValue = (date: string) => {
-  return date ? new Date(date) : new Date();
+export const formatDateTime = (
+  date: Date | string,
+  timeZone: string = "Etc/UTC",
+  dateTimeFormat: string = "yyyy-MM-dd\'T\'HH:mm:ss.SSSXX",
+) => {
+  return formatInTimeZone(parseDate(date), timeZone, dateTimeFormat);
 };
 
 export const formatDate = (
-  date: string,
-  dateFormat: string = "dd MMMM yyyy",
+  date: Date | string,
+  dateFormat: string = "yyyy-MM-dd",
 ) => {
-  return format(new Date(date), dateFormat);
-};
-
-export const getDate = (dateTime: Date) => {
-  return dateTime.toISOString().split("T")[0];
+  return format(parseDate(date), dateFormat);
 };
 
 export const validate = (

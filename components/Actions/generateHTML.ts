@@ -176,8 +176,9 @@ const generateHTML = (
         html += `
         <p>Period${
           violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""
-        }: ${formatDate(period.start_date)} to ${formatDate(
+        }: ${formatDate(period.start_date, "dd MMMM yyyy")} to ${formatDate(
           period.end_date,
+          "dd MMMM yyyy",
         )} (${value} ${getValueKeyword(type, period.days, period.hours)})
         </p>
 

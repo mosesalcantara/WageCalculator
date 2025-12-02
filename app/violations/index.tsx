@@ -20,8 +20,8 @@ import {
 } from "@/types/globals";
 import {
   customPeriodFormat,
+  formatDate,
   formatNumber,
-  getDate,
   getDb,
   getPeriods,
   getTotal,
@@ -126,8 +126,8 @@ const ViolationsPage = () => {
     try {
       const periods = getPeriods(
         wageOrders || [],
-        getDate(values.start_date),
-        getDate(values.end_date),
+        formatDate(values.start_date),
+        formatDate(values.end_date),
       );
       addPeriods(periods);
       form.reset();

@@ -98,7 +98,8 @@ const exportXLSX = async (
         const rateText = `Php${formatNumber(period.rate)}/day`;
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
-        )} to ${formatDate(period.end_date)} (${value} ${getValueKeyword(type, period.days, period.hours)})`;
+          "dd MMMM yyyy",
+        )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`;
         const { formulaText, totalText } = renderFormula(type, period);
 
         rows.push([

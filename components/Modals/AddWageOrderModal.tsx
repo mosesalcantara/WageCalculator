@@ -3,7 +3,7 @@ import Label from "@/components/Label";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db } from "@/types/globals";
-import { getDate, toastVisibilityTime } from "@/utils/globals";
+import { formatDate, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -39,7 +39,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
-      date: getDate(values.date),
+      date: formatDate(values.date),
       less_than_ten: Number(values.less_than_ten),
       ten_or_more: Number(values.ten_or_more),
     };
@@ -135,7 +135,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
                         onPress={() => setIsDateModalVisible(true)}
                       >
                         <Text className="font-r">
-                          {value ? getDate(value) : "Select date"}
+                          {value ? formatDate(value) : "Select date"}
                         </Text>
 
                         <MaterialIcons

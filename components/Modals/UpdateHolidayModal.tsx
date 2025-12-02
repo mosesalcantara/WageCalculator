@@ -4,7 +4,7 @@ import Select from "@/components/Select";
 import { holidays } from "@/db/schema";
 import { holiday as schema, Holiday as Values } from "@/schemas/globals";
 import { Db, Holiday } from "@/types/globals";
-import { getDate, toastVisibilityTime } from "@/utils/globals";
+import { formatDate, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -40,7 +40,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
-      date: getDate(values.date),
+      date: formatDate(values.date),
     };
 
     try {
@@ -118,7 +118,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
                       onPress={() => setIsDateModalVisible(true)}
                     >
                       <Text className="font-r">
-                        {value ? getDate(value) : "Select date"}
+                        {value ? formatDate(value) : "Select date"}
                       </Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
