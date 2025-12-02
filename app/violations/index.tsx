@@ -31,7 +31,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
-import { Href, useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -129,9 +129,11 @@ const ViolationsPage = () => {
         formatDate(values.start_date),
         formatDate(values.end_date),
       );
+
       addPeriods(periods);
       form.reset();
       handleAddPeriodModalToggle(false);
+
       Toast.show({
         type: "success",
         text1: "Added Period",
@@ -139,6 +141,7 @@ const ViolationsPage = () => {
       });
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -178,6 +181,7 @@ const ViolationsPage = () => {
           await db
             .delete(violations)
             .where(eq(violations.employee_id, Number(employee_id)));
+
           await db
             .delete(customViolations)
             .where(eq(customViolations.employee_id, Number(employee_id)));
@@ -186,6 +190,7 @@ const ViolationsPage = () => {
             values: JSON.stringify(violationTypes),
             employee_id: Number(employee_id),
           });
+
           await db.insert(customViolations).values({
             values: JSON.stringify(customViolationType),
             employee_id: Number(employee_id),
@@ -198,6 +203,7 @@ const ViolationsPage = () => {
           });
         } catch (error) {
           console.error(error);
+
           Toast.show({
             type: "error",
             text1: "An Error Has Occured. Please Try Again.",
@@ -207,7 +213,7 @@ const ViolationsPage = () => {
       };
 
       const handleBackPress = () => {
-        router.push("/employees" as Href);
+        router.push("/employees");
         saveViolations(violationTypes, customViolationType);
         return true;
       };

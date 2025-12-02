@@ -41,13 +41,11 @@ const exportXLSX = async (
       Object.keys(violations).forEach((key) => {
         const type = key as ViolationKey;
         violations[type].periods.forEach((period) => {
-          validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
+          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
         });
       });
 
-      if (valid > 0) {
-        renderViolations(employee);
-      }
+      if (valid > 0) renderViolations(employee);
     }
   };
 
@@ -61,14 +59,10 @@ const exportXLSX = async (
 
         let valid = 0;
         violationType.periods.forEach((period: Period) => {
-          if (validate(period, isHours(type) ? [] : ["hours"])) {
-            valid += 1;
-          }
+          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
         });
 
-        if (valid > 0) {
-          renderViolationType(employee, type, violations[type]);
-        }
+        if (valid > 0) renderViolationType(employee, type, violations[type]);
       });
     }
   };
@@ -83,6 +77,7 @@ const exportXLSX = async (
         ? ""
         : ` ${employee.middle_initial.toUpperCase()}.`
     }`;
+
     const typeText = `${
       !violationType.received || Number(violationType.received) === 0
         ? "Non-payment"
@@ -96,10 +91,12 @@ const exportXLSX = async (
           : `${period.days}`;
 
         const rateText = `Php${formatNumber(period.rate)}/day`;
+
         const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
           "dd MMMM yyyy",
         )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`;
+
         const { formulaText, totalText } = renderFormula(type, period);
 
         rows.push([
@@ -176,7 +173,7 @@ const exportXLSX = async (
 
       const repeating: string[] = [];
       Object.keys(counts).forEach((key) => {
-        counts[key] > 1 && repeating.push(key);
+        if (counts[key] > 1) repeating.push(key);
       });
 
       return repeating;
@@ -187,20 +184,24 @@ const exportXLSX = async (
     const getStartAndEnd = (values: string[], value: string) => {
       const startToEnd: number[] = [];
       let index = values.indexOf(value);
+
       while (index !== -1) {
         startToEnd.push(index);
         index = values.indexOf(value, index + 1);
       }
+
       startToEnd.sort((a, b) => a - b);
       return [startToEnd[0], startToEnd[startToEnd.length - 1]];
     };
 
     const getIndices = (repeating: string[]) => {
       const indices: number[][] = [];
+
       repeating.forEach((value) => {
         const [start, end] = getStartAndEnd(values, value);
         start !== end && indices.push([start, end]);
       });
+
       return indices;
     };
 
@@ -211,10 +212,12 @@ const exportXLSX = async (
         s: { c: number; r: number };
         e: { c: number; r: number };
       }[] = [];
+
       indices.forEach((startAndEndIndex) => {
         const [start, end] = startAndEndIndex;
         ranges.push({ s: { c: index, r: start }, e: { c: index, r: end } });
       });
+
       return ranges;
     };
 
@@ -291,6 +294,7 @@ const exportXLSX = async (
               }
             } catch (error) {
               console.error(error);
+
               Toast.show({
                 type: "error",
                 text1: "An Error Has Occured. Please Try Again.",

@@ -436,7 +436,7 @@ export const getValueKeyword = (
     keyword = "rest day";
   }
 
-  Number(value) > 1 && (keyword += "s");
+  if (Number(value) > 1) keyword += "s";
   return keyword;
 };
 

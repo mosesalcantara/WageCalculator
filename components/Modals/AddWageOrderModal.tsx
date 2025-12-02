@@ -13,11 +13,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-type Props = {
-  db: Db;
-  name: string;
-  refetch: () => void;
-};
+type Props = { db: Db; name: string; refetch: () => void };
 
 const AddWageOrderModal = ({ db, name, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -31,9 +27,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const formattedValues = {
@@ -60,9 +54,11 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
         });
       } else {
         await db.insert(wageOrders).values(formattedValues);
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Added Wage Order",
@@ -71,6 +67,7 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

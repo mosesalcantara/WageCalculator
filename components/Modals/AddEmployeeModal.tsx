@@ -12,11 +12,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-type Props = {
-  db: Db;
-  establishment: Establishment;
-  refetch: () => void;
-};
+type Props = { db: Db; establishment: Establishment; refetch: () => void };
 
 const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -26,9 +22,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const NAs = ["na", "n/a"];
@@ -62,14 +56,13 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
         const valuesMiddleInitial =
           formattedValues.middle_initial.toLowerCase();
+
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
             NAs.includes(valuesMiddleInitial)
           );
-        } else {
-          return employeeMiddleInitial === valuesMiddleInitial;
-        }
+        } else return employeeMiddleInitial === valuesMiddleInitial;
       });
 
       if (record) {
@@ -80,9 +73,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         });
       } else {
         await db.insert(employees).values(formattedValues);
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Added Employee",
@@ -91,6 +86,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -116,7 +112,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-2">
+          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Label name="Last Name" />

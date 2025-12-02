@@ -33,12 +33,11 @@ const UpdateEmployeeModal = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const NAs = ["na", "n/a"];
+
     const formattedValues = {
       ...values,
       last_name: `${values.last_name}`.trim(),
@@ -67,14 +66,13 @@ const UpdateEmployeeModal = ({
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
         const valuesMiddleInitial =
           formattedValues.middle_initial.toLowerCase();
+
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
             NAs.includes(valuesMiddleInitial)
           );
-        } else {
-          return employeeMiddleInitial === valuesMiddleInitial;
-        }
+        } else return employeeMiddleInitial === valuesMiddleInitial;
       });
 
       const isSame =
@@ -99,9 +97,11 @@ const UpdateEmployeeModal = ({
           .update(employees)
           .set(formattedValues)
           .where(eq(employees.id, employee.id));
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Updated Employee",
@@ -110,6 +110,7 @@ const UpdateEmployeeModal = ({
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

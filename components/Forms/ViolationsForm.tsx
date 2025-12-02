@@ -12,11 +12,11 @@ import {
 import {
   calculate,
   daysArray,
-  formatDateValue,
   formatNumber,
   getMinimumRate,
   isHours,
   numberToLetter,
+  parseDate,
   validateDateRange,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -67,26 +67,15 @@ const ViolationsForm = ({
   );
 
   const getLabel = () => {
-    if (["Basic Wage", "13th Month Pay"].includes(type)) {
-      return "Working Days";
-    } else if (type === "Special Day") {
-      return "Special Days";
-    } else if (type === "Rest Day") {
-      return "Rest Days";
-    } else if (type === "Holiday Pay") {
-      return "Holidays";
-    } else {
-      return "";
-    }
+    if (["Basic Wage", "13th Month Pay"].includes(type)) return "Working Days";
+    else if (type === "Special Day") return "Special Days";
+    else if (type === "Rest Day") return "Rest Days";
+    else if (type === "Holiday Pay") return "Holidays";
+    else return "";
   };
 
-  const setRate = () => {
-    onChange(index, "rate", `${employee.rate}`);
-  };
-
-  const setDays = () => {
-    onChange(index, "days", estimate);
-  };
+  const setRate = () => onChange(index, "rate", `${employee.rate}`);
+  const setDays = () => onChange(index, "days", estimate);
 
   const handleViewDaysModalToggle = (isVisible: boolean) => {
     setIsViewDaysModalVisible(isVisible);
@@ -114,45 +103,38 @@ const ViolationsForm = ({
     startDate: string,
     endDate: string,
   ) => {
-    if (!validateDateRange(startDate, endDate)) {
-      return "";
-    }
+    if (!validateDateRange(startDate, endDate)) return "";
 
     let workingDays = 0;
     let restDays = 0;
     let specialDays = 0;
     let regularHolidays = 0;
 
-    const dates = eachDayOfInterval({
-      start: startDate,
-      end: endDate,
-    });
+    const dates = eachDayOfInterval({ start: startDate, end: endDate });
 
     dates.forEach((date) => {
-      includedDays.includes(format(date, "EEEE")) && ++workingDays;
+      if (includedDays.includes(format(date, "EEEE"))) ++workingDays;
+
       if (type === "Special Day" || type === "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
         const holiday = holidays.find(
           (holiday) => formattedDate === holiday.date,
         );
+
         if (holiday) {
-          holiday.type === "Special (Non-Working) Holiday" && ++specialDays;
-          holiday.type === "Regular Holiday" && ++regularHolidays;
+          if (holiday.type === "Special (Non-Working) Holiday") ++specialDays;
+          if (holiday.type === "Regular Holiday") ++regularHolidays;
         }
       }
     });
 
     restDays = dates.length - workingDays;
-    if (type === "Basic Wage" || type === "13th Month Pay") {
-      return workingDays;
-    } else if (type === "Rest Day") {
-      return restDays;
-    } else if (type === "Special Day") {
-      return specialDays;
-    } else if (type === "Holiday Pay") {
-      return regularHolidays;
-    }
-    return "";
+
+    if (type === "Basic Wage" || type === "13th Month Pay") return workingDays;
+    else if (type === "Rest Day") return restDays;
+    else if (type === "Special Day") return specialDays;
+    else if (type === "Holiday Pay") return regularHolidays;
+    else return "";
   };
 
   const estimate = getEstimate(holidays, period.start_date, period.end_date);
@@ -274,6 +256,7 @@ const ViolationsForm = ({
                       value={period.days}
                       onChangeText={(value) => onChange(index, "days", value)}
                     />
+
                     {estimate ? (
                       <MaterialIcons
                         name="autorenew"
@@ -358,6 +341,7 @@ const ViolationsForm = ({
                   </Text>
                 </TouchableOpacity>
               )}
+
               <TouchableOpacity onPress={() => onClearPeriod(index)}>
                 <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 font-r text-white">
                   Clear
@@ -378,7 +362,7 @@ const ViolationsForm = ({
 
       {isStartDateModalVisible && (
         <DateTimePicker
-          value={formatDateValue(period.start_date)}
+          value={parseDate(period.start_date) || new Date()}
           mode="date"
           onChange={(event, value) => {
             if (event.type === "set" && value) {
@@ -391,7 +375,7 @@ const ViolationsForm = ({
 
       {isEndDateModalVisible && (
         <DateTimePicker
-          value={formatDateValue(period.end_date)}
+          value={parseDate(period.end_date) || new Date()}
           mode="date"
           onChange={(event, value) => {
             if (event.type === "set" && value) {

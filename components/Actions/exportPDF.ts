@@ -51,6 +51,7 @@ const exportPDF = async (establishment: Establishment, html: string) => {
               }
             } catch (error) {
               console.error(error);
+
               Toast.show({
                 type: "error",
                 text1: "An Error Has Occured. Please Try Again.",

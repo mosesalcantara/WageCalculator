@@ -1,9 +1,7 @@
 import { FieldError } from "react-hook-form";
 import { Text } from "react-native";
 
-type Props = {
-  error: FieldError | undefined;
-};
+type Props = { error: FieldError | undefined };
 
 const ErrorMessage = ({ error }: Props) => {
   return (

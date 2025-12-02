@@ -39,9 +39,7 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
 
   const filteredHolidays = useMemo(() => {
     if (holidays) {
-      if (type === "All" && year === "All") {
-        return holidays;
-      }
+      if (type === "All" && year === "All") return holidays;
 
       return holidays.filter((holiday) => {
         let isTypeMatched = true;
@@ -57,9 +55,11 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
 
   const getOptions = () => {
     const options = [{ label: "All", value: "All" }];
+
     years.forEach((year) => {
       options.push({ label: year, value: year });
     });
+
     return options;
   };
 
@@ -95,9 +95,11 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
                   <Text className="font-b text-base text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
+
                   <Text className="font-r">
                     {formatDate(holiday.date, "MMMM dd, yyyy")}
                   </Text>
+
                   <Text className="font-r text-sm text-gray-600">
                     {holiday.type}
                   </Text>

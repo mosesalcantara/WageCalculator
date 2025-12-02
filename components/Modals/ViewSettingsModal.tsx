@@ -1,11 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Href, Router } from "expo-router";
+import { Router } from "expo-router";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
 
-type Props = {
-  router: Router;
-};
+type Props = { router: Router };
 
 const ViewSettingsModal = ({ router }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -31,23 +29,25 @@ const ViewSettingsModal = ({ router }: Props) => {
             <View>
               <TouchableOpacity
                 className="rounded-[0.625rem] bg-black p-3"
-                onPress={() => router.push("/settings/wage-orders" as Href)}
+                onPress={() => router.push("/settings/wage-orders")}
               >
                 <Text className="text-center font-b text-white">
                   📑 Wage Orders
                 </Text>
               </TouchableOpacity>
             </View>
+
             <View>
               <TouchableOpacity
                 className="rounded-[0.625rem] bg-black p-3"
-                onPress={() => router.push("/settings/holidays" as Href)}
+                onPress={() => router.push("/settings/holidays")}
               >
                 <Text className="text-center font-b text-white">
                   📅 Holidays
                 </Text>
               </TouchableOpacity>
             </View>
+
             <View className="flex-row justify-end">
               <TouchableOpacity
                 className="mt-2 rounded bg-white px-2.5 py-[0.3125rem]"
