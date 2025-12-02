@@ -27,33 +27,33 @@ const ViewSettingsModal = ({ router }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-1.5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <TouchableOpacity
-                className="rounded-[0.625rem] bg-black p-3"
+                className="rounded-[0.625rem] bg-black p-4 mt-4"
                 onPress={() => router.push("/settings/wage-orders" as Href)}
               >
-                <Text className="text-center font-b text-white">
+                <Text className="text-center font-b text-white text-xl">
                   📑 Wage Orders
                 </Text>
               </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity
-                className="rounded-[0.625rem] bg-black p-3"
+                className="rounded-[0.625rem] bg-black p-4 mt-4"
                 onPress={() => router.push("/settings/holidays" as Href)}
               >
-                <Text className="text-center font-b text-white">
+                <Text className="text-center font-b text-white text-xl">
                   📅 Holidays
                 </Text>
               </TouchableOpacity>
             </View>
             <View className="flex-row justify-end">
               <TouchableOpacity
-                className="mt-2 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="mt-4 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b">Cancel</Text>
+                <Text className="font-b text-xl">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>

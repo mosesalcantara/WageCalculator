@@ -116,10 +116,12 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4 gap-2">
+          <View className="mt-[120%] h-[42%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name="Last Name" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                Last Name
+              </Text>
 
                 <Controller
                   control={control}
@@ -141,7 +143,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Label name="First Name" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                First Name
+              </Text>
 
                 <Controller
                   control={control}
@@ -165,7 +169,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name="Middle Initial" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                Middle Initial
+              </Text>
 
                 <Controller
                   control={control}
@@ -187,7 +193,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Label name="Rate" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                Rate
+              </Text>
 
                 <Controller
                   control={control}
@@ -212,7 +220,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name="Work Week Start" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                Work Week Start
+              </Text>
 
                 <Controller
                   control={control}
@@ -235,7 +245,9 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Label name="Work Week End" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                Work Week End
+              </Text>
 
                 <Controller
                   control={control}
@@ -260,17 +272,17 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
 
             <View className="flex-row justify-end">
               <TouchableOpacity
-                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="mr-2 mt-4 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b">Cancel</Text>
+                <Text className="font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="mr-2 mt-4 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b">Save</Text>
+                <Text className="font-b text-lg">Save</Text>
               </TouchableOpacity>
             </View>
           </View>
