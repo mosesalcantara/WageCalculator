@@ -5,7 +5,7 @@ import {
   ViolationType,
   WageOrder,
 } from "@/types/globals";
-import { differenceInDays, format, subDays } from "date-fns";
+import { differenceInDays, format, parseISO, subDays } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
 
@@ -231,18 +231,21 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
   return drizzle(sqlDb, { schema });
 };
 
+export const numberToLetter = (number: number) => {
+  return String.fromCharCode(65 + number);
+};
+
+export const parseDate = (date: Date | string) => {
+  return typeof date === "string" ? parseISO(date) : date;
+};
+
 export const formatNumber = (number: string | number) => {
   number = Number(number);
   if (isNaN(number)) number = 0;
-
   return number.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-};
-
-export const numberToLetter = (number: number) => {
-  return String.fromCharCode(65 + number);
 };
 
 export const formatDateValue = (date: string) => {
