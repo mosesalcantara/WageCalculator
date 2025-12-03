@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import { Period as Values } from "@/schemas/globals";
 import { formatDate } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -45,10 +44,12 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
         onRequestClose={() => onToggle(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="w-full gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name="Start Date" />
+                <Text className="mb-2 text-left font-b text-lg text-white">
+                  Start Date
+                </Text>
 
                 <Controller
                   control={control}
@@ -77,7 +78,9 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Label name="End Date" />
+                <Text className="mb-2 text-left font-b text-lg text-white">
+                  End Date
+                </Text>
 
                 <Controller
                   control={control}
@@ -111,14 +114,14 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => onToggle(false)}
               >
-                <Text className="font-b">Cancel</Text>
+                <Text className="font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b">Add</Text>
+                <Text className="font-b text-lg">Add</Text>
               </TouchableOpacity>
             </View>
           </View>

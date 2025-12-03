@@ -68,7 +68,7 @@ const ViewDaysModal = ({
         onRequestClose={() => onToggle(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="max-h-[70%] w-4/5 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="max-h-[70%] w-full rounded-[0.625rem] bg-[#1E90FF] p-4">
             <Text className="mb-3 text-center font-b text-lg text-white">
               {type === "Special Day"
                 ? "Special (Non-Working) Holidays"

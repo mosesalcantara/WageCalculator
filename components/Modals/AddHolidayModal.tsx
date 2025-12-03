@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { holidays } from "@/db/schema";
 import { holiday as schema, Holiday as Values } from "@/schemas/globals";
@@ -76,9 +75,11 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
-              <Label name="Name" />
+              <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
+                Name
+              </Text>
 
               <Controller
                 control={control}
@@ -86,7 +87,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
-                      className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
+                      className="mt-0.5 rounded-[0.3125rem] border border-[#ccc] bg-white px-2 font-r"
                       placeholder="Enter name"
                       value={value}
                       onChangeText={onChange}
@@ -100,7 +101,9 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
             </View>
 
             <View>
-              <Label name="Date" />
+              <Text className="mb-2 text-left font-b text-lg text-black">
+                Date
+              </Text>
 
               <Controller
                 control={control}
@@ -125,7 +128,9 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
             </View>
 
             <View>
-              <Label name="Type" />
+              <Text className="mb-2 text-left font-b text-lg text-black">
+                Type
+              </Text>
 
               <Controller
                 control={control}

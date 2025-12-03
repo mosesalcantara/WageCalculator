@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db, WageOrder } from "@/types/globals";
@@ -96,10 +95,12 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name="Name" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                  Name
+                </Text>
 
                 <Controller
                   control={control}
@@ -122,7 +123,9 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
               </View>
 
               <View className="w-[49%]">
-                <Label name="Date" />
+                <Text className="mb-2 text-left font-b text-lg text-black">
+                  Date
+                </Text>
 
                 <Controller
                   control={control}
@@ -153,7 +156,9 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
             </View>
 
             <View>
-              <Label name="Employing 1 to 9 workers" />
+              <Text className="mb-2 text-left font-b text-lg text-black">
+                Employing 1 to 9 workers
+              </Text>
 
               <Controller
                 control={control}
@@ -177,7 +182,9 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
             </View>
 
             <View>
-              <Label name="Employing 10 workers and above" />
+              <Text className="mb-2 text-left font-b text-lg text-black">
+                Employing 10 workers and above
+              </Text>
 
               <Controller
                 control={control}

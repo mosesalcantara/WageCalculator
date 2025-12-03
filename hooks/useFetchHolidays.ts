@@ -1,6 +1,6 @@
 import * as models from "@/db/schema";
 import { Db, Holiday, Override } from "@/types/globals";
-import { toastVisibilityTime } from "@/utils/globals";
+import { parseDate, toastVisibilityTime } from "@/utils/globals";
 import holidaysJSON from "@/utils/holidays.json";
 import { useCallback, useEffect } from "react";
 import Toast from "react-native-toast-message";
@@ -29,7 +29,7 @@ const useFetchHolidays = (db: Db) => {
       }
 
       const sortedHolidays = holidays.sort((a, b) => {
-        return Number(new Date(a.date)) - Number(new Date(b.date));
+        return Number(parseDate(a.date)) - Number(parseDate(b.date));
       });
 
       setHolidays(sortedHolidays);

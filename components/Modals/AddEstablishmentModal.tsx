@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import {
@@ -86,9 +85,11 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
-              <Label name="Name" />
+              <Text className="mb-2 text-left font-b text-xl text-black">
+                Name
+              </Text>
 
               <Controller
                 control={control}
@@ -110,7 +111,9 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
             </View>
 
             <View>
-              <Label name="Size" />
+              <Text className="mb-2 text-left font-b text-xl text-black">
+                Size
+              </Text>
 
               <Controller
                 control={control}
@@ -147,17 +150,17 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
 
             <View className="flex-row justify-end">
               <TouchableOpacity
-                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="mr-2 mt-12 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b">Cancel</Text>
+                <Text className="font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="mr-2 mt-12 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b">Save</Text>
+                <Text className="font-b text-lg">Save</Text>
               </TouchableOpacity>
             </View>
           </View>
