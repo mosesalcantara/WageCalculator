@@ -11,7 +11,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
@@ -87,10 +94,15 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
+
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[120%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
-              <Text className="mb-2 text-left font-b text-lg text-black">
+              <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
                 Name
               </Text>
 

@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Router } from "expo-router";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
 
 type Props = { router: Router };
@@ -24,8 +24,13 @@ const ViewSettingsModal = ({ router }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
+
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[140%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <TouchableOpacity
                 className="mt-4 rounded-[0.625rem] bg-black p-4"
