@@ -2,21 +2,24 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db, WageOrder } from "@/types/globals";
-import { getDate, toastVisibilityTime } from "@/utils/globals";
+import { formatDate, parseDate, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Text, TextInput, Pressable, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-type Props = {
-  db: Db;
-  wageOrder: WageOrder;
-  refetch: () => void;
-};
+type Props = { db: Db; wageOrder: WageOrder; refetch: () => void };
 
 const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -30,15 +33,13 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
-      date: getDate(values.date),
+      date: formatDate(values.date),
       less_than_ten: Number(values.less_than_ten),
       ten_or_more: Number(values.ten_or_more),
     };
@@ -65,9 +66,11 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
           .update(wageOrders)
           .set(formattedValues)
           .where(eq(wageOrders.id, wageOrder.id));
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Updated Wage Order",
@@ -76,6 +79,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -97,16 +101,11 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
-        {(() => {
-          return (
-            <Pressable
-              style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
-              onPress={() => setIsVisible(false)}
-            >
-              <Pressable onPress={() => {}} style={{}} />
-            </Pressable>
-          );
-        })()}
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
+
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="mt-[0%] h-[145%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
@@ -143,7 +142,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 <Controller
                   control={control}
                   name="date"
-                  defaultValue={new Date(wageOrder.date)}
+                  defaultValue={parseDate(wageOrder.date)}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <>
                       <TouchableOpacity
@@ -151,7 +150,7 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                         onPress={() => setIsDateModalVisible(true)}
                       >
                         <Text className="font-r">
-                          {value ? getDate(value) : "Select date"}
+                          {value ? formatDate(value) : "Select date"}
                         </Text>
 
                         <MaterialIcons

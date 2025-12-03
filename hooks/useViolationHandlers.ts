@@ -1,5 +1,5 @@
 import { Employee, Period, ViolationKey, ViolationType } from "@/types/globals";
-import { getDate, getPeriodFormat } from "@/utils/globals";
+import { formatDate, getPeriodFormat } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useViolationHandlers = (
@@ -12,9 +12,7 @@ const useViolationHandlers = (
     key: keyof Period | string,
     value: string | number | Date,
   ) => {
-    if (key.endsWith("_date")) {
-      value = getDate(value as Date);
-    }
+    if (key.endsWith("_date")) value = formatDate(value as Date);
 
     setter((draft) => {
       draft[type].periods[index][key as keyof Period] = `${value}`;

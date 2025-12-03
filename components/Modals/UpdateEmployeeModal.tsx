@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
@@ -9,7 +8,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { and, eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Text, TextInput, Pressable, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
@@ -33,12 +39,11 @@ const UpdateEmployeeModal = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const NAs = ["na", "n/a"];
+
     const formattedValues = {
       ...values,
       last_name: `${values.last_name}`.trim(),
@@ -67,14 +72,13 @@ const UpdateEmployeeModal = ({
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
         const valuesMiddleInitial =
           formattedValues.middle_initial.toLowerCase();
+
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
             NAs.includes(valuesMiddleInitial)
           );
-        } else {
-          return employeeMiddleInitial === valuesMiddleInitial;
-        }
+        } else return employeeMiddleInitial === valuesMiddleInitial;
       });
 
       const isSame =
@@ -99,9 +103,11 @@ const UpdateEmployeeModal = ({
           .update(employees)
           .set(formattedValues)
           .where(eq(employees.id, employee.id));
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Updated Employee",
@@ -110,6 +116,7 @@ const UpdateEmployeeModal = ({
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -131,23 +138,18 @@ const UpdateEmployeeModal = ({
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
-                {(() => {
-                  return (
-                    <Pressable
-                      style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
-                      onPress={() => setIsVisible(false)}
-                    >
-                      <Pressable onPress={() => {}} style={{}} />
-                    </Pressable>
-                  );
-                })()}
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
+
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="mt-[0%] h-[145%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                Last Name
-              </Text>
+                  Last Name
+                </Text>
 
                 <Controller
                   control={control}
@@ -171,8 +173,8 @@ const UpdateEmployeeModal = ({
 
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                First Name
-              </Text>
+                  First Name
+                </Text>
 
                 <Controller
                   control={control}
@@ -198,8 +200,8 @@ const UpdateEmployeeModal = ({
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                Middle Initial
-              </Text>
+                  Middle Initial
+                </Text>
 
                 <Controller
                   control={control}
@@ -223,8 +225,8 @@ const UpdateEmployeeModal = ({
 
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                Rate
-              </Text>
+                  Rate
+                </Text>
 
                 <Controller
                   control={control}
@@ -251,8 +253,8 @@ const UpdateEmployeeModal = ({
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                Work Week Start
-              </Text>
+                  Work Week Start
+                </Text>
 
                 <Controller
                   control={control}
@@ -276,8 +278,8 @@ const UpdateEmployeeModal = ({
 
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                Work Week End
-              </Text>
+                  Work Week End
+                </Text>
 
                 <Controller
                   control={control}

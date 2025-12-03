@@ -1,7 +1,6 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import { Period as Values } from "@/schemas/globals";
-import { getDate } from "@/utils/globals";
+import { formatDate } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Controller, UseFormReturn } from "react-hook-form";
@@ -49,117 +48,117 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
           onPress={() => onToggle(false)}
         >
           <View className="flex-1 items-center justify-center bg-black/40">
-        <TouchableOpacity onPress={() => {}}>
-          <View className="w-5/5 gap-2 rt-[0.625rem] bg-primary p-4 rounded-t-xl">
-            <View className="flex-row flex-wrap justify-between gap-1">
-          <View className="w-full">
-            <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
-              Start Date
-            </Text>
+            <TouchableOpacity onPress={() => {}}>
+              <View className="w-5/5 rt-[0.625rem] gap-2 rounded-t-xl bg-primary p-4">
+                <View className="flex-row flex-wrap justify-between gap-1">
+                  <View className="w-full">
+                    <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
+                      Start Date
+                    </Text>
 
-            <Controller
-              control={control}
-              name="start_date"
-              render={({ field: { value, onChange, onBlur } }) => (
-            <>
-              <TouchableOpacity
-                className="h-12 flex-row items-center mt-2 justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                onPress={() => setIsStartDateModalVisible(true)}
-              >
-                <Text className="font-r">
-              {value ? getDate(value) : "Select date"}
-                </Text>
+                    <Controller
+                      control={control}
+                      name="start_date"
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <TouchableOpacity
+                            className="mt-2 h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                            onPress={() => setIsStartDateModalVisible(true)}
+                          >
+                            <Text className="font-r">
+                              {value ? formatDate(value) : "Select date"}
+                            </Text>
 
-                <MaterialIcons
-              name="date-range"
-              size={20}
-              color="#555"
-                />
-              </TouchableOpacity>
-            </>
-              )}
-            />
+                            <MaterialIcons
+                              name="date-range"
+                              size={20}
+                              color="#555"
+                            />
+                          </TouchableOpacity>
+                        </>
+                      )}
+                    />
 
-            <ErrorMessage error={errors.start_date} />
-          </View>
+                    <ErrorMessage error={errors.start_date} />
+                  </View>
 
-          <View className="w-full">
-            <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
-              End Date
-            </Text>
+                  <View className="w-full">
+                    <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
+                      End Date
+                    </Text>
 
-            <Controller
-              control={control}
-              name="end_date"
-              render={({ field: { value, onChange, onBlur } }) => (
-            <>
-              <TouchableOpacity
-                className="h-12 flex-row mt-2 items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                onPress={() => setIsEndDateModalVisible(true)}
-              >
-                <Text className="font-r">
-              {value ? getDate(value) : "Select date"}
-                </Text>
+                    <Controller
+                      control={control}
+                      name="end_date"
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <TouchableOpacity
+                            className="mt-2 h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                            onPress={() => setIsEndDateModalVisible(true)}
+                          >
+                            <Text className="font-r">
+                              {value ? formatDate(value) : "Select date"}
+                            </Text>
 
-                <MaterialIcons
-              name="date-range"
-              size={20}
-              color="#555"
-                />
-              </TouchableOpacity>
-            </>
-              )}
-            />
+                            <MaterialIcons
+                              name="date-range"
+                              size={20}
+                              color="#555"
+                            />
+                          </TouchableOpacity>
+                        </>
+                      )}
+                    />
 
-            <ErrorMessage error={errors.end_date} />
-          </View>
-            </View>
+                    <ErrorMessage error={errors.end_date} />
+                  </View>
+                </View>
 
-            <View className="flex-row justify-end">
-          <TouchableOpacity
-            className="mr-2 mt-3 rounded bg-white px-2.5 py-[0.3125rem]"
-            onPress={() => onToggle(false)}
-          >
-            <Text className="font-b text-lg">Cancel</Text>
-          </TouchableOpacity>
+                <View className="flex-row justify-end">
+                  <TouchableOpacity
+                    className="mr-2 mt-3 rounded bg-white px-2.5 py-[0.3125rem]"
+                    onPress={() => onToggle(false)}
+                  >
+                    <Text className="font-b text-lg">Cancel</Text>
+                  </TouchableOpacity>
 
-          <TouchableOpacity
-            className="mr-2 mt-3 rounded bg-white px-2.5 py-[0.3125rem]"
-            onPress={handleSubmit(onSubmit)}
-          >
-            <Text className="font-b text-lg">Add</Text>
-          </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableOpacity>
+                  <TouchableOpacity
+                    className="mr-2 mt-3 rounded bg-white px-2.5 py-[0.3125rem]"
+                    onPress={handleSubmit(onSubmit)}
+                  >
+                    <Text className="font-b text-lg">Add</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
 
-        {isStartDateModalVisible && (
-          <DateTimePicker
-            value={getValues("start_date") || new Date()}
-            mode="date"
-            onChange={async (event, value) => {
-          if (event.type === "set" && value) {
-            setValue("start_date", value);
-            await trigger("start_date");
-          }
-          setIsStartDateModalVisible(false);
-            }}
-          />
-        )}
+            {isStartDateModalVisible && (
+              <DateTimePicker
+                value={getValues("start_date") || new Date()}
+                mode="date"
+                onChange={async (event, value) => {
+                  if (event.type === "set" && value) {
+                    setValue("start_date", value);
+                    await trigger("start_date");
+                  }
+                  setIsStartDateModalVisible(false);
+                }}
+              />
+            )}
 
-        {isEndDateModalVisible && (
-          <DateTimePicker
-            value={getValues("end_date") || new Date()}
-            mode="date"
-            onChange={async (event, value) => {
-          if (event.type === "set" && value) {
-            setValue("end_date", value);
-            await trigger("end_date");
-          }
-          setIsEndDateModalVisible(false);
-            }}
-          />
-        )}
+            {isEndDateModalVisible && (
+              <DateTimePicker
+                value={getValues("end_date") || new Date()}
+                mode="date"
+                onChange={async (event, value) => {
+                  if (event.type === "set" && value) {
+                    setValue("end_date", value);
+                    await trigger("end_date");
+                  }
+                  setIsEndDateModalVisible(false);
+                }}
+              />
+            )}
           </View>
         </TouchableOpacity>
       </Modal>

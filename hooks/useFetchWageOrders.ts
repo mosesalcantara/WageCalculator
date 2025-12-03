@@ -1,6 +1,6 @@
 import * as models from "@/db/schema";
 import { Db, WageOrder } from "@/types/globals";
-import { toastVisibilityTime } from "@/utils/globals";
+import { parseDate, toastVisibilityTime } from "@/utils/globals";
 import { useCallback, useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
@@ -51,12 +51,13 @@ const useFetchWageOrders = (db: Db) => {
       }
 
       const sortedWageOrders = wageOrders.sort((a, b) => {
-        return Number(new Date(a.date)) - Number(new Date(b.date));
+        return Number(parseDate(a.date)) - Number(parseDate(b.date));
       });
 
       setWageOrders(sortedWageOrders);
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

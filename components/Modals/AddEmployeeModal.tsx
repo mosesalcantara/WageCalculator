@@ -7,15 +7,18 @@ import { daysOptions, toastVisibilityTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { and, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Text, TextInput, Pressable, TouchableOpacity, View  } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-type Props = {
-  db: Db;
-  establishment: Establishment;
-  refetch: () => void;
-};
+type Props = { db: Db; establishment: Establishment; refetch: () => void };
 
 const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -25,9 +28,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const NAs = ["na", "n/a"];
@@ -61,14 +62,13 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         const employeeMiddleInitial = employee.middle_initial.toLowerCase();
         const valuesMiddleInitial =
           formattedValues.middle_initial.toLowerCase();
+
         if (employeeMiddleInitial.length > 1) {
           return (
             NAs.includes(employeeMiddleInitial) &&
             NAs.includes(valuesMiddleInitial)
           );
-        } else {
-          return employeeMiddleInitial === valuesMiddleInitial;
-        }
+        } else return employeeMiddleInitial === valuesMiddleInitial;
       });
 
       if (record) {
@@ -79,9 +79,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         });
       } else {
         await db.insert(employees).values(formattedValues);
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Added Employee",
@@ -90,6 +92,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -114,16 +117,11 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
-        {(() => {
-          return (
-            <Pressable
-              style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
-              onPress={() => setIsVisible(false)}
-            >
-              <Pressable onPress={() => {}} style={{}} />
-            </Pressable>
-          );
-        })()}
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
+
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="mt-[0%] h-[145%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View className="flex-row flex-wrap justify-between gap-1">

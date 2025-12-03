@@ -15,19 +15,20 @@ const useFetchEmployees = (db: Db) => {
 
   const handleFetch = useCallback(async () => {
     try {
-      const establishment_id = SessionStorage.getItem(
-        "establishment_id",
-      ) as string;
+      const establishment_id = SessionStorage.getItem("establishment_id");
+
       const establishment = await db.query.establishments.findFirst({
         where: eq(establishments.id, Number(establishment_id)),
         with: { employees: true },
       });
+
       if (establishment && establishment.employees) {
         setEstablishment(establishment);
         setEmployees(establishment.employees);
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

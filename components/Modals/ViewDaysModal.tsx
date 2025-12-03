@@ -22,17 +22,12 @@ const ViewDaysModal = ({
   onToggle,
 }: Props) => {
   const getHolidays = () => {
-    if (!validateDateRange(startDate, endDate)) {
-      return [];
-    }
+    if (!validateDateRange(startDate, endDate)) return [];
 
     let specialDays: Holiday[] = [];
     let regularHolidays: Holiday[] = [];
 
-    const dates = eachDayOfInterval({
-      start: startDate,
-      end: endDate,
-    });
+    const dates = eachDayOfInterval({ start: startDate, end: endDate });
 
     dates.forEach((date) => {
       if (type === "Special Day" || type === "Holiday Pay") {
@@ -40,10 +35,14 @@ const ViewDaysModal = ({
         const holiday = holidays.find(
           (holiday) => formattedDate === holiday.date,
         );
+
         if (holiday) {
-          holiday.type === "Special (Non-Working) Holiday" &&
+          if (holiday.type === "Special (Non-Working) Holiday") {
             specialDays.push(holiday);
-          holiday.type === "Regular Holiday" && regularHolidays.push(holiday);
+          }
+          if (holiday.type === "Regular Holiday") {
+            regularHolidays.push(holiday);
+          }
         }
       }
     });

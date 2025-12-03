@@ -42,7 +42,7 @@ const exportDOCX = async (
       Object.keys(violations).forEach((key) => {
         const type = key as ViolationKey;
         violations[type].periods.forEach((period) => {
-          validate(period, isHours(type) ? [] : ["hours"]) && (valid += 1);
+          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
         });
       });
 
@@ -56,9 +56,7 @@ const exportDOCX = async (
                     ? ""
                     : ` ${employee.middle_initial.toUpperCase()}.`
                 }`,
-                font: {
-                  name: "Arial",
-                },
+                font: { name: "Arial" },
                 size: 28,
                 bold: true,
                 break: index === 0 ? 0 : 1,
@@ -72,9 +70,7 @@ const exportDOCX = async (
             children: [
               new TextRun({
                 text: `Actual Rate: Php${formatNumber(employee.rate)}/day`,
-                font: {
-                  name: "Arial",
-                },
+                font: { name: "Arial" },
                 size: 28,
               }),
             ],
@@ -115,9 +111,7 @@ const exportDOCX = async (
                       ? "Non-payment"
                       : "Underpayment"
                   } of ${getViolationKeyword(type)}`,
-                  font: {
-                    name: "Arial",
-                  },
+                  font: { name: "Arial" },
                   size: 28,
                   bold: true,
                   underline: {},
@@ -135,9 +129,7 @@ const exportDOCX = async (
           children: [
             new TextRun({
               text: `Total: Php${formatNumber(total)}`,
-              font: {
-                name: "Arial",
-              },
+              font: { name: "Arial" },
               size: 28,
               bold: true,
             }),
@@ -170,10 +162,9 @@ const exportDOCX = async (
               new TextRun({
                 text: `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
-                )} to ${formatDate(period.end_date)} (${value} ${getValueKeyword(type, period.days, period.hours)})`,
-                font: {
-                  name: "Arial",
-                },
+                  "dd MMMM yyyy",
+                )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`,
+                font: { name: "Arial" },
                 size: 28,
               }),
             ],
@@ -194,9 +185,7 @@ const exportDOCX = async (
           children: [
             new TextRun({
               text: `Actual Pay Received: Php${formatNumber(received)}`,
-              font: {
-                name: "Arial",
-              },
+              font: { name: "Arial" },
               size: 28,
             }),
           ],
@@ -208,9 +197,7 @@ const exportDOCX = async (
           children: [
             new TextRun({
               text: `Php${formatNumber(subtotal)} - ${formatNumber(received)} = Php${formatNumber(subtotal - received)}`,
-              font: {
-                name: "Arial",
-              },
+              font: { name: "Arial" },
               size: 28,
             }),
           ],
@@ -224,9 +211,7 @@ const exportDOCX = async (
           children: [
             new TextRun({
               text: `Subtotal: Php${formatNumber(subtotal - received)}`,
-              font: {
-                name: "Arial",
-              },
+              font: { name: "Arial" },
               size: 28,
             }),
           ],
@@ -265,9 +250,7 @@ const exportDOCX = async (
           children: [
             new TextRun({
               text: `Prevailing Rate: Php${formatNumber(minimumRate)} (${wageOrder.name})`,
-              font: {
-                name: "Arial",
-              },
+              font: { name: "Arial" },
               size: 28,
             }),
           ],
@@ -312,9 +295,7 @@ const exportDOCX = async (
         children: [
           new TextRun({
             text: `${text} = Php${total}`,
-            font: {
-              name: "Arial",
-            },
+            font: { name: "Arial" },
             size: 28,
           }),
         ],
@@ -329,9 +310,7 @@ const exportDOCX = async (
         children: [
           new TextRun({
             text: establishment.name.toUpperCase(),
-            font: {
-              name: "Arial",
-            },
+            font: { name: "Arial" },
             size: 32,
             bold: true,
           }),
@@ -341,10 +320,11 @@ const exportDOCX = async (
       }),
     );
 
-    establishment.employees &&
+    if (establishment.employees) {
       establishment.employees.forEach((employee, index) => {
         renderEmployee(index, employee);
       });
+    }
   };
 
   const exportFile = async () => {
@@ -384,6 +364,7 @@ const exportDOCX = async (
               }
             } catch (error) {
               console.error(error);
+
               Toast.show({
                 type: "error",
                 text1: "An Error Has Occured. Please Try Again.",
@@ -402,7 +383,6 @@ const exportDOCX = async (
         onPress: async () => {
           if (await Sharing.isAvailableAsync()) {
             const uri = FileSystem.documentDirectory + filename;
-            console.log(uri);
 
             await FileSystem.writeAsStringAsync(uri, base64, {
               encoding: FileSystem.EncodingType.Base64,

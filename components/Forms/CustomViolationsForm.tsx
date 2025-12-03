@@ -8,10 +8,10 @@ import {
   WageOrder,
 } from "@/types/globals";
 import {
-  formatDateValue,
   formatNumber,
   getMinimumRate,
   numberToLetter,
+  parseDate,
   typesOptions,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -85,9 +85,7 @@ const CustomViolationsForm = ({
     period.end_date,
   );
 
-  const setRate = () => {
-    onChange(index, "rate", `${employee.rate}`);
-  };
+  const setRate = () => onChange(index, "rate", `${employee.rate}`);
 
   return (
     <>
@@ -228,6 +226,7 @@ const CustomViolationsForm = ({
               <Text className="font-b text-base text-[#27ae60]">
                 ({rateToUse} x {daysMultiplier} x {days}) +{" "}
               </Text>
+
               <Text className="font-b text-base text-[#27ae60]">
                 ({rateToUse} / 8 x {nightShiftMultiplier} x {nightShiftHours}) +
                 ({rateToUse} / 8 x {overtimeMultiplier} x {overtimeHours})
@@ -236,7 +235,7 @@ const CustomViolationsForm = ({
               <Text className="font-b text-base text-[#27ae60]">
                 Total:{" "}
                 <Text className="mt-1 font-b text-base text-[#27ae60]">
-                  = ₱{formatNumber(total)}
+                  ₱{formatNumber(total)}
                 </Text>
               </Text>
             </View>
@@ -249,6 +248,7 @@ const CustomViolationsForm = ({
                   </Text>
                 </TouchableOpacity>
               )}
+
               <TouchableOpacity onPress={() => onClearPeriod(index)}>
                 <Text className="rounded-md border border-[#f79812ff] bg-[#f79812ff] px-2.5 py-1.5 font-r text-white">
                   Clear
@@ -269,7 +269,7 @@ const CustomViolationsForm = ({
 
       {isStartDateModalVisible && (
         <DateTimePicker
-          value={formatDateValue(period.start_date)}
+          value={period.start_date ? parseDate(period.start_date) : new Date()}
           mode="date"
           onChange={(event, value) => {
             if (event.type === "set" && value) {
@@ -282,7 +282,7 @@ const CustomViolationsForm = ({
 
       {isEndDateModalVisible && (
         <DateTimePicker
-          value={formatDateValue(period.end_date)}
+          value={period.end_date ? parseDate(period.end_date) : new Date()}
           mode="date"
           onChange={(event, value) => {
             if (event.type === "set" && value) {

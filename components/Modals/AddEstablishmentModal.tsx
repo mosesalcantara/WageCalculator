@@ -11,14 +11,18 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Pressable, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-type Props = {
-  db: Db;
-  refetch: () => void;
-};
+type Props = { db: Db; refetch: () => void };
 
 const AddEstablishmentModal = ({ db, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -28,15 +32,10 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
-    const formattedValues = {
-      ...values,
-      name: values.name.trim(),
-    };
+    const formattedValues = { ...values, name: values.name.trim() };
 
     try {
       const record = await db.query.establishments.findFirst({
@@ -54,9 +53,11 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         });
       } else {
         await db.insert(establishments).values(formattedValues);
+
         refetch();
         reset();
         setIsVisible(false);
+
         Toast.show({
           type: "success",
           text1: "Added Establishment",
@@ -65,6 +66,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -89,21 +91,15 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
-        {(() => {
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
 
-          return (
-            <Pressable
-              style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
-              onPress={() => setIsVisible(false)}
-            >
-              <Pressable onPress={() => {}} style={{}} />
-            </Pressable>
-          );
-        })()}
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="mt-[0%] h-[120%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
-              <Text className="mb-2 text-left font-b text-xl text-black mt-2">
+              <Text className="mb-2 mt-2 text-left font-b text-xl text-black">
                 Name
               </Text>
 

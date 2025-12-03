@@ -28,20 +28,11 @@ const toastConfig = {
   success: (props: BaseToastProps) => (
     <SuccessToast
       {...props}
-      text1Style={{
-        fontSize: 14,
-        textAlign: "center",
-      }}
+      text1Style={{ fontSize: 14, textAlign: "center" }}
     />
   ),
   error: (props: BaseToastProps) => (
-    <ErrorToast
-      {...props}
-      text1Style={{
-        fontSize: 14,
-        textAlign: "center",
-      }}
-    />
+    <ErrorToast {...props} text1Style={{ fontSize: 14, textAlign: "center" }} />
   ),
 };
 
@@ -56,9 +47,7 @@ const RootLayout = () => {
   });
 
   useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
   if (!loaded && !error) return null;

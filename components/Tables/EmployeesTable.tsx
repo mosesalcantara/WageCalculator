@@ -3,7 +3,7 @@ import UpdateEmployeeModal from "@/components/Modals/UpdateEmployeeModal";
 import { Db, Employee, Establishment } from "@/types/globals";
 import { formatNumber } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Href, Router } from "expo-router";
+import { Router } from "expo-router";
 import { useMemo } from "react";
 import {
   ScrollView,
@@ -54,10 +54,12 @@ const EmployeesTable = ({
       return sortedEmployees.filter((employee) => {
         const isValid = columns.some((column) => {
           const value = employee[column as keyof Employee];
+
           return value
             ? `${value}`.toLowerCase().includes(searchQuery.toLowerCase())
             : false;
         });
+
         if (isValid) return employee;
       });
     }
@@ -67,7 +69,7 @@ const EmployeesTable = ({
 
   const setEmployee = (id: number) => {
     SessionStorage.setItem("employee_id", `${id}`);
-    router.push("/violations" as Href);
+    router.push("/violations");
   };
 
   return (
@@ -86,12 +88,15 @@ const EmployeesTable = ({
             <Text className="w-[35%] text-center font-b text-base text-white">
               Name
             </Text>
+
             <Text className="w-[13%] text-center font-b text-base text-white">
               Rate
             </Text>
+
             <Text className="w-[20%] text-center font-b text-base text-white">
               Schedule
             </Text>
+
             <Text className="w-[27%] text-center font-b text-base text-white">
               Actions
             </Text>

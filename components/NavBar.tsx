@@ -1,9 +1,6 @@
 import { Image, Text, View } from "react-native";
 
-type Props = {
-  title?: string;
-  className?: string;
-};
+type Props = { title?: string; className?: string };
 
 const NavBar = ({ title = "DOLECalc", className = "" }: Props) => {
   return (

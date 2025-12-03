@@ -4,7 +4,7 @@ import EmployeesTable from "@/components/Tables/EmployeesTable";
 import useDeleteEmployee from "@/hooks/useDeleteEmployee";
 import useFetchEmployees from "@/hooks/useFetchEmployees";
 import { getDb } from "@/utils/globals";
-import { Href, useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
@@ -20,7 +20,7 @@ const EmployeesPage = () => {
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
-        router.push("/" as Href);
+        router.push("/");
         return true;
       };
 

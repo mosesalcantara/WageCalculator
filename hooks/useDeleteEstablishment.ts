@@ -12,13 +12,17 @@ const useDeleteEstablishment = (db: Db, refetch: () => void) => {
           where: eq(establishments.id, id),
           with: { employees: true },
         });
+
       if (data && data.employees) {
         const ids = data.employees.map((employee) => employee.id);
         await db.delete(violations).where(inArray(violations.employee_id, ids));
       }
+
       await db.delete(employees).where(eq(employees.establishment_id, id));
       await db.delete(establishments).where(eq(establishments.id, id));
+
       refetch();
+
       Toast.show({
         type: "success",
         text1: "Deleted Establishment",
@@ -26,6 +30,7 @@ const useDeleteEstablishment = (db: Db, refetch: () => void) => {
       });
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

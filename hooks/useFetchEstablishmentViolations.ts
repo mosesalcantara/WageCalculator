@@ -14,11 +14,13 @@ const useFetchEstablishmentViolations = (db: Db) => {
 
   const handleFetch = useCallback(async () => {
     try {
-      const id = SessionStorage.getItem("establishment_id") as string;
+      const id = SessionStorage.getItem("establishment_id");
+
       const establishment = await db.query.establishments.findFirst({
         where: eq(establishments.id, Number(id)),
         with: { employees: { with: { violations: true } } },
       });
+
       if (establishment) {
         const employees = establishment.employees.map((employee) => {
           let violations: Violation[] = [];
@@ -30,10 +32,12 @@ const useFetchEstablishmentViolations = (db: Db) => {
 
           return { ...employee, violations: violations };
         });
+
         setEstablishment({ ...establishment, employees: employees });
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

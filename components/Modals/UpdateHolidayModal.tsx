@@ -3,7 +3,7 @@ import Select from "@/components/Select";
 import { holidays } from "@/db/schema";
 import { holiday as schema, Holiday as Values } from "@/schemas/globals";
 import { Db, Holiday } from "@/types/globals";
-import { getDate, toastVisibilityTime } from "@/utils/globals";
+import { formatDate, parseDate, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -20,11 +20,7 @@ import {
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-type Props = {
-  db: Db;
-  holiday: Holiday;
-  refetch: () => void;
-};
+type Props = { db: Db; holiday: Holiday; refetch: () => void };
 
 const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
@@ -38,15 +34,13 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (values: Values) => {
     const formattedValues = {
       ...values,
       name: values.name.trim(),
-      date: getDate(values.date),
+      date: formatDate(values.date),
     };
 
     try {
@@ -54,9 +48,11 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
         .update(holidays)
         .set(formattedValues)
         .where(eq(holidays.id, holiday.id));
+
       refetch();
       reset();
       setIsVisible(false);
+
       Toast.show({
         type: "success",
         text1: "Updated Holiday",
@@ -64,6 +60,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
       });
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -85,16 +82,11 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
-        {(() => {
-          return (
-            <Pressable
-              style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
-              onPress={() => setIsVisible(false)}
-            >
-              <Pressable onPress={() => {}} style={{}} />
-            </Pressable>
-          );
-        })()}
+        <Pressable
+          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setIsVisible(false)}
+        ></Pressable>
+
         <View className="flex-1 items-center justify-center bg-black/40">
           <View className="mt-[0%] h-[150%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
@@ -130,7 +122,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
               <Controller
                 control={control}
                 name="date"
-                defaultValue={new Date(holiday.date)}
+                defaultValue={parseDate(holiday.date)}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TouchableOpacity
@@ -138,7 +130,7 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
                       onPress={() => setIsDateModalVisible(true)}
                     >
                       <Text className="font-r">
-                        {value ? getDate(value) : "Select date"}
+                        {value ? formatDate(value) : "Select date"}
                       </Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
