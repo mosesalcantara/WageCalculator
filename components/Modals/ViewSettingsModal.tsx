@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Href, Router } from "expo-router";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Text, TouchableOpacity, View, Pressable } from "react-native";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -26,24 +26,34 @@ const ViewSettingsModal = ({ router }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
+        {(() => {
+          return (
+            <Pressable
+              style={{ flex: 3, backgroundColor: "rgba(0,0,0,0.5)" }}
+              onPress={() => setIsVisible(false)}
+            >
+              <Pressable onPress={() => {}} style={{}} />
+            </Pressable>
+          );
+        })()}
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[140%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <TouchableOpacity
-                className="rounded-[0.625rem] bg-black p-4 mt-4"
+                className="mt-4 rounded-[0.625rem] bg-black p-4"
                 onPress={() => router.push("/settings/wage-orders" as Href)}
               >
-                <Text className="text-center font-b text-white text-xl">
+                <Text className="text-center font-b text-xl text-white">
                   📑 Wage Orders
                 </Text>
               </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity
-                className="rounded-[0.625rem] bg-black p-4 mt-4"
+                className="mt-4 rounded-[0.625rem] bg-black p-4"
                 onPress={() => router.push("/settings/holidays" as Href)}
               >
-                <Text className="text-center font-b text-white text-xl">
+                <Text className="text-center font-b text-xl text-white">
                   📅 Holidays
                 </Text>
               </TouchableOpacity>

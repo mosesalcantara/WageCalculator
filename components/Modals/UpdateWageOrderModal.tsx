@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db, WageOrder } from "@/types/globals";
@@ -9,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, Text, TextInput, Pressable, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
@@ -98,8 +97,18 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
+        {(() => {
+          return (
+            <Pressable
+              style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+              onPress={() => setIsVisible(false)}
+            >
+              <Pressable onPress={() => {}} style={{}} />
+            </Pressable>
+          );
+        })()}
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[145%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
@@ -128,8 +137,8 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
 
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
-                Date
-              </Text>
+                  Date
+                </Text>
 
                 <Controller
                   control={control}
@@ -216,14 +225,14 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b">Cancel</Text>
+                <Text className="font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b">Update</Text>
+                <Text className="font-b text-lg">Update</Text>
               </TouchableOpacity>
             </View>
           </View>

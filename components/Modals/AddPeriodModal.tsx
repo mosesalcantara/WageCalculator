@@ -45,7 +45,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
         onRequestClose={() => onToggle(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="w-4/5 gap-2 rounded-[0.625rem] bg-[#1E90FF] w-full p-4">
+          <View className="w-5/5 gap-2 rounded-[0.625rem] bg-[#1E90FF]  p-4">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-white">

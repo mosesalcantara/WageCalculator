@@ -1,5 +1,4 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import Label from "@/components/Label";
 import Select from "@/components/Select";
 import { establishments } from "@/db/schema";
 import {
@@ -12,7 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, Text, TextInput, TouchableOpacity, View, Pressable } from "react-native";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
@@ -94,10 +93,20 @@ const UpdateEstablishmentModal = ({ db, establishment, refetch }: Props) => {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       >
+        {(() => {
+          return (
+            <Pressable
+              style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+              onPress={() => setIsVisible(false)}
+            >
+              <Pressable onPress={() => {}} style={{}} />
+            </Pressable>
+          );
+        })()}
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[120%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
-              <Text className="mb-2 text-left font-b text-lg text-black">
+              <Text className="mb-2 text-left font-b text-lg text-black mt-2">
                 Name
               </Text>
 
