@@ -67,8 +67,22 @@ const ViewDaysModal = ({
         visible={isVisible}
         onRequestClose={() => onToggle(false)}
       >
+        <TouchableOpacity
+          className="flex-2 mt-[0%] h-[65%] bg-black/40"
+          onPress={() => onToggle(false)}
+        ></TouchableOpacity>
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="max-h-[70%] w-full rounded-[0.625rem] bg-[#1E90FF] p-4">
+          <View
+            className={`mb-[10%] rounded-t-lg bg-primary p-4 ${
+              estimatedHolidays.length <= 1
+                ? "mt-[13%] min-h-[33%] w-full"
+                : estimatedHolidays.length <= 2
+                  ? "mt-[12%] min-h-[36%] w-full"
+                  : estimatedHolidays.length <= 3
+                    ? "mt-13 min-h-[30%] w-full"
+                    : "mb-[15%] h-[170%] max-h-[140%] min-h-[30%] w-full"
+            }`}
+          >
             <Text className="mb-3 text-center font-b text-lg text-white">
               {type === "Special Day"
                 ? "Special (Non-Working) Holidays"
@@ -78,6 +92,7 @@ const ViewDaysModal = ({
             <ScrollView
               className="mb-2 rounded-md bg-white p-3"
               showsVerticalScrollIndicator={true}
+              scrollEnabled={estimatedHolidays.length > 3}
             >
               {estimatedHolidays.map((holiday, index) => (
                 <View
@@ -87,7 +102,6 @@ const ViewDaysModal = ({
                   <Text className="font-b text-base text-[#333]">
                     {index + 1}. {holiday.name}
                   </Text>
-
                   <Text className="font-r">
                     {formatDate(holiday.date, "MMMM dd, yyyy")}
                   </Text>
