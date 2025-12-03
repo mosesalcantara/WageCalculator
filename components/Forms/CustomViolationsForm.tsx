@@ -235,7 +235,7 @@ const CustomViolationsForm = ({
               <Text className="font-b text-base text-[#27ae60]">
                 Total:{" "}
                 <Text className="mt-1 font-b text-base text-[#27ae60]">
-                  = ₱{formatNumber(total)}
+                  ₱{formatNumber(total)}
                 </Text>
               </Text>
             </View>
