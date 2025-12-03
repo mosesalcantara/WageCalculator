@@ -92,12 +92,13 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <Pressable
-          style={{ flex: 2, backgroundColor: "rgba(0,0,0,0.5)" }}
+          className="bg-black/40"
+          style={{ flex: 2 }}
           onPress={() => setIsVisible(false)}
         ></Pressable>
 
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[0%] h-[120%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="absolute bottom-0.5 w-full gap-2 rounded-t-xl bg-primary px-8 py-6">
             <View>
               <Text className="mb-2 mt-2 text-left font-b text-xl text-black">
                 Name
@@ -160,19 +161,19 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
               <ErrorMessage error={errors.size} />
             </View>
 
-            <View className="flex-row justify-end">
+            <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mr-2 mt-12 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b text-lg">Cancel</Text>
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="mr-2 mt-12 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b text-lg">Save</Text>
+                <Text className="text-center font-b text-lg">Save</Text>
               </TouchableOpacity>
             </View>
           </View>
