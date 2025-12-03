@@ -92,7 +92,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
           );
         })()}
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[42%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[145%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
                 Name
