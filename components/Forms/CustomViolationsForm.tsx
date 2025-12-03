@@ -269,7 +269,7 @@ const CustomViolationsForm = ({
 
       {isStartDateModalVisible && (
         <DateTimePicker
-          value={parseDate(period.start_date) || new Date()}
+          value={period.start_date ? parseDate(period.start_date) : new Date()}
           mode="date"
           onChange={(event, value) => {
             if (event.type === "set" && value) {
@@ -282,7 +282,7 @@ const CustomViolationsForm = ({
 
       {isEndDateModalVisible && (
         <DateTimePicker
-          value={parseDate(period.end_date) || new Date()}
+          value={period.end_date ? parseDate(period.end_date) : new Date()}
           mode="date"
           onChange={(event, value) => {
             if (event.type === "set" && value) {
