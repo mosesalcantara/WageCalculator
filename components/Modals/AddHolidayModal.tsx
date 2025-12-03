@@ -75,7 +75,7 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
         onRequestClose={() => setIsVisible(false)}
       >
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[120%] h-[40%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[120%] h-[42%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <Text className="mb-2 mt-2 text-left font-b text-lg text-black">
                 Name
@@ -166,14 +166,14 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b">Cancel</Text>
+                <Text className="font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b">Add</Text>
+                <Text className="font-b text-lg">Add</Text>
               </TouchableOpacity>
             </View>
           </View>
