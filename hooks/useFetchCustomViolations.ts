@@ -11,7 +11,7 @@ import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const useFetchViolations = (db: Db) => {
-  const parent_id = SessionStorage.getItem("employee_id") as string;
+  const parent_id = SessionStorage.getItem("employee_id");
 
   const [customViolationType, setCustomViolationType] =
     useImmer<CustomViolationType>(getInitialCustomViolationType());
@@ -22,6 +22,7 @@ const useFetchViolations = (db: Db) => {
         where: eq(employees.id, Number(parent_id)),
         with: { customViolations: true },
       });
+
       if (data) {
         if (data.customViolations.length > 0) {
           setCustomViolationType(
@@ -33,6 +34,7 @@ const useFetchViolations = (db: Db) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

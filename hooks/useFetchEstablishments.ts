@@ -14,9 +14,11 @@ const useFetchEstablishments = (db: Db) => {
       const establishments = await db.query.establishments.findMany({
         with: { employees: true },
       });
+
       setEstablishments(establishments);
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

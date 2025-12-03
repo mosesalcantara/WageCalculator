@@ -15,7 +15,7 @@ import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const useFetchViolations = (db: Db) => {
-  const employee_id = SessionStorage.getItem("employee_id") as string;
+  const employee_id = SessionStorage.getItem("employee_id");
 
   const [establishment, setEstablishment] = useImmer<Establishment | undefined>(
     undefined,
@@ -31,6 +31,7 @@ const useFetchViolations = (db: Db) => {
         where: eq(employees.id, Number(employee_id)),
         with: { establishment: true, violations: true },
       });
+
       if (employee) {
         let violations: Violation[] = [];
         const violation = employee.violations[0];
@@ -47,6 +48,7 @@ const useFetchViolations = (db: Db) => {
       }
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

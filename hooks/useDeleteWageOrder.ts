@@ -8,7 +8,9 @@ const useDeleteWageOrder = (db: Db, refetch: () => void) => {
   const handleDelete = async (id: number) => {
     try {
       await db.delete(wageOrders).where(eq(wageOrders.id, id));
+
       refetch();
+
       Toast.show({
         type: "success",
         text1: "Deleted Wage Order",
@@ -16,6 +18,7 @@ const useDeleteWageOrder = (db: Db, refetch: () => void) => {
       });
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
