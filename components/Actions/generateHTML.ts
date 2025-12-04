@@ -261,7 +261,7 @@ const generateHTML = (
       case "Overtime Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "25" : "30"}% x ${period.days} x ${period.hours} ${keyword} 
+                    Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${Number(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
                     <span class="value">= Php${total}</span>
                   </p>
                 `;

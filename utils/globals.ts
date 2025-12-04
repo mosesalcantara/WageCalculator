@@ -343,7 +343,7 @@ export const calculate = (
     else if (type === "Overtime Pay") {
       result =
         (rateToUse / 8) *
-        (period.type === "Normal Day" ? 0.25 : 0.3) *
+        (period.type === "Normal Day" ? 1.25 : 1.3) *
         (days * hours);
     } else if (type === "Night Shift Differential") {
       result = (rateToUse / 8) * 0.1 * (days * hours);
