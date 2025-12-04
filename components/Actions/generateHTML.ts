@@ -54,13 +54,22 @@ const getStyles = (isPreview: boolean) => {
                 text-decoration: underline;
               }
               .right {
-                text-align: right;
+                float: right;
               }
               .space {
                 font-size: 0.5rem;
               }
               .top-space {
                   margin-top: 1rem;
+              }
+                  .value{
+                  text-align: right;
+                  float:right;
+                  }
+
+              .double-underline{
+                    text-decoration: underline;
+                    text-decoration-style: double;
               }
             </style>
           `;
@@ -146,7 +155,7 @@ const generateHTML = (
       });
 
       html += `
-                <p class="bold right">Total: Php${formatNumber(total)}</p>
+                <br><p class="right double-underline">Total: Php${formatNumber(total)}</p>
                 <p class="space">&nbsp</p>
               `;
     }
@@ -211,7 +220,7 @@ const generateHTML = (
 
     if (violationType.periods.length > 1) {
       html += `
-                <p class="right">Subtotal: Php${formatNumber(subtotal - received)}</p>
+                <p class="right underline">Subtotal: Php${formatNumber(subtotal - received)}</p>
               `;
     }
 
@@ -286,7 +295,7 @@ const generateHTML = (
         html += `
                   <p>
                     Php${formattedRateToUse} x 30% x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    <span class="value right">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -301,7 +310,7 @@ const generateHTML = (
       case "13th Month Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months = Php${total}
+                    Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months <span class="right">= Php${total}</span>
                   </p>
                 `;
         break;

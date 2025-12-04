@@ -19,7 +19,7 @@ import {
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { AlignmentType, Document, Packer, Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
@@ -132,6 +132,7 @@ const exportDOCX = async (
               font: { name: "Arial" },
               size: 28,
               bold: true,
+              underline: { type: "double" },
             }),
           ],
           alignment: "right",
@@ -181,15 +182,15 @@ const exportDOCX = async (
 
     if (received > 0) {
       children.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: `Actual Pay Received: Php${formatNumber(received)}`,
-              font: { name: "Arial" },
-              size: 28,
-            }),
-          ],
+      new Paragraph({
+        children: [
+        new TextRun({
+          text: `Actual Pay Received: Php${formatNumber(received)}`,
+          font: { name: "Arial" },
+          size: 28,
         }),
+        ],
+      }),
       );
 
       children.push(
@@ -213,6 +214,7 @@ const exportDOCX = async (
               text: `Subtotal: Php${formatNumber(subtotal - received)}`,
               font: { name: "Arial" },
               size: 28,
+              underline: {},
             }),
           ],
           alignment: "right",
@@ -290,18 +292,31 @@ const exportDOCX = async (
         text = "";
     }
 
-    children.push(
-      new Paragraph({
-        children: [
-          new TextRun({
-            text: `${text} = Php${total}`,
-            font: { name: "Arial" },
-            size: 28,
-          }),
-        ],
-        spacing: { after: addSpace ? 300 : 0 },
+children.push(
+  new Paragraph({
+    children: [
+      new TextRun({
+        text: `${text} =`,
+        font: { name: "Arial" },
+        size: 28,
       }),
-    );
+    ],
+    spacing: { after: 0 },
+  }),
+
+  new Paragraph({
+    alignment: AlignmentType.RIGHT,
+    children: [
+      new TextRun({
+        text: `Php${total}`,
+        font: { name: "Arial" },
+        size: 28,
+      }),
+    ],
+    spacing: { after: addSpace ? 300 : 0 },
+  })
+);
+
   };
 
   const generateDOCX = () => {
