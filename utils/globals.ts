@@ -404,7 +404,8 @@ export const getViolationKeyword = (type: ViolationKey) => {
   if (type === "Basic Wage") keyword = "Wages";
   else if (type === "Special Day") keyword = "Premium Pay on Special Day";
   else if (type === "Rest Day") keyword = "Premium Pay on Rest Day";
-  else return keyword;
+
+  return keyword;
 };
 
 export const getValueKeyword = (
