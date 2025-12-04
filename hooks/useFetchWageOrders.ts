@@ -50,7 +50,7 @@ const useFetchWageOrders = (db: Db) => {
         handleFetch();
       }
 
-      const sortedWageOrders = wageOrders.sort((a, b) => {
+      const sortedWageOrders = [...wageOrders].sort((a, b) => {
         return Number(parseDate(a.date)) - Number(parseDate(b.date));
       });
 

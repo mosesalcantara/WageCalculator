@@ -28,7 +28,7 @@ const useFetchHolidays = (db: Db) => {
         handleFetch();
       }
 
-      const sortedHolidays = holidays.sort((a, b) => {
+      const sortedHolidays = [...holidays].sort((a, b) => {
         return Number(parseDate(a.date)) - Number(parseDate(b.date));
       });
 
