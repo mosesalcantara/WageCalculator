@@ -35,9 +35,17 @@ const EmployeesTable = ({
   const [searchQuery, setSearchQuery] = useImmer("");
 
   const sortedEmployees = useMemo(() => {
-    return employees?.sort((a, b) => {
-      return a.last_name < b.last_name ? -1 : a.last_name > b.last_name ? 1 : 0;
-    });
+    if (employees) {
+      return [...employees].sort((a, b) => {
+        return a.last_name < b.last_name
+          ? -1
+          : a.last_name > b.last_name
+            ? 1
+            : 0;
+      });
+    }
+
+    return employees;
   }, [employees]);
 
   const filteredEmployees = useMemo(() => {
