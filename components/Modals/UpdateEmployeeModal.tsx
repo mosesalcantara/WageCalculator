@@ -144,7 +144,7 @@ const UpdateEmployeeModal = ({
         ></Pressable>
 
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[0%] h-[145%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="absolute bottom-0.5 w-full gap-2 rounded-t-xl bg-primary px-8 py-6">
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
                 <Text className="mb-2 text-left font-b text-lg text-black">
@@ -302,19 +302,20 @@ const UpdateEmployeeModal = ({
               </View>
             </View>
 
-            <View className="flex-row justify-end">
+            <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mr-2 mt-4 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3 border"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b text-lg">Cancel</Text>
+                <Text className="font-b text-lg text-center">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="mr-2 mt-4 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3 border"
+
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b text-lg">Update</Text>
+                <Text className="font-b text-lg text-center">Update</Text>
               </TouchableOpacity>
             </View>
           </View>

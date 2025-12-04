@@ -30,10 +30,10 @@ const ViewSettingsModal = ({ router }: Props) => {
         ></Pressable>
 
         <View className="flex-1 items-center justify-center bg-black/40">
-          <View className="mt-[0%] h-[140%] w-full gap-2 rounded-t-xl bg-primary p-4">
+          <View className="mt-[0%] h-[100%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <TouchableOpacity
-                className="mt-4 rounded-[0.625rem] bg-black p-4"
+                className="mt-4 rounded-[0.625rem] bg-black p-4 border"
                 onPress={() => router.push("/settings/wage-orders")}
               >
                 <Text className="text-center font-b text-xl text-white">
@@ -44,7 +44,7 @@ const ViewSettingsModal = ({ router }: Props) => {
 
             <View>
               <TouchableOpacity
-                className="mt-4 rounded-[0.625rem] bg-black p-4"
+                className="mt-1 rounded-[0.625rem] bg-black p-4 border"
                 onPress={() => router.push("/settings/holidays")}
               >
                 <Text className="text-center font-b text-xl text-white">
@@ -53,12 +53,12 @@ const ViewSettingsModal = ({ router }: Props) => {
               </TouchableOpacity>
             </View>
 
-            <View className="flex-row justify-end">
+            <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mt-4 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3 border"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b text-xl">Cancel</Text>
+                <Text className="text-center font-b text-xl">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -216,14 +216,14 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="rounded bg-white py-3"
+                className="rounded bg-white py-3 border"
                 onPress={() => setIsVisible(false)}
               >
                 <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="rounded bg-white py-3"
+                className="rounded bg-white py-3 border"
                 onPress={handleSubmit(onSubmit)}
               >
                 <Text className="text-center font-b text-lg">Save</Text>

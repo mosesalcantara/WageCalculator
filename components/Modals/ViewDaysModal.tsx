@@ -80,7 +80,7 @@ const ViewDaysModal = ({
                   ? "mt-[12%] min-h-[36%] w-full"
                   : estimatedHolidays.length <= 3
                     ? "mt-13 min-h-[30%] w-full"
-                    : "mb-[15%] h-[170%] max-h-[140%] min-h-[30%] w-full"
+                    : "mb-[7%] h-[170%] max-h-[140%] min-h-[30%] w-full"
             }`}
           >
             <Text className="mb-3 text-center font-b text-lg text-white">
@@ -90,7 +90,7 @@ const ViewDaysModal = ({
             </Text>
 
             <ScrollView
-              className="mb-2 rounded-md bg-white p-3"
+              className="rounded-md bg-white p-3"
               showsVerticalScrollIndicator={true}
               scrollEnabled={estimatedHolidays.length > 3}
             >
@@ -109,12 +109,12 @@ const ViewDaysModal = ({
               ))}
             </ScrollView>
 
-            <View className="flex-row justify-end">
+            <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mr-2 mt-2.5 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white p-4 w-full border"
                 onPress={() => onToggle(false)}
               >
-                <Text className="font-b">Close</Text>
+                <Text className="font-b text-center">Close</Text>
               </TouchableOpacity>
             </View>
           </View>

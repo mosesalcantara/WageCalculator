@@ -44,7 +44,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
         onRequestClose={() => onToggle(false)}
       >
         <TouchableOpacity
-          className="flex-2 mt-[0%] h-[166%]"
+          className="flex-2 mt-[0%] h-[158%]"
           onPress={() => onToggle(false)}
         >
           <View className="flex-1 items-center justify-center bg-black/40">
@@ -62,7 +62,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                       render={({ field: { value, onChange, onBlur } }) => (
                         <>
                           <TouchableOpacity
-                            className="mt-2 h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                            className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                             onPress={() => setIsStartDateModalVisible(true)}
                           >
                             <Text className="font-r">
@@ -93,7 +93,7 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                       render={({ field: { value, onChange, onBlur } }) => (
                         <>
                           <TouchableOpacity
-                            className="mt-2 h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
+                            className=" h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
                             onPress={() => setIsEndDateModalVisible(true)}
                           >
                             <Text className="font-r">
@@ -114,19 +114,21 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                   </View>
                 </View>
 
-                <View className="flex-row justify-end">
+            <View className="mt-6 gap-3">
                   <TouchableOpacity
-                    className="mr-2 mt-3 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3 border"
+
                     onPress={() => onToggle(false)}
                   >
-                    <Text className="font-b text-lg">Cancel</Text>
+                    <Text className="font-b text-lg text-center">Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    className="mr-2 mt-3 rounded bg-white px-2.5 py-[0.3125rem]"
+                className="rounded bg-white py-3 border"
+
                     onPress={handleSubmit(onSubmit)}
                   >
-                    <Text className="font-b text-lg">Add</Text>
+                    <Text className="font-b text-lg text-center">Add</Text>
                   </TouchableOpacity>
                 </View>
               </View>
