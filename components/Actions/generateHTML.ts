@@ -157,6 +157,7 @@ const generateHTML = (
       html += `
                 <br><p class="right double-underline">Total: Php${formatNumber(total)}</p>
                 <p class="space">&nbsp</p>
+                <br><br><p  class="right double-underline">Grand Total: Php</p>
               `;
     }
 
