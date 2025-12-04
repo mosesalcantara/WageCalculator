@@ -1,10 +1,5 @@
 import * as schema from "@/db/schema";
-import {
-  Period,
-  ViolationKey,
-  ViolationType,
-  WageOrder,
-} from "@/types/globals";
+import { Period, ViolationKey, WageOrder } from "@/types/globals";
 import { differenceInDays, format, parseISO, subDays } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -212,6 +207,7 @@ export const periodFormat = {
   days: "",
   hours: "",
   type: "Normal Day",
+  received: "",
 };
 
 export const customPeriodFormat = {
@@ -382,14 +378,36 @@ export const getCustomPeriodFormat = (rate?: number) => {
 };
 
 export const getInitialViolationTypes = (rate?: number) => {
-  const values = {} as Record<ViolationKey, ViolationType>;
-
-  violationKeysArray.forEach((type) => {
-    values[type as ViolationKey] = {
-      periods: [getPeriodFormat(rate)],
-      received: "",
-    };
-  });
+  const values = {
+    "Basic Wage": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+    "Overtime Pay": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+    "Night Shift Differential": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+    "Special Day": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+    "Rest Day": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+    "Holiday Pay": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+    "13th Month Pay": {
+      Underpayment: getPeriodFormat(rate),
+      "Non-payment": getPeriodFormat(rate),
+    },
+  };
 
   return values;
 };
@@ -404,8 +422,7 @@ export const getViolationKeyword = (type: ViolationKey) => {
   if (type === "Basic Wage") keyword = "Wages";
   else if (type === "Special Day") keyword = "Premium Pay on Special Day";
   else if (type === "Rest Day") keyword = "Premium Pay on Rest Day";
-
-  return keyword;
+  else return keyword;
 };
 
 export const getValueKeyword = (

@@ -16,7 +16,7 @@ import {
   CustomViolationType,
   Period,
   ViolationKey,
-  ViolationType,
+  ViolationValues,
 } from "@/types/globals";
 import {
   customPeriodFormat,
@@ -28,7 +28,6 @@ import {
   periodFormat,
   toastVisibilityTime,
 } from "@/utils/globals";
-import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -57,7 +56,9 @@ const ViolationsPage = () => {
   const form = useForm({ resolver: yupResolver(schema) });
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
-  const [type, setType] = useImmer<ViolationKey>("Basic Wage");
+  const [violationType, setViolationType] =
+    useImmer<ViolationKey>("Basic Wage");
+  const [paymentType, setPaymentType] = useImmer("Underpayment");
   const [isAddPeriodModalVisible, setIsAddPeriodModalVisible] = useImmer(false);
 
   const { wageOrders } = useFetchWageOrders(db);
@@ -68,10 +69,10 @@ const ViolationsPage = () => {
   const { customViolationType, setCustomViolationType } =
     useFetchCustomViolations(db);
 
-  const violationType = violationTypes[type];
+  const periods = violationTypes[violationType][paymentType];
 
   const violationHandlers = useViolationHandlers(
-    type,
+    violationType,
     employee,
     setViolationTypes,
   );
@@ -153,20 +154,20 @@ const ViolationsPage = () => {
   const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
     const periodsFormat = dates.map((date) => {
       return {
-        ...(type === "Custom" ? customPeriodFormat : periodFormat),
+        ...(violationType === "Custom" ? customPeriodFormat : periodFormat),
         start_date: date.start_date,
         end_date: date.end_date,
         rate: employee ? `${employee.rate}` : "",
       };
     });
 
-    if (type === "Custom") {
+    if (violationType === "Custom") {
       setCustomViolationType((draft) => {
         draft.periods.push(...(periodsFormat as CustomPeriod[]));
       });
     } else {
       setViolationTypes((draft) => {
-        draft[type].periods.push(...(periodsFormat as Period[]));
+        draft[violationType].periods.push(...(periodsFormat as Period[]));
       });
     }
   };
@@ -174,7 +175,7 @@ const ViolationsPage = () => {
   useFocusEffect(
     useCallback(() => {
       const saveViolations = async (
-        violationTypes: Record<ViolationKey, ViolationType>,
+        violationTypes: ViolationValues,
         customViolationType: CustomViolationType,
       ) => {
         try {
@@ -249,53 +250,27 @@ const ViolationsPage = () => {
             <SafeAreaView className="flex-1 bg-primary">
               <NavBar />
 
-              <View className="bg-primary">
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  className="border-b border-b-[#333] py-2.5 "
-                >
-                  {getTabs(establishment.size).map((tab) => (
-                    <TouchableOpacity
-                      key={tab.name}
-                      className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                      onPress={() => setType(tab.name as ViolationKey)}
-                    >
-                      <MaterialIcons
-                        name={tab.icon as IconNames}
-                        size={18}
-                        color={type === tab.name ? "#fff" : "#555"}
-                      />
-
-                      <Text
-                        className={`ml-1.5 font-r text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
-                      >
-                        {tab.name}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-
-              <View className="flex-row items-center justify-between px-4 py-2.5">
+              <View className="flex-row items-center justify-between gap-2 p-2.5">
                 <View className="w-[64%]">
-                  <Text className="ml-1.5 font-b text-xl">
+                  <Text className="font-b text-xl">
                     {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial}.`}`}
                   </Text>
-                  <Text className="ml-1.5 font-b text-xl">
+
+                  <Text className="font-b text-xl">
                     Subtotal:{" "}
                     {formatNumber(
-                      type === "Custom"
+                      violationType === "Custom"
                         ? customViolationHandlers.getTotal()
                         : getTotal(
                             wageOrders,
-                            type,
-                            establishment.size,
                             violationType,
+                            establishment.size,
+                            periods,
                           ),
                     )}
                   </Text>
                 </View>
+
                 <View className="w-[34%]">
                   <AddPeriodModal
                     form={form}
@@ -306,13 +281,56 @@ const ViolationsPage = () => {
                 </View>
               </View>
 
+              <View className="gap-2 border-b border-b-[#333] bg-primary p-2.5">
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View className="flex-row gap-1">
+                    {getTabs(establishment.size).map((tab) => (
+                      <TouchableOpacity
+                        key={tab.name}
+                        onPress={() =>
+                          setViolationType(tab.name as ViolationKey)
+                        }
+                      >
+                        <Text
+                          className={`${violationType === tab.name ? "text-white" : ""}`}
+                        >
+                          {tab.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+
+                <View className="flex-row gap-2">
+                  <TouchableOpacity
+                    onPress={() => setPaymentType("Underpayment")}
+                  >
+                    <Text
+                      className={`${paymentType === "Underpayment" ? "text-white" : ""}`}
+                    >
+                      Underpayment
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => setPaymentType("Non-payment")}
+                  >
+                    <Text
+                      className={`${paymentType === "Non-payment" ? "text-white" : ""}`}
+                    >
+                      Non-payment
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
               <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                className="h-[73%] px-4"
+                className="mt-6 h-[73%] px-4"
               >
                 <ScrollView>
                   <View className="gap-7">
-                    {type === "Custom" ? (
+                    {violationType === "Custom" ? (
                       <>
                         {customViolationType.periods.map((_, index) => (
                           <CustomViolationForm
@@ -354,10 +372,10 @@ const ViolationsPage = () => {
                       </>
                     ) : (
                       <>
-                        {violationType.periods.map((_, index) => (
+                        {periods.map((_, index) => (
                           <Form
                             key={index}
-                            type={type}
+                            type={violationType}
                             index={index}
                             wageOrders={wageOrders}
                             holidays={holidays}
@@ -372,20 +390,6 @@ const ViolationsPage = () => {
                             onClearPeriod={violationHandlers.handleClearPeriod}
                           />
                         ))}
-
-                        <View className="mx-10 rounded-[0.625rem] bg-white p-2.5">
-                          <Label name="Received" color="#333" />
-
-                          <TextInput
-                            className="rounded-md border border-black px-2.5 font-r"
-                            keyboardType="numeric"
-                            placeholder="Enter pay received"
-                            value={violationType.received}
-                            onChangeText={(value) =>
-                              violationHandlers.handleReceivedChange(value)
-                            }
-                          />
-                        </View>
                       </>
                     )}
                   </View>
