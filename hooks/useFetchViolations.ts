@@ -4,10 +4,12 @@ import {
   Employee,
   Establishment,
   Violation,
-  ViolationKey,
-  ViolationType,
+  ViolationValues,
 } from "@/types/globals";
-import { getInitialViolationTypes, toastVisibilityTime } from "@/utils/globals";
+import {
+  getInitialViolationValues,
+  toastVisibilityTime,
+} from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect } from "react";
 import SessionStorage from "react-native-session-storage";
@@ -21,9 +23,9 @@ const useFetchViolations = (db: Db) => {
     undefined,
   );
   const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
-  const [violationTypes, setViolationTypes] = useImmer<
-    Record<ViolationKey, ViolationType>
-  >(getInitialViolationTypes());
+  const [violationValues, setViolationValues] = useImmer<ViolationValues>(
+    getInitialViolationValues(),
+  );
 
   const handleFetch = useCallback(async () => {
     try {
@@ -38,9 +40,9 @@ const useFetchViolations = (db: Db) => {
 
         if (employee.violations.length > 0) {
           violations = [{ ...violation, values: violation.values as string }];
-          setViolationTypes(JSON.parse(violation.values as string));
+          setViolationValues(JSON.parse(violation.values as string));
         } else {
-          setViolationTypes(getInitialViolationTypes(employee.rate));
+          setViolationValues(getInitialViolationValues(employee.rate));
         }
 
         setEmployee({ ...employee, violations: violations });
@@ -55,13 +57,13 @@ const useFetchViolations = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, [employee_id, setEstablishment, setEmployee, setViolationTypes]);
+  }, [employee_id, setEstablishment, setEmployee, setViolationValues]);
 
   useEffect(() => {
     handleFetch();
   }, [handleFetch]);
 
-  return { establishment, employee, violationTypes, setViolationTypes };
+  return { establishment, employee, violationValues, setViolationValues };
 };
 
 export default useFetchViolations;

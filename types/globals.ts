@@ -66,7 +66,7 @@ export type ViolationValues = {
   "Rest Day": { Underpayment: Period[]; "Non-payment": Period[] };
   "Holiday Pay": { Underpayment: Period[]; "Non-payment": Period[] };
   "13th Month Pay": { Underpayment: Period[]; "Non-payment": Period[] };
-  Custom: Period[];
+  Custom: CustomPeriod[];
 };
 
 export type CustomViolation = {

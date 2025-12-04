@@ -14,6 +14,7 @@ import { period as schema, Period as Values } from "@/schemas/globals";
 import {
   CustomPeriod,
   CustomViolationType,
+  PaymentKey,
   Period,
   ViolationKey,
   ViolationValues,
@@ -58,23 +59,23 @@ const ViolationsPage = () => {
 
   const [violationType, setViolationType] =
     useImmer<ViolationKey>("Basic Wage");
-  const [paymentType, setPaymentType] = useImmer("Underpayment");
+  const [paymentType, setPaymentType] = useImmer<PaymentKey>("Underpayment");
   const [isAddPeriodModalVisible, setIsAddPeriodModalVisible] = useImmer(false);
 
   const { wageOrders } = useFetchWageOrders(db);
   const { holidays } = useFetchHolidays(db);
 
-  const { establishment, employee, violationTypes, setViolationTypes } =
+  const { establishment, employee, violationValues, setViolationValues } =
     useFetchViolations(db);
   const { customViolationType, setCustomViolationType } =
     useFetchCustomViolations(db);
 
-  const periods = violationTypes[violationType][paymentType];
+  const violationTypeValues: Period[] = violationValues[violationType];
 
   const violationHandlers = useViolationHandlers(
     violationType,
     employee,
-    setViolationTypes,
+    setViolationValues,
   );
   const customViolationHandlers = useCustomViolationHandlers(
     wageOrders || [],
@@ -166,8 +167,8 @@ const ViolationsPage = () => {
         draft.periods.push(...(periodsFormat as CustomPeriod[]));
       });
     } else {
-      setViolationTypes((draft) => {
-        draft[violationType].periods.push(...(periodsFormat as Period[]));
+      setViolationValues((draft) => {
+        draft[violationType][paymentType].push(...(periodsFormat as Period[]));
       });
     }
   };
@@ -215,7 +216,7 @@ const ViolationsPage = () => {
 
       const handleBackPress = () => {
         router.push("/employees");
-        saveViolations(violationTypes, customViolationType);
+        saveViolations(violationValues, customViolationType);
         return true;
       };
 
@@ -223,7 +224,7 @@ const ViolationsPage = () => {
         "change",
         (nextAppState) => {
           nextAppState === "background" &&
-            saveViolations(violationTypes, customViolationType);
+            saveViolations(violationValues, customViolationType);
         },
       );
 
@@ -236,7 +237,7 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [db, router, employee_id, violationTypes, customViolationType]),
+    }, [db, router, employee_id, violationValues, customViolationType]),
   );
 
   return (
@@ -245,7 +246,7 @@ const ViolationsPage = () => {
         holidays &&
         establishment &&
         employee &&
-        violationTypes && (
+        violationValues && (
           <>
             <SafeAreaView className="flex-1 bg-primary">
               <NavBar />
@@ -265,7 +266,7 @@ const ViolationsPage = () => {
                             wageOrders,
                             violationType,
                             establishment.size,
-                            periods,
+                            violationValues[violationType][paymentType],
                           ),
                     )}
                   </Text>
@@ -372,24 +373,29 @@ const ViolationsPage = () => {
                       </>
                     ) : (
                       <>
-                        {periods.map((_, index) => (
-                          <Form
-                            key={index}
-                            type={violationType}
-                            index={index}
-                            wageOrders={wageOrders}
-                            holidays={holidays}
-                            establishment={establishment}
-                            employee={employee}
-                            violationTypes={violationTypes}
-                            onChange={violationHandlers.handleChange}
-                            onAddPeriod={violationHandlers.handleAddPeriod}
-                            onRemovePeriod={
-                              violationHandlers.handleRemovePeriod
-                            }
-                            onClearPeriod={violationHandlers.handleClearPeriod}
-                          />
-                        ))}
+                        {violationTypeValues[paymentType as PaymentKey].map(
+                          (_, index) => (
+                            <Form
+                              key={index}
+                              violationType={violationType}
+                              paymentType={paymentType}
+                              index={index}
+                              wageOrders={wageOrders}
+                              holidays={holidays}
+                              establishment={establishment}
+                              employee={employee}
+                              violationTypes={violationTypes}
+                              onChange={violationHandlers.handleChange}
+                              onAddPeriod={violationHandlers.handleAddPeriod}
+                              onRemovePeriod={
+                                violationHandlers.handleRemovePeriod
+                              }
+                              onClearPeriod={
+                                violationHandlers.handleClearPeriod
+                              }
+                            />
+                          ),
+                        )}
                       </>
                     )}
                   </View>

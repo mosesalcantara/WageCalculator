@@ -1,5 +1,10 @@
 import * as schema from "@/db/schema";
-import { Period, ViolationKey, WageOrder } from "@/types/globals";
+import {
+  Period,
+  ViolationKey,
+  ViolationValues,
+  WageOrder,
+} from "@/types/globals";
 import { differenceInDays, format, parseISO, subDays } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -356,15 +361,14 @@ export const getTotal = (
   wageOrders: WageOrder[],
   type: ViolationKey,
   size: string,
-  violationType: { periods: Period[]; received: string },
+  periods: Period[],
 ) => {
   let result = 0;
 
-  violationType.periods.forEach((period) => {
+  periods.forEach((period) => {
     result += calculate(wageOrders, type, size, period);
+    result -= Number(period.received);
   });
-
-  if (violationType.received) result -= Number(violationType.received);
 
   return result;
 };
@@ -377,36 +381,37 @@ export const getCustomPeriodFormat = (rate?: number) => {
   return { ...customPeriodFormat, rate: rate ? `${rate}` : "" };
 };
 
-export const getInitialViolationTypes = (rate?: number) => {
-  const values = {
+export const getInitialViolationValues = (rate?: number) => {
+  const values: ViolationValues = {
     "Basic Wage": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
     "Overtime Pay": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
     "Night Shift Differential": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
     "Special Day": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
     "Rest Day": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
     "Holiday Pay": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
     "13th Month Pay": {
-      Underpayment: getPeriodFormat(rate),
-      "Non-payment": getPeriodFormat(rate),
+      Underpayment: [getPeriodFormat(rate)],
+      "Non-payment": [getPeriodFormat(rate)],
     },
+    Custom: [getCustomPeriodFormat(rate)],
   };
 
   return values;
