@@ -17,6 +17,8 @@ const ExportPage = () => {
   const { wageOrders } = useFetchWageOrders(db);
   const { establishment } = useFetchEstablishmentViolations(db);
 
+  console.log(establishment);
+
   const previewHTML = establishment
     ? generateHTML(wageOrders || [], establishment, true)
     : "";

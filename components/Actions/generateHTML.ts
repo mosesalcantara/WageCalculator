@@ -1,9 +1,10 @@
 import {
   Employee,
   Establishment,
+  PaymentType,
   Period,
-  ViolationKey,
   ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -76,15 +77,25 @@ const generateHTML = (
     let html = "";
 
     if (employee.violations && employee.violations.length > 0) {
-      const violations: Record<ViolationKey, ViolationType> = JSON.parse(
+      const violationValues: ViolationValues = JSON.parse(
         employee.violations[0].values as string,
       );
 
       let valid = 0;
-      Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKey;
-        violations[type].periods.forEach((period) => {
-          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
+      Object.keys(violationValues).forEach((violationKey) => {
+        const violationType = violationKey as ViolationType;
+        Object.keys(violationType).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
         });
       });
 
@@ -120,7 +131,7 @@ const generateHTML = (
       const violations = JSON.parse(employee.violations[0].values as string);
 
       let total = 0;
-      Object.keys(violations).forEach((key) => {
+      Object.keys(violations).forEach((violationKey) => {
         const type = key as ViolationKey;
         const violationType = violations[type];
         total += getTotal(wageOrders, type, establishment.size, violationType);

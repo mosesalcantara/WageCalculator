@@ -292,9 +292,10 @@ const ViolationsPage = () => {
                     {getTabs(establishment.size).map((tab) => (
                       <TouchableOpacity
                         key={tab.name}
-                        onPress={() =>
-                          setViolationType(tab.name as ViolationType)
-                        }
+                        onPress={() => {
+                          setViolationType(tab.name as ViolationType);
+                          setPaymentType("Underpayment");
+                        }}
                       >
                         <Text
                           className={`${violationType === tab.name ? "text-white" : ""}`}

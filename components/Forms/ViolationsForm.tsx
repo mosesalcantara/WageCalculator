@@ -328,7 +328,7 @@ const ViolationsForm = ({
             )}
 
             {paymentType === "Underpayment" && (
-              <View className="w-[49%]">
+              <View>
                 <Label name="Received" color="#333" />
 
                 <TextInput

@@ -206,6 +206,8 @@ export const violationTypesArray = [
   "13th Month Pay",
 ];
 
+export const paymentTypesArray = ["Underpayment", "Non-payment"];
+
 export const periodFormat = {
   start_date: "",
   end_date: "",
