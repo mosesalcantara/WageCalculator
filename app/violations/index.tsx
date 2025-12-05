@@ -71,9 +71,6 @@ const ViolationsPage = () => {
   const { customViolationType, setCustomViolationType } =
     useFetchCustomViolations(db);
 
-  const violationPeriods: Period[] =
-    violationValues[violationType][paymentType];
-
   const violationHandlers = useViolationHandlers(
     violationType,
     paymentType,
@@ -87,7 +84,7 @@ const ViolationsPage = () => {
     setCustomViolationType,
   );
 
-  const receivedTotal = violationPeriods.reduce(
+  const receivedTotal = violationValues[violationType][paymentType].reduce(
     (acc, period) => acc + parseNumber(period.received),
     0,
   );
@@ -398,25 +395,29 @@ const ViolationsPage = () => {
                       </>
                     ) : (
                       <>
-                        {violationPeriods.map((_, index) => (
-                          <Form
-                            key={index}
-                            violationType={violationType}
-                            paymentType={paymentType}
-                            index={index}
-                            wageOrders={wageOrders}
-                            holidays={holidays}
-                            establishment={establishment}
-                            employee={employee}
-                            violationValues={violationValues}
-                            onChange={violationHandlers.handleChange}
-                            onAddPeriod={violationHandlers.handleAddPeriod}
-                            onRemovePeriod={
-                              violationHandlers.handleRemovePeriod
-                            }
-                            onClearPeriod={violationHandlers.handleClearPeriod}
-                          />
-                        ))}
+                        {violationValues[violationType][paymentType].map(
+                          (_, index) => (
+                            <Form
+                              key={index}
+                              violationType={violationType}
+                              paymentType={paymentType}
+                              index={index}
+                              wageOrders={wageOrders}
+                              holidays={holidays}
+                              establishment={establishment}
+                              employee={employee}
+                              violationValues={violationValues}
+                              onChange={violationHandlers.handleChange}
+                              onAddPeriod={violationHandlers.handleAddPeriod}
+                              onRemovePeriod={
+                                violationHandlers.handleRemovePeriod
+                              }
+                              onClearPeriod={
+                                violationHandlers.handleClearPeriod
+                              }
+                            />
+                          ),
+                        )}
                       </>
                     )}
                   </View>
