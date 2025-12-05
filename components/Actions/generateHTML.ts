@@ -84,8 +84,9 @@ const generateHTML = (
       let valid = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        Object.keys(violationType).forEach((paymentKey) => {
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
           const paymentType = paymentKey as PaymentType;
+
           violationValues[violationType][paymentType].forEach((period) => {
             if (
               validate(
@@ -128,33 +129,46 @@ const generateHTML = (
     let html = "";
 
     if (employee.violations && employee.violations.length > 0) {
-      const violations = JSON.parse(employee.violations[0].values as string);
+      const violationValues: ViolationValues = JSON.parse(
+        employee.violations[0].values as string,
+      );
 
       let total = 0;
-      Object.keys(violations).forEach((violationKey) => {
-        const type = key as ViolationKey;
-        const violationType = violations[type];
-        total += getTotal(wageOrders, type, establishment.size, violationType);
+      Object.keys(violationValues).forEach((violationKey) => {
+        const violationType = violationKey as ViolationType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
 
-        let valid = 0;
-        violationType.periods.forEach((period: Period) => {
-          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
-        });
+          total += getTotal(
+            wageOrders,
+            establishment.size,
+            violationType,
+            paymentType,
+            violationValues[violationType][paymentType],
+          );
 
-        if (valid > 0) {
-          html += `
+          let valid = 0;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
+
+          if (valid > 0) {
+            html += `
                     <p class="bold underline top-space">
-                      ${
-                        !violationType.received ||
-                        violationType.received === "0"
-                          ? "Non-payment"
-                          : "Underpayment"
-                      } of ${getViolationKeyword(type)}
+                      ${paymentType} of ${getViolationKeyword(violationType)}
                     </p>
-                  
-                    ${renderViolationType(type, violations[type])}
+
+                    ${renderViolationType(violationType, paymentType, violationValues[violationType][paymentType])}
                   `;
-        }
+          }
+        });
       });
 
       html += `
@@ -167,70 +181,86 @@ const generateHTML = (
   };
 
   const renderViolationType = (
-    type: ViolationKey,
-    violationType: { periods: Period[]; received: string },
+    violationType: ViolationType,
+    paymentType: PaymentType,
+    periods: Period[],
   ) => {
     let html = "";
     let subtotal = 0;
-    const received = parseNumber(violationType.received);
 
-    violationType.periods.forEach((period, index) => {
-      const result = calculate(wageOrders, type, establishment.size, period);
+    periods.forEach((period, index) => {
+      const result = calculate(
+        wageOrders,
+        establishment.size,
+        violationType,
+        paymentType,
+        period,
+      );
 
-      if (validate(period, isHours(type) ? [] : ["hours"])) {
+      if (
+        validate(
+          period,
+          isHours(violationType) ? ["received"] : ["received", "hours"],
+        )
+      ) {
         subtotal += result;
 
-        const value = isHours(type)
+        const value = isHours(violationType)
           ? `${parseNumber(period.days) * parseNumber(period.hours)}`
           : `${period.days}`;
 
         html += `
                   <p>Period${
-                    violationType.periods.length > 1
-                      ? ` ${numberToLetter(index)}`
-                      : ""
+                    periods.length > 1 ? ` ${numberToLetter(index)}` : ""
                   }: ${formatDate(period.start_date, "dd MMMM yyyy")} to ${formatDate(
                     period.end_date,
                     "dd MMMM yyyy",
-                  )} (${value} ${getValueKeyword(type, period.days, period.hours)})
+                  )} (${value} ${getValueKeyword(violationType, period.days, period.hours)})
                   </p>
 
-                  ${renderFormula(type, period)}
+                  ${renderFormula(violationType, paymentType, period)}
 
                   ${
-                    index + 1 !== violationType.periods.length ||
-                    (index + 1 === violationType.periods.length && received > 0)
+                    parseNumber(period.received) > 0
+                      ? `
+                      <p>
+                        Actual Pay Received: 
+                        Php${formatNumber(period.received)}
+                      </p>
+    
+                      <p>
+                        Php${formatNumber(result)} - ${formatNumber(period.received)} 
+                        <span>= Php${formatNumber(result - parseNumber(period.received))}</span>
+                      </p>
+                    `
+                      : ""
+                  }
+
+                  
+                  ${
+                    index + 1 !== periods.length || index + 1 === periods.length
                       ? `<p class="space">&nbsp</p>`
                       : ""
                   }
-                `;
+
+                  `;
       }
     });
 
-    if (received > 0) {
+    if (periods.length > 1) {
       html += `
-                <p>
-                  Actual Pay Received: 
-                  Php${formatNumber(received)}
-                </p>
-
-                <p>
-                  Php${formatNumber(subtotal)} - ${formatNumber(received)} 
-                  <span>= Php${formatNumber(subtotal - received)}</span>
-                </p>
-              `;
-    }
-
-    if (violationType.periods.length > 1) {
-      html += `
-                <p class="right">Subtotal: Php${formatNumber(subtotal - received)}</p>
+                <p class="right">Subtotal: Php${formatNumber(subtotal)}</p>
               `;
     }
 
     return html;
   };
 
-  const renderFormula = (type: ViolationKey, period: Period) => {
+  const renderFormula = (
+    violationType: ViolationType,
+    paymentType: PaymentType,
+    period: Period,
+  ) => {
     let html = "";
 
     const rate = parseNumber(period.rate);
@@ -257,18 +287,34 @@ const generateHTML = (
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(
-      calculate(wageOrders, type, establishment.size, period),
+      calculate(
+        wageOrders,
+        establishment.size,
+        violationType,
+        paymentType,
+        period,
+      ),
     );
-    const keyword = getValueKeyword(type, period.days, period.hours);
+    const keyword = getValueKeyword(violationType, period.days, period.hours);
 
-    switch (type) {
+    switch (violationType) {
       case "Basic Wage":
-        html += `
+        if (paymentType === "Underpayment") {
+          html += `
                   <p>
                     Php${formatNumber(minimumRate)} - ${formatNumber(rate)} x ${period.days} ${keyword} 
                     <span class="value">= Php${total}</span>
                   </p>
                 `;
+        } else {
+          html += `
+                  <p>
+                    Php${formattedRateToUse} x ${period.days} ${keyword} 
+                    <span class="value">= Php${total}</span>
+                  </p>
+                `;
+        }
+
         break;
       case "Overtime Pay":
         html += `

@@ -320,9 +320,9 @@ export const getMinimumRate = (
 
 export const calculate = (
   wageOrders: WageOrder[],
+  size: string,
   violationType: ViolationType,
   paymentType: PaymentType,
-  size: string,
   period: Period,
 ) => {
   let result = 0;
@@ -364,8 +364,6 @@ export const calculate = (
     else if (violationType === "Holiday Pay") result = rateToUse * days;
     else if (violationType === "13th Month Pay")
       result = (rateToUse * days) / 12;
-
-    if (period.received) result -= parseNumber(period.received);
   }
 
   return result;
@@ -373,16 +371,15 @@ export const calculate = (
 
 export const getTotal = (
   wageOrders: WageOrder[],
+  size: string,
   violationType: ViolationType,
   paymentType: PaymentType,
-  size: string,
   periods: Period[],
 ) => {
   let result = 0;
 
   periods.forEach((period) => {
-    result += calculate(wageOrders, violationType, paymentType, size, period);
-    result -= parseNumber(period.received);
+    result += calculate(wageOrders, size, violationType, paymentType, period);
   });
 
   return result;
@@ -419,7 +416,8 @@ export const getViolationKeyword = (type: ViolationType) => {
   if (type === "Basic Wage") keyword = "Wages";
   else if (type === "Special Day") keyword = "Premium Pay on Special Day";
   else if (type === "Rest Day") keyword = "Premium Pay on Rest Day";
-  else return keyword;
+
+  return keyword;
 };
 
 export const getValueKeyword = (

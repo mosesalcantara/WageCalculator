@@ -87,6 +87,11 @@ const ViolationsPage = () => {
     setCustomViolationType,
   );
 
+  const receivedTotal = violationPeriods.reduce(
+    (acc, period) => acc + parseNumber(period.received),
+    0,
+  );
+
   const tabs = [
     { name: "Basic Wage", icon: "payments" },
     { name: "Overtime Pay", icon: "access-time" },
@@ -261,15 +266,15 @@ const ViolationsPage = () => {
                   </Text>
 
                   <Text className="font-b text-xl">
-                    Subtotal:{" "}
+                    Grand Total:{" "}
                     {formatNumber(
                       violationType === "Custom"
                         ? customViolationHandlers.getTotal()
                         : getTotal(
                             wageOrders,
+                            establishment.size,
                             violationType,
                             paymentType,
-                            establishment.size,
                             violationValues[violationType][paymentType],
                           ),
                     )}
@@ -332,10 +337,25 @@ const ViolationsPage = () => {
 
               <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                className="mt-6 h-[73%] px-4"
+                className="mt-4 h-[73%] px-4"
               >
                 <ScrollView>
-                  <View className="gap-7">
+                  <Text className="font-b text-xl">
+                    Subtotal:{" "}
+                    {formatNumber(
+                      violationType === "Custom"
+                        ? customViolationHandlers.getTotal()
+                        : getTotal(
+                            wageOrders,
+                            establishment.size,
+                            violationType,
+                            paymentType,
+                            violationValues[violationType][paymentType],
+                          ) - receivedTotal,
+                    )}
+                  </Text>
+
+                  <View className="mt-4 gap-7">
                     {violationType === "Custom" ? (
                       <>
                         {customViolationType.periods.map((_, index) => (

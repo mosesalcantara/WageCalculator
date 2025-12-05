@@ -18,6 +18,7 @@ import {
   isHours,
   numberToLetter,
   parseDate,
+  parseNumber,
   validateDateRange,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -349,11 +350,11 @@ const ViolationsForm = ({
                 {formatNumber(
                   calculate(
                     wageOrders,
+                    establishment.size,
                     violationType,
                     paymentType,
-                    establishment.size,
                     period,
-                  ),
+                  ) - parseNumber(period.received),
                 )}
               </Text>
             </View>
