@@ -203,7 +203,7 @@ const generateHTML = (
           isHours(violationType) ? ["received"] : ["received", "hours"],
         )
       ) {
-        subtotal += result;
+        subtotal = subtotal + result - Number(period.received);
 
         const value = isHours(violationType)
           ? `${parseNumber(period.days) * parseNumber(period.hours)}`
