@@ -1,11 +1,18 @@
-import { Employee, Period, ViolationKey, ViolationType } from "@/types/globals";
+import {
+  Employee,
+  PaymentType,
+  Period,
+  ViolationType,
+  ViolationValues,
+} from "@/types/globals";
 import { formatDate, getPeriodFormat } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useViolationHandlers = (
-  type: ViolationKey,
+  violationType: ViolationType,
+  paymentType: PaymentType,
   employee: Employee | undefined,
-  setter: Updater<Record<ViolationKey, ViolationType>>,
+  setter: Updater<ViolationValues>,
 ) => {
   const handleChange = (
     index: number,
@@ -15,37 +22,31 @@ const useViolationHandlers = (
     if (key.endsWith("_date")) value = formatDate(value as Date);
 
     setter((draft) => {
-      draft[type].periods[index][key as keyof Period] = `${value}`;
-    });
-  };
-
-  const handleReceivedChange = (value: string) => {
-    setter((draft) => {
-      draft[type].received = value;
+      draft[violationType][paymentType][index][key as keyof Period] =
+        `${value}`;
     });
   };
 
   const handleAddPeriod = () => {
     setter((draft) => {
-      draft[type].periods.push(getPeriodFormat(employee?.rate));
+      draft[violationType][paymentType].push(getPeriodFormat(employee?.rate));
     });
   };
 
   const handleRemovePeriod = (index: number) => {
     setter((draft) => {
-      draft[type].periods.splice(index, 1);
+      draft[violationType][paymentType].splice(index, 1);
     });
   };
 
   const handleClearPeriod = (index: number) => {
     setter((draft) => {
-      draft[type].periods[index] = getPeriodFormat();
+      draft[violationType][paymentType][index] = getPeriodFormat();
     });
   };
 
   return {
     handleChange,
-    handleReceivedChange,
     handleAddPeriod,
     handleClearPeriod,
     handleRemovePeriod,

@@ -6,7 +6,7 @@ import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   holidays: Holiday[];
-  type: ViolationKey;
+  violationType: ViolationKey;
   startDate: string;
   endDate: string;
   isVisible: boolean;
@@ -15,7 +15,7 @@ type Props = {
 
 const ViewDaysModal = ({
   holidays,
-  type,
+  violationType,
   startDate,
   endDate,
   isVisible,
@@ -30,7 +30,7 @@ const ViewDaysModal = ({
     const dates = eachDayOfInterval({ start: startDate, end: endDate });
 
     dates.forEach((date) => {
-      if (type === "Special Day" || type === "Holiday Pay") {
+      if (violationType === "Special Day" || violationType === "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
         const holiday = holidays.find(
           (holiday) => formattedDate === holiday.date,
@@ -47,7 +47,7 @@ const ViewDaysModal = ({
       }
     });
 
-    return type === "Special Day" ? specialDays : regularHolidays;
+    return violationType === "Special Day" ? specialDays : regularHolidays;
   };
 
   const estimatedHolidays = getHolidays();
@@ -84,7 +84,7 @@ const ViewDaysModal = ({
             }`}
           >
             <Text className="mb-3 text-center font-b text-lg text-white">
-              {type === "Special Day"
+              {violationType === "Special Day"
                 ? "Special (Non-Working) Holidays"
                 : "Regular Holidays"}
             </Text>
@@ -111,10 +111,10 @@ const ViewDaysModal = ({
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="rounded bg-white p-4 w-full border"
+                className="w-full rounded border bg-white p-4"
                 onPress={() => onToggle(false)}
               >
-                <Text className="font-b text-center">Close</Text>
+                <Text className="text-center font-b">Close</Text>
               </TouchableOpacity>
             </View>
           </View>

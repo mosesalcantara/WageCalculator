@@ -1,7 +1,8 @@
 import * as schema from "@/db/schema";
 import {
+  PaymentType,
   Period,
-  ViolationKey,
+  ViolationType,
   ViolationValues,
   WageOrder,
 } from "@/types/globals";
@@ -195,7 +196,7 @@ export const daysArray = [
   "Sunday",
 ];
 
-export const violationKeysArray = [
+export const violationTypesArray = [
   "Basic Wage",
   "Overtime Pay",
   "Night Shift Differential",
@@ -272,7 +273,7 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
-export const isHours = (type: ViolationKey) => {
+export const isHours = (type: ViolationType) => {
   return ["Overtime Pay", "Night Shift Differential"].includes(type);
 };
 
@@ -316,22 +317,24 @@ export const getMinimumRate = (
 
 export const calculate = (
   wageOrders: WageOrder[],
-  type: ViolationKey,
+  violationType: ViolationType,
+  paymentType: PaymentType,
   size: string,
   period: Period,
 ) => {
   let result = 0;
 
   const excluded =
-    type === "Overtime Pay" || type === "Night Shift Differential"
-      ? []
-      : ["hours"];
+    violationType === "Overtime Pay" ||
+    violationType === "Night Shift Differential"
+      ? ["received"]
+      : ["received", "hours"];
 
   if (validate(period, excluded)) {
-    const days = Number(period.days);
-    const hours = Number(period.hours);
+    const days = parseNumber(period.days);
+    const hours = parseNumber(period.hours);
 
-    const rate = Number(period.rate);
+    const rate = parseNumber(period.rate);
     const minimumRate = getMinimumRate(
       wageOrders,
       size,
@@ -340,18 +343,26 @@ export const calculate = (
     );
     const rateToUse = Math.max(rate, minimumRate);
 
-    if (type === "Basic Wage") result = (rateToUse - rate) * days;
-    else if (type === "Overtime Pay") {
+    if (violationType === "Basic Wage") {
+      if (paymentType === "Underpayment") {
+        result = (rateToUse - rate) * days;
+      } else {
+        result = rateToUse * days;
+      }
+    } else if (violationType === "Overtime Pay") {
       result =
         (rateToUse / 8) *
         (period.type === "Normal Day" ? 1.25 : 1.3) *
         (days * hours);
-    } else if (type === "Night Shift Differential") {
+    } else if (violationType === "Night Shift Differential") {
       result = (rateToUse / 8) * 0.1 * (days * hours);
-    } else if (type === "Special Day") result = rateToUse * 0.3 * days;
-    else if (type === "Rest Day") result = rateToUse * 0.3 * days;
-    else if (type === "Holiday Pay") result = rateToUse * days;
-    else if (type === "13th Month Pay") result = (rateToUse * days) / 12;
+    } else if (violationType === "Special Day") result = rateToUse * 0.3 * days;
+    else if (violationType === "Rest Day") result = rateToUse * 0.3 * days;
+    else if (violationType === "Holiday Pay") result = rateToUse * days;
+    else if (violationType === "13th Month Pay")
+      result = (rateToUse * days) / 12;
+
+    if (period.received) result -= parseNumber(period.received);
   }
 
   return result;
@@ -359,14 +370,15 @@ export const calculate = (
 
 export const getTotal = (
   wageOrders: WageOrder[],
-  type: ViolationKey,
+  violationType: ViolationType,
+  paymentType: PaymentType,
   size: string,
   periods: Period[],
 ) => {
   let result = 0;
 
   periods.forEach((period) => {
-    result += calculate(wageOrders, type, size, period);
+    result += calculate(wageOrders, violationType, paymentType, size, period);
     result -= Number(period.received);
   });
 
@@ -382,37 +394,14 @@ export const getCustomPeriodFormat = (rate?: number) => {
 };
 
 export const getInitialViolationValues = (rate?: number) => {
-  const values: ViolationValues = {
-    "Basic Wage": {
+  const values = {} as ViolationValues;
+
+  violationTypesArray.forEach((violationType, index) => {
+    values[violationType as ViolationType] = {
       Underpayment: [getPeriodFormat(rate)],
       "Non-payment": [getPeriodFormat(rate)],
-    },
-    "Overtime Pay": {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    },
-    "Night Shift Differential": {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    },
-    "Special Day": {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    },
-    "Rest Day": {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    },
-    "Holiday Pay": {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    },
-    "13th Month Pay": {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    },
-    Custom: [getCustomPeriodFormat(rate)],
-  };
+    };
+  });
 
   return values;
 };
@@ -421,7 +410,7 @@ export const getInitialCustomViolationType = (rate?: number) => {
   return { periods: [getCustomPeriodFormat(rate)], received: "" };
 };
 
-export const getViolationKeyword = (type: ViolationKey) => {
+export const getViolationKeyword = (type: ViolationType) => {
   let keyword: string = type;
 
   if (type === "Basic Wage") keyword = "Wages";
@@ -431,7 +420,7 @@ export const getViolationKeyword = (type: ViolationKey) => {
 };
 
 export const getValueKeyword = (
-  type: ViolationKey,
+  type: ViolationType,
   days: string,
   hours: string,
 ) => {

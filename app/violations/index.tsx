@@ -14,9 +14,9 @@ import { period as schema, Period as Values } from "@/schemas/globals";
 import {
   CustomPeriod,
   CustomViolationType,
-  PaymentKey,
+  PaymentType,
   Period,
-  ViolationKey,
+  ViolationType,
   ViolationValues,
 } from "@/types/globals";
 import {
@@ -58,8 +58,8 @@ const ViolationsPage = () => {
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
   const [violationType, setViolationType] =
-    useImmer<ViolationKey>("Basic Wage");
-  const [paymentType, setPaymentType] = useImmer<PaymentKey>("Underpayment");
+    useImmer<ViolationType>("Basic Wage");
+  const [paymentType, setPaymentType] = useImmer<PaymentType>("Underpayment");
   const [isAddPeriodModalVisible, setIsAddPeriodModalVisible] = useImmer(false);
 
   const { wageOrders } = useFetchWageOrders(db);
@@ -70,10 +70,12 @@ const ViolationsPage = () => {
   const { customViolationType, setCustomViolationType } =
     useFetchCustomViolations(db);
 
-  const violationTypeValues: Period[] = violationValues[violationType];
+  const violationPeriods: Period[] =
+    violationValues[violationType][paymentType];
 
   const violationHandlers = useViolationHandlers(
     violationType,
+    paymentType,
     employee,
     setViolationValues,
   );
@@ -265,6 +267,7 @@ const ViolationsPage = () => {
                         : getTotal(
                             wageOrders,
                             violationType,
+                            paymentType,
                             establishment.size,
                             violationValues[violationType][paymentType],
                           ),
@@ -289,7 +292,7 @@ const ViolationsPage = () => {
                       <TouchableOpacity
                         key={tab.name}
                         onPress={() =>
-                          setViolationType(tab.name as ViolationKey)
+                          setViolationType(tab.name as ViolationType)
                         }
                       >
                         <Text
@@ -373,29 +376,25 @@ const ViolationsPage = () => {
                       </>
                     ) : (
                       <>
-                        {violationTypeValues[paymentType as PaymentKey].map(
-                          (_, index) => (
-                            <Form
-                              key={index}
-                              violationType={violationType}
-                              paymentType={paymentType}
-                              index={index}
-                              wageOrders={wageOrders}
-                              holidays={holidays}
-                              establishment={establishment}
-                              employee={employee}
-                              violationTypes={violationTypes}
-                              onChange={violationHandlers.handleChange}
-                              onAddPeriod={violationHandlers.handleAddPeriod}
-                              onRemovePeriod={
-                                violationHandlers.handleRemovePeriod
-                              }
-                              onClearPeriod={
-                                violationHandlers.handleClearPeriod
-                              }
-                            />
-                          ),
-                        )}
+                        {violationPeriods.map((_, index) => (
+                          <Form
+                            key={index}
+                            violationType={violationType}
+                            paymentType={paymentType}
+                            index={index}
+                            wageOrders={wageOrders}
+                            holidays={holidays}
+                            establishment={establishment}
+                            employee={employee}
+                            violationValues={violationValues}
+                            onChange={violationHandlers.handleChange}
+                            onAddPeriod={violationHandlers.handleAddPeriod}
+                            onRemovePeriod={
+                              violationHandlers.handleRemovePeriod
+                            }
+                            onClearPeriod={violationHandlers.handleClearPeriod}
+                          />
+                        ))}
                       </>
                     )}
                   </View>
