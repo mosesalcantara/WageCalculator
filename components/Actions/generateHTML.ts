@@ -71,6 +71,10 @@ const getStyles = (isPreview: boolean) => {
                     text-decoration: underline;
                     text-decoration-style: double;
               }
+
+              .fontSize{
+                  font-size: ${isPreview ? "2.5" : "1.25"}rem;
+              }
             </style>
           `;
 };
@@ -155,12 +159,13 @@ const generateHTML = (
       });
 
       html += `
-                <br><p class="right double-underline">Total: Php${formatNumber(total)}</p>
+                <br><p class="right double-underline">Total: Php${formatNumber(total)}</p> 
                 <p class="space">&nbsp</p>
-                <br><br><p  class="right double-underline">Grand Total: Php</p>
               `;
     }
-
+            //KAPAG BINUBURA YUNG "Total" na word, nawawala ang value ng Grand Total sa dulo
+            //DAPAT DAW KASI SA Php magsimula ang double-underline
+            //Yung pinakahuling amount daw bago may SubTotal lang daw dapat ang naka-underline
     return html;
   };
 
@@ -221,14 +226,14 @@ const generateHTML = (
 
     if (violationType.periods.length > 1) {
       html += `
-                <p class="right underline">Subtotal: Php${formatNumber(subtotal - received)}</p>
+                <p class="right">Subtotal: Php${formatNumber(subtotal - received)}</p>
               `;
     }
 
     return html;
   };
 
-  const renderFormula = (type: ViolationKey, period: Period) => {
+  const renderFormula = (type: ViolationKey, period: Period, isLastViolation: boolean) => {
     let html = "";
 
     const rate = Number(period.rate);
@@ -258,13 +263,14 @@ const generateHTML = (
       calculate(wageOrders, type, establishment.size, period),
     );
     const keyword = getValueKeyword(type, period.days, period.hours);
+    const valueClass = isLastViolation ? "value underline" : "value";
 
     switch (type) {
       case "Basic Wage":
         html += `
                   <p>
                     Php${formatNumber(minimumRate)} - ${formatNumber(rate)} x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    <span class="${valueClass}">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -272,7 +278,7 @@ const generateHTML = (
         html += `
                   <p>
                     Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${Number(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    <span class="${valueClass}">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -280,7 +286,7 @@ const generateHTML = (
         html += `
                   <p>
                     Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    <span class="${valueClass}">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -288,7 +294,7 @@ const generateHTML = (
         html += `
                   <p>
                     Php${formattedRateToUse} x 30% x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    <span class="${valueClass}">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -296,7 +302,7 @@ const generateHTML = (
         html += `
                   <p>
                     Php${formattedRateToUse} x 30% x ${period.days} ${keyword} 
-                    <span class="value right">= Php${total}</span>
+                    <span class="right underline">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -304,14 +310,14 @@ const generateHTML = (
         html += `
                   <p>
                     Php${formattedRateToUse} x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    <span class="${valueClass}">= Php${total}</span>
                   </p>
                 `;
         break;
       case "13th Month Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months <span class="right">= Php${total}</span>
+                    Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months <span class="right underline">= Php${total}</span>
                   </p>
                 `;
         break;
@@ -338,22 +344,47 @@ const generateHTML = (
                   establishment &&
                   `<h1>${establishment.name.toUpperCase()}</h1>
 
-                  <table>
-                    <tbody>
-                      ${
-                        establishment &&
-                        establishment.employees &&
-                        establishment.employees
-                          .map(
-                            (employee, index) => `
-                          ${renderEmployee(index, employee)}
-                        `,
-                          )
-                          .join("")
+              <table>
+              <tbody>
+              ${
+                establishment &&
+                establishment.employees &&
+                (() => {
+                  let grandTotalCents = 0;
+
+                  const employeesHTML = establishment.employees
+                    .map((employee, index) => {
+                      const empHTML = renderEmployee(index, employee);
+
+                      const regex = /Total: Php([\d,]+(?:\.\d{1,2})?)/g;
+                      const matches = Array.from(empHTML.matchAll(regex));
+
+                      if (matches.length > 0) {
+                        const totalStr = matches[matches.length - 1][1].replace(/,/g, "");
+                        const cents = Math.round(Number(totalStr) * 100);
+                        if (!isNaN(cents)) grandTotalCents += cents;
                       }
-                    </tbody>
-                  </table>
-                  `
+                      return empHTML;
+                    })
+                    .join("");
+
+                  const grandTotal = grandTotalCents / 100;
+
+                  return `
+                    ${employeesHTML}
+                    <tr>
+                      <td>
+                        <p class="right top-space fontSize">
+                        Grand Total:
+                        <span class="double-underline"> Php${formatNumber(grandTotal)}</span>
+                      </p>
+                      </td>
+                    </tr>
+                  `;
+                })()
+              }
+              </tbody>
+              </table>              `
                 }
               </body>
             </html>

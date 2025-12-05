@@ -29,7 +29,7 @@ const exportXLSX = async (
   establishment: Establishment,
 ) => {
   const filename = `${establishment.name}.xlsx`;
-  const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
+  const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Subtotal", "Total", "Grand Total"]];
 
   const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
@@ -97,7 +97,7 @@ const exportXLSX = async (
           "dd MMMM yyyy",
         )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`;
 
-        const { formulaText, totalText } = renderFormula(type, period);
+        const { formulaText, subTotalText, totalText, grandTotalText } = renderFormula(type, period);
 
         rows.push([
           nameText,
@@ -105,7 +105,9 @@ const exportXLSX = async (
           typeText,
           periodText,
           formulaText,
+          subTotalText,
           totalText,
+          grandTotalText,
         ]);
       }
     });
@@ -123,9 +125,11 @@ const exportXLSX = async (
     );
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-    const total = formatNumber(
+    const subTotal = formatNumber(
       calculate(wageOrders, type, establishment.size, period),
     );
+    const total = "123,456.00";
+    const grandTotal = "456,000.000";
     const keyword = getValueKeyword(type, period.days, period.hours);
 
     switch (type) {
@@ -155,8 +159,10 @@ const exportXLSX = async (
     }
 
     const formulaText = `${text}`;
+    const subTotalText = `Php${subTotal}`;
     const totalText = `Php${total}`;
-    return { formulaText, totalText };
+    const grandTotalText = `Php${grandTotal}`;
+    return { formulaText, subTotalText, totalText, grandTotalText };
   };
 
   const getMerges = (index: number, rows: string[][]) => {
@@ -249,6 +255,8 @@ const exportXLSX = async (
       { wch: 60 },
       { wch: 40 },
       { wch: 18 },
+      { wch: 20 },
+      { wch: 20 },
     ];
     worksheet["!merges"] = getMerges(0, rows);
 
