@@ -15,6 +15,7 @@ import {
   getViolationKeyword,
   isHours,
   numberToLetter,
+  parseNumber,
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
@@ -79,7 +80,7 @@ const exportXLSX = async (
     }`;
 
     const typeText = `${
-      !violationType.received || Number(violationType.received) === 0
+      !violationType.received || parseNumber(violationType.received) === 0
         ? "Non-payment"
         : "Underpayment"
     } of ${getViolationKeyword(type)}`;
@@ -87,7 +88,7 @@ const exportXLSX = async (
     violationType.periods.forEach((period, index) => {
       if (validate(period, isHours(type) ? [] : ["hours"])) {
         const value = isHours(type)
-          ? `${Number(period.days) * Number(period.hours)}`
+          ? `${parseNumber(period.days) * parseNumber(period.hours)}`
           : `${period.days}`;
 
         const rateText = `Php${formatNumber(period.rate)}/day`;
@@ -114,7 +115,7 @@ const exportXLSX = async (
   const renderFormula = (type: ViolationKey, period: Period) => {
     let text = "";
 
-    const rate = Number(period.rate);
+    const rate = parseNumber(period.rate);
     const minimumRate = getMinimumRate(
       wageOrders,
       establishment.size,
@@ -133,7 +134,7 @@ const exportXLSX = async (
         text = `Php${formatNumber(minimumRate)} - Php${formatNumber(period.rate)} x ${period.days} ${keyword}`;
         break;
       case "Overtime Pay":
-        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${Number(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
         break;
       case "Night Shift Differential":
         text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword}`;

@@ -2,7 +2,12 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db, WageOrder } from "@/types/globals";
-import { formatDate, parseDate, toastVisibilityTime } from "@/utils/globals";
+import {
+  formatDate,
+  parseDate,
+  parseNumber,
+  toastVisibilityTime,
+} from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -40,8 +45,8 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
       ...values,
       name: values.name.trim(),
       date: formatDate(values.date),
-      less_than_ten: Number(values.less_than_ten),
-      ten_or_more: Number(values.ten_or_more),
+      less_than_ten: parseNumber(values.less_than_ten),
+      ten_or_more: parseNumber(values.ten_or_more),
     };
 
     try {
@@ -221,17 +226,17 @@ const UpdateWageOrderModal = ({ db, wageOrder, refetch }: Props) => {
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mt-2.5 rounded bg-white px-2.5 py-3 border"
+                className="mt-2.5 rounded border bg-white px-2.5 py-3"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b text-lg text-center">Cancel</Text>
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="mt-2.5 rounded bg-white px-2.5 py-3 border"
+                className="mt-2.5 rounded border bg-white px-2.5 py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b text-lg text-center">Update</Text>
+                <Text className="text-center font-b text-lg">Update</Text>
               </TouchableOpacity>
             </View>
           </View>

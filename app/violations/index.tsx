@@ -26,6 +26,7 @@ import {
   getDb,
   getPeriods,
   getTotal,
+  parseNumber,
   periodFormat,
   toastVisibilityTime,
 } from "@/utils/globals";
@@ -184,20 +185,20 @@ const ViolationsPage = () => {
         try {
           await db
             .delete(violations)
-            .where(eq(violations.employee_id, Number(employee_id)));
+            .where(eq(violations.employee_id, parseNumber(employee_id)));
 
           await db
             .delete(customViolations)
-            .where(eq(customViolations.employee_id, Number(employee_id)));
+            .where(eq(customViolations.employee_id, parseNumber(employee_id)));
 
           await db.insert(violations).values({
             values: JSON.stringify(violationTypes),
-            employee_id: Number(employee_id),
+            employee_id: parseNumber(employee_id),
           });
 
           await db.insert(customViolations).values({
             values: JSON.stringify(customViolationType),
-            employee_id: Number(employee_id),
+            employee_id: parseNumber(employee_id),
           });
 
           Toast.show({

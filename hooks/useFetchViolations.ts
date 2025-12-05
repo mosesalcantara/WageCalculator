@@ -8,6 +8,7 @@ import {
 } from "@/types/globals";
 import {
   getInitialViolationValues,
+  parseNumber,
   toastVisibilityTime,
 } from "@/utils/globals";
 import { eq } from "drizzle-orm";
@@ -30,7 +31,7 @@ const useFetchViolations = (db: Db) => {
   const handleFetch = useCallback(async () => {
     try {
       const employee = await db.query.employees.findFirst({
-        where: eq(employees.id, Number(employee_id)),
+        where: eq(employees.id, parseNumber(employee_id as string)),
         with: { establishment: true, violations: true },
       });
 

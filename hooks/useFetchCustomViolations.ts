@@ -2,6 +2,7 @@ import { employees } from "@/db/schema";
 import { CustomViolationType, Db } from "@/types/globals";
 import {
   getInitialCustomViolationType,
+  parseNumber,
   toastVisibilityTime,
 } from "@/utils/globals";
 import { eq } from "drizzle-orm";
@@ -19,7 +20,7 @@ const useFetchViolations = (db: Db) => {
   const handleFetch = useCallback(async () => {
     try {
       const data = await db.query.employees.findFirst({
-        where: eq(employees.id, Number(parent_id)),
+        where: eq(employees.id, parseNumber(parent_id as string)),
         with: { customViolations: true },
       });
 

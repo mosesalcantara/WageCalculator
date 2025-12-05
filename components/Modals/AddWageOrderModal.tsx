@@ -2,7 +2,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { wageOrders } from "@/db/schema";
 import { wageOrder as schema, WageOrder as Values } from "@/schemas/globals";
 import { Db } from "@/types/globals";
-import { formatDate, toastVisibilityTime } from "@/utils/globals";
+import { formatDate, parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -40,8 +40,8 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
       ...values,
       name: values.name.trim(),
       date: formatDate(values.date),
-      less_than_ten: Number(values.less_than_ten),
-      ten_or_more: Number(values.ten_or_more),
+      less_than_ten: parseNumber(values.less_than_ten),
+      ten_or_more: parseNumber(values.ten_or_more),
     };
 
     try {
@@ -216,14 +216,14 @@ const AddWageOrderModal = ({ db, name, refetch }: Props) => {
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
+                className="rounded border bg-white py-3"
                 onPress={() => setIsVisible(false)}
               >
                 <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
+                className="rounded border bg-white py-3"
                 onPress={handleSubmit(onSubmit)}
               >
                 <Text className="text-center font-b text-lg">Save</Text>

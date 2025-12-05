@@ -230,14 +230,15 @@ export const periodsFormat = { periods: [periodFormat] };
 
 export const getDb = (sqlDb: SQLiteDatabase) => drizzle(sqlDb, { schema });
 
-export const parseNumber = (value: string) => (value ? Number(value) : 0);
+export const parseNumber = (value: Date | string | number) =>
+  value ? Number(value) : 0;
 
 export const parseDate = (date: Date | string) => {
   return typeof date === "string" ? parseISO(date) : date;
 };
 
 export const formatNumber = (number: string | number) => {
-  return number.toLocaleString("en-US", {
+  return parseNumber(number).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -379,7 +380,7 @@ export const getTotal = (
 
   periods.forEach((period) => {
     result += calculate(wageOrders, violationType, paymentType, size, period);
-    result -= Number(period.received);
+    result -= parseNumber(period.received);
   });
 
   return result;
@@ -434,7 +435,7 @@ export const getValueKeyword = (
   else if (type === "Special Day") keyword = "special day";
   else if (type === "Rest Day") keyword = "rest day";
 
-  if (Number(value) > 1) keyword += "s";
+  if (parseNumber(value) !== 1) keyword += "s";
 
   return keyword;
 };

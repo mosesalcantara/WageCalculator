@@ -94,7 +94,7 @@ const useCustomViolationHandlers = (
       customViolationType.periods.forEach((period) => {
         result += calculate(establishment.size, period).total;
         if (customViolationType.received) {
-          result -= Number(customViolationType.received);
+          result -= parseNumber(customViolationType.received);
         }
       });
     }

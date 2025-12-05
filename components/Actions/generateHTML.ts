@@ -16,6 +16,7 @@ import {
   getViolationKeyword,
   isHours,
   numberToLetter,
+  parseNumber,
   validate,
 } from "@/utils/globals";
 
@@ -160,7 +161,7 @@ const generateHTML = (
   ) => {
     let html = "";
     let subtotal = 0;
-    const received = Number(violationType.received) || 0;
+    const received = parseNumber(violationType.received);
 
     violationType.periods.forEach((period, index) => {
       const result = calculate(wageOrders, type, establishment.size, period);
@@ -169,7 +170,7 @@ const generateHTML = (
         subtotal += result;
 
         const value = isHours(type)
-          ? `${Number(period.days) * Number(period.hours)}`
+          ? `${parseNumber(period.days) * parseNumber(period.hours)}`
           : `${period.days}`;
 
         html += `
@@ -221,7 +222,7 @@ const generateHTML = (
   const renderFormula = (type: ViolationKey, period: Period) => {
     let html = "";
 
-    const rate = Number(period.rate);
+    const rate = parseNumber(period.rate);
     const minimumRate = getMinimumRate(
       wageOrders,
       establishment.size,
@@ -261,7 +262,7 @@ const generateHTML = (
       case "Overtime Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${Number(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
+                    Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
                     <span class="value">= Php${total}</span>
                   </p>
                 `;

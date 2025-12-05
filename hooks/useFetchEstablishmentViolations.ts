@@ -1,6 +1,6 @@
 import { establishments } from "@/db/schema";
 import { Db, Establishment, Violation } from "@/types/globals";
-import { toastVisibilityTime } from "@/utils/globals";
+import { parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect } from "react";
 import SessionStorage from "react-native-session-storage";
@@ -17,7 +17,7 @@ const useFetchEstablishmentViolations = (db: Db) => {
       const id = SessionStorage.getItem("establishment_id");
 
       const establishment = await db.query.establishments.findFirst({
-        where: eq(establishments.id, Number(id)),
+        where: eq(establishments.id, parseNumber(id as string)),
         with: { employees: { with: { violations: true } } },
       });
 
