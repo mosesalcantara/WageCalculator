@@ -12,7 +12,7 @@ import {
   formatDate,
   formatNumber,
   getMinimumRate,
-  getTotal,
+  getSubtotal,
   getValueKeyword,
   getViolationKeyword,
   isHours,
@@ -43,20 +43,22 @@ const exportDOCX = async (
       let valid = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-          const paymentType = paymentKey as PaymentType;
+        if (violationType !== "Custom") {
+          Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+            const paymentType = paymentKey as PaymentType;
 
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
+            violationValues[violationType][paymentType].forEach((period) => {
+              if (
+                validate(
+                  period,
+                  isHours(violationType) ? ["received"] : ["received", "hours"],
+                )
+              ) {
+                ++valid;
+              }
+            });
           });
-        });
+        }
       });
 
       if (valid > 0) {
@@ -101,64 +103,66 @@ const exportDOCX = async (
         employee.violations[0].values as string,
       );
 
-      let total = 0;
+      let grandTotal = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-          const paymentType = paymentKey as PaymentType;
+        if (violationType !== "Custom") {
+          Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+            const paymentType = paymentKey as PaymentType;
 
-          total += getTotal(
-            wageOrders,
-            establishment.size,
-            violationType,
-            paymentType,
-            violationValues[violationType][paymentType],
-          );
-
-          let valid = 0;
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-
-          if (valid > 0) {
-            children.push(
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: `${
-                      paymentType
-                    } of ${getViolationKeyword(violationType)}`,
-                    font: { name: "Arial" },
-                    size: 28,
-                    bold: true,
-                    underline: {},
-                    break: 1,
-                  }),
-                ],
-              }),
-            );
-
-            renderViolationType(
+            grandTotal += getSubtotal(
+              wageOrders,
+              establishment.size,
               violationType,
               paymentType,
-              violationValues[violationType][paymentType],
+              violationValues[violationType][paymentType] as Period[],
             );
-          }
-        });
+
+            let valid = 0;
+            violationValues[violationType][paymentType].forEach((period) => {
+              if (
+                validate(
+                  period,
+                  isHours(violationType) ? ["received"] : ["received", "hours"],
+                )
+              ) {
+                ++valid;
+              }
+            });
+
+            if (valid > 0) {
+              children.push(
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text: `${
+                        paymentType
+                      } of ${getViolationKeyword(violationType)}`,
+                      font: { name: "Arial" },
+                      size: 28,
+                      bold: true,
+                      underline: {},
+                      break: 1,
+                    }),
+                  ],
+                }),
+              );
+
+              renderViolationType(
+                violationType,
+                paymentType,
+                violationValues[violationType][paymentType] as Period[],
+              );
+            }
+          });
+        }
       });
 
       children.push(
         new Paragraph({
           children: [
             new TextRun({
-              text: `Total: Php${formatNumber(total)}`,
+              text: `Grand Total: Php${formatNumber(grandTotal)}`,
               font: { name: "Arial" },
               size: 28,
               bold: true,

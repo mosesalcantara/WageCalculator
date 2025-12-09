@@ -92,18 +92,13 @@ const useCustomViolationHandlers = (
     };
   };
 
-  const getTotal = () => {
+  const getSubtotal = () => {
     let result = 0;
+
     if (violationType === "Custom") {
       if (establishment) {
-        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-          const type = paymentKey as PaymentType;
-          violationValues[violationType][type].forEach((period) => {
-            result =
-              result +
-              calculate(establishment.size, period).total -
-              parseNumber(period.received);
-          });
+        violationValues[violationType][paymentType].forEach((period) => {
+          result += calculate(establishment?.size, period).total;
         });
       }
     }
@@ -148,7 +143,7 @@ const useCustomViolationHandlers = (
 
   return {
     calculate,
-    getTotal,
+    getSubtotal,
     handleChange,
     handleAddPeriod,
     handleClearPeriod,

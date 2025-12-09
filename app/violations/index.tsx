@@ -21,7 +21,7 @@ import {
   formatNumber,
   getDb,
   getPeriods,
-  getTotal,
+  getSubtotal,
   parseNumber,
   periodFormat,
   toastVisibilityTime,
@@ -64,8 +64,6 @@ const ViolationsPage = () => {
   const { establishment, employee, violationValues, setViolationValues } =
     useFetchViolations(db);
 
-  console.log(violationValues);
-
   const violationHandlers = useViolationHandlers(
     violationType,
     paymentType,
@@ -79,11 +77,6 @@ const ViolationsPage = () => {
     establishment,
     violationValues,
     setViolationValues,
-  );
-
-  const receivedTotal = violationValues[violationType][paymentType].reduce(
-    (acc, period) => acc + parseNumber(period.received),
-    0,
   );
 
   const tabs = [
@@ -242,8 +235,8 @@ const ViolationsPage = () => {
                     Grand Total:{" "}
                     {formatNumber(
                       violationType === "Custom"
-                        ? customViolationHandlers.getTotal()
-                        : getTotal(
+                        ? customViolationHandlers.getSubtotal()
+                        : getSubtotal(
                             wageOrders,
                             establishment.size,
                             violationType,
@@ -319,8 +312,8 @@ const ViolationsPage = () => {
                     Subtotal:{" "}
                     {formatNumber(
                       violationType === "Custom"
-                        ? customViolationHandlers.getTotal()
-                        : getTotal(
+                        ? customViolationHandlers.getSubtotal()
+                        : getSubtotal(
                             wageOrders,
                             establishment.size,
                             violationType,
@@ -328,7 +321,7 @@ const ViolationsPage = () => {
                             violationValues[violationType][
                               paymentType
                             ] as Period[],
-                          ) - receivedTotal,
+                          ),
                     )}
                   </Text>
 

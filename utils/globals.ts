@@ -372,7 +372,7 @@ export const calculate = (
   return result;
 };
 
-export const getTotal = (
+export const getSubtotal = (
   wageOrders: WageOrder[],
   size: string,
   violationType: ViolationType,
@@ -382,7 +382,10 @@ export const getTotal = (
   let result = 0;
 
   periods.forEach((period) => {
-    result += calculate(wageOrders, size, violationType, paymentType, period);
+    result =
+      result +
+      calculate(wageOrders, size, violationType, paymentType, period) -
+      Number(period.received);
   });
 
   return result;
