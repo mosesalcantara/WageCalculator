@@ -19,18 +19,24 @@ const useViolationHandlers = (
     key: keyof Period | string,
     value: string | number | Date,
   ) => {
-    if (key.endsWith("_date")) value = formatDate(value as Date);
+    if (violationType !== "Custom") {
+      if (key.endsWith("_date")) value = formatDate(value as Date);
 
-    setter((draft) => {
-      draft[violationType][paymentType][index][key as keyof Period] =
-        `${value}`;
-    });
+      setter((draft) => {
+        draft[violationType][paymentType][index][key as keyof Period] =
+          `${value}`;
+      });
+    }
   };
 
   const handleAddPeriod = () => {
-    setter((draft) => {
-      draft[violationType][paymentType].push(getPeriodFormat(employee?.rate));
-    });
+    if (violationType !== "Custom") {
+      setter((draft) => {
+        draft[violationType][paymentType].push(
+          getPeriodFormat(violationType, employee?.rate) as Period,
+        );
+      });
+    }
   };
 
   const handleRemovePeriod = (index: number) => {
@@ -41,7 +47,7 @@ const useViolationHandlers = (
 
   const handleClearPeriod = (index: number) => {
     setter((draft) => {
-      draft[violationType][paymentType][index] = getPeriodFormat();
+      draft[violationType][paymentType][index] = getPeriodFormat(violationType);
     });
   };
 

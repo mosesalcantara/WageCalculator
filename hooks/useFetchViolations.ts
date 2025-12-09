@@ -24,6 +24,7 @@ const useFetchViolations = (db: Db) => {
     undefined,
   );
   const [employee, setEmployee] = useImmer<Employee | undefined>(undefined);
+
   const [violationValues, setViolationValues] = useImmer<ViolationValues>(
     getInitialViolationValues(),
   );

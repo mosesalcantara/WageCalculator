@@ -1,7 +1,9 @@
 import {
   CustomPeriod,
-  CustomViolationType,
   Establishment,
+  PaymentType,
+  ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -13,10 +15,12 @@ import {
 import { Updater } from "use-immer";
 
 const useCustomViolationHandlers = (
+  violationType: ViolationType,
+  paymentType: PaymentType,
   wageOrders: WageOrder[],
   establishment: Establishment | undefined,
-  customViolationType: CustomViolationType,
-  setter: Updater<CustomViolationType>,
+  violationValues: ViolationValues,
+  setter: Updater<ViolationValues>,
 ) => {
   const calculate = (size: string, period: CustomPeriod) => {
     const values = {
@@ -90,14 +94,20 @@ const useCustomViolationHandlers = (
 
   const getTotal = () => {
     let result = 0;
-    if (establishment) {
-      customViolationType.periods.forEach((period) => {
-        result += calculate(establishment.size, period).total;
-        if (customViolationType.received) {
-          result -= parseNumber(customViolationType.received);
-        }
-      });
+    if (violationType === "Custom") {
+      if (establishment) {
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const type = paymentKey as PaymentType;
+          violationValues[violationType][type].forEach((period) => {
+            result =
+              result +
+              calculate(establishment.size, period).total -
+              parseNumber(period.received);
+          });
+        });
+      }
     }
+
     return result;
   };
 
@@ -106,34 +116,33 @@ const useCustomViolationHandlers = (
     key: keyof CustomPeriod | string,
     value: Date | string | number,
   ) => {
-    if (key.endsWith("_date")) value = formatDate(value as Date);
+    if (violationType === "Custom") {
+      if (key.endsWith("_date")) value = formatDate(value as Date);
 
-    setter((draft) => {
-      draft.periods[index][key as keyof CustomPeriod] = `${value}`;
-    });
-  };
-
-  const handleReceivedChange = (value: string) => {
-    setter((draft) => {
-      draft.received = value;
-    });
+      setter((draft) => {
+        draft[violationType][paymentType][index][key as keyof CustomPeriod] =
+          `${value}`;
+      });
+    }
   };
 
   const handleAddPeriod = () => {
-    setter((draft) => {
-      draft.periods.push(customPeriodFormat);
-    });
+    if (violationType === "Custom") {
+      setter((draft) => {
+        draft[violationType][paymentType].push(customPeriodFormat);
+      });
+    }
   };
 
   const handleRemovePeriod = (index: number) => {
     setter((draft) => {
-      draft.periods.splice(index, 1);
+      draft[violationType][paymentType].splice(index, 1);
     });
   };
 
   const handleClearPeriod = (index: number) => {
     setter((draft) => {
-      draft.periods[index] = customPeriodFormat;
+      draft[violationType][paymentType][index] = customPeriodFormat;
     });
   };
 
@@ -141,7 +150,6 @@ const useCustomViolationHandlers = (
     calculate,
     getTotal,
     handleChange,
-    handleReceivedChange,
     handleAddPeriod,
     handleClearPeriod,
     handleRemovePeriod,

@@ -144,7 +144,7 @@ const generateHTML = (
             establishment.size,
             violationType,
             paymentType,
-            violationValues[violationType][paymentType],
+            violationValues[violationType][paymentType] as Period[],
           );
 
           let valid = 0;
@@ -165,7 +165,7 @@ const generateHTML = (
                       ${paymentType} of ${getViolationKeyword(violationType)}
                     </p>
 
-                    ${renderViolationType(violationType, paymentType, violationValues[violationType][paymentType])}
+                    ${renderViolationType(violationType, paymentType, violationValues[violationType][paymentType] as Period[])}
                   `;
           }
         });

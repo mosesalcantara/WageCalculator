@@ -6,6 +6,7 @@ import {
   Establishment,
   Holiday,
   PaymentType,
+  Period,
   ViolationType,
   ViolationValues,
   WageOrder,
@@ -60,8 +61,8 @@ const ViolationsForm = ({
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
   const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useImmer(false);
 
-  const periods = violationValues[violationType][paymentType];
-  const period = violationValues[violationType][paymentType][index];
+  const periods = violationValues[violationType][paymentType] as Period[];
+  const period = violationValues[violationType][paymentType][index] as Period;
 
   const minimumRate = getMinimumRate(
     wageOrders,

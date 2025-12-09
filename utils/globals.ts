@@ -1,5 +1,6 @@
 import * as schema from "@/db/schema";
 import {
+  CustomPeriod,
   PaymentType,
   Period,
   ViolationType,
@@ -204,6 +205,7 @@ export const violationTypesArray = [
   "Rest Day",
   "Holiday Pay",
   "13th Month Pay",
+  "Custom",
 ];
 
 export const paymentTypesArray = ["Underpayment", "Non-payment"];
@@ -226,6 +228,7 @@ export const customPeriodFormat = {
   days: "",
   nightShiftHours: "",
   overtimeHours: "",
+  received: "",
 };
 
 export const periodsFormat = { periods: [periodFormat] };
@@ -385,29 +388,35 @@ export const getTotal = (
   return result;
 };
 
-export const getPeriodFormat = (rate?: number) => {
-  return { ...periodFormat, rate: rate ? `${rate}` : "" };
-};
-
-export const getCustomPeriodFormat = (rate?: number) => {
-  return { ...customPeriodFormat, rate: rate ? `${rate}` : "" };
+export const getPeriodFormat = (
+  violationType: ViolationType,
+  rate?: number,
+) => {
+  return {
+    ...(violationType === "Custom" ? customPeriodFormat : periodFormat),
+    rate: rate ? `${rate}` : "",
+  };
 };
 
 export const getInitialViolationValues = (rate?: number) => {
   const values = {} as ViolationValues;
 
-  violationTypesArray.forEach((violationType, index) => {
-    values[violationType as ViolationType] = {
-      Underpayment: [getPeriodFormat(rate)],
-      "Non-payment": [getPeriodFormat(rate)],
-    };
+  violationTypesArray.forEach((violationKey) => {
+    const violationType = violationKey as ViolationType;
+    if (violationType === "Custom") {
+      values[violationType] = {
+        Underpayment: [getPeriodFormat(violationType, rate)] as CustomPeriod[],
+        "Non-payment": [getPeriodFormat(violationType, rate)] as CustomPeriod[],
+      };
+    } else {
+      values[violationType] = {
+        Underpayment: [getPeriodFormat(violationType, rate)] as Period[],
+        "Non-payment": [getPeriodFormat(violationType, rate)] as Period[],
+      };
+    }
   });
 
   return values;
-};
-
-export const getInitialCustomViolationType = (rate?: number) => {
-  return { periods: [getCustomPeriodFormat(rate)], received: "" };
 };
 
 export const getViolationKeyword = (type: ViolationType) => {

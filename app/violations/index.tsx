@@ -1,19 +1,15 @@
 import CustomViolationForm from "@/components/Forms/CustomViolationsForm";
 import Form from "@/components/Forms/ViolationsForm";
-import Label from "@/components/Label";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
-import { customViolations, violations } from "@/db/schema";
+import { violations } from "@/db/schema";
 import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
-import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
 import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
 import { period as schema, Period as Values } from "@/schemas/globals";
 import {
-  CustomPeriod,
-  CustomViolationType,
   PaymentType,
   Period,
   ViolationType,
@@ -43,7 +39,6 @@ import {
   Platform,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -68,8 +63,8 @@ const ViolationsPage = () => {
 
   const { establishment, employee, violationValues, setViolationValues } =
     useFetchViolations(db);
-  const { customViolationType, setCustomViolationType } =
-    useFetchCustomViolations(db);
+
+  console.log(violationValues);
 
   const violationHandlers = useViolationHandlers(
     violationType,
@@ -78,10 +73,12 @@ const ViolationsPage = () => {
     setViolationValues,
   );
   const customViolationHandlers = useCustomViolationHandlers(
+    violationType,
+    paymentType,
     wageOrders || [],
     establishment,
-    customViolationType,
-    setCustomViolationType,
+    violationValues,
+    setViolationValues,
   );
 
   const receivedTotal = violationValues[violationType][paymentType].reduce(
@@ -99,16 +96,6 @@ const ViolationsPage = () => {
     { name: "13th Month Pay", icon: "card-giftcard" },
     { name: "Custom", icon: "build" },
   ];
-
-  type IconNames =
-    | "payments"
-    | "access-time"
-    | "nights-stay"
-    | "star"
-    | "coffee"
-    | "event-available"
-    | "card-giftcard"
-    | "build";
 
   const getTabs = (size: string) => {
     let excluded: string[] = [];
@@ -167,39 +154,29 @@ const ViolationsPage = () => {
       };
     });
 
-    if (violationType === "Custom") {
-      setCustomViolationType((draft) => {
-        draft.periods.push(...(periodsFormat as CustomPeriod[]));
-      });
-    } else {
-      setViolationValues((draft) => {
-        draft[violationType][paymentType].push(...(periodsFormat as Period[]));
-      });
-    }
+    console.log(periodsFormat);
+
+    // if (violationType === "Custom") {
+    //   setCustomViolationValues((draft) => {
+    //     draft.push(...(periodsFormat as CustomPeriod[]));
+    //   });
+    // } else {
+    //   setViolationValues((draft) => {
+    //     draft[violationType][paymentType].push(periodsFormat);
+    //   });
+    // }
   };
 
   useFocusEffect(
     useCallback(() => {
-      const saveViolations = async (
-        violationTypes: ViolationValues,
-        customViolationType: CustomViolationType,
-      ) => {
+      const saveViolations = async (violationValues: ViolationValues) => {
         try {
           await db
             .delete(violations)
             .where(eq(violations.employee_id, parseNumber(employee_id)));
 
-          await db
-            .delete(customViolations)
-            .where(eq(customViolations.employee_id, parseNumber(employee_id)));
-
           await db.insert(violations).values({
-            values: JSON.stringify(violationTypes),
-            employee_id: parseNumber(employee_id),
-          });
-
-          await db.insert(customViolations).values({
-            values: JSON.stringify(customViolationType),
+            values: JSON.stringify(violationValues),
             employee_id: parseNumber(employee_id),
           });
 
@@ -221,15 +198,14 @@ const ViolationsPage = () => {
 
       const handleBackPress = () => {
         router.push("/employees");
-        saveViolations(violationValues, customViolationType);
+        saveViolations(violationValues);
         return true;
       };
 
       const appStateHandler = AppState.addEventListener(
         "change",
         (nextAppState) => {
-          nextAppState === "background" &&
-            saveViolations(violationValues, customViolationType);
+          nextAppState === "background" && saveViolations(violationValues);
         },
       );
 
@@ -242,7 +218,7 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [db, router, employee_id, violationValues, customViolationType]),
+    }, [db, router, employee_id, violationValues]),
   );
 
   return (
@@ -272,7 +248,9 @@ const ViolationsPage = () => {
                             establishment.size,
                             violationType,
                             paymentType,
-                            violationValues[violationType][paymentType],
+                            violationValues[violationType][
+                              paymentType
+                            ] as Period[],
                           ),
                     )}
                   </Text>
@@ -347,7 +325,9 @@ const ViolationsPage = () => {
                             establishment.size,
                             violationType,
                             paymentType,
-                            violationValues[violationType][paymentType],
+                            violationValues[violationType][
+                              paymentType
+                            ] as Period[],
                           ) - receivedTotal,
                     )}
                   </Text>
@@ -355,43 +335,31 @@ const ViolationsPage = () => {
                   <View className="mt-4 gap-7">
                     {violationType === "Custom" ? (
                       <>
-                        {customViolationType.periods.map((_, index) => (
-                          <CustomViolationForm
-                            key={index}
-                            index={index}
-                            wageOrders={wageOrders}
-                            establishment={establishment}
-                            employee={employee}
-                            customViolationType={customViolationType}
-                            calculate={customViolationHandlers.calculate}
-                            onChange={customViolationHandlers.handleChange}
-                            onAddPeriod={
-                              customViolationHandlers.handleAddPeriod
-                            }
-                            onRemovePeriod={
-                              customViolationHandlers.handleRemovePeriod
-                            }
-                            onClearPeriod={
-                              customViolationHandlers.handleClearPeriod
-                            }
-                          />
-                        ))}
-
-                        <View className="mx-10 rounded-[0.625rem] bg-white p-2.5">
-                          <Label name="Received" color="#333" />
-
-                          <TextInput
-                            className="rounded-md border border-black px-2.5 font-r"
-                            keyboardType="numeric"
-                            placeholder="Enter pay received"
-                            value={customViolationType.received}
-                            onChangeText={(value) =>
-                              customViolationHandlers.handleReceivedChange(
-                                value,
-                              )
-                            }
-                          />
-                        </View>
+                        {violationValues[violationType][paymentType].map(
+                          (_, index) => (
+                            <CustomViolationForm
+                              key={index}
+                              violationType={violationType}
+                              paymentType={paymentType}
+                              index={index}
+                              wageOrders={wageOrders}
+                              establishment={establishment}
+                              employee={employee}
+                              violationValues={violationValues}
+                              calculate={customViolationHandlers.calculate}
+                              onChange={customViolationHandlers.handleChange}
+                              onAddPeriod={
+                                customViolationHandlers.handleAddPeriod
+                              }
+                              onRemovePeriod={
+                                customViolationHandlers.handleRemovePeriod
+                              }
+                              onClearPeriod={
+                                customViolationHandlers.handleClearPeriod
+                              }
+                            />
+                          ),
+                        )}
                       </>
                     ) : (
                       <>
