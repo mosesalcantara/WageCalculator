@@ -14,6 +14,7 @@ import {
   getMinimumRate,
   numberToLetter,
   parseDate,
+  parseNumber,
   typesOptions,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -30,6 +31,7 @@ type Props = {
   employee: Employee;
   violationValues: ViolationValues;
   calculate: (
+    wageOrders: WageOrder[],
     size: string,
     period: CustomPeriod,
   ) => {
@@ -84,7 +86,7 @@ const CustomViolationsForm = ({
     overtimeMultiplier,
     overtimeHours,
     total,
-  } = calculate(establishment.size, period);
+  } = calculate(wageOrders, establishment.size, period);
 
   const minimumRate = getMinimumRate(
     wageOrders,
@@ -257,7 +259,7 @@ const CustomViolationsForm = ({
               <Text className="font-b text-base text-[#27ae60]">
                 Total:{" "}
                 <Text className="mt-1 font-b text-base text-[#27ae60]">
-                  ₱{formatNumber(total)}
+                  ₱{formatNumber(total - parseNumber(period.received))}
                 </Text>
               </Text>
             </View>

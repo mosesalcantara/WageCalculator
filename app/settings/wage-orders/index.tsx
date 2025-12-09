@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import WageOrdersTable from "@/components/Tables/WageOrdersTable";
 import useDeleteWageOrder from "@/hooks/useDeleteWageOrder";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
-import { getDb } from "@/utils/globals";
+import { getDb, parseNumber } from "@/utils/globals";
 import { useSQLiteContext } from "expo-sqlite";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,7 +17,7 @@ const WageOrdersPage = () => {
   let name = "";
   if (wageOrders) {
     const wageOrder = wageOrders[wageOrders.length - 1];
-    let number = Number(wageOrder.name.split("-")[2]);
+    let number = parseNumber(wageOrder.name.split("-")[2]);
     name = `RB-MIMAROPA-${++number}`;
   }
 

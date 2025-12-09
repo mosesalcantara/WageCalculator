@@ -9,17 +9,15 @@ import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
 import { period as schema, Period as Values } from "@/schemas/globals";
+import { PaymentType, ViolationType, ViolationValues } from "@/types/globals";
 import {
-  PaymentType,
-  Period,
-  ViolationType,
-  ViolationValues,
-} from "@/types/globals";
-import {
+  customCalculate,
+  customGetSubtotal,
   customPeriodFormat,
   formatDate,
   formatNumber,
   getDb,
+  getGrandTotal,
   getPeriods,
   getSubtotal,
   parseNumber,
@@ -234,17 +232,11 @@ const ViolationsPage = () => {
                   <Text className="font-b text-xl">
                     Grand Total:{" "}
                     {formatNumber(
-                      violationType === "Custom"
-                        ? customViolationHandlers.getSubtotal()
-                        : getSubtotal(
-                            wageOrders,
-                            establishment.size,
-                            violationType,
-                            paymentType,
-                            violationValues[violationType][
-                              paymentType
-                            ] as Period[],
-                          ),
+                      getGrandTotal(
+                        wageOrders,
+                        establishment.size,
+                        violationValues,
+                      ),
                     )}
                   </Text>
                 </View>
@@ -312,15 +304,17 @@ const ViolationsPage = () => {
                     Subtotal:{" "}
                     {formatNumber(
                       violationType === "Custom"
-                        ? customViolationHandlers.getSubtotal()
+                        ? customGetSubtotal(
+                            wageOrders,
+                            establishment.size,
+                            violationValues[violationType][paymentType],
+                          )
                         : getSubtotal(
                             wageOrders,
                             establishment.size,
                             violationType,
                             paymentType,
-                            violationValues[violationType][
-                              paymentType
-                            ] as Period[],
+                            violationValues[violationType][paymentType],
                           ),
                     )}
                   </Text>
@@ -339,7 +333,7 @@ const ViolationsPage = () => {
                               establishment={establishment}
                               employee={employee}
                               violationValues={violationValues}
-                              calculate={customViolationHandlers.calculate}
+                              calculate={customCalculate}
                               onChange={customViolationHandlers.handleChange}
                               onAddPeriod={
                                 customViolationHandlers.handleAddPeriod

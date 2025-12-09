@@ -6,12 +6,7 @@ import {
   ViolationValues,
   WageOrder,
 } from "@/types/globals";
-import {
-  customPeriodFormat,
-  formatDate,
-  getMinimumRate,
-  parseNumber,
-} from "@/utils/globals";
+import { customPeriodFormat, formatDate } from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useCustomViolationHandlers = (
@@ -22,90 +17,6 @@ const useCustomViolationHandlers = (
   violationValues: ViolationValues,
   setter: Updater<ViolationValues>,
 ) => {
-  const calculate = (size: string, period: CustomPeriod) => {
-    const values = {
-      ...period,
-      rate: parseNumber(period.rate),
-      days: parseNumber(period.days),
-      nightShiftHours: parseNumber(period.nightShiftHours),
-      overtimeHours: parseNumber(period.overtimeHours),
-    };
-
-    const minimumRate = getMinimumRate(
-      wageOrders,
-      size,
-      period.start_date,
-      period.end_date,
-    );
-    const rateToUse = Math.max(values.rate, minimumRate);
-
-    const type = period.type.toLowerCase();
-    let nightShiftMultiplier = 0;
-    if (type.includes("night shift")) nightShiftMultiplier = 1.1;
-
-    let overtimeMultiplier = 0;
-    if (type.includes("ot")) {
-      overtimeMultiplier = 1.3;
-      if (type.includes("ordinary day")) overtimeMultiplier = 1.25;
-    }
-
-    let daysMultiplier = 0;
-    if (type.includes("ordinary day")) daysMultiplier = 1;
-    else if (
-      type.includes("rest day") &&
-      type.includes("special (non-working) day")
-    ) {
-      daysMultiplier = 1.5;
-      if (type.includes("double")) daysMultiplier = 1.95;
-    } else if (type.includes("holiday")) {
-      daysMultiplier = 2;
-      if (type.includes("double")) {
-        daysMultiplier = 3;
-        if (type.includes("rest day")) daysMultiplier = 3.9;
-      } else {
-        if (type.includes("rest day")) daysMultiplier = 2.6;
-      }
-    } else if (
-      type.includes("rest day") ||
-      type.includes("special (non-working) day")
-    ) {
-      daysMultiplier = 1.3;
-      if (type.includes("double")) daysMultiplier = 1.5;
-    }
-
-    let total = 0;
-    total =
-      rateToUse * daysMultiplier * values.days +
-      (rateToUse / 8) * nightShiftMultiplier * values.nightShiftHours +
-      (rateToUse / 8) * overtimeMultiplier * values.overtimeHours;
-
-    return {
-      rate: values.rate,
-      rateToUse,
-      daysMultiplier,
-      days: values.days,
-      nightShiftMultiplier,
-      nightShiftHours: values.nightShiftHours,
-      overtimeMultiplier,
-      overtimeHours: values.overtimeHours,
-      total,
-    };
-  };
-
-  const getSubtotal = () => {
-    let result = 0;
-
-    if (violationType === "Custom") {
-      if (establishment) {
-        violationValues[violationType][paymentType].forEach((period) => {
-          result += calculate(establishment?.size, period).total;
-        });
-      }
-    }
-
-    return result;
-  };
-
   const handleChange = (
     index: number,
     key: keyof CustomPeriod | string,
@@ -142,8 +53,6 @@ const useCustomViolationHandlers = (
   };
 
   return {
-    calculate,
-    getSubtotal,
     handleChange,
     handleAddPeriod,
     handleClearPeriod,
