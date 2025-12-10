@@ -286,8 +286,8 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
-export const isHours = (type: ViolationType) => {
-  return ["Overtime Pay", "Night Shift Differential"].includes(type);
+export const isHours = (violationType: ViolationType) => {
+  return ["Overtime Pay", "Night Shift Differential"].includes(violationType);
 };
 
 export const getMinimumRate = (
@@ -555,30 +555,32 @@ export const getInitialViolationValues = (rate?: number) => {
   return values;
 };
 
-export const getViolationKeyword = (type: ViolationType) => {
-  let keyword: string = type;
+export const getViolationKeyword = (violationType: ViolationType) => {
+  let keyword: string = violationType;
 
-  if (type === "Basic Wage") keyword = "Wages";
-  else if (type === "Special Day") keyword = "Premium Pay on Special Day";
-  else if (type === "Rest Day") keyword = "Premium Pay on Rest Day";
+  if (violationType === "Basic Wage") keyword = "Wages";
+  else if (violationType === "Special Day")
+    keyword = "Premium Pay on Special Day";
+  else if (violationType === "Rest Day") keyword = "Premium Pay on Rest Day";
 
   return keyword;
 };
 
 export const getValueKeyword = (
-  type: ViolationType,
+  violationType: ViolationType,
   days: string,
   hours: string,
 ) => {
-  const value = isHours(type) ? hours : days;
+  const value = isHours(violationType) ? hours : days;
   let keyword = "";
 
-  if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(type)) {
+  if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(violationType)) {
     keyword = "day";
-  } else if (type === "Overtime Pay") keyword = "OT hour";
-  else if (type === "Night Shift Differential") keyword = "night-shift hour";
-  else if (type === "Special Day") keyword = "special day";
-  else if (type === "Rest Day") keyword = "rest day";
+  } else if (violationType === "Overtime Pay") keyword = "OT hour";
+  else if (violationType === "Night Shift Differential")
+    keyword = "night-shift hour";
+  else if (violationType === "Special Day") keyword = "special day";
+  else if (violationType === "Rest Day") keyword = "rest day";
 
   if (parseNumber(value) !== 1) keyword += "s";
 

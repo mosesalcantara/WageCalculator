@@ -145,7 +145,7 @@ const exportDOCX = async (
               }),
             );
 
-            renderViolationType(
+            renderType(
               violationType,
               paymentType,
               violationValues[violationType][paymentType] as Period[],
@@ -170,7 +170,7 @@ const exportDOCX = async (
     }
   };
 
-  const renderViolationType = (
+  const renderType = (
     violationType: ViolationType,
     paymentType: PaymentType,
     periods: Period[],

@@ -165,7 +165,7 @@ const generateHTML = (
                       ${paymentType} of ${getViolationKeyword(violationType)}
                     </p>
 
-                    ${renderViolationType(violationType, paymentType, violationValues[violationType][paymentType] as Period[])}
+                    ${renderType(violationType, paymentType, violationValues[violationType][paymentType] as Period[])}
                   `;
           }
         });
@@ -180,7 +180,7 @@ const generateHTML = (
     return html;
   };
 
-  const renderViolationType = (
+  const renderType = (
     violationType: ViolationType,
     paymentType: PaymentType,
     periods: Period[],

@@ -1,9 +1,10 @@
 import {
   Employee,
   Establishment,
+  PaymentType,
   Period,
-  ViolationKey,
   ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -34,15 +35,25 @@ const exportXLSX = async (
 
   const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations: Record<ViolationKey, ViolationType> = JSON.parse(
+      const violationValues: ViolationValues = JSON.parse(
         employee.violations[0].values as string,
       );
 
       let valid = 0;
-      Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKey;
-        violations[type].periods.forEach((period) => {
-          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
+      Object.keys(violationValues).forEach((violationKey) => {
+        const violationType = violationKey as ViolationType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
         });
       });
 
@@ -52,26 +63,44 @@ const exportXLSX = async (
 
   const renderViolations = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations = JSON.parse(employee.violations[0].values as string);
+      const violationValues: ViolationValues = JSON.parse(
+        employee.violations[0].values as string,
+      );
 
-      Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKey;
-        const violationType = violations[type];
+      Object.keys(violationValues).forEach((violationKey) => {
+        const violationType = violationKey as ViolationType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
 
-        let valid = 0;
-        violationType.periods.forEach((period: Period) => {
-          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
+          let valid = 0;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
+
+          if (valid > 0)
+            renderType(
+              employee,
+              violationType,
+              paymentType,
+              violationValues[violationType][paymentType] as Period[],
+            );
         });
-
-        if (valid > 0) renderViolationType(employee, type, violations[type]);
       });
     }
   };
 
-  const renderViolationType = (
+  const renderType = (
     employee: Employee,
-    type: ViolationKey,
-    violationType: { periods: Period[]; received: string },
+    violationType: ViolationType,
+    paymentType: PaymentType,
+    periods: Period[],
   ) => {
     const nameText = `${employee.last_name.toUpperCase()}, ${employee.first_name.toUpperCase()}${
       ["na", "n/a"].includes(employee.middle_initial.toLowerCase())
@@ -79,26 +108,31 @@ const exportXLSX = async (
         : ` ${employee.middle_initial.toUpperCase()}.`
     }`;
 
-    const typeText = `${
-      !violationType.received || parseNumber(violationType.received) === 0
-        ? "Non-payment"
-        : "Underpayment"
-    } of ${getViolationKeyword(type)}`;
+    const typeText = `${paymentType} of ${getViolationKeyword(violationType)}`;
 
-    violationType.periods.forEach((period, index) => {
-      if (validate(period, isHours(type) ? [] : ["hours"])) {
-        const value = isHours(type)
+    periods.forEach((period, index) => {
+      if (
+        validate(
+          period,
+          isHours(violationType) ? ["received"] : ["received", "hours"],
+        )
+      ) {
+        const value = isHours(violationType)
           ? `${parseNumber(period.days) * parseNumber(period.hours)}`
           : `${period.days}`;
 
         const rateText = `Php${formatNumber(period.rate)}/day`;
 
-        const periodText = `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
+        const periodText = `Period${periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
           period.start_date,
           "dd MMMM yyyy",
-        )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`;
+        )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(violationType, period.days, period.hours)})`;
 
-        const { formulaText, totalText } = renderFormula(type, period);
+        const { formulaText, totalText } = renderFormula(
+          violationType,
+          paymentType,
+          period,
+        );
 
         rows.push([
           nameText,
@@ -112,7 +146,11 @@ const exportXLSX = async (
     });
   };
 
-  const renderFormula = (type: ViolationKey, period: Period) => {
+  const renderFormula = (
+    violationType: ViolationType,
+    paymentType: PaymentType,
+    period: Period,
+  ) => {
     let text = "";
 
     const rate = parseNumber(period.rate);
@@ -125,13 +163,23 @@ const exportXLSX = async (
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(
-      calculate(wageOrders, type, establishment.size, period),
+      calculate(
+        wageOrders,
+        establishment.size,
+        violationType,
+        paymentType,
+        period,
+      ) - parseNumber(period.received),
     );
-    const keyword = getValueKeyword(type, period.days, period.hours);
+    const keyword = getValueKeyword(violationType, period.days, period.hours);
 
-    switch (type) {
+    switch (violationType) {
       case "Basic Wage":
-        text = `Php${formatNumber(minimumRate)} - Php${formatNumber(period.rate)} x ${period.days} ${keyword}`;
+        if (paymentType === "Underpayment") {
+          text = `Php${formatNumber(minimumRate)} - Php${formatNumber(period.rate)} x ${period.days} ${keyword}`;
+        } else {
+          text = `Php${formattedRateToUse} x ${period.days} ${keyword}`;
+        }
         break;
       case "Overtime Pay":
         text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
@@ -153,6 +201,10 @@ const exportXLSX = async (
         break;
       default:
         text = "";
+    }
+
+    if (parseNumber(period.received) > 0) {
+      text += ` - Php${formatNumber(period.received)}`;
     }
 
     const formulaText = `${text}`;
