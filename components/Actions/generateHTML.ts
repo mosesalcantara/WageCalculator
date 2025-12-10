@@ -270,15 +270,11 @@ const generateHTML = (
     return html;
   };
 
-<<<<<<< HEAD
-  const renderFormula = (type: ViolationKey, period: Period, isLastViolation: boolean) => {
-=======
   const renderFormula = (
     violationType: ViolationType,
     paymentType: PaymentType,
     period: Period,
   ) => {
->>>>>>> development
     let html = "";
 
     const rate = parseNumber(period.rate);

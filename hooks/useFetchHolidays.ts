@@ -29,11 +29,7 @@ const useFetchHolidays = (db: Db) => {
       }
 
       const sortedHolidays = [...holidays].sort((a, b) => {
-<<<<<<< HEAD
-        return Number(parseDate(a.date)) - Number(parseDate(b.date));
-=======
         return parseNumber(parseDate(a.date)) - parseNumber(parseDate(b.date));
->>>>>>> development
       });
 
       setHolidays(sortedHolidays);

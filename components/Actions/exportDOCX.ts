@@ -95,63 +95,6 @@ const exportDOCX = async (
     }
   };
 
-<<<<<<< HEAD
-  let grandTotalCents = 0;
-
-const renderViolations = (employee: Employee) => {
-  if (employee.violations && employee.violations.length > 0) {
-    const violations: Record<ViolationKey, ViolationType> = JSON.parse(
-      employee.violations[0].values as string,
-    );
-
-    let employeeTotal = 0;
-
-    Object.keys(violations).forEach((key) => {
-      const type = key as ViolationKey;
-      const violationType = violations[type];
-
-      const totalForType = getTotal(wageOrders, type, establishment.size, violationType);
-      employeeTotal += totalForType;
-
-      let valid = 0;
-      violationType.periods.forEach((period: Period) => {
-        if (validate(period, isHours(type) ? [] : ["hours"])) valid += 1;
-      });
-
-      if (valid > 0) {
-        children.push(
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: `${
-                  !violationType.received || violationType.received === "0"
-                    ? "Non-payment"
-                    : "Underpayment"
-                } of ${getViolationKeyword(type)}`,
-                font: { name: "Arial" },
-                size: 28,
-                bold: true,
-                underline: {},
-                break: 1,
-              }),
-            ],
-          }),
-        );
-
-        renderViolationType(type, violationType);
-      }
-    });
-
-    //Total for Employee
-    children.push(
-      new Paragraph({
-      children: [
-        new TextRun({
-        text: `Total: `,
-        font: { name: "Arial" },
-        size: 28,
-        bold: true,
-=======
   const renderViolations = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
       const violationValues: ViolationValues = JSON.parse(
@@ -222,7 +165,6 @@ const renderViolations = (employee: Employee) => {
             }),
           ],
           alignment: "right",
->>>>>>> development
         }),
         new TextRun({
         text: `Php${formatNumber(employeeTotal)}`,
@@ -317,47 +259,6 @@ const renderViolations = (employee: Employee) => {
 
     if (periods.length > 1) {
       children.push(
-<<<<<<< HEAD
-      new Paragraph({
-        children: [
-        new TextRun({
-          text: `Actual Pay Received: Php${formatNumber(received)}`,
-          font: { name: "Arial" },
-          size: 28,
-        }),
-        ],
-      }),
-      );
-
-      //ACTUAL PAY RECEIVED SUBTRACTION
-      children.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: `Php${formatNumber(subtotal)} - ${formatNumber(received)} = Php${formatNumber(subtotal - received)}`,
-              font: { name: "Arial" },
-              size: 28,
-            }),
-          ],
-        }),
-      );
-    }
-
-    if (violationType.periods.length > 1) {
-      children.push(
-        new Paragraph({
-          children: [
-        new TextRun({
-          text: `Subtotal: `,
-          font: { name: "Arial" },
-          size: 28,
-        }),
-        new TextRun({
-          text: `Php${formatNumber(subtotal - received)}`,
-          font: { name: "Arial" },
-          size: 28,
-        }),
-=======
         new Paragraph({
           children: [
             new TextRun({
@@ -365,7 +266,6 @@ const renderViolations = (employee: Employee) => {
               font: { name: "Arial" },
               size: 28,
             }),
->>>>>>> development
           ],
           alignment: "right",
         }),
@@ -453,15 +353,6 @@ const renderViolations = (employee: Employee) => {
         text = "";
     }
 
-<<<<<<< HEAD
-children.push(
-  new Paragraph({
-    children: [
-      new TextRun({
-        text: `${text} =`,
-        font: { name: "Arial" },
-        size: 28,
-=======
     children.push(
       new Paragraph({
         children: [
@@ -471,7 +362,6 @@ children.push(
             size: 28,
           }),
         ],
->>>>>>> development
       }),
     ],
     spacing: { after: 0 },

@@ -31,7 +31,18 @@ const exportXLSX = async (
   establishment: Establishment,
 ) => {
   const filename = `${establishment.name}.xlsx`;
-  const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Subtotal", "Total", "Grand Total"]];
+  const rows = [
+    [
+      "Name",
+      "Rate",
+      "Violation",
+      "Period",
+      "Formula",
+      "Subtotal",
+      "Total",
+      "Grand Total",
+    ],
+  ];
 
   const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
@@ -128,15 +139,11 @@ const exportXLSX = async (
           "dd MMMM yyyy",
         )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(violationType, period.days, period.hours)})`;
 
-<<<<<<< HEAD
-        const { formulaText, subTotalText, totalText, grandTotalText } = renderFormula(type, period);
-=======
         const { formulaText, totalText } = renderFormula(
           violationType,
           paymentType,
           period,
         );
->>>>>>> development
 
         rows.push([
           nameText,
@@ -168,14 +175,6 @@ const exportXLSX = async (
     );
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
-<<<<<<< HEAD
-    const subTotal = formatNumber(
-      calculate(wageOrders, type, establishment.size, period),
-    );
-    const total = "123,456.00";
-    const grandTotal = "456,000.000";
-    const keyword = getValueKeyword(type, period.days, period.hours);
-=======
     const total = formatNumber(
       calculate(
         wageOrders,
@@ -186,7 +185,6 @@ const exportXLSX = async (
       ) - parseNumber(period.received),
     );
     const keyword = getValueKeyword(violationType, period.days, period.hours);
->>>>>>> development
 
     switch (violationType) {
       case "Basic Wage":

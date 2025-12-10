@@ -51,11 +51,7 @@ const useFetchWageOrders = (db: Db) => {
       }
 
       const sortedWageOrders = [...wageOrders].sort((a, b) => {
-<<<<<<< HEAD
-        return Number(parseDate(a.date)) - Number(parseDate(b.date));
-=======
         return parseNumber(parseDate(a.date)) - parseNumber(parseDate(b.date));
->>>>>>> development
       });
 
       setWageOrders(sortedWageOrders);
