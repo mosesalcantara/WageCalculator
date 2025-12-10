@@ -235,8 +235,15 @@ export const periodsFormat = { periods: [periodFormat] };
 
 export const getDb = (sqlDb: SQLiteDatabase) => drizzle(sqlDb, { schema });
 
-export const parseNumber = (value: Date | string | number) =>
-  value ? Number(value) : 0;
+export const parseNumber = (value: Date | string | number) => {
+  let formattedValue = 0;
+  if (value instanceof Date) {
+    formattedValue = Number(value);
+  } else {
+    formattedValue = Number(Math.round(Number(value) + "e2") + "e-2");
+  }
+  return formattedValue;
+};
 
 export const parseDate = (date: Date | string) => {
   return typeof date === "string" ? parseISO(date) : date;
@@ -369,7 +376,7 @@ export const calculate = (
       result = (rateToUse * days) / 12;
   }
 
-  return result;
+  return parseNumber(result);
 };
 
 export const getSubtotal = (
@@ -479,7 +486,7 @@ export const customGetSubtotal = (
       parseNumber(period.received);
   });
 
-  return result;
+  return parseNumber(result);
 };
 
 export const getGrandTotal = (
