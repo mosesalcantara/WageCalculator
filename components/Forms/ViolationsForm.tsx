@@ -58,9 +58,9 @@ const ViolationsForm = ({
   onRemovePeriod,
 }: Props) => {
   const [modalVisibility, setModalVisibility] = useImmer({
-    start_date: false,
-    end_date: false,
-    view_days: false,
+    startDate: false,
+    endDate: false,
+    viewDays: false,
   });
 
   const periods = violationValues[violationType][paymentType] as Period[];
@@ -87,7 +87,7 @@ const ViolationsForm = ({
 
   const handleViewDaysModalToggle = (isVisible: boolean) => {
     setModalVisibility((draft) => {
-      draft.view_days = isVisible;
+      draft.viewDays = isVisible;
     });
   };
 
@@ -169,7 +169,7 @@ const ViolationsForm = ({
                   className="h-12 flex-row items-center justify-between rounded-md border border-black px-2.5"
                   onPress={() =>
                     setModalVisibility((draft) => {
-                      draft.start_date = true;
+                      draft.startDate = true;
                     })
                   }
                 >
@@ -188,7 +188,7 @@ const ViolationsForm = ({
                   className="h-12 flex-row items-center justify-between rounded-md border border-black  px-2.5"
                   onPress={() =>
                     setModalVisibility((draft) => {
-                      draft.end_date = true;
+                      draft.endDate = true;
                     })
                   }
                 >
@@ -308,7 +308,7 @@ const ViolationsForm = ({
                           violationType={violationType}
                           startDate={period.start_date}
                           endDate={period.end_date}
-                          isVisible={modalVisibility.view_days}
+                          isVisible={modalVisibility.viewDays}
                           onToggle={handleViewDaysModalToggle}
                         />
                       )}
@@ -399,7 +399,7 @@ const ViolationsForm = ({
         </View>
       </View>
 
-      {modalVisibility.start_date && (
+      {modalVisibility.startDate && (
         <DateTimePicker
           value={period.start_date ? parseDate(period.start_date) : new Date()}
           mode="date"
@@ -408,13 +408,13 @@ const ViolationsForm = ({
               onChange(index, "start_date", value);
             }
             setModalVisibility((draft) => {
-              draft.start_date = false;
+              draft.startDate = false;
             });
           }}
         />
       )}
 
-      {modalVisibility.end_date && (
+      {modalVisibility.endDate && (
         <DateTimePicker
           value={period.end_date ? parseDate(period.end_date) : new Date()}
           mode="date"
@@ -423,7 +423,7 @@ const ViolationsForm = ({
               onChange(index, "end_date", value);
             }
             setModalVisibility((draft) => {
-              draft.end_date = false;
+              draft.endDate = false;
             });
           }}
         />
