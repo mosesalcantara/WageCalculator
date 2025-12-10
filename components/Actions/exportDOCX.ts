@@ -21,7 +21,7 @@ import {
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
-import { AlignmentType, Document, Packer, Paragraph, TextRun } from "docx";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Alert, Platform } from "react-native";
@@ -166,22 +166,9 @@ const exportDOCX = async (
           ],
           alignment: "right",
         }),
-        new TextRun({
-        text: `Php${formatNumber(employeeTotal)}`,
-        font: { name: "Arial" },
-        size: 28,
-        bold: true,
-        underline: { type: "double" },
-        }),
-      ],
-      alignment: AlignmentType.RIGHT,
-      }),
-    );
-
-    grandTotalCents += Math.round(employeeTotal * 100);
-  }
-};
-
+      );
+    }
+  };
 
   const renderType = (
     violationType: ViolationType,
@@ -363,25 +350,7 @@ const exportDOCX = async (
           }),
         ],
       }),
-    ],
-    spacing: { after: 0 },
-  }),
-
-  //Amount per formula/violation
-  new Paragraph({
-    alignment: AlignmentType.RIGHT,
-    children: [
-      new TextRun({
-        text: `Php${total}`,
-        font: { name: "Arial" },
-        size: 28,
-        underline: {},
-      }),
-    ],
-    spacing: { after: addSpace ? 300 : 0 },
-  })
-);
-
+    );
   };
 
   const generateDOCX = () => {
@@ -477,27 +446,8 @@ const exportDOCX = async (
     ]);
   };
 
-generateDOCX();
-
-const grandTotal = grandTotalCents / 100;
-children.push(
-  new Paragraph({
-    children: [
-      new TextRun({
-        text: `Grand Total: Php${formatNumber(grandTotal)}`,
-        font: { name: "Arial" },
-        size: 32,
-        bold: true,
-        underline: { type: "double" },
-      }),
-    ],
-    alignment: AlignmentType.RIGHT,
-    spacing: { before: 300 },
-  }),
-);
-
-
-await exportFile();
-}
+  generateDOCX();
+  await exportFile();
+};
 
 export default exportDOCX;

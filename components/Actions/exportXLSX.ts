@@ -31,18 +31,7 @@ const exportXLSX = async (
   establishment: Establishment,
 ) => {
   const filename = `${establishment.name}.xlsx`;
-  const rows = [
-    [
-      "Name",
-      "Rate",
-      "Violation",
-      "Period",
-      "Formula",
-      "Subtotal",
-      "Total",
-      "Grand Total",
-    ],
-  ];
+  const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
 
   const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
@@ -151,9 +140,7 @@ const exportXLSX = async (
           typeText,
           periodText,
           formulaText,
-          subTotalText,
           totalText,
-          grandTotalText,
         ]);
       }
     });
@@ -221,10 +208,8 @@ const exportXLSX = async (
     }
 
     const formulaText = `${text}`;
-    const subTotalText = `Php${subTotal}`;
     const totalText = `Php${total}`;
-    const grandTotalText = `Php${grandTotal}`;
-    return { formulaText, subTotalText, totalText, grandTotalText };
+    return { formulaText, totalText };
   };
 
   const getMerges = (index: number, rows: string[][]) => {
@@ -317,8 +302,6 @@ const exportXLSX = async (
       { wch: 60 },
       { wch: 40 },
       { wch: 18 },
-      { wch: 20 },
-      { wch: 20 },
     ];
     worksheet["!merges"] = getMerges(0, rows);
 
