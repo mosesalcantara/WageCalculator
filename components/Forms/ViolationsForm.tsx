@@ -57,9 +57,11 @@ const ViolationsForm = ({
   onClearPeriod,
   onRemovePeriod,
 }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
-  const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useImmer(false);
+  const [modalVisibility, setModalVisibility] = useImmer({
+    start_date: false,
+    end_date: false,
+    view_days: false,
+  });
 
   const periods = violationValues[violationType][paymentType] as Period[];
   const period = violationValues[violationType][paymentType][index] as Period;
@@ -84,7 +86,9 @@ const ViolationsForm = ({
   const setDays = () => onChange(index, "days", estimate);
 
   const handleViewDaysModalToggle = (isVisible: boolean) => {
-    setIsViewDaysModalVisible(isVisible);
+    setModalVisibility((draft) => {
+      draft.view_days = isVisible;
+    });
   };
 
   const getIncludedDays = (startDay: string, endDay: string) => {
@@ -163,7 +167,11 @@ const ViolationsForm = ({
 
                 <TouchableOpacity
                   className="h-12 flex-row items-center justify-between rounded-md border border-black px-2.5"
-                  onPress={() => setIsStartDateModalVisible(true)}
+                  onPress={() =>
+                    setModalVisibility((draft) => {
+                      draft.start_date = true;
+                    })
+                  }
                 >
                   <Text className="font-r">
                     {period.start_date || "Select date"}
@@ -178,7 +186,11 @@ const ViolationsForm = ({
 
                 <TouchableOpacity
                   className="h-12 flex-row items-center justify-between rounded-md border border-black  px-2.5"
-                  onPress={() => setIsEndDateModalVisible(true)}
+                  onPress={() =>
+                    setModalVisibility((draft) => {
+                      draft.end_date = true;
+                    })
+                  }
                 >
                   <Text className="font-r">
                     {period.end_date || "Select date"}
@@ -296,7 +308,7 @@ const ViolationsForm = ({
                           violationType={violationType}
                           startDate={period.start_date}
                           endDate={period.end_date}
-                          isVisible={isViewDaysModalVisible}
+                          isVisible={modalVisibility.view_days}
                           onToggle={handleViewDaysModalToggle}
                         />
                       )}
@@ -387,7 +399,7 @@ const ViolationsForm = ({
         </View>
       </View>
 
-      {isStartDateModalVisible && (
+      {modalVisibility.start_date && (
         <DateTimePicker
           value={period.start_date ? parseDate(period.start_date) : new Date()}
           mode="date"
@@ -395,12 +407,14 @@ const ViolationsForm = ({
             if (event.type === "set" && value) {
               onChange(index, "start_date", value);
             }
-            setIsStartDateModalVisible(false);
+            setModalVisibility((draft) => {
+              draft.start_date = false;
+            });
           }}
         />
       )}
 
-      {isEndDateModalVisible && (
+      {modalVisibility.end_date && (
         <DateTimePicker
           value={period.end_date ? parseDate(period.end_date) : new Date()}
           mode="date"
@@ -408,7 +422,9 @@ const ViolationsForm = ({
             if (event.type === "set" && value) {
               onChange(index, "end_date", value);
             }
-            setIsEndDateModalVisible(false);
+            setModalVisibility((draft) => {
+              draft.end_date = false;
+            });
           }}
         />
       )}
