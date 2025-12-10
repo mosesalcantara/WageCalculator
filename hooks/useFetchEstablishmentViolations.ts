@@ -27,7 +27,9 @@ const useFetchEstablishmentViolations = (db: Db) => {
           const violation = employee.violations[0];
 
           if (employee.violations.length > 0) {
-            violations = [{ ...violation, values: violation.values as string }];
+            let values = JSON.parse(violation.values as string);
+            values["Custom"] = { Underpayment: [], "Non-payment": [] };
+            violations = [{ ...violation, values: JSON.stringify(values) }];
           }
 
           return { ...employee, violations: violations };

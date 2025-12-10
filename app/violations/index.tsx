@@ -145,11 +145,9 @@ const ViolationsPage = () => {
       };
     });
 
-    console.log(periodsFormat);
-
     // if (violationType === "Custom") {
-    //   setCustomViolationValues((draft) => {
-    //     draft.push(...(periodsFormat as CustomPeriod[]));
+    //   setViolationValues((draft) => {
+    //     draft[violationType][paymentType].push(...(periodsFormat as CustomPeriod[]));
     //   });
     // } else {
     //   setViolationValues((draft) => {

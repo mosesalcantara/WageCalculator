@@ -84,22 +84,20 @@ const generateHTML = (
       let valid = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        if (violationType !== "Custom") {
-          Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-            const paymentType = paymentKey as PaymentType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
 
-            violationValues[violationType][paymentType].forEach((period) => {
-              if (
-                validate(
-                  period,
-                  isHours(violationType) ? ["received"] : ["received", "hours"],
-                )
-              ) {
-                ++valid;
-              }
-            });
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
           });
-        }
+        });
       });
 
       if (valid > 0) {
@@ -138,41 +136,39 @@ const generateHTML = (
       let grandTotal = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        if (violationType !== "Custom") {
-          Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-            const paymentType = paymentKey as PaymentType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
 
-            grandTotal += getSubtotal(
-              wageOrders,
-              establishment.size,
-              violationType,
-              paymentType,
-              violationValues[violationType][paymentType] as Period[],
-            );
+          grandTotal += getSubtotal(
+            wageOrders,
+            establishment.size,
+            violationType,
+            paymentType,
+            violationValues[violationType][paymentType] as Period[],
+          );
 
-            let valid = 0;
-            violationValues[violationType][paymentType].forEach((period) => {
-              if (
-                validate(
-                  period,
-                  isHours(violationType) ? ["received"] : ["received", "hours"],
-                )
-              ) {
-                ++valid;
-              }
-            });
+          let valid = 0;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
 
-            if (valid > 0) {
-              html += `
+          if (valid > 0) {
+            html += `
                     <p class="bold underline top-space">
                       ${paymentType} of ${getViolationKeyword(violationType)}
                     </p>
 
                     ${renderViolationType(violationType, paymentType, violationValues[violationType][paymentType] as Period[])}
                   `;
-            }
-          });
-        }
+          }
+        });
       });
 
       html += `

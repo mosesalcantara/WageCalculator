@@ -54,10 +54,16 @@ export type Period = {
   received: string;
 };
 
-// export type ViolationValues = Record<
-//   ViolationType,
-//   Record<PaymentType, Period[] | CustomPeriod[]>
-// >;
+export type CustomPeriod = {
+  start_date: string;
+  end_date: string;
+  type: string;
+  rate: string;
+  days: string;
+  nightShiftHours: string;
+  overtimeHours: string;
+  received: string;
+};
 
 export type ViolationValues = {
   "Basic Wage": {
@@ -92,17 +98,6 @@ export type ViolationValues = {
     Underpayment: CustomPeriod[];
     "Non-payment": CustomPeriod[];
   };
-};
-
-export type CustomPeriod = {
-  start_date: string;
-  end_date: string;
-  type: string;
-  rate: string;
-  days: string;
-  nightShiftHours: string;
-  overtimeHours: string;
-  received: string;
 };
 
 export type WageOrder = {

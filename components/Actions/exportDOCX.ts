@@ -43,22 +43,20 @@ const exportDOCX = async (
       let valid = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        if (violationType !== "Custom") {
-          Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-            const paymentType = paymentKey as PaymentType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
 
-            violationValues[violationType][paymentType].forEach((period) => {
-              if (
-                validate(
-                  period,
-                  isHours(violationType) ? ["received"] : ["received", "hours"],
-                )
-              ) {
-                ++valid;
-              }
-            });
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
           });
-        }
+        });
       });
 
       if (valid > 0) {
@@ -74,7 +72,7 @@ const exportDOCX = async (
                 font: { name: "Arial" },
                 size: 28,
                 bold: true,
-                break: index === 0 ? 0 : 1,
+                break: index === 0 ? 2 : 1,
               }),
             ],
           }),
@@ -106,56 +104,54 @@ const exportDOCX = async (
       let grandTotal = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
-        if (violationType !== "Custom") {
-          Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-            const paymentType = paymentKey as PaymentType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
 
-            grandTotal += getSubtotal(
-              wageOrders,
-              establishment.size,
+          grandTotal += getSubtotal(
+            wageOrders,
+            establishment.size,
+            violationType,
+            paymentType,
+            violationValues[violationType][paymentType] as Period[],
+          );
+
+          let valid = 0;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
+
+          if (valid > 0) {
+            children.push(
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${
+                      paymentType
+                    } of ${getViolationKeyword(violationType)}`,
+                    font: { name: "Arial" },
+                    size: 28,
+                    bold: true,
+                    underline: {},
+                    break: 1,
+                  }),
+                ],
+              }),
+            );
+
+            renderViolationType(
               violationType,
               paymentType,
               violationValues[violationType][paymentType] as Period[],
             );
-
-            let valid = 0;
-            violationValues[violationType][paymentType].forEach((period) => {
-              if (
-                validate(
-                  period,
-                  isHours(violationType) ? ["received"] : ["received", "hours"],
-                )
-              ) {
-                ++valid;
-              }
-            });
-
-            if (valid > 0) {
-              children.push(
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: `${
-                        paymentType
-                      } of ${getViolationKeyword(violationType)}`,
-                      font: { name: "Arial" },
-                      size: 28,
-                      bold: true,
-                      underline: {},
-                      break: 1,
-                    }),
-                  ],
-                }),
-              );
-
-              renderViolationType(
-                violationType,
-                paymentType,
-                violationValues[violationType][paymentType] as Period[],
-              );
-            }
-          });
-        }
+          }
+        });
       });
 
       children.push(
@@ -212,14 +208,13 @@ const exportDOCX = async (
                 )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(violationType, period.days, period.hours)})`,
                 font: { name: "Arial" },
                 size: 28,
+                break: index === 0 ? 0 : 1,
               }),
             ],
           }),
         );
 
-        const addSpace = index + 1 !== periods.length;
-
-        renderFormula(violationType, paymentType, period, addSpace);
+        renderFormula(violationType, paymentType, period);
 
         if (parseNumber(period.received) > 0) {
           children.push(
@@ -269,7 +264,6 @@ const exportDOCX = async (
     violationType: ViolationType,
     paymentType: PaymentType,
     period: Period,
-    addSpace: boolean,
   ) => {
     let text = "";
 
@@ -355,7 +349,6 @@ const exportDOCX = async (
             size: 28,
           }),
         ],
-        spacing: { after: addSpace ? 300 : 0 },
       }),
     );
   };
@@ -372,7 +365,6 @@ const exportDOCX = async (
           }),
         ],
         alignment: "center",
-        spacing: { after: 400 },
       }),
     );
 
