@@ -24,16 +24,15 @@ export type Employee = {
   end_day: string;
   establishment_id?: number;
   violations?: Violation[] | [];
-  custom_violations?: CustomViolation[] | [];
 };
 
 export type Violation = {
   id: number;
-  values: Record<ViolationKey, ViolationType> | string;
+  values: ViolationValues | string;
   employee_id?: number;
 };
 
-export type ViolationKey =
+export type ViolationType =
   | "Basic Wage"
   | "Overtime Pay"
   | "Night Shift Differential"
@@ -43,10 +42,7 @@ export type ViolationKey =
   | "13th Month Pay"
   | "Custom";
 
-export type ViolationType = {
-  periods: Period[];
-  received: string;
-};
+export type PaymentType = "Underpayment" | "Non-payment";
 
 export type Period = {
   start_date: string;
@@ -55,16 +51,6 @@ export type Period = {
   days: string;
   hours: string;
   type: string;
-};
-
-export type CustomViolation = {
-  id: number;
-  values: CustomViolationType | string;
-  employee_id?: number;
-};
-
-export type CustomViolationType = {
-  periods: CustomPeriod[];
   received: string;
 };
 
@@ -76,6 +62,42 @@ export type CustomPeriod = {
   days: string;
   nightShiftHours: string;
   overtimeHours: string;
+  received: string;
+};
+
+export type ViolationValues = {
+  "Basic Wage": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "Overtime Pay": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "Night Shift Differential": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "Special Day": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "Rest Day": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "Holiday Pay": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "13th Month Pay": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  Custom: {
+    Underpayment: CustomPeriod[];
+    "Non-payment": CustomPeriod[];
+  };
 };
 
 export type WageOrder = {

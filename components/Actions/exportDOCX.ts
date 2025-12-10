@@ -1,9 +1,10 @@
 import {
   Employee,
   Establishment,
+  PaymentType,
   Period,
-  ViolationKey,
   ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -11,11 +12,12 @@ import {
   formatDate,
   formatNumber,
   getMinimumRate,
-  getTotal,
+  getSubtotal,
   getValueKeyword,
   getViolationKeyword,
   isHours,
   numberToLetter,
+  parseNumber,
   toastVisibilityTime,
   validate,
 } from "@/utils/globals";
@@ -34,15 +36,26 @@ const exportDOCX = async (
 
   const renderEmployee = (index: number, employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
-      const violations: Record<ViolationKey, ViolationType> = JSON.parse(
+      const violationValues: ViolationValues = JSON.parse(
         employee.violations[0].values as string,
       );
 
       let valid = 0;
-      Object.keys(violations).forEach((key) => {
-        const type = key as ViolationKey;
-        violations[type].periods.forEach((period) => {
-          if (validate(period, isHours(type) ? [] : ["hours"])) ++valid;
+      Object.keys(violationValues).forEach((violationKey) => {
+        const violationType = violationKey as ViolationType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
+
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
         });
       });
 
@@ -59,7 +72,7 @@ const exportDOCX = async (
                 font: { name: "Arial" },
                 size: 28,
                 bold: true,
-                break: index === 0 ? 0 : 1,
+                break: index === 0 ? 2 : 1,
               }),
             ],
           }),
@@ -82,6 +95,7 @@ const exportDOCX = async (
     }
   };
 
+<<<<<<< HEAD
   let grandTotalCents = 0;
 
 const renderViolations = (employee: Employee) => {
@@ -137,6 +151,78 @@ const renderViolations = (employee: Employee) => {
         font: { name: "Arial" },
         size: 28,
         bold: true,
+=======
+  const renderViolations = (employee: Employee) => {
+    if (employee.violations && employee.violations.length > 0) {
+      const violationValues: ViolationValues = JSON.parse(
+        employee.violations[0].values as string,
+      );
+
+      let grandTotal = 0;
+      Object.keys(violationValues).forEach((violationKey) => {
+        const violationType = violationKey as ViolationType;
+        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+          const paymentType = paymentKey as PaymentType;
+
+          grandTotal += getSubtotal(
+            wageOrders,
+            establishment.size,
+            violationType,
+            paymentType,
+            violationValues[violationType][paymentType] as Period[],
+          );
+
+          let valid = 0;
+          violationValues[violationType][paymentType].forEach((period) => {
+            if (
+              validate(
+                period,
+                isHours(violationType) ? ["received"] : ["received", "hours"],
+              )
+            ) {
+              ++valid;
+            }
+          });
+
+          if (valid > 0) {
+            children.push(
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${
+                      paymentType
+                    } of ${getViolationKeyword(violationType)}`,
+                    font: { name: "Arial" },
+                    size: 28,
+                    bold: true,
+                    underline: {},
+                    break: 1,
+                  }),
+                ],
+              }),
+            );
+
+            renderType(
+              violationType,
+              paymentType,
+              violationValues[violationType][paymentType] as Period[],
+            );
+          }
+        });
+      });
+
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Grand Total: Php${formatNumber(grandTotal)}`,
+              font: { name: "Arial" },
+              size: 28,
+              bold: true,
+            }),
+          ],
+          alignment: "right",
+>>>>>>> development
         }),
         new TextRun({
         text: `Php${formatNumber(employeeTotal)}`,
@@ -155,47 +241,83 @@ const renderViolations = (employee: Employee) => {
 };
 
 
-  const renderViolationType = (
-    type: ViolationKey,
-    violationType: { periods: Period[]; received: string },
+  const renderType = (
+    violationType: ViolationType,
+    paymentType: PaymentType,
+    periods: Period[],
   ) => {
     let subtotal = 0;
-    const received = Number(violationType.received) || 0;
 
-    violationType.periods.forEach((period, index) => {
-      const result = calculate(wageOrders, type, establishment.size, period);
+    periods.forEach((period, index) => {
+      const result = calculate(
+        wageOrders,
+        establishment.size,
+        violationType,
+        paymentType,
+        period,
+      );
 
-      if (validate(period, isHours(type) ? [] : ["hours"])) {
-        subtotal += result;
-        const value = isHours(type)
-          ? `${Number(period.days) * Number(period.hours)}`
+      if (
+        validate(
+          period,
+          isHours(violationType) ? ["received"] : ["received", "hours"],
+        )
+      ) {
+        subtotal = subtotal + result - parseNumber(period.received);
+
+        const value = isHours(violationType)
+          ? `${parseNumber(period.days) * parseNumber(period.hours)}`
           : `${period.days}`;
 
         children.push(
           new Paragraph({
             children: [
               new TextRun({
-                text: `Period${violationType.periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
+                text: `Period${periods.length > 1 ? ` ${numberToLetter(index)}` : ""}: ${formatDate(
                   period.start_date,
                   "dd MMMM yyyy",
-                )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(type, period.days, period.hours)})`,
+                )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(violationType, period.days, period.hours)})`,
                 font: { name: "Arial" },
                 size: 28,
+                break: index === 0 ? 0 : 1,
               }),
             ],
           }),
         );
 
-        const addSpace =
-          index + 1 !== violationType.periods.length ||
-          (index + 1 === violationType.periods.length && received > 0);
+        renderFormula(violationType, paymentType, period);
 
-        renderFormula(type, period, addSpace);
+        if (parseNumber(period.received) > 0) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Actual Pay Received: Php${formatNumber(period.received)}`,
+                  font: { name: "Arial" },
+                  size: 28,
+                }),
+              ],
+            }),
+          );
+
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Php${formatNumber(result)} - ${formatNumber(period.received)} = Php${formatNumber(result - parseNumber(period.received))}`,
+                  font: { name: "Arial" },
+                  size: 28,
+                }),
+              ],
+            }),
+          );
+        }
       }
     });
 
-    if (received > 0) {
+    if (periods.length > 1) {
       children.push(
+<<<<<<< HEAD
       new Paragraph({
         children: [
         new TextRun({
@@ -235,6 +357,15 @@ const renderViolations = (employee: Employee) => {
           font: { name: "Arial" },
           size: 28,
         }),
+=======
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Subtotal: Php${formatNumber(subtotal)}`,
+              font: { name: "Arial" },
+              size: 28,
+            }),
+>>>>>>> development
           ],
           alignment: "right",
         }),
@@ -243,13 +374,13 @@ const renderViolations = (employee: Employee) => {
   };
 
   const renderFormula = (
-    type: ViolationKey,
+    violationType: ViolationType,
+    paymentType: PaymentType,
     period: Period,
-    addSpace: boolean,
   ) => {
     let text = "";
 
-    const rate = Number(period.rate);
+    const rate = parseNumber(period.rate);
     const minimumRate = getMinimumRate(
       wageOrders,
       establishment.size,
@@ -281,16 +412,27 @@ const renderViolations = (employee: Employee) => {
 
     const formattedRateToUse = formatNumber(Math.max(rate, minimumRate));
     const total = formatNumber(
-      calculate(wageOrders, type, establishment.size, period),
+      calculate(
+        wageOrders,
+        establishment.size,
+        violationType,
+        paymentType,
+        period,
+      ),
     );
-    const keyword = getValueKeyword(type, period.days, period.hours);
+    const keyword = getValueKeyword(violationType, period.days, period.hours);
 
-    switch (type) {
+    switch (violationType) {
       case "Basic Wage":
-        text = `Php${formatNumber(minimumRate)} - Php${formatNumber(period.rate)} x ${period.days} ${keyword}`;
+        if (paymentType === "Underpayment") {
+          text = `Php${formatNumber(minimumRate)} - Php${formatNumber(period.rate)} x ${period.days} ${keyword}`;
+        } else {
+          text = `Php${formattedRateToUse} x ${period.days} ${keyword}`;
+        }
+
         break;
       case "Overtime Pay":
-        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${Number(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
         break;
       case "Night Shift Differential":
         text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword}`;
@@ -311,6 +453,7 @@ const renderViolations = (employee: Employee) => {
         text = "";
     }
 
+<<<<<<< HEAD
 children.push(
   new Paragraph({
     children: [
@@ -318,6 +461,17 @@ children.push(
         text: `${text} =`,
         font: { name: "Arial" },
         size: 28,
+=======
+    children.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: `${text} = Php${total}`,
+            font: { name: "Arial" },
+            size: 28,
+          }),
+        ],
+>>>>>>> development
       }),
     ],
     spacing: { after: 0 },
@@ -352,7 +506,6 @@ children.push(
           }),
         ],
         alignment: "center",
-        spacing: { after: 400 },
       }),
     );
 

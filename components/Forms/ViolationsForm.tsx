@@ -5,8 +5,10 @@ import {
   Employee,
   Establishment,
   Holiday,
-  ViolationKey,
+  PaymentType,
+  Period,
   ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -17,6 +19,7 @@ import {
   isHours,
   numberToLetter,
   parseDate,
+  parseNumber,
   validateDateRange,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -26,13 +29,14 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
 
 type Props = {
-  type: ViolationKey;
+  violationType: ViolationType;
+  paymentType: PaymentType;
   index: number;
   wageOrders: WageOrder[];
   holidays: Holiday[];
   establishment: Establishment;
   employee: Employee;
-  violationTypes: Record<ViolationKey, ViolationType>;
+  violationValues: ViolationValues;
   onChange: (index: number, key: string, value: string | number | Date) => void;
   onAddPeriod: () => void;
   onClearPeriod: (index: number) => void;
@@ -40,13 +44,14 @@ type Props = {
 };
 
 const ViolationsForm = ({
-  type,
+  violationType,
+  paymentType,
   index,
   wageOrders,
   holidays,
   establishment,
   employee,
-  violationTypes,
+  violationValues,
   onChange,
   onAddPeriod,
   onClearPeriod,
@@ -56,8 +61,8 @@ const ViolationsForm = ({
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
   const [isViewDaysModalVisible, setIsViewDaysModalVisible] = useImmer(false);
 
-  const periods = violationTypes[type].periods;
-  const period = violationTypes[type].periods[index];
+  const periods = violationValues[violationType][paymentType] as Period[];
+  const period = violationValues[violationType][paymentType][index] as Period;
 
   const minimumRate = getMinimumRate(
     wageOrders,
@@ -67,10 +72,11 @@ const ViolationsForm = ({
   );
 
   const getLabel = () => {
-    if (["Basic Wage", "13th Month Pay"].includes(type)) return "Working Days";
-    else if (type === "Special Day") return "Special Days";
-    else if (type === "Rest Day") return "Rest Days";
-    else if (type === "Holiday Pay") return "Holidays";
+    if (["Basic Wage", "13th Month Pay"].includes(violationType))
+      return "Working Days";
+    else if (violationType === "Special Day") return "Special Days";
+    else if (violationType === "Rest Day") return "Rest Days";
+    else if (violationType === "Holiday Pay") return "Holidays";
     else return "";
   };
 
@@ -115,7 +121,7 @@ const ViolationsForm = ({
     dates.forEach((date) => {
       if (includedDays.includes(format(date, "EEEE"))) ++workingDays;
 
-      if (type === "Special Day" || type === "Holiday Pay") {
+      if (violationType === "Special Day" || violationType === "Holiday Pay") {
         const formattedDate = format(date, "yyyy-MM-dd");
         const holiday = holidays.find(
           (holiday) => formattedDate === holiday.date,
@@ -130,10 +136,11 @@ const ViolationsForm = ({
 
     restDays = dates.length - workingDays;
 
-    if (type === "Basic Wage" || type === "13th Month Pay") return workingDays;
-    else if (type === "Rest Day") return restDays;
-    else if (type === "Special Day") return specialDays;
-    else if (type === "Holiday Pay") return regularHolidays;
+    if (violationType === "Basic Wage" || violationType === "13th Month Pay")
+      return workingDays;
+    else if (violationType === "Rest Day") return restDays;
+    else if (violationType === "Special Day") return specialDays;
+    else if (violationType === "Holiday Pay") return regularHolidays;
     else return "";
   };
 
@@ -141,7 +148,7 @@ const ViolationsForm = ({
 
   return (
     <>
-      <View className="mx-6 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
+      <View className="mx-4 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View>
           {periods.length > 1 && (
             <Text className="mb-3 text-center font-b text-lg">
@@ -218,7 +225,7 @@ const ViolationsForm = ({
             </View>
 
             <View className="flex-row flex-wrap justify-between gap-1">
-              {isHours(type) ? (
+              {isHours(violationType) ? (
                 <>
                   <View className="w-[49%]">
                     <Label name="Days" color="#333" />
@@ -269,7 +276,7 @@ const ViolationsForm = ({
                 </View>
               )}
 
-              {!isHours(type) && (
+              {!isHours(violationType) && (
                 <View className="w-[49%]">
                   <Label name={getLabel()} color="#333" />
 
@@ -282,11 +289,11 @@ const ViolationsForm = ({
                       value={`${estimate}`}
                     />
 
-                    {["Special Day", "Holiday Pay"].includes(type) &&
+                    {["Special Day", "Holiday Pay"].includes(violationType) &&
                       validateDateRange(period.start_date, period.end_date) && (
                         <ViewDaysModal
                           holidays={holidays}
-                          type={type}
+                          violationType={violationType}
                           startDate={period.start_date}
                           endDate={period.end_date}
                           isVisible={isViewDaysModalVisible}
@@ -298,7 +305,7 @@ const ViolationsForm = ({
               )}
             </View>
 
-            {type === "Overtime Pay" && (
+            {violationType === "Overtime Pay" && (
               <View>
                 <Label name="Type" color="#333" />
 
@@ -321,6 +328,20 @@ const ViolationsForm = ({
                 />
               </View>
             )}
+
+            {paymentType === "Underpayment" && (
+              <View>
+                <Label name="Received" color="#333" />
+
+                <TextInput
+                  className="rounded-md border border-black px-2.5 font-r"
+                  keyboardType="numeric"
+                  placeholder="Enter amount"
+                  value={period.received}
+                  onChangeText={(value) => onChange(index, "received", value)}
+                />
+              </View>
+            )}
           </View>
 
           <View>
@@ -328,7 +349,13 @@ const ViolationsForm = ({
               <Text className="font-b text-base text-[#27ae60]">
                 Total: ₱
                 {formatNumber(
-                  calculate(wageOrders, type, establishment.size, period),
+                  calculate(
+                    wageOrders,
+                    establishment.size,
+                    violationType,
+                    paymentType,
+                    period,
+                  ) - parseNumber(period.received),
                 )}
               </Text>
             </View>

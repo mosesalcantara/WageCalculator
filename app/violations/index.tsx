@@ -1,11 +1,9 @@
 import CustomViolationForm from "@/components/Forms/CustomViolationsForm";
 import Form from "@/components/Forms/ViolationsForm";
-import Label from "@/components/Label";
 import AddPeriodModal from "@/components/Modals/AddPeriodModal";
 import NavBar from "@/components/NavBar";
-import { customViolations, violations } from "@/db/schema";
+import { violations } from "@/db/schema";
 import useCustomViolationHandlers from "@/hooks/useCustomViolationHandlers";
-import useFetchCustomViolations from "@/hooks/useFetchCustomViolations";
 import useFetchHolidays from "@/hooks/useFetchHolidays";
 import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
@@ -13,22 +11,25 @@ import useViolationHandlers from "@/hooks/useViolationHandlers";
 import { period as schema, Period as Values } from "@/schemas/globals";
 import {
   CustomPeriod,
-  CustomViolationType,
+  PaymentType,
   Period,
-  ViolationKey,
   ViolationType,
+  ViolationValues,
 } from "@/types/globals";
 import {
+  customCalculate,
+  customGetSubtotal,
   customPeriodFormat,
   formatDate,
   formatNumber,
   getDb,
+  getGrandTotal,
   getPeriods,
-  getTotal,
+  getSubtotal,
+  parseNumber,
   periodFormat,
   toastVisibilityTime,
 } from "@/utils/globals";
-import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -42,7 +43,6 @@ import {
   Platform,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -57,29 +57,28 @@ const ViolationsPage = () => {
   const form = useForm({ resolver: yupResolver(schema) });
   const employee_id = SessionStorage.getItem("employee_id") as string;
 
-  const [type, setType] = useImmer<ViolationKey>("Basic Wage");
+  const [violationType, setViolationType] =
+    useImmer<ViolationType>("Basic Wage");
+  const [paymentType, setPaymentType] = useImmer<PaymentType>("Underpayment");
   const [isAddPeriodModalVisible, setIsAddPeriodModalVisible] = useImmer(false);
 
   const { wageOrders } = useFetchWageOrders(db);
   const { holidays } = useFetchHolidays(db);
 
-  const { establishment, employee, violationTypes, setViolationTypes } =
+  const { establishment, employee, violationValues, setViolationValues } =
     useFetchViolations(db);
-  const { customViolationType, setCustomViolationType } =
-    useFetchCustomViolations(db);
-
-  const violationType = violationTypes[type];
 
   const violationHandlers = useViolationHandlers(
-    type,
+    violationType,
+    paymentType,
     employee,
-    setViolationTypes,
+    setViolationValues,
   );
   const customViolationHandlers = useCustomViolationHandlers(
-    wageOrders || [],
-    establishment,
-    customViolationType,
-    setCustomViolationType,
+    violationType,
+    paymentType,
+    employee,
+    setViolationValues,
   );
 
   const tabs = [
@@ -92,16 +91,6 @@ const ViolationsPage = () => {
     { name: "13th Month Pay", icon: "card-giftcard" },
     { name: "Custom", icon: "build" },
   ];
-
-  type IconNames =
-    | "payments"
-    | "access-time"
-    | "nights-stay"
-    | "star"
-    | "coffee"
-    | "event-available"
-    | "card-giftcard"
-    | "build";
 
   const getTabs = (size: string) => {
     let excluded: string[] = [];
@@ -153,47 +142,37 @@ const ViolationsPage = () => {
   const addPeriods = (dates: { start_date: string; end_date: string }[]) => {
     const periodsFormat = dates.map((date) => {
       return {
-        ...(type === "Custom" ? customPeriodFormat : periodFormat),
+        ...(violationType === "Custom" ? customPeriodFormat : periodFormat),
         start_date: date.start_date,
         end_date: date.end_date,
         rate: employee ? `${employee.rate}` : "",
       };
     });
 
-    if (type === "Custom") {
-      setCustomViolationType((draft) => {
-        draft.periods.push(...(periodsFormat as CustomPeriod[]));
+    if (violationType === "Custom") {
+      setViolationValues((draft) => {
+        draft[violationType][paymentType].push(
+          ...(periodsFormat as CustomPeriod[]),
+        );
       });
     } else {
-      setViolationTypes((draft) => {
-        draft[type].periods.push(...(periodsFormat as Period[]));
+      setViolationValues((draft) => {
+        draft[violationType][paymentType].push(...(periodsFormat as Period[]));
       });
     }
   };
 
   useFocusEffect(
     useCallback(() => {
-      const saveViolations = async (
-        violationTypes: Record<ViolationKey, ViolationType>,
-        customViolationType: CustomViolationType,
-      ) => {
+      const saveViolations = async (violationValues: ViolationValues) => {
         try {
           await db
             .delete(violations)
-            .where(eq(violations.employee_id, Number(employee_id)));
-
-          await db
-            .delete(customViolations)
-            .where(eq(customViolations.employee_id, Number(employee_id)));
+            .where(eq(violations.employee_id, parseNumber(employee_id)));
 
           await db.insert(violations).values({
-            values: JSON.stringify(violationTypes),
-            employee_id: Number(employee_id),
-          });
-
-          await db.insert(customViolations).values({
-            values: JSON.stringify(customViolationType),
-            employee_id: Number(employee_id),
+            values: JSON.stringify(violationValues),
+            employee_id: parseNumber(employee_id),
           });
 
           Toast.show({
@@ -214,15 +193,14 @@ const ViolationsPage = () => {
 
       const handleBackPress = () => {
         router.push("/employees");
-        saveViolations(violationTypes, customViolationType);
+        saveViolations(violationValues);
         return true;
       };
 
       const appStateHandler = AppState.addEventListener(
         "change",
         (nextAppState) => {
-          nextAppState === "background" &&
-            saveViolations(violationTypes, customViolationType);
+          nextAppState === "background" && saveViolations(violationValues);
         },
       );
 
@@ -235,7 +213,7 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [db, router, employee_id, violationTypes, customViolationType]),
+    }, [db, router, employee_id, violationValues]),
   );
 
   return (
@@ -244,58 +222,29 @@ const ViolationsPage = () => {
         holidays &&
         establishment &&
         employee &&
-        violationTypes && (
+        violationValues && (
           <>
             <SafeAreaView className="flex-1 bg-primary">
               <NavBar />
 
-              <View className="bg-primary">
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  className="border-b border-b-[#333] py-2.5 "
-                >
-                  {getTabs(establishment.size).map((tab) => (
-                    <TouchableOpacity
-                      key={tab.name}
-                      className={`mx-[0.3125rem] h-11 flex-row items-center rounded-lg border px-3 ${type === tab.name ? `border-[#2c3e50] bg-[#2c3e50]` : `border-[#ccc] bg-white`}`}
-                      onPress={() => setType(tab.name as ViolationKey)}
-                    >
-                      <MaterialIcons
-                        name={tab.icon as IconNames}
-                        size={18}
-                        color={type === tab.name ? "#fff" : "#555"}
-                      />
-
-                      <Text
-                        className={`ml-1.5 font-r text-sm ${type === tab.name ? `text-white` : `text-[#555]`}`}
-                      >
-                        {tab.name}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-
-              <View className="flex-row items-center justify-between px-4 py-2.5">
+              <View className="flex-row items-center justify-between gap-2 p-2.5">
                 <View className="w-[64%]">
-                  <Text className="ml-1.5 font-b text-xl">
+                  <Text className="font-b text-xl">
                     {`${employee.last_name}, ${employee.first_name}${["na", "n/a"].includes(employee.middle_initial.toLowerCase()) ? "" : ` ${employee.middle_initial}.`}`}
                   </Text>
-                  <Text className="ml-1.5 font-b text-xl">
-                    Subtotal:{" "}
+
+                  <Text className="font-b text-xl">
+                    Grand Total:{" "}
                     {formatNumber(
-                      type === "Custom"
-                        ? customViolationHandlers.getTotal()
-                        : getTotal(
-                            wageOrders,
-                            type,
-                            establishment.size,
-                            violationType,
-                          ),
+                      getGrandTotal(
+                        wageOrders,
+                        establishment.size,
+                        violationValues,
+                      ),
                     )}
                   </Text>
                 </View>
+
                 <View className="w-[34%]">
                   <AddPeriodModal
                     form={form}
@@ -306,86 +255,128 @@ const ViolationsPage = () => {
                 </View>
               </View>
 
+              <View className="gap-2 border-b border-b-[#333] bg-primary p-2.5">
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View className="flex-row gap-1">
+                    {getTabs(establishment.size).map((tab) => (
+                      <TouchableOpacity
+                        key={tab.name}
+                        onPress={() => {
+                          setViolationType(tab.name as ViolationType);
+                          setPaymentType("Underpayment");
+                        }}
+                      >
+                        <Text
+                          className={`${violationType === tab.name ? "text-white" : ""}`}
+                        >
+                          {tab.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+
+                <View className="flex-row gap-2">
+                  <TouchableOpacity
+                    onPress={() => setPaymentType("Underpayment")}
+                  >
+                    <Text
+                      className={`${paymentType === "Underpayment" ? "text-white" : ""}`}
+                    >
+                      Underpayment
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => setPaymentType("Non-payment")}
+                  >
+                    <Text
+                      className={`${paymentType === "Non-payment" ? "text-white" : ""}`}
+                    >
+                      Non-payment
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
               <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                className="h-[73%] px-4"
+                className="mt-4 h-[73%] px-4"
               >
                 <ScrollView>
-                  <View className="gap-7">
-                    {type === "Custom" ? (
+                  <Text className="font-b text-xl">
+                    Subtotal:{" "}
+                    {formatNumber(
+                      violationType === "Custom"
+                        ? customGetSubtotal(
+                            wageOrders,
+                            establishment.size,
+                            violationValues[violationType][paymentType],
+                          )
+                        : getSubtotal(
+                            wageOrders,
+                            establishment.size,
+                            violationType,
+                            paymentType,
+                            violationValues[violationType][paymentType],
+                          ),
+                    )}
+                  </Text>
+
+                  <View className="mt-4 gap-7">
+                    {violationType === "Custom" ? (
                       <>
-                        {customViolationType.periods.map((_, index) => (
-                          <CustomViolationForm
-                            key={index}
-                            index={index}
-                            wageOrders={wageOrders}
-                            establishment={establishment}
-                            employee={employee}
-                            customViolationType={customViolationType}
-                            calculate={customViolationHandlers.calculate}
-                            onChange={customViolationHandlers.handleChange}
-                            onAddPeriod={
-                              customViolationHandlers.handleAddPeriod
-                            }
-                            onRemovePeriod={
-                              customViolationHandlers.handleRemovePeriod
-                            }
-                            onClearPeriod={
-                              customViolationHandlers.handleClearPeriod
-                            }
-                          />
-                        ))}
-
-                        <View className="mx-10 rounded-[0.625rem] bg-white p-2.5">
-                          <Label name="Received" color="#333" />
-
-                          <TextInput
-                            className="rounded-md border border-black px-2.5 font-r"
-                            keyboardType="numeric"
-                            placeholder="Enter pay received"
-                            value={customViolationType.received}
-                            onChangeText={(value) =>
-                              customViolationHandlers.handleReceivedChange(
-                                value,
-                              )
-                            }
-                          />
-                        </View>
+                        {violationValues[violationType][paymentType].map(
+                          (_, index) => (
+                            <CustomViolationForm
+                              key={index}
+                              violationType={violationType}
+                              paymentType={paymentType}
+                              index={index}
+                              wageOrders={wageOrders}
+                              establishment={establishment}
+                              employee={employee}
+                              violationValues={violationValues}
+                              calculate={customCalculate}
+                              onChange={customViolationHandlers.handleChange}
+                              onAddPeriod={
+                                customViolationHandlers.handleAddPeriod
+                              }
+                              onRemovePeriod={
+                                customViolationHandlers.handleRemovePeriod
+                              }
+                              onClearPeriod={
+                                customViolationHandlers.handleClearPeriod
+                              }
+                            />
+                          ),
+                        )}
                       </>
                     ) : (
                       <>
-                        {violationType.periods.map((_, index) => (
-                          <Form
-                            key={index}
-                            type={type}
-                            index={index}
-                            wageOrders={wageOrders}
-                            holidays={holidays}
-                            establishment={establishment}
-                            employee={employee}
-                            violationTypes={violationTypes}
-                            onChange={violationHandlers.handleChange}
-                            onAddPeriod={violationHandlers.handleAddPeriod}
-                            onRemovePeriod={
-                              violationHandlers.handleRemovePeriod
-                            }
-                            onClearPeriod={violationHandlers.handleClearPeriod}
-                          />
-                        ))}
-
-                        <View className="mx-10 rounded-[0.625rem] bg-white p-2.5">
-                          <Label name="Received" color="#333" />
-
-                          <TextInput
-                            className="rounded-md border border-black px-2.5 font-r"
-                            keyboardType="numeric"
-                            placeholder="Enter pay received"
-                            value={violationType.received}
-                            onChangeText={(value) =>
-                              violationHandlers.handleReceivedChange(value)
-                            }
-                          />
-                        </View>
+                        {violationValues[violationType][paymentType].map(
+                          (_, index) => (
+                            <Form
+                              key={index}
+                              violationType={violationType}
+                              paymentType={paymentType}
+                              index={index}
+                              wageOrders={wageOrders}
+                              holidays={holidays}
+                              establishment={establishment}
+                              employee={employee}
+                              violationValues={violationValues}
+                              onChange={violationHandlers.handleChange}
+                              onAddPeriod={violationHandlers.handleAddPeriod}
+                              onRemovePeriod={
+                                violationHandlers.handleRemovePeriod
+                              }
+                              onClearPeriod={
+                                violationHandlers.handleClearPeriod
+                              }
+                            />
+                          ),
+                        )}
                       </>
                     )}
                   </View>

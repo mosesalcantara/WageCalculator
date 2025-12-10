@@ -1,6 +1,6 @@
 import * as models from "@/db/schema";
 import { Db, WageOrder } from "@/types/globals";
-import { parseDate, toastVisibilityTime } from "@/utils/globals";
+import { parseDate, parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { useCallback, useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
@@ -51,7 +51,11 @@ const useFetchWageOrders = (db: Db) => {
       }
 
       const sortedWageOrders = [...wageOrders].sort((a, b) => {
+<<<<<<< HEAD
         return Number(parseDate(a.date)) - Number(parseDate(b.date));
+=======
+        return parseNumber(parseDate(a.date)) - parseNumber(parseDate(b.date));
+>>>>>>> development
       });
 
       setWageOrders(sortedWageOrders);

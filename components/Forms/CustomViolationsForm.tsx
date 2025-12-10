@@ -2,9 +2,11 @@ import Label from "@/components/Label";
 import Select from "@/components/PeriodSelect";
 import {
   CustomPeriod,
-  CustomViolationType,
   Employee,
   Establishment,
+  PaymentType,
+  ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import {
@@ -12,6 +14,7 @@ import {
   getMinimumRate,
   numberToLetter,
   parseDate,
+  parseNumber,
   typesOptions,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -20,12 +23,15 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useImmer } from "use-immer";
 
 type Props = {
+  violationType: ViolationType;
+  paymentType: PaymentType;
   index: number;
   wageOrders: WageOrder[];
   establishment: Establishment;
   employee: Employee;
-  customViolationType: CustomViolationType;
+  violationValues: ViolationValues;
   calculate: (
+    wageOrders: WageOrder[],
     size: string,
     period: CustomPeriod,
   ) => {
@@ -50,11 +56,13 @@ type Props = {
 };
 
 const CustomViolationsForm = ({
+  violationType,
+  paymentType,
   index,
   wageOrders,
   establishment,
   employee,
-  customViolationType,
+  violationValues,
   calculate,
   onChange,
   onAddPeriod,
@@ -64,8 +72,10 @@ const CustomViolationsForm = ({
   const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
   const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
 
-  const periods = customViolationType.periods;
-  const period = customViolationType.periods[index];
+  const periods = violationValues[violationType][paymentType] as CustomPeriod[];
+  const period = violationValues[violationType][paymentType][
+    index
+  ] as CustomPeriod;
 
   const {
     rateToUse,
@@ -76,7 +86,7 @@ const CustomViolationsForm = ({
     overtimeMultiplier,
     overtimeHours,
     total,
-  } = calculate(establishment.size, period);
+  } = calculate(wageOrders, establishment.size, period);
 
   const minimumRate = getMinimumRate(
     wageOrders,
@@ -219,6 +229,20 @@ const CustomViolationsForm = ({
                 />
               </View>
             </View>
+
+            {paymentType === "Underpayment" && (
+              <View>
+                <Label name="Received" color="#333" />
+
+                <TextInput
+                  className="rounded-md border border-black px-2.5 font-r"
+                  keyboardType="numeric"
+                  placeholder="Enter amount"
+                  value={period.received}
+                  onChangeText={(value) => onChange(index, "received", value)}
+                />
+              </View>
+            )}
           </View>
 
           <View>
@@ -235,7 +259,7 @@ const CustomViolationsForm = ({
               <Text className="font-b text-base text-[#27ae60]">
                 Total:{" "}
                 <Text className="mt-1 font-b text-base text-[#27ae60]">
-                  ₱{formatNumber(total)}
+                  ₱{formatNumber(total - parseNumber(period.received))}
                 </Text>
               </Text>
             </View>

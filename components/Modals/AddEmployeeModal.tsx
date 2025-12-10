@@ -3,7 +3,7 @@ import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
 import { Db, Establishment } from "@/types/globals";
-import { daysOptions, toastVisibilityTime } from "@/utils/globals";
+import { daysOptions, parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { and, sql } from "drizzle-orm";
 import { Controller, useForm } from "react-hook-form";
@@ -38,7 +38,7 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
       last_name: `${values.last_name}`.trim(),
       first_name: `${values.first_name}`.trim(),
       middle_initial: `${values.middle_initial}`.trim(),
-      rate: Number(values.rate),
+      rate: parseNumber(values.rate),
       establishment_id: establishment.id,
     };
 
@@ -279,19 +279,17 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
-
+                className="rounded border bg-white py-3"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b text-lg text-center">Cancel</Text>
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
-
+                className="rounded border bg-white py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b text-lg text-center">Save</Text>
+                <Text className="text-center font-b text-lg">Save</Text>
               </TouchableOpacity>
             </View>
           </View>

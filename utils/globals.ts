@@ -1,8 +1,10 @@
 import * as schema from "@/db/schema";
 import {
+  CustomPeriod,
+  PaymentType,
   Period,
-  ViolationKey,
   ViolationType,
+  ViolationValues,
   WageOrder,
 } from "@/types/globals";
 import { differenceInDays, format, parseISO, subDays } from "date-fns";
@@ -195,7 +197,7 @@ export const daysArray = [
   "Sunday",
 ];
 
-export const violationKeysArray = [
+export const violationTypesArray = [
   "Basic Wage",
   "Overtime Pay",
   "Night Shift Differential",
@@ -203,7 +205,10 @@ export const violationKeysArray = [
   "Rest Day",
   "Holiday Pay",
   "13th Month Pay",
+  "Custom",
 ];
+
+export const paymentTypesArray = ["Underpayment", "Non-payment"];
 
 export const periodFormat = {
   start_date: "",
@@ -212,6 +217,7 @@ export const periodFormat = {
   days: "",
   hours: "",
   type: "Normal Day",
+  received: "",
 };
 
 export const customPeriodFormat = {
@@ -222,20 +228,29 @@ export const customPeriodFormat = {
   days: "",
   nightShiftHours: "",
   overtimeHours: "",
+  received: "",
 };
 
 export const periodsFormat = { periods: [periodFormat] };
 
 export const getDb = (sqlDb: SQLiteDatabase) => drizzle(sqlDb, { schema });
 
-export const parseNumber = (value: string) => (value ? Number(value) : 0);
+export const parseNumber = (value: Date | string | number) => {
+  let formattedValue = 0;
+  if (value instanceof Date) {
+    formattedValue = Number(value);
+  } else {
+    formattedValue = Number(Math.round(Number(value) + "e2") + "e-2");
+  }
+  return formattedValue;
+};
 
 export const parseDate = (date: Date | string) => {
   return typeof date === "string" ? parseISO(date) : date;
 };
 
 export const formatNumber = (number: string | number) => {
-  return number.toLocaleString("en-US", {
+  return parseNumber(number).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -271,8 +286,8 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
-export const isHours = (type: ViolationKey) => {
-  return ["Overtime Pay", "Night Shift Differential"].includes(type);
+export const isHours = (violationType: ViolationType) => {
+  return ["Overtime Pay", "Night Shift Differential"].includes(violationType);
 };
 
 export const getMinimumRate = (
@@ -315,22 +330,24 @@ export const getMinimumRate = (
 
 export const calculate = (
   wageOrders: WageOrder[],
-  type: ViolationKey,
   size: string,
+  violationType: ViolationType,
+  paymentType: PaymentType,
   period: Period,
 ) => {
   let result = 0;
 
   const excluded =
-    type === "Overtime Pay" || type === "Night Shift Differential"
-      ? []
-      : ["hours"];
+    violationType === "Overtime Pay" ||
+    violationType === "Night Shift Differential"
+      ? ["received"]
+      : ["received", "hours"];
 
   if (validate(period, excluded)) {
-    const days = Number(period.days);
-    const hours = Number(period.hours);
+    const days = parseNumber(period.days);
+    const hours = parseNumber(period.hours);
 
-    const rate = Number(period.rate);
+    const rate = parseNumber(period.rate);
     const minimumRate = getMinimumRate(
       wageOrders,
       size,
@@ -339,91 +356,233 @@ export const calculate = (
     );
     const rateToUse = Math.max(rate, minimumRate);
 
-    if (type === "Basic Wage") result = (rateToUse - rate) * days;
-    else if (type === "Overtime Pay") {
+    if (violationType === "Basic Wage") {
+      if (paymentType === "Underpayment") {
+        result = (rateToUse - rate) * days;
+      } else {
+        result = rateToUse * days;
+      }
+    } else if (violationType === "Overtime Pay") {
       result =
         (rateToUse / 8) *
         (period.type === "Normal Day" ? 1.25 : 1.3) *
         (days * hours);
-    } else if (type === "Night Shift Differential") {
+    } else if (violationType === "Night Shift Differential") {
       result = (rateToUse / 8) * 0.1 * (days * hours);
-    } else if (type === "Special Day") result = rateToUse * 0.3 * days;
-    else if (type === "Rest Day") result = rateToUse * 0.3 * days;
-    else if (type === "Holiday Pay") result = rateToUse * days;
-    else if (type === "13th Month Pay") result = (rateToUse * days) / 12;
+    } else if (violationType === "Special Day") result = rateToUse * 0.3 * days;
+    else if (violationType === "Rest Day") result = rateToUse * 0.3 * days;
+    else if (violationType === "Holiday Pay") result = rateToUse * days;
+    else if (violationType === "13th Month Pay")
+      result = (rateToUse * days) / 12;
   }
 
-  return result;
+  return parseNumber(result);
 };
 
-export const getTotal = (
+export const getSubtotal = (
   wageOrders: WageOrder[],
-  type: ViolationKey,
   size: string,
-  violationType: { periods: Period[]; received: string },
+  violationType: ViolationType,
+  paymentType: PaymentType,
+  periods: Period[],
 ) => {
   let result = 0;
 
-  violationType.periods.forEach((period) => {
-    result += calculate(wageOrders, type, size, period);
+  periods.forEach((period) => {
+    result =
+      result +
+      calculate(wageOrders, size, violationType, paymentType, period) -
+      parseNumber(period.received);
   });
-
-  if (violationType.received) result -= Number(violationType.received);
 
   return result;
 };
 
-export const getPeriodFormat = (rate?: number) => {
-  return { ...periodFormat, rate: rate ? `${rate}` : "" };
+export const customCalculate = (
+  wageOrders: WageOrder[],
+  size: string,
+  period: CustomPeriod,
+) => {
+  const values = {
+    ...period,
+    rate: parseNumber(period.rate),
+    days: parseNumber(period.days),
+    nightShiftHours: parseNumber(period.nightShiftHours),
+    overtimeHours: parseNumber(period.overtimeHours),
+  };
+
+  const minimumRate = getMinimumRate(
+    wageOrders,
+    size,
+    period.start_date,
+    period.end_date,
+  );
+  const rateToUse = Math.max(values.rate, minimumRate);
+
+  const type = period.type.toLowerCase();
+  let nightShiftMultiplier = 0;
+  if (type.includes("night shift")) nightShiftMultiplier = 1.1;
+
+  let overtimeMultiplier = 0;
+  if (type.includes("ot")) {
+    overtimeMultiplier = 1.3;
+    if (type.includes("ordinary day")) overtimeMultiplier = 1.25;
+  }
+
+  let daysMultiplier = 0;
+  if (type.includes("ordinary day")) daysMultiplier = 1;
+  else if (
+    type.includes("rest day") &&
+    type.includes("special (non-working) day")
+  ) {
+    daysMultiplier = 1.5;
+    if (type.includes("double")) daysMultiplier = 1.95;
+  } else if (type.includes("holiday")) {
+    daysMultiplier = 2;
+    if (type.includes("double")) {
+      daysMultiplier = 3;
+      if (type.includes("rest day")) daysMultiplier = 3.9;
+    } else {
+      if (type.includes("rest day")) daysMultiplier = 2.6;
+    }
+  } else if (
+    type.includes("rest day") ||
+    type.includes("special (non-working) day")
+  ) {
+    daysMultiplier = 1.3;
+    if (type.includes("double")) daysMultiplier = 1.5;
+  }
+
+  let total = 0;
+  total =
+    rateToUse * daysMultiplier * values.days +
+    (rateToUse / 8) * nightShiftMultiplier * values.nightShiftHours +
+    (rateToUse / 8) * overtimeMultiplier * values.overtimeHours;
+
+  return {
+    rate: values.rate,
+    rateToUse,
+    daysMultiplier,
+    days: values.days,
+    nightShiftMultiplier,
+    nightShiftHours: values.nightShiftHours,
+    overtimeMultiplier,
+    overtimeHours: values.overtimeHours,
+    total,
+  };
 };
 
-export const getCustomPeriodFormat = (rate?: number) => {
-  return { ...customPeriodFormat, rate: rate ? `${rate}` : "" };
+export const customGetSubtotal = (
+  wageOrders: WageOrder[],
+  size: string,
+  periods: CustomPeriod[],
+) => {
+  let result = 0;
+
+  periods.forEach((period) => {
+    result =
+      result +
+      customCalculate(wageOrders, size, period).total -
+      parseNumber(period.received);
+  });
+
+  return parseNumber(result);
 };
 
-export const getInitialViolationTypes = (rate?: number) => {
-  const values = {} as Record<ViolationKey, ViolationType>;
+export const getGrandTotal = (
+  wageOrders: WageOrder[],
+  size: string,
+  violationValues: ViolationValues,
+) => {
+  let result = 0;
 
-  violationKeysArray.forEach((type) => {
-    values[type as ViolationKey] = {
-      periods: [getPeriodFormat(rate)],
-      received: "",
-    };
+  Object.keys(violationValues).forEach((violationKey) => {
+    const violationType = violationKey as ViolationType;
+    Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+      const paymentType = paymentKey as PaymentType;
+      violationValues[violationType][paymentType].forEach((period) => {
+        if (violationType === "Custom") {
+          result += customCalculate(
+            wageOrders,
+            size,
+            period as CustomPeriod,
+          ).total;
+        } else {
+          result += calculate(
+            wageOrders,
+            size,
+            violationType,
+            paymentType,
+            period as Period,
+          );
+        }
+        result -= parseNumber(period.received);
+      });
+    });
+  });
+
+  return result;
+};
+
+export const getPeriodFormat = (
+  violationType: ViolationType,
+  rate?: number,
+) => {
+  return {
+    ...(violationType === "Custom" ? customPeriodFormat : periodFormat),
+    rate: rate ? `${rate}` : "",
+  };
+};
+
+export const getInitialViolationValues = (rate?: number) => {
+  const values = {} as ViolationValues;
+
+  violationTypesArray.forEach((violationKey) => {
+    const violationType = violationKey as ViolationType;
+    if (violationType === "Custom") {
+      values[violationType] = {
+        Underpayment: [getPeriodFormat(violationType, rate)] as CustomPeriod[],
+        "Non-payment": [getPeriodFormat(violationType, rate)] as CustomPeriod[],
+      };
+    } else {
+      values[violationType] = {
+        Underpayment: [getPeriodFormat(violationType, rate)] as Period[],
+        "Non-payment": [getPeriodFormat(violationType, rate)] as Period[],
+      };
+    }
   });
 
   return values;
 };
 
-export const getInitialCustomViolationType = (rate?: number) => {
-  return { periods: [getCustomPeriodFormat(rate)], received: "" };
-};
+export const getViolationKeyword = (violationType: ViolationType) => {
+  let keyword: string = violationType;
 
-export const getViolationKeyword = (type: ViolationKey) => {
-  let keyword: string = type;
-
-  if (type === "Basic Wage") keyword = "Wages";
-  else if (type === "Special Day") keyword = "Premium Pay on Special Day";
-  else if (type === "Rest Day") keyword = "Premium Pay on Rest Day";
+  if (violationType === "Basic Wage") keyword = "Wages";
+  else if (violationType === "Special Day")
+    keyword = "Premium Pay on Special Day";
+  else if (violationType === "Rest Day") keyword = "Premium Pay on Rest Day";
 
   return keyword;
 };
 
 export const getValueKeyword = (
-  type: ViolationKey,
+  violationType: ViolationType,
   days: string,
   hours: string,
 ) => {
-  const value = isHours(type) ? hours : days;
+  const value = isHours(violationType) ? hours : days;
   let keyword = "";
 
-  if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(type)) {
+  if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(violationType)) {
     keyword = "day";
-  } else if (type === "Overtime Pay") keyword = "OT hour";
-  else if (type === "Night Shift Differential") keyword = "night-shift hour";
-  else if (type === "Special Day") keyword = "special day";
-  else if (type === "Rest Day") keyword = "rest day";
+  } else if (violationType === "Overtime Pay") keyword = "OT hour";
+  else if (violationType === "Night Shift Differential")
+    keyword = "night-shift hour";
+  else if (violationType === "Special Day") keyword = "special day";
+  else if (violationType === "Rest Day") keyword = "rest day";
 
-  if (Number(value) > 1) keyword += "s";
+  if (parseNumber(value) !== 1) keyword += "s";
 
   return keyword;
 };

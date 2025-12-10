@@ -3,7 +3,7 @@ import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
 import { Db, Employee, Establishment } from "@/types/globals";
-import { daysOptions, toastVisibilityTime } from "@/utils/globals";
+import { daysOptions, parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { and, eq, sql } from "drizzle-orm";
@@ -49,7 +49,7 @@ const UpdateEmployeeModal = ({
       last_name: `${values.last_name}`.trim(),
       first_name: `${values.first_name}`.trim(),
       middle_initial: `${values.middle_initial}`.trim(),
-      rate: Number(values.rate),
+      rate: parseNumber(values.rate),
     };
 
     try {
@@ -304,18 +304,17 @@ const UpdateEmployeeModal = ({
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
+                className="rounded border bg-white py-3"
                 onPress={() => setIsVisible(false)}
               >
-                <Text className="font-b text-lg text-center">Cancel</Text>
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
-
+                className="rounded border bg-white py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b text-lg text-center">Update</Text>
+                <Text className="text-center font-b text-lg">Update</Text>
               </TouchableOpacity>
             </View>
           </View>
