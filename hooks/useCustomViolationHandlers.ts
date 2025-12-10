@@ -1,20 +1,21 @@
 import {
   CustomPeriod,
-  Establishment,
+  Employee,
   PaymentType,
   ViolationType,
   ViolationValues,
-  WageOrder,
 } from "@/types/globals";
-import { customPeriodFormat, formatDate } from "@/utils/globals";
+import {
+  customPeriodFormat,
+  formatDate,
+  getPeriodFormat,
+} from "@/utils/globals";
 import { Updater } from "use-immer";
 
 const useCustomViolationHandlers = (
   violationType: ViolationType,
   paymentType: PaymentType,
-  wageOrders: WageOrder[],
-  establishment: Establishment | undefined,
-  violationValues: ViolationValues,
+  employee: Employee | undefined,
   setter: Updater<ViolationValues>,
 ) => {
   const handleChange = (
@@ -35,7 +36,9 @@ const useCustomViolationHandlers = (
   const handleAddPeriod = () => {
     if (violationType === "Custom") {
       setter((draft) => {
-        draft[violationType][paymentType].push(customPeriodFormat);
+        draft[violationType][paymentType].push(
+          getPeriodFormat(violationType, employee?.rate) as CustomPeriod,
+        );
       });
     }
   };

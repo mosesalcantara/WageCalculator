@@ -9,7 +9,13 @@ import useFetchViolations from "@/hooks/useFetchViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import useViolationHandlers from "@/hooks/useViolationHandlers";
 import { period as schema, Period as Values } from "@/schemas/globals";
-import { PaymentType, ViolationType, ViolationValues } from "@/types/globals";
+import {
+  CustomPeriod,
+  PaymentType,
+  Period,
+  ViolationType,
+  ViolationValues,
+} from "@/types/globals";
 import {
   customCalculate,
   customGetSubtotal,
@@ -71,9 +77,7 @@ const ViolationsPage = () => {
   const customViolationHandlers = useCustomViolationHandlers(
     violationType,
     paymentType,
-    wageOrders || [],
-    establishment,
-    violationValues,
+    employee,
     setViolationValues,
   );
 
@@ -145,15 +149,17 @@ const ViolationsPage = () => {
       };
     });
 
-    // if (violationType === "Custom") {
-    //   setViolationValues((draft) => {
-    //     draft[violationType][paymentType].push(...(periodsFormat as CustomPeriod[]));
-    //   });
-    // } else {
-    //   setViolationValues((draft) => {
-    //     draft[violationType][paymentType].push(periodsFormat);
-    //   });
-    // }
+    if (violationType === "Custom") {
+      setViolationValues((draft) => {
+        draft[violationType][paymentType].push(
+          ...(periodsFormat as CustomPeriod[]),
+        );
+      });
+    } else {
+      setViolationValues((draft) => {
+        draft[violationType][paymentType].push(...(periodsFormat as Period[]));
+      });
+    }
   };
 
   useFocusEffect(
