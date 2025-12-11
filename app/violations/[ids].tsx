@@ -24,6 +24,7 @@ import {
   formatNumber,
   getDb,
   getGrandTotal,
+  getParamValue,
   getPeriods,
   getSubtotal,
   parseNumber,
@@ -51,9 +52,11 @@ import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const ViolationsPage = () => {
-  const { id: employee_id } = useLocalSearchParams() as {
-    [key: string]: string;
-  };
+  const { ids }: { ids: string } = useLocalSearchParams();
+
+  const pairs = ids.split("&");
+  const establishment_id = getParamValue(pairs[0]);
+  const employee_id = getParamValue(pairs[1]);
 
   const db = getDb(useSQLiteContext());
   const router = useRouter();
@@ -196,7 +199,7 @@ const ViolationsPage = () => {
       const handleBackPress = () => {
         router.navigate({
           pathname: "/employees/[id]",
-          params: { id: employee_id },
+          params: { id: establishment_id },
         });
         saveViolations(violationValues);
         return true;

@@ -235,6 +235,10 @@ export const periodsFormat = { periods: [periodFormat] };
 
 export const getDb = (sqlDb: SQLiteDatabase) => drizzle(sqlDb, { schema });
 
+export const getParamValue = (pair: string) => {
+  return pair.split("=")[1];
+};
+
 export const parseNumber = (value: Date | string | number) => {
   let formattedValue = 0;
   if (value instanceof Date) {

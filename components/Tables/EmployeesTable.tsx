@@ -76,8 +76,10 @@ const EmployeesTable = ({
 
   const setEmployee = (employee_id: number) => {
     router.navigate({
-      pathname: "/violations/[id]",
-      params: { id: employee_id },
+      pathname: "/violations/[ids]",
+      params: {
+        ids: `establishment_id=${establishment.id}&employee_id=${employee_id}`,
+      },
     });
   };
 
