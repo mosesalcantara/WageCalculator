@@ -194,7 +194,10 @@ const ViolationsPage = () => {
       };
 
       const handleBackPress = () => {
-        router.navigate("/employees");
+        router.navigate({
+          pathname: "/employees/[id]",
+          params: { id: employee_id },
+        });
         saveViolations(violationValues);
         return true;
       };
