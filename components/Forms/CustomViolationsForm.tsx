@@ -69,8 +69,10 @@ const CustomViolationsForm = ({
   onClearPeriod,
   onRemovePeriod,
 }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
+  const [modalVisibility, setModalVisibility] = useImmer({
+    startDate: false,
+    endDate: false,
+  });
 
   const periods = violationValues[violationType][paymentType] as CustomPeriod[];
   const period = violationValues[violationType][paymentType][
@@ -114,7 +116,11 @@ const CustomViolationsForm = ({
 
                 <TouchableOpacity
                   className="h-12 flex-row items-center justify-between rounded-md border border-black px-2.5"
-                  onPress={() => setIsStartDateModalVisible(true)}
+                  onPress={() =>
+                    setModalVisibility((draft) => {
+                      draft.startDate = true;
+                    })
+                  }
                 >
                   <Text className="font-r">
                     {period.start_date || "Select date"}
@@ -129,7 +135,11 @@ const CustomViolationsForm = ({
 
                 <TouchableOpacity
                   className="h-12 flex-row items-center justify-between rounded-md border border-black  px-2.5"
-                  onPress={() => setIsEndDateModalVisible(true)}
+                  onPress={() =>
+                    setModalVisibility((draft) => {
+                      draft.endDate = true;
+                    })
+                  }
                 >
                   <Text className="font-r">
                     {period.end_date || "Select date"}
@@ -291,7 +301,7 @@ const CustomViolationsForm = ({
         </View>
       </View>
 
-      {isStartDateModalVisible && (
+      {modalVisibility.startDate && (
         <DateTimePicker
           value={period.start_date ? parseDate(period.start_date) : new Date()}
           mode="date"
@@ -299,12 +309,14 @@ const CustomViolationsForm = ({
             if (event.type === "set" && value) {
               onChange(index, "start_date", value);
             }
-            setIsStartDateModalVisible(false);
+            setModalVisibility((draft) => {
+              draft.startDate = false;
+            });
           }}
         />
       )}
 
-      {isEndDateModalVisible && (
+      {modalVisibility.endDate && (
         <DateTimePicker
           value={period.end_date ? parseDate(period.end_date) : new Date()}
           mode="date"
@@ -312,7 +324,9 @@ const CustomViolationsForm = ({
             if (event.type === "set" && value) {
               onChange(index, "end_date", value);
             }
-            setIsEndDateModalVisible(false);
+            setModalVisibility((draft) => {
+              draft.endDate = false;
+            });
           }}
         />
       )}

@@ -15,8 +15,10 @@ type Props = {
 };
 
 const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
-  const [isStartDateModalVisible, setIsStartDateModalVisible] = useImmer(false);
-  const [isEndDateModalVisible, setIsEndDateModalVisible] = useImmer(false);
+  const [modalVisibility, setModalVisibility] = useImmer({
+    startDate: false,
+    endDate: false,
+  });
 
   const {
     control,
@@ -63,7 +65,11 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                         <>
                           <TouchableOpacity
                             className="h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                            onPress={() => setIsStartDateModalVisible(true)}
+                            onPress={() =>
+                              setModalVisibility((draft) => {
+                                draft.startDate = true;
+                              })
+                            }
                           >
                             <Text className="font-r">
                               {value ? formatDate(value) : "Select date"}
@@ -94,7 +100,11 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                         <>
                           <TouchableOpacity
                             className=" h-12 flex-row items-center justify-between rounded-md border border-[#ccc] bg-[#fafafa] px-2.5"
-                            onPress={() => setIsEndDateModalVisible(true)}
+                            onPress={() =>
+                              setModalVisibility((draft) => {
+                                draft.endDate = true;
+                              })
+                            }
                           >
                             <Text className="font-r">
                               {value ? formatDate(value) : "Select date"}
@@ -114,27 +124,25 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                   </View>
                 </View>
 
-            <View className="mt-6 gap-3">
+                <View className="mt-6 gap-3">
                   <TouchableOpacity
-                className="rounded bg-white py-3 border"
-
+                    className="rounded border bg-white py-3"
                     onPress={() => onToggle(false)}
                   >
-                    <Text className="font-b text-lg text-center">Cancel</Text>
+                    <Text className="text-center font-b text-lg">Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                className="rounded bg-white py-3 border"
-
+                    className="rounded border bg-white py-3"
                     onPress={handleSubmit(onSubmit)}
                   >
-                    <Text className="font-b text-lg text-center">Add</Text>
+                    <Text className="text-center font-b text-lg">Add</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>
 
-            {isStartDateModalVisible && (
+            {modalVisibility.startDate && (
               <DateTimePicker
                 value={getValues("start_date") || new Date()}
                 mode="date"
@@ -143,12 +151,14 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                     setValue("start_date", value);
                     await trigger("start_date");
                   }
-                  setIsStartDateModalVisible(false);
+                  setModalVisibility((draft) => {
+                    draft.startDate = false;
+                  });
                 }}
               />
             )}
 
-            {isEndDateModalVisible && (
+            {modalVisibility.endDate && (
               <DateTimePicker
                 value={getValues("end_date") || new Date()}
                 mode="date"
@@ -157,7 +167,9 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                     setValue("end_date", value);
                     await trigger("end_date");
                   }
-                  setIsEndDateModalVisible(false);
+                  setModalVisibility((draft) => {
+                    draft.endDate = false;
+                  });
                 }}
               />
             )}
