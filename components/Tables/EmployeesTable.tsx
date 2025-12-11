@@ -74,10 +74,10 @@ const EmployeesTable = ({
     return sortedEmployees;
   }, [sortedEmployees, searchQuery]);
 
-  const setEmployee = (id: number) => {
+  const setEmployee = (employee_id: number) => {
     router.navigate({
       pathname: "/violations/[id]",
-      params: { id },
+      params: { id: employee_id },
     });
   };
 
