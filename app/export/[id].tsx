@@ -6,16 +6,24 @@ import NavBar from "@/components/NavBar";
 import useFetchEstablishmentViolations from "@/hooks/useFetchEstablishmentViolations";
 import useFetchWageOrders from "@/hooks/useFetchWageOrders";
 import { getDb } from "@/utils/globals";
+import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 
 const ExportPage = () => {
+  const { id: establishment_id } = useLocalSearchParams() as {
+    [key: string]: string;
+  };
+
   const db = getDb(useSQLiteContext());
 
   const { wageOrders } = useFetchWageOrders(db);
-  const { establishment } = useFetchEstablishmentViolations(db);
+  const { establishment } = useFetchEstablishmentViolations(
+    db,
+    establishment_id,
+  );
 
   const previewHTML = establishment
     ? generateHTML(wageOrders || [], establishment, true)

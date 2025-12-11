@@ -3,21 +3,18 @@ import { Db, Establishment, Violation } from "@/types/globals";
 import { parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect } from "react";
-import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-const useFetchEstablishmentViolations = (db: Db) => {
+const useFetchEstablishmentViolations = (db: Db, establishment_id: string) => {
   const [establishment, setEstablishment] = useImmer<Establishment | undefined>(
     undefined,
   );
 
   const handleFetch = useCallback(async () => {
     try {
-      const id = SessionStorage.getItem("establishment_id");
-
       const establishment = await db.query.establishments.findFirst({
-        where: eq(establishments.id, parseNumber(id as string)),
+        where: eq(establishments.id, parseNumber(establishment_id)),
         with: { employees: { with: { violations: true } } },
       });
 
@@ -46,7 +43,7 @@ const useFetchEstablishmentViolations = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, [setEstablishment]);
+  }, [establishment_id, setEstablishment]);
 
   useEffect(() => {
     handleFetch();

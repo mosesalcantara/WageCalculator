@@ -2,9 +2,8 @@ import confirmAlert from "@/components/ConfirmAlert";
 import UpdateEstablishmentModal from "@/components/Modals/UpdateEstablishmentModal";
 import { Db, Establishment } from "@/types/globals";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Href, Router } from "expo-router";
+import { RelativePathString, Router } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import SessionStorage from "react-native-session-storage";
 
 type Props = {
   db: Db;
@@ -22,8 +21,10 @@ const EstablishmentsTable = ({
   onDelete,
 }: Props) => {
   const setEstablishment = (id: number, route: string) => {
-    SessionStorage.setItem("establishment_id", `${id}`);
-    router.push(`/${route}` as Href);
+    router.navigate({
+      pathname: `/${route}/[id]` as RelativePathString,
+      params: { id },
+    });
   };
 
   return (

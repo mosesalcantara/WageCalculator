@@ -13,13 +13,10 @@ import {
 } from "@/utils/globals";
 import { eq } from "drizzle-orm";
 import { useCallback, useEffect } from "react";
-import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-const useFetchViolations = (db: Db) => {
-  const employee_id = SessionStorage.getItem("employee_id");
-
+const useFetchViolations = (db: Db, employee_id: string) => {
   const [establishment, setEstablishment] = useImmer<Establishment | undefined>(
     undefined,
   );
@@ -32,7 +29,7 @@ const useFetchViolations = (db: Db) => {
   const handleFetch = useCallback(async () => {
     try {
       const employee = await db.query.employees.findFirst({
-        where: eq(employees.id, parseNumber(employee_id as string)),
+        where: eq(employees.id, parseNumber(employee_id)),
         with: { establishment: true, violations: true },
       });
 

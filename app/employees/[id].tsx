@@ -4,17 +4,24 @@ import EmployeesTable from "@/components/Tables/EmployeesTable";
 import useDeleteEmployee from "@/hooks/useDeleteEmployee";
 import useFetchEmployees from "@/hooks/useFetchEmployees";
 import { getDb } from "@/utils/globals";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { BackHandler, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const EmployeesPage = () => {
+  const { id: establishment_id } = useLocalSearchParams() as {
+    [key: string]: string;
+  };
+
   const db = getDb(useSQLiteContext());
   const router = useRouter();
 
-  const { establishment, employees, refetch } = useFetchEmployees(db);
+  const { establishment, employees, refetch } = useFetchEmployees(
+    db,
+    establishment_id,
+  );
   const { handleDelete } = useDeleteEmployee(db, refetch);
 
   useFocusEffect(

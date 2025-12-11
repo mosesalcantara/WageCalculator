@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import SessionStorage from "react-native-session-storage";
 import { useImmer } from "use-immer";
 
 type Props = {
@@ -76,8 +75,10 @@ const EmployeesTable = ({
   }, [sortedEmployees, searchQuery]);
 
   const setEmployee = (id: number) => {
-    SessionStorage.setItem("employee_id", `${id}`);
-    router.push("/violations");
+    router.navigate({
+      pathname: "/violations/[id]",
+      params: { id },
+    });
   };
 
   return (

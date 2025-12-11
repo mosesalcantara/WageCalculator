@@ -32,7 +32,7 @@ import {
 } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -47,15 +47,17 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const ViolationsPage = () => {
+  const { id: employee_id } = useLocalSearchParams() as {
+    [key: string]: string;
+  };
+
   const db = getDb(useSQLiteContext());
   const router = useRouter();
   const form = useForm({ resolver: yupResolver(schema) });
-  const employee_id = SessionStorage.getItem("employee_id") as string;
 
   const [violationType, setViolationType] =
     useImmer<ViolationType>("Basic Wage");
@@ -66,7 +68,7 @@ const ViolationsPage = () => {
   const { holidays } = useFetchHolidays(db);
 
   const { establishment, employee, violationValues, setViolationValues } =
-    useFetchViolations(db);
+    useFetchViolations(db, employee_id);
 
   const violationHandlers = useViolationHandlers(
     violationType,
