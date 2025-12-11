@@ -261,46 +261,55 @@ const ViolationsPage = () => {
               </View>
 
               <View className="gap-2 border-b border-b-[#333] bg-primary p-2.5">
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View className="flex-row gap-1">
-                    {getTabs(establishment.size).map((tab) => (
-                      <TouchableOpacity
-                        key={tab.name}
-                        onPress={() => {
-                          setViolationType(tab.name as ViolationType);
-                          setPaymentType("Underpayment");
-                        }}
-                      >
-                        <Text
-                          className={`${violationType === tab.name ? "text-white" : ""}`}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
+                  <View className="flex-row gap-2">
+                    {getTabs(establishment.size).map((tab) => {
+                      const isActive = violationType === tab.name;
+
+                      return (
+                        <TouchableOpacity
+                          key={tab.name}
+                          onPress={() => {
+                            setViolationType(tab.name as ViolationType);
+                            setPaymentType("Underpayment");
+                          }}
+                            className={`rounded-xl border px-4 py-2 
+                            ${isActive ? "border-black bg-black" : "border-[#555]"}
+                          `}
                         >
-                          {tab.name}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
+                          <Text
+                            className={`font-b text-sm
+                            ${isActive ? "text-white" : "text-white"}
+                          `}
+                          >
+                            {tab.name}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
                   </View>
                 </ScrollView>
 
-                <View className="flex-row gap-2">
-                  <TouchableOpacity
-                    onPress={() => setPaymentType("Underpayment")}
-                  >
-                    <Text
-                      className={`${paymentType === "Underpayment" ? "text-white" : ""}`}
-                    >
-                      Underpayment
-                    </Text>
-                  </TouchableOpacity>
+                <View className="mt-2 flex-row gap-3">
+                  {["Underpayment", "Non-payment"].map((type) => {
+                    const isActive = paymentType === type;
 
-                  <TouchableOpacity
-                    onPress={() => setPaymentType("Non-payment")}
-                  >
-                    <Text
-                      className={`${paymentType === "Non-payment" ? "text-white" : ""}`}
-                    >
-                      Non-payment
-                    </Text>
-                  </TouchableOpacity>
+                    return (
+                      <TouchableOpacity
+                        key={type}
+                        onPress={() => setPaymentType(type as PaymentType)}
+                        className={`rounded-lg border px-3 py-1.5 
+                          ${isActive ? "border-black bg-black" : "border-[#555]"}
+                        `}>
+                        <Text
+                          className={`font-b
+                          ${isActive ? "text-white" : "text-white"}
+                        `}>
+                          {type}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
 
