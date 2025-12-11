@@ -185,7 +185,7 @@ const exportXLSX = async (
         text = `Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
         break;
       case "Night Shift Differential":
-        text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword}`;
+        text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
         break;
       case "Special Day":
         text = `Php${formattedRateToUse} x 30% x ${period.days} ${keyword}`;

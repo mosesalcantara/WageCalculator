@@ -322,7 +322,7 @@ const generateHTML = (
       case "Night Shift Differential":
         html += `
                   <p>
-                    Php${formattedRateToUse} / 8 x 10% x ${period.days} x ${period.hours} ${keyword} 
+                    Php${formattedRateToUse} / 8 x 10% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
                     <span class="value">= Php${total}</span>
                   </p>
                 `;
