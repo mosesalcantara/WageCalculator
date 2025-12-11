@@ -33,8 +33,8 @@ const ViewSettingsModal = ({ router }: Props) => {
           <View className="mt-[0%] h-[100%] w-full gap-2 rounded-t-xl bg-primary p-4">
             <View>
               <TouchableOpacity
-                className="mt-4 rounded-[0.625rem] bg-black p-4 border"
-                onPress={() => router.push("/settings/wage-orders")}
+                className="mt-4 rounded-[0.625rem] border bg-black p-4"
+                onPress={() => router.navigate("/settings/wage-orders")}
               >
                 <Text className="text-center font-b text-xl text-white">
                   📑 Wage Orders
@@ -44,8 +44,8 @@ const ViewSettingsModal = ({ router }: Props) => {
 
             <View>
               <TouchableOpacity
-                className="mt-1 rounded-[0.625rem] bg-black p-4 border"
-                onPress={() => router.push("/settings/holidays")}
+                className="mt-1 rounded-[0.625rem] border bg-black p-4"
+                onPress={() => router.navigate("/settings/holidays")}
               >
                 <Text className="text-center font-b text-xl text-white">
                   📅 Holidays
@@ -55,7 +55,7 @@ const ViewSettingsModal = ({ router }: Props) => {
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="rounded bg-white py-3 border"
+                className="rounded border bg-white py-3"
                 onPress={() => setIsVisible(false)}
               >
                 <Text className="text-center font-b text-xl">Cancel</Text>

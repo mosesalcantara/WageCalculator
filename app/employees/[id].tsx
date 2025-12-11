@@ -27,7 +27,7 @@ const EmployeesPage = () => {
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
-        router.push("/");
+        router.navigate("/");
         return true;
       };
 

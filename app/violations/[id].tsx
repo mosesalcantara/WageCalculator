@@ -194,7 +194,7 @@ const ViolationsPage = () => {
       };
 
       const handleBackPress = () => {
-        router.push("/employees");
+        router.navigate("/employees");
         saveViolations(violationValues);
         return true;
       };
