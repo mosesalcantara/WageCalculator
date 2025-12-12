@@ -1,6 +1,7 @@
 import * as schema from "@/db/schema";
 import {
   CustomPeriod,
+  Employee,
   PaymentType,
   Period,
   ViolationType,
@@ -523,6 +524,26 @@ export const getTotal = (
         result -= parseNumber(period.received);
       });
     });
+  });
+
+  return result;
+};
+
+export const getGrandTotal = (
+  wageOrders: WageOrder[],
+  size: string,
+  employees: Employee[],
+) => {
+  let result = 0;
+
+  employees.forEach((employee) => {
+    if (employee.violations) {
+      result += getTotal(
+        wageOrders,
+        size,
+        JSON.parse(employee.violations[0].values as string),
+      );
+    }
   });
 
   return result;

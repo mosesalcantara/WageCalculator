@@ -11,6 +11,7 @@ import {
   calculate,
   formatDate,
   formatNumber,
+  getGrandTotal,
   getMinimumRate,
   getSubtotal,
   getValueKeyword,
@@ -25,9 +26,10 @@ const getStyles = (isPreview: boolean) => {
   return `
             <style>
               body {
-                font-family: Arial, sans-serif;
                 margin: 1.25rem;
                 padding: 0;
+                font-family: Arial, sans-serif;
+                font-size: ${isPreview ? "2" : "0.75"}rem;
               }
               table {
                 width: 100%;
@@ -36,14 +38,13 @@ const getStyles = (isPreview: boolean) => {
               }
               th, td {
                 padding: 0 0.375rem;
-                font-size: ${isPreview ? "2" : "0.75"}rem;
               }
               h1 {
                 text-align: center; 
-                font-size: ${isPreview ? "2.5" : "1.25"}rem;
                 font-weight: bold;
                 color: black;
                 margin-bottom: 1.25rem;
+                font-size: ${isPreview ? "2.5" : "1.25"}rem;
               }
               p {
                 margin: 0;
@@ -54,6 +55,10 @@ const getStyles = (isPreview: boolean) => {
               }
               .underline {
                 text-decoration: underline;
+              }
+              .double-underline {
+                text-decoration: underline;
+                text-decoration-style: double;
               }
               .right {
                 text-align: right;
@@ -104,6 +109,8 @@ const generateHTML = (
         html += `      
                   <tr>
                       <td>
+                        ${index > 0 ? `<p class="space">&nbsp</p>` : ""}
+                        
                         <p>
                           ${index + 1}. 
                           ${employee.last_name.toUpperCase()}, 
@@ -172,8 +179,7 @@ const generateHTML = (
       });
 
       html += `
-                <p class="bold right">Total: Php${formatNumber(total)}</p>
-                <p class="space">&nbsp</p>
+                <p class="right bold double-underline">Total: Php${formatNumber(total)}</p>
               `;
     }
 
@@ -228,10 +234,8 @@ const generateHTML = (
                         Php${formatNumber(period.received)}
                       </p>
     
-                      <p>
-                        Php${formatNumber(result)} - ${formatNumber(period.received)} 
-                        <span>= Php${formatNumber(result - parseNumber(period.received))}</span>
-                      </p>
+                      <p>Php${formatNumber(result)} - ${formatNumber(period.received)} =</p>
+                      <p class="right underline">Php${formatNumber(result - parseNumber(period.received))}</p>
                     `
                       : ""
                   }
@@ -257,6 +261,7 @@ const generateHTML = (
     period: Period,
   ) => {
     let html = "";
+    let valueHtml = "";
 
     const rate = parseNumber(period.rate);
     const minimumRate = getMinimumRate(
@@ -292,20 +297,26 @@ const generateHTML = (
     );
     const keyword = getValueKeyword(violationType, period.days, period.hours);
 
+    if (parseNumber(period.received) > 0) {
+      valueHtml = `<span>Php${total}</span>`;
+    } else {
+      valueHtml = `<p class="right underline">Php${total}</p>`;
+    }
+
     switch (violationType) {
       case "Basic Wage":
         if (paymentType === "Underpayment") {
           html += `
                   <p>
-                    Php${formatNumber(minimumRate)} - ${formatNumber(rate)} x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formatNumber(minimumRate)} - ${formatNumber(rate)} x ${period.days} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         } else {
           html += `
                   <p>
-                    Php${formattedRateToUse} x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} x ${period.days} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         }
@@ -314,47 +325,48 @@ const generateHTML = (
       case "Overtime Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} / 8 x ${period.type === "Normal Day" ? "125" : "130"}% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         break;
       case "Night Shift Differential":
         html += `
                   <p>
-                    Php${formattedRateToUse} / 8 x 10% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} / 8 x 10% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         break;
       case "Special Day":
         html += `
                   <p>
-                    Php${formattedRateToUse} x 30% x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} x 30% x ${period.days} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         break;
       case "Rest Day":
         html += `
                   <p>
-                    Php${formattedRateToUse} x 30% x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} x 30% x ${period.days} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         break;
       case "Holiday Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} x ${period.days} ${keyword} 
-                    <span class="value">= Php${total}</span>
+                    Php${formattedRateToUse} x ${period.days} ${keyword} =
+                    ${valueHtml}
                   </p>
                 `;
         break;
       case "13th Month Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months = Php${total}
+                    Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months =
+                    ${valueHtml}
                   </p>
                 `;
         break;
@@ -379,23 +391,29 @@ const generateHTML = (
               <body>
                 ${
                   establishment &&
-                  `<h1>${establishment.name.toUpperCase()}</h1>
+                  `
+                  <h1>${establishment.name.toUpperCase()}</h1>
 
-                  <table>
-                    <tbody>
-                      ${
-                        establishment &&
-                        establishment.employees &&
-                        establishment.employees
-                          .map(
-                            (employee, index) => `
-                          ${renderEmployee(index, employee)}
-                        `,
-                          )
-                          .join("")
-                      }
-                    </tbody>
-                  </table>
+                  ${
+                    establishment &&
+                    establishment.employees &&
+                    `
+                      <table>
+                        <tbody>
+                          ${establishment.employees
+                            .map(
+                              (employee, index) => `
+                              ${renderEmployee(index, employee)}
+                            `,
+                            )
+                            .join("")}
+                        </tbody>
+                      </table>
+
+                      <p class="right bold double-underline">Grand Total: Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}</p>
+                    `
+                  }
+
                   `
                 }
               </body>
