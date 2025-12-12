@@ -264,8 +264,12 @@ const ViolationsPage = () => {
               </View>
 
               <View className="gap-2 border-b border-b-[#333] bg-primary p-2.5">
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View className="flex-row gap-1">
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ paddingRight: 16 }}
+                >
+                  <View className="flex-row gap-2">
                     {getTabs(establishment.size).map((tab) => (
                       <TouchableOpacity
                         key={tab.name}
@@ -273,9 +277,14 @@ const ViolationsPage = () => {
                           setViolationType(tab.name as ViolationType);
                           setPaymentType("Underpayment");
                         }}
+                        className={`rounded-xl border px-4 py-2 
+                            ${violationType === tab.name ? "border-black bg-black" : "border-[#555]"}
+                          `}
                       >
                         <Text
-                          className={`${violationType === tab.name ? "text-white" : ""}`}
+                          className={`font-b text-sm
+                            ${violationType === tab.name ? "text-white" : "text-white"}
+                          `}
                         >
                           {tab.name}
                         </Text>
@@ -284,26 +293,24 @@ const ViolationsPage = () => {
                   </View>
                 </ScrollView>
 
-                <View className="flex-row gap-2">
-                  <TouchableOpacity
-                    onPress={() => setPaymentType("Underpayment")}
-                  >
-                    <Text
-                      className={`${paymentType === "Underpayment" ? "text-white" : ""}`}
+                <View className="mt-2 flex-row gap-3">
+                  {["Underpayment", "Non-payment"].map((type) => (
+                    <TouchableOpacity
+                      key={type}
+                      onPress={() => setPaymentType(type as PaymentType)}
+                      className={`rounded-lg border px-3 py-1.5 
+                          ${paymentType === type ? "border-black bg-black" : "border-[#555]"}
+                        `}
                     >
-                      Underpayment
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => setPaymentType("Non-payment")}
-                  >
-                    <Text
-                      className={`${paymentType === "Non-payment" ? "text-white" : ""}`}
-                    >
-                      Non-payment
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        className={`font-b
+                          ${paymentType === type ? "text-white" : "text-white"}
+                        `}
+                      >
+                        {type}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 
