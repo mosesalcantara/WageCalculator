@@ -23,9 +23,10 @@ import {
   formatDate,
   formatNumber,
   getDb,
-  getGrandTotal,
+  getParamValue,
   getPeriods,
   getSubtotal,
+  getTotal,
   parseNumber,
   periodFormat,
   toastVisibilityTime,
@@ -51,9 +52,11 @@ import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const ViolationsPage = () => {
-  const { id: employee_id } = useLocalSearchParams() as {
-    [key: string]: string;
-  };
+  const { ids }: { ids: string } = useLocalSearchParams();
+
+  const pairs = ids.split("&");
+  const establishment_id = getParamValue(pairs[0]);
+  const employee_id = getParamValue(pairs[1]);
 
   const db = getDb(useSQLiteContext());
   const router = useRouter();
@@ -196,7 +199,7 @@ const ViolationsPage = () => {
       const handleBackPress = () => {
         router.navigate({
           pathname: "/employees/[id]",
-          params: { id: employee_id },
+          params: { id: establishment_id },
         });
         saveViolations(violationValues);
         return true;
@@ -239,13 +242,9 @@ const ViolationsPage = () => {
                   </Text>
 
                   <Text className="font-b text-xl">
-                    Grand Total:{" "}
+                    Total:{" "}
                     {formatNumber(
-                      getGrandTotal(
-                        wageOrders,
-                        establishment.size,
-                        violationValues,
-                      ),
+                      getTotal(wageOrders, establishment.size, violationValues),
                     )}
                   </Text>
                 </View>
@@ -261,55 +260,53 @@ const ViolationsPage = () => {
               </View>
 
               <View className="gap-2 border-b border-b-[#333] bg-primary p-2.5">
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ paddingRight: 16 }}
+                >
                   <View className="flex-row gap-2">
-                    {getTabs(establishment.size).map((tab) => {
-                      const isActive = violationType === tab.name;
-
-                      return (
-                        <TouchableOpacity
-                          key={tab.name}
-                          onPress={() => {
-                            setViolationType(tab.name as ViolationType);
-                            setPaymentType("Underpayment");
-                          }}
-                            className={`rounded-xl border px-4 py-2 
-                            ${isActive ? "border-black bg-black" : "border-[#555]"}
+                    {getTabs(establishment.size).map((tab) => (
+                      <TouchableOpacity
+                        key={tab.name}
+                        onPress={() => {
+                          setViolationType(tab.name as ViolationType);
+                          setPaymentType("Underpayment");
+                        }}
+                        className={`rounded-xl border px-4 py-2 
+                            ${violationType === tab.name ? "border-black bg-black" : "border-[#555]"}
+                          `}
+                      >
+                        <Text
+                          className={`font-b text-sm
+                            ${violationType === tab.name ? "text-white" : "text-white"}
                           `}
                         >
-                          <Text
-                            className={`font-b text-sm
-                            ${isActive ? "text-white" : "text-white"}
-                          `}
-                          >
-                            {tab.name}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
+                          {tab.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
                   </View>
                 </ScrollView>
 
                 <View className="mt-2 flex-row gap-3">
-                  {["Underpayment", "Non-payment"].map((type) => {
-                    const isActive = paymentType === type;
-
-                    return (
-                      <TouchableOpacity
-                        key={type}
-                        onPress={() => setPaymentType(type as PaymentType)}
-                        className={`rounded-lg border px-3 py-1.5 
-                          ${isActive ? "border-black bg-black" : "border-[#555]"}
-                        `}>
-                        <Text
-                          className={`font-b
-                          ${isActive ? "text-white" : "text-white"}
-                        `}>
-                          {type}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
+                  {["Underpayment", "Non-payment"].map((type) => (
+                    <TouchableOpacity
+                      key={type}
+                      onPress={() => setPaymentType(type as PaymentType)}
+                      className={`rounded-lg border px-3 py-1.5 
+                          ${paymentType === type ? "border-black bg-black" : "border-[#555]"}
+                        `}
+                    >
+                      <Text
+                        className={`font-b
+                          ${paymentType === type ? "text-white" : "text-white"}
+                        `}
+                      >
+                        {type}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 

@@ -133,13 +133,13 @@ const generateHTML = (
         employee.violations[0].values as string,
       );
 
-      let grandTotal = 0;
+      let total = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
         Object.keys(violationValues[violationType]).forEach((paymentKey) => {
           const paymentType = paymentKey as PaymentType;
 
-          grandTotal += getSubtotal(
+          total += getSubtotal(
             wageOrders,
             establishment.size,
             violationType,
@@ -172,7 +172,7 @@ const generateHTML = (
       });
 
       html += `
-                <p class="bold right">Grand Total: Php${formatNumber(grandTotal)}</p>
+                <p class="bold right">Total: Php${formatNumber(total)}</p>
                 <p class="space">&nbsp</p>
               `;
     }
