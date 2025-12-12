@@ -11,7 +11,7 @@ const ViewSettingsModal = ({ router }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
+        className="rounded-[1.875rem] bg-[#102a47] p-3"
         onPress={() => setIsVisible(true)}
       >
         <MaterialIcons name="settings" size={20} color="white" />

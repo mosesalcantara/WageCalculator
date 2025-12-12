@@ -78,7 +78,7 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
+        className="rounded-[1.875rem] bg-[#102a47] p-3"
         onPress={() => setIsVisible(true)}
       >
         <MaterialIcons name="add" size={20} color="white" />
@@ -166,7 +166,9 @@ const AddEstablishmentModal = ({ db, refetch }: Props) => {
                 className="rounded border bg-black py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="text-center text-white font-b text-lg">Save</Text>
+                <Text className="text-center font-b text-lg text-white">
+                  Save
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="rounded border bg-white py-3"
