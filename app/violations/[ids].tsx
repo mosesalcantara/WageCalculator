@@ -31,6 +31,7 @@ import {
   periodFormat,
   toastVisibilityTime,
 } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
@@ -277,13 +278,22 @@ const ViolationsPage = () => {
                             ${violationType === tab.name ? "border-black bg-black" : "border-[#555]"}
                           `}
                       >
+                        <View className="flex-col items-center gap-1">
+                          <MaterialIcons
+                            name={tab.icon as any}
+                            size={20}
+                            color={
+                              violationType === tab.name ? "white" : "black"
+                            }
+                          />
                         <Text
                           className={`font-b text-sm
-                            ${violationType === tab.name ? "text-white" : "text-white"}
+                            ${violationType === tab.name ? "text-white" : "text-black"}
                           `}
                         >
                           {tab.name}
                         </Text>
+                        </View>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -300,7 +310,7 @@ const ViolationsPage = () => {
                     >
                       <Text
                         className={`font-b
-                          ${paymentType === type ? "text-white" : "text-white"}
+                          ${paymentType === type ? "text-white" : "text-black"}
                         `}
                       >
                         {type}

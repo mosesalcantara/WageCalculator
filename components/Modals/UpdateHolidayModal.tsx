@@ -178,10 +178,10 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
 
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mt-2.5 rounded border bg-white px-2.5 py-3"
+                className="mt-2.5 rounded border bg-black px-2.5 py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="text-center font-b text-lg">Update</Text>
+                <Text className="text-center font-b text-white text-lg">Update</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="mt-2.5 rounded border bg-white px-2.5 py-3"
