@@ -286,13 +286,13 @@ const ViolationsPage = () => {
                               violationType === tab.name ? "white" : "black"
                             }
                           />
-                        <Text
-                          className={`font-b text-sm
+                          <Text
+                            className={`font-b text-sm
                             ${violationType === tab.name ? "text-white" : "text-black"}
                           `}
-                        >
-                          {tab.name}
-                        </Text>
+                          >
+                            {tab.name}
+                          </Text>
                         </View>
                       </TouchableOpacity>
                     ))}
@@ -322,7 +322,7 @@ const ViolationsPage = () => {
 
               <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                className="mt-4 h-[67%] px-4"
+                className="mt-4 h-[64%] px-4"
               >
                 <ScrollView>
                   <Text className="font-b text-xl">
