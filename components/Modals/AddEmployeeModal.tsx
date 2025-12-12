@@ -104,7 +104,14 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
+        className="rounded bg-[#102a47] p-3"
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
         onPress={() => setIsVisible(true)}
       >
         <Text className="text-center font-b text-white">Add Employee</Text>
@@ -280,16 +287,15 @@ const AddEmployeeModal = ({ db, establishment, refetch }: Props) => {
             <View className="mt-6 gap-3">
               <TouchableOpacity
                 className="rounded border bg-white py-3"
-                onPress={() => setIsVisible(false)}
-              >
-                <Text className="text-center font-b text-lg">Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                className="rounded border bg-white py-3"
                 onPress={handleSubmit(onSubmit)}
               >
                 <Text className="text-center font-b text-lg">Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="rounded border bg-white py-3"
+                onPress={() => setIsVisible(false)}
+              >
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>

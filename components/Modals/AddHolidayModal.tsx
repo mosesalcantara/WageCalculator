@@ -68,7 +68,14 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
+        className="rounded bg-[#102a47] p-3"
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
         onPress={() => setIsVisible(true)}
       >
         <Text className="text-center font-b text-white">Add Holiday</Text>
@@ -179,17 +186,16 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
             </View>
             <View className="mt-6 gap-3">
               <TouchableOpacity
-                className="mt-2.5 rounded bg-white px-2.5 py-3 border"
-                onPress={() => setIsVisible(false)}
-              >
-                <Text className="font-b text-lg text-center">Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                className="mt-2.5 rounded bg-white px-2.5 py-3 border"
+                className="mt-2.5 rounded border bg-white px-2.5 py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="font-b text-lg text-center">Add</Text>
+                <Text className="text-center font-b text-lg">Add</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="mt-2.5 rounded border bg-white px-2.5 py-3"
+                onPress={() => setIsVisible(false)}
+              >
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>

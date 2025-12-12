@@ -305,16 +305,15 @@ const UpdateEmployeeModal = ({
             <View className="mt-6 gap-3">
               <TouchableOpacity
                 className="rounded border bg-white py-3"
-                onPress={() => setIsVisible(false)}
-              >
-                <Text className="text-center font-b text-lg">Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                className="rounded border bg-white py-3"
                 onPress={handleSubmit(onSubmit)}
               >
                 <Text className="text-center font-b text-lg">Update</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="rounded border bg-white py-3"
+                onPress={() => setIsVisible(false)}
+              >
+                <Text className="text-center font-b text-lg">Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>

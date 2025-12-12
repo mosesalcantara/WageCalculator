@@ -32,7 +32,14 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
   return (
     <>
       <TouchableOpacity
-        className="rounded-[1.875rem] bg-black p-3"
+        className="rounded bg-[#102a47] p-3"
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
         onPress={() => onToggle(true)}
       >
         <Text className="text-center font-b text-white">Add Period</Text>
@@ -127,16 +134,15 @@ const AddPeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                 <View className="mt-6 gap-3">
                   <TouchableOpacity
                     className="rounded border bg-white py-3"
-                    onPress={() => onToggle(false)}
-                  >
-                    <Text className="text-center font-b text-lg">Cancel</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    className="rounded border bg-white py-3"
                     onPress={handleSubmit(onSubmit)}
                   >
                     <Text className="text-center font-b text-lg">Add</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="rounded border bg-white py-3"
+                    onPress={() => onToggle(false)}
+                  >
+                    <Text className="text-center font-b text-lg">Cancel</Text>
                   </TouchableOpacity>
                 </View>
               </View>
