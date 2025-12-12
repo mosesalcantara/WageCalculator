@@ -11,6 +11,7 @@ import {
   calculate,
   formatDate,
   formatNumber,
+  getGrandTotal,
   getMinimumRate,
   getSubtotal,
   getValueKeyword,
@@ -91,6 +92,24 @@ const exportDOCX = async (
         );
 
         renderViolations(employee);
+
+        if (establishment.employees) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Grand Total: Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
+                  font: { name: "Arial" },
+                  size: 28,
+                  bold: true,
+                  underline: { type: "double" },
+                  break: 1,
+                }),
+              ],
+              alignment: "right",
+            }),
+          );
+        }
       }
     }
   };
@@ -162,6 +181,7 @@ const exportDOCX = async (
               font: { name: "Arial" },
               size: 28,
               bold: true,
+              underline: { type: "double" },
             }),
           ],
           alignment: "right",
@@ -233,11 +253,24 @@ const exportDOCX = async (
             new Paragraph({
               children: [
                 new TextRun({
-                  text: `Php${formatNumber(result)} - ${formatNumber(period.received)} = Php${formatNumber(result - parseNumber(period.received))}`,
+                  text: `Php${formatNumber(result)} - ${formatNumber(period.received)} =`,
                   font: { name: "Arial" },
                   size: 28,
                 }),
               ],
+            }),
+          );
+
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Php${formatNumber(result - parseNumber(period.received))}`,
+                  font: { name: "Arial" },
+                  size: 28,
+                }),
+              ],
+              alignment: "right",
             }),
           );
         }
@@ -340,17 +373,44 @@ const exportDOCX = async (
         text = "";
     }
 
-    children.push(
-      new Paragraph({
-        children: [
-          new TextRun({
-            text: `${text} = Php${total}`,
-            font: { name: "Arial" },
-            size: 28,
-          }),
-        ],
-      }),
-    );
+    if (parseNumber(period.received) > 0) {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `${text} = Php${total}`,
+              font: { name: "Arial" },
+              size: 28,
+            }),
+          ],
+        }),
+      );
+    } else {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `${text} =`,
+              font: { name: "Arial" },
+              size: 28,
+            }),
+          ],
+        }),
+      );
+
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Php${total}`,
+              font: { name: "Arial" },
+              size: 28,
+            }),
+          ],
+          alignment: "right",
+        }),
+      );
+    }
   };
 
   const generateDOCX = () => {
