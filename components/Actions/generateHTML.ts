@@ -226,7 +226,7 @@ const generateHTML = (
                   )} (${value} ${getValueKeyword(violationType, period.days, period.hours)})
                   </p>
 
-                  ${renderFormula(violationType, paymentType, period, isLast)}
+                  ${renderFormula(violationType, paymentType, period)}
 
                   ${
                     parseNumber(period.received) > 0
@@ -237,7 +237,7 @@ const generateHTML = (
                       </p>
     
                       <p>Php${formatNumber(result)} - ${formatNumber(period.received)} =</p>
-                      <p class="right ${isLast ? "underline" : ""}">Php${formatNumber(result - parseNumber(period.received))}</p>
+                      <p class="right">Php${formatNumber(result - parseNumber(period.received))}</p>
                     `
                       : ""
                   }
@@ -261,7 +261,6 @@ const generateHTML = (
     violationType: ViolationType,
     paymentType: PaymentType,
     period: Period,
-    isLast: boolean,
   ) => {
     let html = "";
     let valueHtml = "";
@@ -303,7 +302,7 @@ const generateHTML = (
     if (parseNumber(period.received) > 0) {
       valueHtml = `<span>Php${total}</span>`;
     } else {
-      valueHtml = `<p class="right ${isLast ? "underline" : ""}">Php${total}</p>`;
+      valueHtml = `<p class="right">Php${total}</p>`;
     }
 
     switch (violationType) {
