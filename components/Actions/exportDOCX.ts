@@ -92,24 +92,6 @@ const exportDOCX = async (
         );
 
         renderViolations(employee);
-
-        if (establishment.employees) {
-          children.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `Grand Total: Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
-                  font: { name: "Arial" },
-                  size: 28,
-                  bold: true,
-                  underline: { type: "double" },
-                  break: 1,
-                }),
-              ],
-              alignment: "right",
-            }),
-          );
-        }
       }
     }
   };
@@ -198,6 +180,8 @@ const exportDOCX = async (
     let subtotal = 0;
 
     periods.forEach((period, index) => {
+      const isLast = index + 1 === periods.length;
+
       const result = calculate(
         wageOrders,
         establishment.size,
@@ -234,7 +218,7 @@ const exportDOCX = async (
           }),
         );
 
-        renderFormula(violationType, paymentType, period);
+        renderFormula(violationType, paymentType, period, isLast);
 
         if (parseNumber(period.received) > 0) {
           children.push(
@@ -268,6 +252,7 @@ const exportDOCX = async (
                   text: `Php${formatNumber(result - parseNumber(period.received))}`,
                   font: { name: "Arial" },
                   size: 28,
+                  underline: { type: isLast ? "single" : "none" },
                 }),
               ],
               alignment: "right",
@@ -297,6 +282,7 @@ const exportDOCX = async (
     violationType: ViolationType,
     paymentType: PaymentType,
     period: Period,
+    isLast: boolean,
   ) => {
     let text = "";
 
@@ -393,6 +379,7 @@ const exportDOCX = async (
               text: `${text} =`,
               font: { name: "Arial" },
               size: 28,
+              underline: { type: isLast ? "single" : "none" },
             }),
           ],
         }),
@@ -432,6 +419,22 @@ const exportDOCX = async (
       establishment.employees.forEach((employee, index) => {
         renderEmployee(index, employee);
       });
+
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Grand Total: Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
+              font: { name: "Arial" },
+              size: 28,
+              bold: true,
+              underline: { type: "double" },
+              break: 1,
+            }),
+          ],
+          alignment: "right",
+        }),
+      );
     }
   };
 
