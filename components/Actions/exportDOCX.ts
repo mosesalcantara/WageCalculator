@@ -101,13 +101,13 @@ const exportDOCX = async (
         employee.violations[0].values as string,
       );
 
-      let grandTotal = 0;
+      let total = 0;
       Object.keys(violationValues).forEach((violationKey) => {
         const violationType = violationKey as ViolationType;
         Object.keys(violationValues[violationType]).forEach((paymentKey) => {
           const paymentType = paymentKey as PaymentType;
 
-          grandTotal += getSubtotal(
+          total += getSubtotal(
             wageOrders,
             establishment.size,
             violationType,
@@ -158,7 +158,7 @@ const exportDOCX = async (
         new Paragraph({
           children: [
             new TextRun({
-              text: `Grand Total: Php${formatNumber(grandTotal)}`,
+              text: `Total: Php${formatNumber(total)}`,
               font: { name: "Arial" },
               size: 28,
               bold: true,

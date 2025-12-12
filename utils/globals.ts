@@ -493,7 +493,7 @@ export const customGetSubtotal = (
   return parseNumber(result);
 };
 
-export const getGrandTotal = (
+export const getTotal = (
   wageOrders: WageOrder[],
   size: string,
   violationValues: ViolationValues,

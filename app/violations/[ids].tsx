@@ -23,10 +23,10 @@ import {
   formatDate,
   formatNumber,
   getDb,
-  getGrandTotal,
   getParamValue,
   getPeriods,
   getSubtotal,
+  getTotal,
   parseNumber,
   periodFormat,
   toastVisibilityTime,
@@ -242,13 +242,9 @@ const ViolationsPage = () => {
                   </Text>
 
                   <Text className="font-b text-xl">
-                    Grand Total:{" "}
+                    Total:{" "}
                     {formatNumber(
-                      getGrandTotal(
-                        wageOrders,
-                        establishment.size,
-                        violationValues,
-                      ),
+                      getTotal(wageOrders, establishment.size, violationValues),
                     )}
                   </Text>
                 </View>
