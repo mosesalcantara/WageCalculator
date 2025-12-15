@@ -108,7 +108,7 @@ const generateHTML = (
                   <tr>
                     <td>${renderViolations(employee)}</td>
                   </tr>
-              `;
+                `;
       }
     }
 
@@ -146,8 +146,8 @@ const generateHTML = (
                         ${paymentType} of ${getViolationKeyword(violationType)}
                       </p>
 
-                    ${renderType(violationType, paymentType, periods)}
-                  `;
+                      ${renderType(violationType, paymentType, periods)}
+                    `;
           }
         });
       });
