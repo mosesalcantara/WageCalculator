@@ -33,18 +33,7 @@ const exportXLSX = async (
   establishment: Establishment,
 ) => {
   const filename = `${establishment.name}.xlsx`;
-  const rows = [
-    [
-      "Name",
-      "Rate",
-      "Violation",
-      "Period",
-      "Formula",
-      "Total",
-      "Subtotal",
-      "Grand Total",
-    ],
-  ];
+  const rows = [["Name", "Rate", "Violation", "Period", "Formula", "Total"]];
 
   const renderEmployee = (employee: Employee) => {
     if (employee.violations && employee.violations.length > 0) {
@@ -109,8 +98,11 @@ const exportXLSX = async (
           "dd MMMM yyyy",
         )} to ${formatDate(period.end_date, "dd MMMM yyyy")} (${value} ${getValueKeyword(violationType, period.days, period.hours)})`;
 
-        const { formulaText, totalText, subTotalText, grandTotalText } =
-          renderFormula(violationType, paymentType, period);
+        const { formulaText, totalText } = renderFormula(
+          violationType,
+          paymentType,
+          period,
+        );
 
         rows.push([
           nameText,
@@ -119,8 +111,6 @@ const exportXLSX = async (
           periodText,
           formulaText,
           totalText,
-          subTotalText,
-          grandTotalText,
         ]);
       }
     });
@@ -151,15 +141,6 @@ const exportXLSX = async (
         period,
       ) - parseNumber(period.received),
     );
-
-    const subTotal = formatNumber(
-      rows.slice(1, -1).reduce((acc, row) => acc + parseNumber(row[5]), 0),
-    );
-
-    const grandTotal = formatNumber(
-      rows.slice(1).reduce((acc, row) => acc + parseNumber(row[6]), 0),
-    );
-
     const keyword = getValueKeyword(violationType, period.days, period.hours);
 
     switch (violationType) {
@@ -198,9 +179,7 @@ const exportXLSX = async (
 
     const formulaText = `${text}`;
     const totalText = `Php${total}`;
-    const subTotalText = `Php${subTotal}`;
-    const grandTotalText = `Php${grandTotal}`;
-    return { formulaText, totalText, subTotalText, grandTotalText };
+    return { formulaText, totalText };
   };
 
   const getMerges = (index: number, rows: string[][]) => {
@@ -292,8 +271,6 @@ const exportXLSX = async (
       { wch: 40 },
       { wch: 60 },
       { wch: 40 },
-      { wch: 18 },
-      { wch: 18 },
       { wch: 18 },
     ];
     worksheet["!merges"] = getMerges(0, rows);
