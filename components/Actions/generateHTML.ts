@@ -20,6 +20,8 @@ import {
   numberToLetter,
   parseNumber,
   validate,
+  validatePeriods,
+  validateViolationValues,
 } from "@/utils/globals";
 
 const getStyles = (isPreview: boolean) => {
@@ -86,26 +88,7 @@ const generateHTML = (
         employee.violations[0].values as string,
       );
 
-      let valid = 0;
-      Object.keys(violationValues).forEach((violationKey) => {
-        const violationType = violationKey as ViolationType;
-        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-          const paymentType = paymentKey as PaymentType;
-
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-        });
-      });
-
-      if (valid > 0) {
+      if (validateViolationValues(violationValues)) {
         html += `      
                   <tr>
                       <td>
@@ -145,34 +128,25 @@ const generateHTML = (
         const violationType = violationKey as ViolationType;
         Object.keys(violationValues[violationType]).forEach((paymentKey) => {
           const paymentType = paymentKey as PaymentType;
+          const periods = violationValues[violationType][
+            paymentType
+          ] as Period[];
 
           total += getSubtotal(
             wageOrders,
             establishment.size,
             violationType,
             paymentType,
-            violationValues[violationType][paymentType] as Period[],
+            periods,
           );
 
-          let valid = 0;
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-
-          if (valid > 0) {
+          if (validatePeriods(violationType, periods)) {
             html += `
                     <p class="bold underline top-space">
                       ${paymentType} of ${getViolationKeyword(violationType)}
                     </p>
 
-                    ${renderType(violationType, paymentType, violationValues[violationType][paymentType] as Period[])}
+                    ${renderType(violationType, paymentType, periods)}
                   `;
           }
         });
@@ -234,14 +208,14 @@ const generateHTML = (
                   ${
                     parseNumber(period.received) > 0
                       ? `
-                      <p>
-                        Actual Pay Received: 
-                        Php${formatNumber(period.received)}
-                      </p>
-    
-                      <p>Php${formatNumber(result)} - ${formatNumber(period.received)} =</p>
-                      <p class="right">Php${formatNumber(result - parseNumber(period.received))}</p>
-                    `
+                          <p>
+                            Actual Pay Received: 
+                            Php${formatNumber(period.received)}
+                          </p>
+        
+                          <p>Php${formatNumber(result)} - ${formatNumber(period.received)} =</p>
+                          <p class="right">Php${formatNumber(result - parseNumber(period.received))}</p>
+                        `
                       : ""
                   }
                   
