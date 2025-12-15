@@ -291,6 +291,48 @@ export const validateDateRange = (startDate: string, endDate: string) => {
   return startDate && endDate && differenceInDays(endDate, startDate) >= 0;
 };
 
+export const validateViolationValues = (violationValues: ViolationValues) => {
+  let valid = 0;
+
+  Object.keys(violationValues).forEach((violationKey) => {
+    const violationType = violationKey as ViolationType;
+    Object.keys(violationValues[violationType]).forEach((paymentKey) => {
+      const paymentType = paymentKey as PaymentType;
+
+      if (
+        validatePeriods(
+          violationType,
+          violationValues[violationType][paymentType] as Period[],
+        )
+      ) {
+        ++valid;
+      }
+    });
+  });
+
+  return valid > 0;
+};
+
+export const validatePeriods = (
+  violationType: ViolationType,
+  periods: Period[],
+) => {
+  let valid = 0;
+
+  periods.forEach((period) => {
+    if (
+      validate(
+        period,
+        isHours(violationType) ? ["received"] : ["received", "hours"],
+      )
+    ) {
+      ++valid;
+    }
+  });
+
+  return valid > 0;
+};
+
 export const isHours = (violationType: ViolationType) => {
   return ["Overtime Pay", "Night Shift Differential"].includes(violationType);
 };

@@ -21,6 +21,8 @@ import {
   parseNumber,
   toastVisibilityTime,
   validate,
+  validatePeriods,
+  validateViolationValues,
 } from "@/utils/globals";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import * as FileSystem from "expo-file-system";
@@ -41,26 +43,7 @@ const exportDOCX = async (
         employee.violations[0].values as string,
       );
 
-      let valid = 0;
-      Object.keys(violationValues).forEach((violationKey) => {
-        const violationType = violationKey as ViolationType;
-        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-          const paymentType = paymentKey as PaymentType;
-
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-        });
-      });
-
-      if (valid > 0) {
+      if (validateViolationValues(violationValues)) {
         children.push(
           new Paragraph({
             children: [
@@ -107,28 +90,19 @@ const exportDOCX = async (
         const violationType = violationKey as ViolationType;
         Object.keys(violationValues[violationType]).forEach((paymentKey) => {
           const paymentType = paymentKey as PaymentType;
+          const periods = violationValues[violationType][
+            paymentType
+          ] as Period[];
 
           total += getSubtotal(
             wageOrders,
             establishment.size,
             violationType,
             paymentType,
-            violationValues[violationType][paymentType] as Period[],
+            periods,
           );
 
-          let valid = 0;
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-
-          if (valid > 0) {
+          if (validatePeriods(violationType, periods)) {
             children.push(
               new Paragraph({
                 children: [
@@ -146,11 +120,7 @@ const exportDOCX = async (
               }),
             );
 
-            renderType(
-              violationType,
-              paymentType,
-              violationValues[violationType][paymentType] as Period[],
-            );
+            renderType(violationType, paymentType, periods);
           }
         });
       });

@@ -19,6 +19,8 @@ import {
   parseNumber,
   toastVisibilityTime,
   validate,
+  validatePeriods,
+  validateViolationValues,
 } from "@/utils/globals";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -39,25 +41,7 @@ const exportXLSX = async (
         employee.violations[0].values as string,
       );
 
-      let valid = 0;
-      Object.keys(violationValues).forEach((violationKey) => {
-        const violationType = violationKey as ViolationType;
-        Object.keys(violationValues[violationType]).forEach((paymentKey) => {
-          const paymentType = paymentKey as PaymentType;
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-        });
-      });
-
-      if (valid > 0) renderViolations(employee);
+      if (validateViolationValues(violationValues)) renderViolations(employee);
     }
   };
 
@@ -71,26 +55,12 @@ const exportXLSX = async (
         const violationType = violationKey as ViolationType;
         Object.keys(violationValues[violationType]).forEach((paymentKey) => {
           const paymentType = paymentKey as PaymentType;
+          const periods = violationValues[violationType][
+            paymentType
+          ] as Period[];
 
-          let valid = 0;
-          violationValues[violationType][paymentType].forEach((period) => {
-            if (
-              validate(
-                period,
-                isHours(violationType) ? ["received"] : ["received", "hours"],
-              )
-            ) {
-              ++valid;
-            }
-          });
-
-          if (valid > 0)
-            renderType(
-              employee,
-              violationType,
-              paymentType,
-              violationValues[violationType][paymentType] as Period[],
-            );
+          if (validatePeriods(violationType, periods))
+            renderType(employee, violationType, paymentType, periods);
         });
       });
     }
