@@ -146,14 +146,17 @@ const generateHTML = (
                         ${paymentType} of ${getViolationKeyword(violationType)}
                       </p>
 
-                      ${renderType(violationType, paymentType, periods)}
-                    `;
+                    ${renderType(violationType, paymentType, periods)}
+                  `;
           }
         });
       });
 
       html += `
-                <p class="right bold double-underline">Total: Php${formatNumber(total)}</p>
+                <p class="right">
+                  <span>Total: </span>
+                  <span class="bold double-underline">Php${formatNumber(total)}</span>
+                </p>
               `;
     }
 
@@ -205,7 +208,10 @@ const generateHTML = (
                   ${
                     parseNumber(period.received) > 0
                       ? `
-                          <p>Actual Pay Received: Php${formatNumber(period.received)}</p>
+                          <p>
+                            Actual Pay Received: 
+                            Php${formatNumber(period.received)}
+                          </p>
         
                           <p>Php${formatNumber(result)} - ${formatNumber(period.received)} =</p>
                           <p class="right">Php${formatNumber(result - parseNumber(period.received))}</p>
@@ -383,7 +389,10 @@ const generateHTML = (
                         </tbody>
                       </table>
 
-                      <p class="right bold double-underline">Grand Total: Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}</p>
+                      <p class="right">
+                        <span>Grand Total: </span>
+                        <span class="bold double-underline">Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}</span>
+                      </p>
                     `
                   }
 

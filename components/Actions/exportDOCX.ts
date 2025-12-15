@@ -129,7 +129,12 @@ const exportDOCX = async (
         new Paragraph({
           children: [
             new TextRun({
-              text: `Total: Php${formatNumber(total)}`,
+              text: `Total: `,
+              font: { name: "Arial" },
+              size: 28,
+            }),
+            new TextRun({
+              text: `Php${formatNumber(total)}`,
               font: { name: "Arial" },
               size: 28,
               bold: true,
@@ -389,12 +394,17 @@ const exportDOCX = async (
         new Paragraph({
           children: [
             new TextRun({
-              text: `Grand Total: Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
+              text: `Grand Total: `,
+              font: { name: "Arial" },
+              size: 28,
+              break: 1,
+            }),
+            new TextRun({
+              text: `Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
               font: { name: "Arial" },
               size: 28,
               bold: true,
               underline: { type: "double" },
-              break: 1,
             }),
           ],
           alignment: "right",
