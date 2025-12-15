@@ -158,18 +158,18 @@ const exportDOCX = async (
       children.push(
         new Paragraph({
           children: [
-        new TextRun({
-          text: `Total: `,
-          font: { name: "Arial" },
-          size: 28,
-        }),
-        new TextRun({
-          text: `Php${formatNumber(total)}`,
-          font: { name: "Arial" },
-          size: 28,
-          bold: true,
-          underline: { type: "double" },
-        }),
+            new TextRun({
+              text: `Total: `,
+              font: { name: "Arial" },
+              size: 28,
+            }),
+            new TextRun({
+              text: `Php${formatNumber(total)}`,
+              font: { name: "Arial" },
+              size: 28,
+              bold: true,
+              underline: { type: "double" },
+            }),
           ],
           alignment: "right",
         }),
@@ -423,19 +423,19 @@ const exportDOCX = async (
       children.push(
         new Paragraph({
           children: [
-        new TextRun({
-          text: `Grand Total: `,
-          font: { name: "Arial" },
-          size: 28,
-          break: 1,
-        }),
-        new TextRun({
-          text: `Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
-          font: { name: "Arial" },
-          size: 28,
-          bold: true,
-          underline: { type: "double" },
-        }),
+            new TextRun({
+              text: `Grand Total: `,
+              font: { name: "Arial" },
+              size: 28,
+              break: 1,
+            }),
+            new TextRun({
+              text: `Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}`,
+              font: { name: "Arial" },
+              size: 28,
+              bold: true,
+              underline: { type: "double" },
+            }),
           ],
           alignment: "right",
         }),

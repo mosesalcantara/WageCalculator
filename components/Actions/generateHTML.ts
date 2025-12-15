@@ -179,8 +179,11 @@ const generateHTML = (
       });
 
       html += `
-            <p class="right"><span>Total: </span><span class="bold double-underline">Php${formatNumber(total)}</span></p>
-          `;
+                <p class="right">
+                  <span>Total: </span>
+                  <span class="bold double-underline">Php${formatNumber(total)}</span>
+                </p>
+              `;
     }
 
     return html;
@@ -412,7 +415,10 @@ const generateHTML = (
                         </tbody>
                       </table>
 
-                      <p class="right"><span>Grand Total: </span><span class="bold double-underline">Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}</span></p>
+                      <p class="right">
+                        <span>Grand Total: </span>
+                        <span class="bold double-underline">Php${formatNumber(getGrandTotal(wageOrders, establishment.size, establishment.employees))}</span>
+                      </p>
                     `
                   }
 
