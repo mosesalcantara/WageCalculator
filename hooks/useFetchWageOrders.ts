@@ -38,6 +38,12 @@ const useFetchWageOrders = (db: Db) => {
             less_than_ten: 404,
             ten_or_more: 430,
           },
+          {
+            name: "RB-MIMAROPA-13",
+            date: "2026-01-01",
+            less_than_ten: 455,
+            ten_or_more: 455,
+          },
         ];
 
         await db.insert(models.wageOrders).values(initialWageOrders);
