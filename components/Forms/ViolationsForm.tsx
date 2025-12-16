@@ -74,16 +74,20 @@ const ViolationsForm = ({
   );
 
   const getLabel = () => {
-    if (["Basic Wage", "13th Month Pay"].includes(violationType))
+    if (
+      [
+        "Basic Wage",
+        "Overtime Pay",
+        "Night Shift Differential",
+        "13th Month Pay",
+      ].includes(violationType)
+    )
       return "Working Days";
     else if (violationType === "Special Day") return "Special Days";
     else if (violationType === "Rest Day") return "Rest Days";
     else if (violationType === "Holiday Pay") return "Holidays";
     else return "";
   };
-
-  const setRate = () => onChange(index, "rate", `${employee.rate}`);
-  const setDays = () => onChange(index, "days", estimate);
 
   const handleViewDaysModalToggle = (isVisible: boolean) => {
     setModalVisibility((draft) => {
@@ -140,7 +144,14 @@ const ViolationsForm = ({
 
     restDays = dates.length - workingDays;
 
-    if (violationType === "Basic Wage" || violationType === "13th Month Pay")
+    if (
+      [
+        "Basic Wage",
+        "Overtime Pay",
+        "Night Shift Differential",
+        "13th Month Pay",
+      ].includes(violationType)
+    )
       return workingDays;
     else if (violationType === "Rest Day") return restDays;
     else if (violationType === "Special Day") return specialDays;
@@ -218,7 +229,7 @@ const ViolationsForm = ({
                     name="autorenew"
                     size={20}
                     color="#555"
-                    onPress={setRate}
+                    onPress={() => onChange(index, "rate", `${employee.rate}`)}
                   />
                 </View>
               </View>
@@ -237,85 +248,69 @@ const ViolationsForm = ({
             </View>
 
             <View className="flex-row flex-wrap justify-between gap-1">
-              {isHours(violationType) ? (
-                <>
-                  <View className="w-[49%]">
-                    <Label name="Days" color="#333" />
+              <View className="w-[49%]">
+                <Label name="Days" color="#333" />
 
-                    <TextInput
-                      className="rounded-md border border-black px-2.5 font-r"
-                      keyboardType="numeric"
-                      placeholder="Enter days"
-                      value={period.days}
-                      onChangeText={(value) => onChange(index, "days", value)}
+                <View className="flex-row items-center  rounded-md border border-black px-2.5">
+                  <TextInput
+                    className="w-[85%] font-r"
+                    keyboardType="numeric"
+                    placeholder="Enter days"
+                    value={period.days}
+                    onChangeText={(value) => onChange(index, "days", value)}
+                  />
+
+                  {estimate ? (
+                    <MaterialIcons
+                      name="autorenew"
+                      size={20}
+                      color="#555"
+                      onPress={() => onChange(index, "days", estimate)}
                     />
-                  </View>
+                  ) : null}
+                </View>
+              </View>
 
-                  <View className="w-[49%]">
-                    <Label name="Hours" color="#333" />
+              <View className="w-[49%]">
+                <Label name={getLabel()} color="#333" />
 
-                    <TextInput
-                      className="rounded-md border border-black px-2.5 font-r"
-                      keyboardType="numeric"
-                      placeholder="Enter hours"
-                      value={period.hours}
-                      onChangeText={(value) => onChange(index, "hours", value)}
-                    />
-                  </View>
-                </>
-              ) : (
-                <View className="w-[49%]">
-                  <Label name="Days" color="#333" />
+                <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
+                  <TextInput
+                    className="w-[85%] font-r"
+                    keyboardType="numeric"
+                    placeholder=""
+                    editable={false}
+                    value={`${estimate}`}
+                  />
 
-                  <View className="flex-row items-center  rounded-md border border-black px-2.5">
-                    <TextInput
-                      className="w-[85%] font-r"
-                      keyboardType="numeric"
-                      placeholder="Enter days"
-                      value={period.days}
-                      onChangeText={(value) => onChange(index, "days", value)}
-                    />
-
-                    {estimate ? (
-                      <MaterialIcons
-                        name="autorenew"
-                        size={20}
-                        color="#555"
-                        onPress={setDays}
+                  {["Special Day", "Holiday Pay"].includes(violationType) &&
+                    validateDateRange(period.start_date, period.end_date) && (
+                      <ViewDaysModal
+                        holidays={holidays}
+                        violationType={violationType}
+                        startDate={period.start_date}
+                        endDate={period.end_date}
+                        isVisible={modalVisibility.viewDays}
+                        onToggle={handleViewDaysModalToggle}
                       />
-                    ) : null}
-                  </View>
+                    )}
                 </View>
-              )}
-
-              {!isHours(violationType) && (
-                <View className="w-[49%]">
-                  <Label name={getLabel()} color="#333" />
-
-                  <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
-                    <TextInput
-                      className="w-[85%] font-r"
-                      keyboardType="numeric"
-                      placeholder=""
-                      editable={false}
-                      value={`${estimate}`}
-                    />
-
-                    {["Special Day", "Holiday Pay"].includes(violationType) &&
-                      validateDateRange(period.start_date, period.end_date) && (
-                        <ViewDaysModal
-                          holidays={holidays}
-                          violationType={violationType}
-                          startDate={period.start_date}
-                          endDate={period.end_date}
-                          isVisible={modalVisibility.viewDays}
-                          onToggle={handleViewDaysModalToggle}
-                        />
-                      )}
-                  </View>
-                </View>
-              )}
+              </View>
             </View>
+
+            {isHours(violationType) && (
+              <View className="w-[49%]">
+                <Label name="Hours" color="#333" />
+
+                <TextInput
+                  className="rounded-md border border-black px-2.5 font-r"
+                  keyboardType="numeric"
+                  placeholder="Enter hours"
+                  value={period.hours}
+                  onChangeText={(value) => onChange(index, "hours", value)}
+                />
+              </View>
+            )}
 
             {violationType === "Overtime Pay" && (
               <View>
