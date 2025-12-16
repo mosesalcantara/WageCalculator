@@ -222,7 +222,7 @@ const ViolationsPage = () => {
         backhandler.remove();
         appStateHandler.remove();
       };
-    }, [db, router, employee_id, violationValues]),
+    }, [db, router, establishment_id, employee_id, violationValues]),
   );
 
   return (
@@ -322,7 +322,7 @@ const ViolationsPage = () => {
 
               <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                className="mt-4 h-[64%] px-4"
+                className="mt-4 h-[62%] px-4"
               >
                 <ScrollView>
                   <Text className="font-b text-xl">
