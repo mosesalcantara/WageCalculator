@@ -214,10 +214,10 @@ export const paymentTypesArray = ["Underpayment", "Non-payment"];
 export const periodFormat = {
   start_date: "",
   end_date: "",
+  type: "Normal Day",
   rate: "",
   days: "",
   hours: "",
-  type: "Normal Day",
   received: "",
 };
 
@@ -242,11 +242,12 @@ export const getParamValue = (pair: string) => {
 
 export const parseNumber = (value: Date | string | number) => {
   let formattedValue = 0;
-  if (value instanceof Date) {
-    formattedValue = Number(value);
-  } else {
+
+  if (value instanceof Date) formattedValue = Number(value);
+  else {
     formattedValue = Number(Math.round(Number(value) + "e2") + "e-2");
   }
+
   return formattedValue;
 };
 
@@ -404,11 +405,8 @@ export const calculate = (
     const rateToUse = Math.max(rate, minimumRate);
 
     if (violationType === "Basic Wage") {
-      if (paymentType === "Underpayment") {
-        result = (rateToUse - rate) * days;
-      } else {
-        result = rateToUse * days;
-      }
+      if (paymentType === "Underpayment") result = (rateToUse - rate) * days;
+      else result = rateToUse * days;
     } else if (violationType === "Overtime Pay") {
       result =
         (rateToUse / 8) *
@@ -419,8 +417,9 @@ export const calculate = (
     } else if (violationType === "Special Day") result = rateToUse * 0.3 * days;
     else if (violationType === "Rest Day") result = rateToUse * 0.3 * days;
     else if (violationType === "Holiday Pay") result = rateToUse * days;
-    else if (violationType === "13th Month Pay")
+    else if (violationType === "13th Month Pay") {
       result = (rateToUse * days) / 12;
+    }
   }
 
   return parseNumber(result);
@@ -465,8 +464,8 @@ export const customCalculate = (
     period.end_date,
   );
   const rateToUse = Math.max(values.rate, minimumRate);
-
   const type = period.type.toLowerCase();
+
   let nightShiftMultiplier = 0;
   if (type.includes("night shift")) nightShiftMultiplier = 1.1;
 
@@ -547,6 +546,7 @@ export const getTotal = (
     const violationType = violationKey as ViolationType;
     Object.keys(violationValues[violationType]).forEach((paymentKey) => {
       const paymentType = paymentKey as PaymentType;
+
       violationValues[violationType][paymentType].forEach((period) => {
         if (violationType === "Custom") {
           result += customCalculate(
@@ -563,6 +563,7 @@ export const getTotal = (
             period as Period,
           );
         }
+
         result -= parseNumber(period.received);
       });
     });
@@ -606,6 +607,7 @@ export const getInitialViolationValues = (rate?: number) => {
 
   violationTypesArray.forEach((violationKey) => {
     const violationType = violationKey as ViolationType;
+
     if (violationType === "Custom") {
       values[violationType] = {
         Underpayment: [getPeriodFormat(violationType, rate)] as CustomPeriod[],
@@ -626,9 +628,9 @@ export const getViolationKeyword = (violationType: ViolationType) => {
   let keyword: string = violationType;
 
   if (violationType === "Basic Wage") keyword = "Wages";
-  else if (violationType === "Special Day")
+  else if (violationType === "Special Day") {
     keyword = "Premium Pay on Special Day";
-  else if (violationType === "Rest Day") keyword = "Premium Pay on Rest Day";
+  } else if (violationType === "Rest Day") keyword = "Premium Pay on Rest Day";
 
   return keyword;
 };
@@ -638,18 +640,17 @@ export const getValueKeyword = (
   days: string,
   hours: string,
 ) => {
-  const value = isHours(violationType) ? hours : days;
   let keyword = "";
 
   if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(violationType)) {
     keyword = "day";
   } else if (violationType === "Overtime Pay") keyword = "OT hour";
-  else if (violationType === "Night Shift Differential")
+  else if (violationType === "Night Shift Differential") {
     keyword = "night-shift hour";
-  else if (violationType === "Special Day") keyword = "special day";
+  } else if (violationType === "Special Day") keyword = "special day";
   else if (violationType === "Rest Day") keyword = "rest day";
 
-  if (parseNumber(value) !== 1) keyword += "s";
+  if (parseNumber(isHours(violationType) ? hours : days) !== 1) keyword += "s";
 
   return keyword;
 };

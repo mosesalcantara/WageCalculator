@@ -47,10 +47,10 @@ export type PaymentType = "Underpayment" | "Non-payment";
 export type Period = {
   start_date: string;
   end_date: string;
+  type: string;
   rate: string;
   days: string;
   hours: string;
-  type: string;
   received: string;
 };
 
