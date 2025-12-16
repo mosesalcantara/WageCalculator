@@ -163,7 +163,7 @@ const ViolationsForm = ({
 
   return (
     <>
-      <View className="mx-4 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
+      <View className="rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View>
           {periods.length > 1 && (
             <Text className="mb-3 text-center font-b text-lg">
@@ -298,43 +298,45 @@ const ViolationsForm = ({
               </View>
             </View>
 
-            {isHours(violationType) && (
-              <View className="w-[49%]">
-                <Label name="Hours" color="#333" />
+            <View className="flex-row flex-wrap justify-between gap-1">
+              {isHours(violationType) && (
+                <View className="w-[49%]">
+                  <Label name="Hours" color="#333" />
 
-                <TextInput
-                  className="rounded-md border border-black px-2.5 font-r"
-                  keyboardType="numeric"
-                  placeholder="Enter hours"
-                  value={period.hours}
-                  onChangeText={(value) => onChange(index, "hours", value)}
-                />
-              </View>
-            )}
+                  <TextInput
+                    className="rounded-md border border-black px-2.5 font-r"
+                    keyboardType="numeric"
+                    placeholder="Enter hours"
+                    value={period.hours}
+                    onChangeText={(value) => onChange(index, "hours", value)}
+                  />
+                </View>
+              )}
 
-            {violationType === "Overtime Pay" && (
-              <View>
-                <Label name="Type" color="#333" />
+              {violationType === "Overtime Pay" && (
+                <View className="w-[49%]">
+                  <Label name="Type" color="#333" />
 
-                <Select
-                  index={index}
-                  name="type"
-                  value={period.type}
-                  options={[
-                    {
-                      label: "Normal Day",
-                      value: "Normal Day",
-                    },
-                    {
-                      label: "Holiday, Special Day, or Rest Day",
-                      value: "Holiday, Special Day, or Rest Day",
-                    },
-                  ]}
-                  placeholder="Select Type"
-                  onChange={onChange}
-                />
-              </View>
-            )}
+                  <Select
+                    index={index}
+                    name="type"
+                    value={period.type}
+                    options={[
+                      {
+                        label: "Normal Day",
+                        value: "Normal Day",
+                      },
+                      {
+                        label: "Holiday, Special Day, or Rest Day",
+                        value: "Holiday, Special Day, or Rest Day",
+                      },
+                    ]}
+                    placeholder="Select Type"
+                    onChange={onChange}
+                  />
+                </View>
+              )}
+            </View>
 
             {paymentType === "Underpayment" && (
               <View>

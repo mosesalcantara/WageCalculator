@@ -101,7 +101,7 @@ const CustomViolationsForm = ({
 
   return (
     <>
-      <View className="mx-4 rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
+      <View className="rounded-lg border border-t-[0.3125rem] border-[#0d3dff] bg-white p-2.5">
         <View>
           {periods.length > 1 && (
             <Text className="mb-3 text-center font-b text-lg">
