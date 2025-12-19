@@ -13,7 +13,10 @@ const NavBar = ({ title = "DOLECalc", className = "" }: Props) => {
         style={{ resizeMode: "contain" }}
       />
 
-      <Text className="text-center font-b text-xl">{title}</Text>
+      <View>
+        <Text className="text-center font-b text-xl">{title}</Text>
+        <Text className="text-center font-sb text-sm">as of 12-19-2025</Text>
+      </View>
 
       <Image
         source={require("@/assets/images/bagongpilipinas.png")}
