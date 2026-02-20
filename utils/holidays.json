@@ -841,5 +841,87 @@
             "date": "2025-12-31",
             "type": "Special (Non-Working) Holiday"
         }
+    ],
+    "2026": [
+        {
+            "name": "New Year's Day",
+            "date": "2026-01-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Chinese New Year",
+            "date": "2026-02-17",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Maundy Thursday",
+            "date": "2026-04-02",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Good Friday",
+            "date": "2026-04-03",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Black Saturday",
+            "date": "2026-04-04",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Araw ng Kagitingan",
+            "date": "2026-04-09",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Labor Day",
+            "date": "2026-05-01",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Independence Day",
+            "date": "2026-06-02",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Ninoy Aquino Day",
+            "date": "2026-08-21",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "National Heroes Day",
+            "date": "2026-08-31",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "All Saints' Day",
+            "date": "2026-11-01",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "All Souls' Day",
+            "date": "2026-11-02",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Bonifacio Day",
+            "date": "2026-11-30",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Christmas Eve",
+            "date": "2026-12-24",
+            "type": "Special (Non-Working) Holiday"
+        },
+        {
+            "name": "Christmas Day",
+            "date": "2026-12-25",
+            "type": "Regular Holiday"
+        },
+        {
+            "name": "Rizal Day",
+            "date": "2026-12-30",
+            "type": "Regular Holiday"
+        }
     ]
 }

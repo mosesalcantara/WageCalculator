@@ -4,6 +4,7 @@ import { Db, Establishment } from "@/types/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RelativePathString, Router } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import ViewCustomConfirmation from "../Modals/ViewCustomConfirmation";
 
 type Props = {
   db: Db;
@@ -63,11 +64,11 @@ const EstablishmentsTable = ({
                 <MaterialIcons name="delete" size={20} color="#E53935" />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => setEstablishment(establishment.id, "export")}
-              >
-                <MaterialIcons name="file-download" size={20} color="#2196F3" />
-              </TouchableOpacity>
+              <ViewCustomConfirmation
+                establishment={establishment}
+                refetch={refetch}
+                router={router}
+              />
             </View>
           </View>
         )}

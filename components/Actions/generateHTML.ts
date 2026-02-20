@@ -349,6 +349,14 @@ const generateHTML = (
                   </p>
                 `;
         break;
+      // case "Custom":
+      //   html += `
+      //             <p>
+      //               Php${formattedRateToUse} x ${customPeriod.days} ${keyword} =
+      //               ${valueHtml}
+      //             </p>
+      //           `;
+      //   break;
       default:
         html += "";
         break;
