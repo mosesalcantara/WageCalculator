@@ -16,7 +16,7 @@ const NavBar = ({ title = "DOLECalc", className = "" }: Props) => {
       <View>
         <Text className="text-center font-b text-xl">{title}</Text>
         <Text className="text-center font-sb text-sm">
-          as of December 19, 2025
+          as of April 1, 2026
         </Text>
       </View>
 

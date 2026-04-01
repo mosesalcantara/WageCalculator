@@ -206,6 +206,7 @@ export const violationTypesArray = [
   "Rest Day",
   "Holiday Pay",
   "13th Month Pay",
+  "Service Incentive Leave",
   "Custom",
 ];
 
@@ -338,6 +339,10 @@ export const isHours = (violationType: ViolationType) => {
   return ["Overtime Pay", "Night Shift Differential"].includes(violationType);
 };
 
+export const isSIL = (violationType: ViolationType) => {
+  return ["Service Incentive Leave"].includes(violationType);
+};
+
 export const getMinimumRate = (
   wageOrders: WageOrder[],
   size: string,
@@ -417,6 +422,7 @@ export const calculate = (
     } else if (violationType === "Special Day") result = rateToUse * 0.3 * days;
     else if (violationType === "Rest Day") result = rateToUse * 0.3 * days;
     else if (violationType === "Holiday Pay") result = rateToUse * days;
+    else if (violationType === "Service Incentive Leave") result = rateToUse * days;
     else if (violationType === "13th Month Pay") {
       result = (rateToUse * days) / 12;
     }
@@ -642,7 +648,7 @@ export const getValueKeyword = (
 ) => {
   let keyword = "";
 
-  if (["Basic Wage", "Holiday Pay", "13th Month Pay"].includes(violationType)) {
+  if (["Basic Wage", "Holiday Pay", "13th Month Pay", "Service Incentive Leave"].includes(violationType)) {
     keyword = "day";
   } else if (violationType === "Overtime Pay") keyword = "OT hour";
   else if (violationType === "Night Shift Differential") {

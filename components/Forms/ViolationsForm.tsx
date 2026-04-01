@@ -273,13 +273,17 @@ const ViolationsForm = ({
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name="Days" color="#333" />
+                <Label name={violationType === "Service Incentive Leave" ? "SIL Days" : "Days"}color="#333"/>
 
                 <View className="flex-row items-center  rounded-md border border-black px-2.5">
                   <TextInput
                     className="w-[85%] font-r"
                     keyboardType="numeric"
-                    placeholder="Enter days"
+                    placeholder={
+                      violationType === "Service Incentive Leave"
+                        ? "Enter SIL days"
+                        : "Enter days"
+                    }
                     value={period.days}
                     onChangeText={(value) => onChange(index, "days", value)}
                   />
@@ -298,6 +302,7 @@ const ViolationsForm = ({
               <View className="w-[49%]">
                 <Label name={getLabel()} color="#333" />
 
+{violationType !== "Service Incentive Leave" && (
                 <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
                   <TextInput
                     className="w-[85%] font-r"
@@ -319,6 +324,7 @@ const ViolationsForm = ({
                       />
                     )}
                 </View>
+)}
               </View>
             </View>
 

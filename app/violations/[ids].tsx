@@ -95,6 +95,7 @@ const ViolationsPage = () => {
     { name: "Rest Day", icon: "coffee" },
     { name: "Holiday Pay", icon: "event-available" },
     { name: "13th Month Pay", icon: "card-giftcard" },
+    { name: "Service Incentive Leave", icon: "time-to-leave" },
     { name: "Custom", icon: "build" },
   ];
 

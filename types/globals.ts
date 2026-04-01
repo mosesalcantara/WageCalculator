@@ -40,7 +40,8 @@ export type ViolationType =
   | "Rest Day"
   | "Holiday Pay"
   | "13th Month Pay"
-  | "Custom";
+  | "Custom"
+  | "Service Incentive Leave";
 
 export type PaymentType = "Underpayment" | "Non-payment";
 
@@ -91,6 +92,10 @@ export type ViolationValues = {
     "Non-payment": Period[];
   };
   "13th Month Pay": {
+    Underpayment: Period[];
+    "Non-payment": Period[];
+  };
+  "Service Incentive Leave": {
     Underpayment: Period[];
     "Non-payment": Period[];
   };

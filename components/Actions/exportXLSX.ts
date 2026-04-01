@@ -169,6 +169,9 @@ const exportXLSX = async (
       case "13th Month Pay":
         text = `Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months`;
         break;
+      case "Service Incentive Leave":
+        text = `Php${formattedRateToUse} x ${period.days} ${keyword}`;
+        break;
       default:
         text = "";
     }

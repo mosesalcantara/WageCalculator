@@ -4,7 +4,7 @@ import { Db, Establishment } from "@/types/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RelativePathString, Router } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import ViewCustomConfirmation from "../Modals/ViewCustomConfirmation";
+
 
 type Props = {
   db: Db;

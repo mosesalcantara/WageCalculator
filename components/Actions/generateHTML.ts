@@ -349,6 +349,14 @@ const generateHTML = (
                   </p>
                 `;
         break;
+      case "Service Incentive Leave":
+        html += `
+                  <p>
+                    Php${formattedRateToUse} x ${period.days} ${keyword} =
+                    ${valueHtml}
+                  </p>
+                `;
+        break;
       // case "Custom":
       //   html += `
       //             <p>
