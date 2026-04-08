@@ -161,8 +161,8 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
                           value: "Regular Holiday",
                         },
                         {
-                          label: "Special (Non-Working) Holiday",
-                          value: "Special (Non-Working) Holiday",
+                          label: "Special (Non-Working) Day",
+                          value: "Special (Non-Working) Day",
                         },
                       ]}
                       placeholder="Select Type"
@@ -181,7 +181,9 @@ const UpdateHolidayModal = ({ db, holiday, refetch }: Props) => {
                 className="mt-2.5 rounded border bg-black px-2.5 py-3"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="text-center font-b text-white text-lg">Update</Text>
+                <Text className="text-center font-b text-lg text-white">
+                  Update
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="mt-2.5 rounded border bg-white px-2.5 py-3"

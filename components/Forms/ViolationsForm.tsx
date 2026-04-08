@@ -136,7 +136,7 @@ const ViolationsForm = ({
         );
 
         if (holiday) {
-          if (holiday.type === "Special (Non-Working) Holiday") ++specialDays;
+          if (holiday.type === "Special (Non-Working) Day") ++specialDays;
           if (holiday.type === "Regular Holiday") ++regularHolidays;
         }
       }

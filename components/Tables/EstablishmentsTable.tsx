@@ -64,11 +64,11 @@ const EstablishmentsTable = ({
                 <MaterialIcons name="delete" size={20} color="#E53935" />
               </TouchableOpacity>
 
-              <ViewCustomConfirmation
-                establishment={establishment}
-                refetch={refetch}
-                router={router}
-              />
+              <TouchableOpacity
+                onPress={() => setEstablishment(establishment.id, "export")}
+              >
+                <MaterialIcons name="file-download" size={20} color="#2196F3" />
+              </TouchableOpacity>
             </View>
           </View>
         )}

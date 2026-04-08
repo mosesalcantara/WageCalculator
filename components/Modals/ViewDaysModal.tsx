@@ -37,7 +37,7 @@ const ViewDaysModal = ({
         );
 
         if (holiday) {
-          if (holiday.type === "Special (Non-Working) Holiday") {
+          if (holiday.type === "Special (Non-Working) Day") {
             specialDays.push(holiday);
           }
           if (holiday.type === "Regular Holiday") {
@@ -85,7 +85,7 @@ const ViewDaysModal = ({
           >
             <Text className="mb-3 text-center font-b text-lg text-white">
               {violationType === "Special Day"
-                ? "Special (Non-Working) Holidays"
+                ? "Special (Non-Working) Days"
                 : "Regular Holidays"}
             </Text>
 

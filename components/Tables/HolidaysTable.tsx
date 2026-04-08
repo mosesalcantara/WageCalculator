@@ -26,8 +26,8 @@ const HolidaysTable = ({ db, holidays, refetch, onDelete }: Props) => {
       value: "Regular Holiday",
     },
     {
-      label: "Special (Non-Working) Holiday",
-      value: "Special (Non-Working) Holiday",
+      label: "Special (Non-Working) Day",
+      value: "Special (Non-Working) Day",
     },
   ];
 

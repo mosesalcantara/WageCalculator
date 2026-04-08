@@ -170,8 +170,8 @@ const AddHolidayModal = ({ db, refetch }: Props) => {
                           value: "Regular Holiday",
                         },
                         {
-                          label: "Special (Non-Working) Holiday",
-                          value: "Special (Non-Working) Holiday",
+                          label: "Special (Non-Working) Day",
+                          value: "Special (Non-Working) Day",
                         },
                       ]}
                       placeholder="Select Type"
