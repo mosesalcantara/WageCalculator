@@ -1,27 +1,35 @@
-import AddEstablishmentModal from "@/components/Modals/AddEstablishmentModal";
-import ViewSettingsModal from "@/components/Modals/ViewSettingsModal";
-import NavBar from "@/components/NavBar";
-import EstablishmentsTable from "@/components/Tables/EstablishmentsTable";
-import useDeleteEstablishment from "@/hooks/useDeleteEstablishment";
-import useFetchEstablishments from "@/hooks/useFetchEstablishments";
-import useFetchHolidays from "@/hooks/useFetchHolidays";
-import useFetchWageOrders from "@/hooks/useFetchWageOrders";
-import { getDb } from "@/utils/globals";
-import { useFocusEffect, useRouter } from "expo-router";
-import { useSQLiteContext } from "expo-sqlite";
-import { useCallback } from "react";
-import { BackHandler, Text, View } from "react-native";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  BackHandler,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const EstablishmentsPage = () => {
-  const db = getDb(useSQLiteContext());
-  const router = useRouter();
+  const [showContent, setShowContent] = useState(false);
+  const animation = useRef(new Animated.Value(0)).current;
 
-  useFetchWageOrders(db);
-  useFetchHolidays(db);
-
-  const { establishments, refetch } = useFetchEstablishments(db);
-  const { handleDelete } = useDeleteEstablishment(db, refetch);
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 1400,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 1400,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, [animation]);
 
   useFocusEffect(
     useCallback(() => {
@@ -39,26 +47,42 @@ const EstablishmentsPage = () => {
     }, []),
   );
 
+  const animatedStyle = {
+    backgroundColor: animation.interpolate({
+      inputRange: [0, 0.5],
+      outputRange: ["#1e960b", "#0b6396"],
+    }),
+    transform: [
+      {
+        scale: animation.interpolate({
+          inputRange: [0, 0.5],
+          outputRange: [1, 1.03],
+        }),
+      },
+    ],
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-primary">
-      <NavBar />
-
-      <View className="p-4">
-        <View className="mb-2 flex-row items-center justify-between">
-          <Text className="text-center font-b text-xl">Establishments</Text>
-          <View className="flex-row justify-end gap-2">
-            <AddEstablishmentModal db={db} refetch={refetch} />
-            <ViewSettingsModal router={router} />
-          </View>
-        </View>
-
-        <EstablishmentsTable
-          db={db}
-          router={router}
-          establishments={establishments}
-          refetch={refetch}
-          onDelete={handleDelete}
+      <View className="flex-1 items-center justify-center">
+        <Image
+          source={require("../assets/images/DOLECalcLogo.png")}
+          className="mb-8 h-[290px] w-[290px]"
         />
+        <Text className="mb-8 text-3xl font-bold ">DOLECalc</Text>
+        <Animated.View
+          style={animatedStyle}
+          className="mb-8 overflow-hidden rounded-lg"
+        >
+          <Pressable
+            onPress={() => router.navigate("/homepage/index")}
+            className="px-8 py-3"
+          >
+            <Text className="font-regular text-lg font-semibold text-white">
+              Get Started
+            </Text>
+          </Pressable>
+        </Animated.View>
       </View>
     </SafeAreaView>
   );
