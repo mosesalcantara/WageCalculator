@@ -586,7 +586,7 @@ export const getGrandTotal = (
   let result = 0;
 
   employees.forEach((employee) => {
-    if (employee.violations) {
+    if (employee.violations && employee.violations.length > 0) {
       result += getTotal(
         wageOrders,
         size,
@@ -648,7 +648,14 @@ export const getValueKeyword = (
 ) => {
   let keyword = "";
 
-  if (["Basic Wage", "Holiday Pay", "13th Month Pay", "Service Incentive Leave"].includes(violationType)) {
+  if (
+    [
+      "Basic Wage",
+      "Holiday Pay",
+      "13th Month Pay",
+      "Service Incentive Leave",
+    ].includes(violationType)
+  ) {
     keyword = "day";
   } else if (violationType === "Overtime Pay") keyword = "OT hour";
   else if (violationType === "Night Shift Differential") {
