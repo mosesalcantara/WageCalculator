@@ -7,6 +7,7 @@ import { daysOptions, parseNumber, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { and, eq, sql } from "drizzle-orm";
+import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import {
   Modal,
@@ -34,15 +35,20 @@ const UpdateEmployeeModal = ({
 }: Props) => {
   const [isVisible, setIsVisible] = useImmer(false);
 
+  const validationSchema = schema.shape({
+    middle_initial: yup.string().default(""), 
+  });
+  
+
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm({ resolver: yupResolver(validationSchema) });
 
   const onSubmit = async (values: Values) => {
-    const NAs = ["na", "n/a"];
+    const NAs = ["na", "n/a", ""];
 
     const formattedValues = {
       ...values,
@@ -69,9 +75,9 @@ const UpdateEmployeeModal = ({
       });
 
       const record = records.find((employee) => {
-        const employeeMiddleInitial = employee.middle_initial.toLowerCase();
+        const employeeMiddleInitial = (employee.middle_initial?.toLowerCase()) ?? "";
         const valuesMiddleInitial =
-          formattedValues.middle_initial.toLowerCase();
+          (formattedValues.middle_initial?.toLowerCase()) ?? "";
 
         if (employeeMiddleInitial.length > 1) {
           return (
@@ -212,7 +218,7 @@ const UpdateEmployeeModal = ({
                       <TextInput
                         className="mt-0.5 rounded-[0.3125rem] bg-white px-2 font-r"
                         placeholder="Ex. A or N/A"
-                        value={value}
+                        value={value ?? ""}
                         onChangeText={onChange}
                         onBlur={onBlur}
                       />
@@ -220,7 +226,7 @@ const UpdateEmployeeModal = ({
                   )}
                 />
 
-                <ErrorMessage error={errors.middle_initial} />
+                {/* <ErrorMessage error={errors.middle_initial} /> */}
               </View>
 
               <View className="w-[49%]">

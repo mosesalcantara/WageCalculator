@@ -320,7 +320,7 @@ const generateHTML = (
       case "Special Day":
         html += `
                   <p>
-                    Php${formattedRateToUse} x 30% x ${period.days} ${keyword} =
+                    Php${formattedRateToUse} x 30% x ${period.days} special day${parseNumber(period.days) === 1 ? "" : "s"} =
                     ${valueHtml}
                   </p>
                 `;
@@ -336,7 +336,7 @@ const generateHTML = (
       case "Holiday Pay":
         html += `
                   <p>
-                    Php${formattedRateToUse} x ${period.days} ${keyword} =
+                    Php${formattedRateToUse} x ${period.days} holiday${parseNumber(period.days) === 1 ? "" : "s"} =
                     ${valueHtml}
                   </p>
                 `;

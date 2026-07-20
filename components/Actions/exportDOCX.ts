@@ -315,13 +315,14 @@ const exportDOCX = async (
         text = `Php${formattedRateToUse} / 8 x 10% x ${period.days} day${parseNumber(period.days) === 1 ? "" : "s"} x ${period.hours} ${keyword}`;
         break;
       case "Special Day":
-        text = `Php${formattedRateToUse} x 30% x ${period.days} ${keyword}`;
+        // ensure there is a space between hours and keyword so it renders correctly in DOCX
+        text = `Php${formattedRateToUse} x 30% x ${period.days} special day${parseNumber(period.days) === 1 ? "" : "s"}`;
         break;
       case "Rest Day":
-        text = `Php${formattedRateToUse} x 30% x ${period.days} ${keyword}`;
+        text = `Php${formattedRateToUse} x 30% x ${period.days} rest day${parseNumber(period.days) === 1 ? "" : "s"}`;
         break;
       case "Holiday Pay":
-        text = `Php${formattedRateToUse} x ${period.days} ${keyword}`;
+        text = `Php${formattedRateToUse} x ${period.days} regular holiday${parseNumber(period.days) === 1 ? "" : "s"}`;
         break;
       case "13th Month Pay":
         text = `Php${formattedRateToUse} x ${period.days} ${keyword} / 12 months`;

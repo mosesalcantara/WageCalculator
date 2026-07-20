@@ -122,11 +122,12 @@ const EmployeesTable = ({
                 >
                   <Text className="w-[35%] text-center font-r text-[0.85rem] text-[#333]">
                     {employee.last_name}, {employee.first_name}
-                    {["na", "n/a"].includes(
-                      employee.middle_initial.toLowerCase(),
+                    {employee.middle_initial?.trim() &&
+                    !["na", "n/a"].includes(
+                      employee.middle_initial.trim().toLowerCase(),
                     )
-                      ? ""
-                      : ` ${employee.middle_initial}.`}
+                      ? ` ${employee.middle_initial.trim()}.`
+                      : ""}
                   </Text>
 
                   <Text className="w-[13%] text-center font-r text-[0.85rem] text-[#333]">
