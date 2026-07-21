@@ -273,7 +273,14 @@ const ViolationsForm = ({
 
             <View className="flex-row flex-wrap justify-between gap-1">
               <View className="w-[49%]">
-                <Label name={violationType === "Service Incentive Leave" ? "SIL Days" : "Days"}color="#333"/>
+                <Label
+                  name={
+                    violationType === "Service Incentive Leave"
+                      ? "SIL Days"
+                      : "Days (Editable)"
+                  }
+                  color="#333"
+                />
 
                 <View className="flex-row items-center  rounded-md border border-black px-2.5">
                   <TextInput
@@ -290,7 +297,7 @@ const ViolationsForm = ({
 
                   {estimate ? (
                     <MaterialIcons
-                      name="autorenew"
+                      name="content-copy"
                       size={20}
                       color="#555"
                       onPress={() => onChange(index, "days", estimate)}
@@ -302,29 +309,29 @@ const ViolationsForm = ({
               <View className="w-[49%]">
                 <Label name={getLabel()} color="#333" />
 
-{violationType !== "Service Incentive Leave" && (
-                <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
-                  <TextInput
-                    className="w-[85%] font-r"
-                    keyboardType="numeric"
-                    placeholder=""
-                    editable={false}
-                    value={`${estimate}`}
-                  />
+                {violationType !== "Service Incentive Leave" && (
+                  <View className="flex-row items-center rounded-md border border-[#ccc] bg-[#fafafa] px-2.5">
+                    <TextInput
+                      className="w-[85%] font-r"
+                      keyboardType="numeric"
+                      placeholder=""
+                      editable={false}
+                      value={`${estimate}`}
+                    />
 
-                  {["Special Day", "Holiday Pay"].includes(violationType) &&
-                    validateDateRange(period.start_date, period.end_date) && (
-                      <ViewDaysModal
-                        holidays={holidays}
-                        violationType={violationType}
-                        startDate={period.start_date}
-                        endDate={period.end_date}
-                        isVisible={modalVisibility.viewDays}
-                        onToggle={handleViewDaysModalToggle}
-                      />
-                    )}
-                </View>
-)}
+                    {["Special Day", "Holiday Pay"].includes(violationType) &&
+                      validateDateRange(period.start_date, period.end_date) && (
+                        <ViewDaysModal
+                          holidays={holidays}
+                          violationType={violationType}
+                          startDate={period.start_date}
+                          endDate={period.end_date}
+                          isVisible={modalVisibility.viewDays}
+                          onToggle={handleViewDaysModalToggle}
+                        />
+                      )}
+                  </View>
+                )}
               </View>
             </View>
 
