@@ -249,12 +249,17 @@ const ViolationsForm = ({
                     onChangeText={(value) => onChange(index, "rate", value)}
                   />
 
-                  <MaterialIcons
-                    name="autorenew"
-                    size={20}
-                    color="#0066cc"
+                  <TouchableOpacity
+                    className="rounded-md bg-blue-100 p-1"
+                    activeOpacity={0.7}
                     onPress={() => onChange(index, "rate", `${employee.rate}`)}
-                  />
+                  >
+                    <MaterialIcons
+                      name="autorenew"
+                      size={20}
+                      color="#1e40af"
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -301,7 +306,7 @@ const ViolationsForm = ({
                       onPress={() => onChange(index, "days", estimate)}
                     >
                       <MaterialIcons
-                        name="content-copy"
+                        name="content-paste"
                         size={20}
                         color="#1e40af"
                       />
