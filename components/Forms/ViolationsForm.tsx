@@ -250,7 +250,7 @@ const ViolationsForm = ({
                   />
 
                   <TouchableOpacity
-                    className="rounded-md bg-blue-100 p-1"
+                    className="rounded-md  p-1"
                     activeOpacity={0.7}
                     onPress={() => onChange(index, "rate", `${employee.rate}`)}
                   >
@@ -302,7 +302,7 @@ const ViolationsForm = ({
 
                   {estimate ? (
                     <TouchableOpacity
-                      className="rounded-md bg-blue-100 p-1"
+                      className="rounded-md p-1"
                       onPress={() => onChange(index, "days", estimate)}
                     >
                       <MaterialIcons

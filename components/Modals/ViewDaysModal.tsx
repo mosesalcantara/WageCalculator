@@ -56,7 +56,7 @@ const ViewDaysModal = ({
     <>
       {estimatedHolidays.length > 0 && (
         <TouchableOpacity onPress={() => onToggle(true)}>
-          <MaterialIcons name="remove-red-eye" size={20} color="#555" />
+          <MaterialIcons name="remove-red-eye" size={20} color="#1e40af" />
         </TouchableOpacity>
       )}
 
