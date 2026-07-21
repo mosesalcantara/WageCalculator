@@ -252,7 +252,7 @@ const ViolationsForm = ({
                   <MaterialIcons
                     name="autorenew"
                     size={20}
-                    color="#555"
+                    color="#0066cc"
                     onPress={() => onChange(index, "rate", `${employee.rate}`)}
                   />
                 </View>
@@ -296,12 +296,16 @@ const ViolationsForm = ({
                   />
 
                   {estimate ? (
-                    <MaterialIcons
-                      name="content-copy"
-                      size={20}
-                      color="#555"
+                    <TouchableOpacity
+                      className="rounded-md bg-blue-100 p-1"
                       onPress={() => onChange(index, "days", estimate)}
-                    />
+                    >
+                      <MaterialIcons
+                        name="content-copy"
+                        size={20}
+                        color="#1e40af"
+                      />
+                    </TouchableOpacity>
                   ) : null}
                 </View>
               </View>
